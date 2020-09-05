@@ -8,19 +8,23 @@
 
 import UIKit
 
-enum AwardDetailMode {
-    case awarding
-    case awarded
-    case toBeAwarded
+enum AwardDetailMode: String {
+    case awarding = "Being Awarded"
+    case awarded = "Awarded"
+    case toBeAwarded = "For the Future"
 }
 
 class AwardDetailView: UIView {
         
     private var tapGesture: UITapGestureRecognizer!
+    private var shadow = true
+    private var widthPercent: CGFloat = 0.8
+    private var dismiss = false
     
     @IBOutlet private weak var contentView: UIView!
     @IBOutlet private weak var exitButton: UIButton!
     @IBOutlet private weak var shadowView: UIView!
+    @IBOutlet private weak var shadowViewWidthConstraint: NSLayoutConstraint!
     @IBOutlet private weak var nameLabel: UILabel!
     @IBOutlet private weak var awardView: AwardView!
     @IBOutlet private weak var titleLabel: UILabel!
@@ -31,7 +35,7 @@ class AwardDetailView: UIView {
  
     @objc internal func viewTapped(_ touch: UITapGestureRecognizer) {
         // Ignore tap unless it is outside the popup view or inside the exit button
-        if !self.shadowView.frame.contains(touch.location(in: self.contentView)) || self.exitButton.frame.contains(touch.location(in: self.shadowView)) {
+        if dismiss && (!self.shadowView.frame.contains(touch.location(in: self.contentView)) || self.exitButton.frame.contains(touch.location(in: self.shadowView))) {
             self.hide()
         }
     }
@@ -53,14 +57,17 @@ class AwardDetailView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         self.shadowView.roundCorners(cornerRadius: 16.0)
-        self.contentView.addShadow(shadowSize: CGSize(width: 8.0, height: 8.0), shadowColor: UIColor.black)
+        if self.shadow {
+            self.contentView.addShadow(shadowSize: CGSize(width: 8.0, height: 8.0), shadowColor: UIColor.black)
+        }
+        self.contentView.layoutIfNeeded()
+        self.shadowViewWidthConstraint.constant = self.contentView.frame.width * self.widthPercent
     }
     
-    public func set(awards: Awards, playerUUID: String, award: Award, mode: AwardDetailMode, backgroundColor: UIColor? = nil, textColor: UIColor? = nil) {
-        self.nameLabel.text = award.name
-        self.titleLabel.text = award.title
-        let alpha: CGFloat = (mode == .toBeAwarded ? 0.5 : 1.0)
-        self.awardView.set(award: award, alpha: alpha, showBadge: false)
+    public func set(backgroundColor: UIColor? = nil, textColor: UIColor? = nil, detailFont: UIFont? = nil, shadow: Bool = true, dismiss: Bool = true, widthPercent: CGFloat = 0.8) {
+        self.dismiss = dismiss
+        self.widthPercent = widthPercent
+        self.exitButton.isHidden = !dismiss
         if let backgroundColor = backgroundColor {
             self.shadowView.backgroundColor = backgroundColor
         }
@@ -68,6 +75,22 @@ class AwardDetailView: UIView {
             self.labels.forEach{(label) in label.textColor = textColor}
             self.exitButton.tintColor = textColor
         }
+        if let detailFont = detailFont {
+            self.titleLabel.font = detailFont
+            self.otherLabel.font = detailFont
+        }
+        
+        self.shadow = shadow
+        
+        self.layoutSubviews()
+    }
+    
+    public func set(awards: Awards, playerUUID: String, award: Award, mode: AwardDetailMode) {
+        self.nameLabel.text = award.name
+        self.titleLabel.text = award.title
+        self.exitButton.isHidden = !dismiss
+        let alpha: CGFloat = (mode == .toBeAwarded ? 0.5 : 1.0)
+        self.awardView.set(award: award, alpha: alpha, showBadge: false)
         switch mode {
         case .awarding:
             self.otherLabel.text = ""

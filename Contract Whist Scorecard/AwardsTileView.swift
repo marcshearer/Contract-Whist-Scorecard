@@ -19,6 +19,8 @@ class AwardsTileView: UIView, DashboardTileDelegate, AwardCollectionDelegate, UI
     private var achievedSection: Int!
     private var toAchieveSection: Int!
     private var awardDetailView: AwardDetailView!
+    private var tileColor: PaletteColor!
+    private var shadow = true
     
     private var spacing: CGFloat = 10.0
     private var nameHeight: CGFloat = 12.0
@@ -61,9 +63,6 @@ class AwardsTileView: UIView, DashboardTileDelegate, AwardCollectionDelegate, UI
         contentView.frame = self.bounds
         contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         
-        // Default view colors
-        self.defaultViewColors()
-        
         // Register collection view cells
         AwardCollectionCell.register(self.collectionView, modes: .grid, .list)
         AwardCollectionHeader.register(self.collectionView)
@@ -88,6 +87,21 @@ class AwardsTileView: UIView, DashboardTileDelegate, AwardCollectionDelegate, UI
         
         // Configure collection view
         self.collectionViewFlowLayout.sectionHeadersPinToVisibleBounds = true
+        
+        // Show detail for latest award
+        if !self.achieved.isEmpty {
+            self.showAwardDetail(award: self.achieved.first!, mode: .awarded, overrideTitle: "Latest Award")
+        }
+        
+        // Set up colors
+        if self.parentDashboardView?.parentViewController?.container != .none {
+            self.tileColor = Palette.normal
+            self.shadow = false
+        } else {
+            self.tileColor = Palette.buttonFace
+            self.shadow = true
+        }
+        self.tileView.backgroundColor = self.tileColor.background
     }
     
     override internal func layoutSubviews() {
@@ -95,8 +109,10 @@ class AwardsTileView: UIView, DashboardTileDelegate, AwardCollectionDelegate, UI
         
         self.tileView.layoutIfNeeded()
         
-        self.tileView.roundCorners(cornerRadius: 8.0)
-        self.contentView.addShadow(shadowSize: CGSize(width: 4.0, height: 4.0))
+        if self.shadow {
+            self.tileView.roundCorners(cornerRadius: 8.0)
+            self.contentView.addShadow(shadowSize: CGSize(width: 4.0, height: 4.0))
+        }
 
     }
     
@@ -174,13 +190,13 @@ class AwardsTileView: UIView, DashboardTileDelegate, AwardCollectionDelegate, UI
             var title: NSMutableAttributedString
             if indexPath.section == achievedSection {
                 title = NSMutableAttributedString("Awarded")
-                title = title + NSMutableAttributedString(" \(self.achieved.count)", color: Palette.buttonFace.themeText)
-                title = title + NSMutableAttributedString("/\(self.awardsTotal)", color: Palette.buttonFace.themeText, font: UIFont.systemFont(ofSize: 12, weight: .light))
+                title = title + NSMutableAttributedString(" \(self.achieved.count)", color: self.tileColor.themeText)
+                title = title + NSMutableAttributedString("/\(self.awardsTotal)", color: self.tileColor.themeText, font: UIFont.systemFont(ofSize: 12, weight: .light))
             } else {
                 title = NSMutableAttributedString("For the Future")
             }
             header = AwardCollectionHeader.dequeue(collectionView, for: indexPath, delegate: self)
-            header.bind(title: title, section: indexPath.section, mode: self.mode, noAwards: indexPath.section == achievedSection && self.achieved.isEmpty)
+            header.bind(title: title, color: self.tileColor, section: indexPath.section, mode: self.mode, noAwards: indexPath.section == achievedSection && self.achieved.isEmpty)
         default:
             break
         }
@@ -219,25 +235,40 @@ class AwardsTileView: UIView, DashboardTileDelegate, AwardCollectionDelegate, UI
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         var award: Award
-        if let parentView = self.parentDashboardView?.parentViewController?.view {
-            if indexPath.section == self.achievedSection {
-                award = achieved[indexPath.row]
-            } else {
-                award = toAchieve[indexPath.row]
-            }
-            self.awardDetailView = AwardDetailView(frame: parentView.frame)
-            awardDetailView.set(awards: self.awards, playerUUID: Scorecard.settings.thisPlayerUUID, award: award, mode: (indexPath.section == achievedSection ? .awarded : .toBeAwarded), backgroundColor: Palette.buttonFace.background, textColor: Palette.buttonFace.text)
-            awardDetailView.show(from: parentView)
+        var mode: AwardDetailMode
+        if indexPath.section == self.achievedSection {
+            award = achieved[indexPath.row]
+            mode = .awarded
+        } else {
+            award = toAchieve[indexPath.row]
+            mode = .toBeAwarded
         }
+        if !self.showAwardDetail(award: award, mode: mode) {
+            // No view available in right panel - pop up
+            if let viewController = self.parentDashboardView?.parentViewController, let parentView = viewController.view {
+                self.awardDetailView = AwardDetailView(frame: parentView.frame)
+                awardDetailView.set(backgroundColor: self.tileColor.background, textColor: self.tileColor.text)
+                awardDetailView.set(awards: self.awards, playerUUID: Scorecard.settings.thisPlayerUUID, award: award, mode: mode)
+                awardDetailView.show(from: parentView)
+            }
+        }
+    }
+    
+    @discardableResult private func showAwardDetail(award: Award, mode: AwardDetailMode, overrideTitle: String? = nil) -> Bool {
+        var shown = false
+        if let viewController = self.parentDashboardView?.parentViewController {
+            if let awardDetail = viewController.awardDetail {
+                viewController.setRightPanel(title: (overrideTitle ?? mode.rawValue), caption: "")
+                awardDetail.show(awards: self.awards, playerUUID: Scorecard.settings.thisPlayerUUID, award: award, mode: mode)
+                shown = true
+            }
+        }
+        return shown
     }
         
     // MARK: - Utility Routines ======================================================================== -
     
     private func loadData(noCache: Bool = false) {
         (self.achieved, self.toAchieve, self.awardsTotal) = awards.get(playerUUID: Scorecard.settings.thisPlayerUUID, noCache: noCache)
-    }
-    
-    private func defaultViewColors() {
-        self.tileView.backgroundColor = Palette.buttonFace.background
     }
 }

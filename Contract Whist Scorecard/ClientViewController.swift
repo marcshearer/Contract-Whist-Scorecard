@@ -51,6 +51,8 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     public var thisPlayerName: String!
     private var thisPlayerBeforeSettings: String!
     private var displayingPeer = 0
+    public var dismissImageView: UIImageView!
+    internal var viewControllerStack: [(uniqueID: String, viewController: ScorecardViewController)] = []
 
     // Observers
     private var observer: NSObjectProtocol?
@@ -91,12 +93,23 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     private var resultsItem: Int = -2
     private var settingsItem: Int = -3
     
+    internal var containers = false
+    
     // MARK: - IB Outlets ============================================================================== -
     
+    @IBOutlet internal weak var leftContainer: UIView!
+    @IBOutlet internal weak var mainContainer: UIView!
+    @IBOutlet internal weak var rightPanel: UIView!
+    @IBOutlet internal weak var rightContainer: UIView!
+    @IBOutlet internal weak var mainRightContainer: UIView!
+    @IBOutlet internal weak var leftPanelWidthConstraint: NSLayoutConstraint!
+    @IBOutlet internal weak var rightPanelWidthConstraint: NSLayoutConstraint!
+
+    @IBOutlet internal weak var rightPanelTitleLabel: UILabel!
+    @IBOutlet internal weak var rightPanelCaptionLabel: UILabel!
+
     @IBOutlet private weak var topSection: UIView!
-    @IBOutlet private weak var topHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var upperMiddleSection: UIView!
-    @IBOutlet private weak var upperMiddleHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var lowerMiddleSection: UIView!
     @IBOutlet private weak var bottomSection: UIView!
     @IBOutlet private weak var bannerPaddingView: InsetPaddingView!
@@ -125,7 +138,6 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     @IBOutlet private weak var playerSelectionViewWidthConstraint: NSLayoutConstraint!
     @IBOutlet private weak var tapGestureRecognizer: UITapGestureRecognizer!
     @IBOutlet private weak var flowLayout: CustomCollectionViewLayout!
-    @IBOutlet private weak var dismissScreenshotImageView: UIImageView!
     @IBOutlet private var actionButtons: [ImageButton]!
     @IBOutlet private weak var settingsBadgeButton: ShadowButton!
 
@@ -180,6 +192,17 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Patch in right panel label
+        self.rightTitleLabel = self.rightPanelTitleLabel
+        self.rightCaptionLabel = self.rightPanelCaptionLabel
+        self.showLastGame()
+        
+        // Show menu container if necessary
+        self.allocateContainerSizes()
+        let menuPanelViewController = MenuPanelViewController.create()
+        self.menuController = menuPanelViewController
+        self.presentInContainers([PanelContainerItem(viewController: menuPanelViewController, container: Container.left)], animated: false, completion: nil)
+        
         self.hideNavigationBar()
 
         // Setup colours (previously in storyboard) and setup whisper
@@ -218,7 +241,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         Scorecard.shared.viewPresenting = .none
         
         // Look out for images arriving
-        imageObserver = setPlayerDownloadNotification(name: .playerImageDownloaded)
+        self.imageObserver = setPlayerDownloadNotification(name: .playerImageDownloaded)
         
         // Clear hand state
         Scorecard.game?.handState = nil
@@ -236,7 +259,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        self.ignoringGameBanners {
+        Palette.ignoringGameBanners {
             
             if self.launchScreen {
                 // Cover with launch screen
@@ -250,7 +273,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        self.ignoringGameBanners {
+        Palette.ignoringGameBanners {
             
             self.changePlayerAvailable()
             
@@ -285,8 +308,10 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        self.mainContainer?.layoutIfNeeded()
+        self.allocateContainerSizes()
         
-        self.ignoringGameBanners {
+        Palette.ignoringGameBanners {
             
             // Update sizes to layout constraints immediately to aid calculations
             self.view.layoutIfNeeded()
@@ -340,9 +365,11 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         GetStartedViewController.show(from: self, completion: {self.restart()})
     }
         
-    private func showSettings() {
+    @discardableResult internal func showSettings(presentCompletion: (()->())? = nil) -> ScorecardViewController {
         self.thisPlayerBeforeSettings = Scorecard.settings.thisPlayerUUID
-        SettingsViewController.show(from: self, backText: "", backImage: "home", completion: self.showSettingsCompletion)
+        let settingsViewController = SettingsViewController.create(backText: "", backImage: "home", completion: self.showSettingsCompletion)
+        self.present(settingsViewController, animated: true, container: .main, completion: presentCompletion)
+        return settingsViewController
     }
     
     private func showSettingsCompletion() {
@@ -354,6 +381,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         self.DefaultScreenColors()
         hostCollectionView.reloadData()
         peerCollectionView.reloadData()
+        self.menuController?.refresh()
         self.restart()
     }
     
@@ -365,7 +393,8 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         DashboardViewController.show(from: self,
             dashboardNames: [(title: "Awards",  fileName: "AwardsDashboard",  imageName: "award"),
                              (title: "Personal", fileName: "PersonalDashboard", imageName: "personal"),
-                             (title: "Everyone", fileName: "EveryoneDashboard", imageName: "everyone")])
+                             (title: "Everyone", fileName: "EveryoneDashboard", imageName: "everyone")],
+            container: .mainRight)
     }
     
     private func showWalkthrough() {
@@ -374,10 +403,11 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     
     // MARK: - Player Selection View Delegate Handlers ======================================================= -
     
-    private func showPlayerSelection() {
+    internal func showPlayerSelection(completion: (()->())? = nil) {
         
         Utility.animate(view: self.view, duration: 0.5, completion: {
             self.hostTitleBar.isHidden = true
+            completion?()
         }, animations: {
             if ScorecardUI.landscapePhone() {
                 let selectionWidth = self.view.frame.width - self.playerSelectionView.frame.minX + self.view.safeAreaInsets.right
@@ -398,11 +428,11 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         
     }
     
-    private func hidePlayerSelection() {
+    internal func hidePlayerSelection(completion: (()->())? = nil) {
         self.showThisPlayer(alwaysShow: true)
         self.hostTitleBar.isHidden = false
         
-        Utility.animate(view: self.view, duration: 0.5) {
+        Utility.animate(view: self.view, duration: 0.5, completion: completion) {
             if ScorecardUI.landscapePhone() {
                 self.playerSelectionViewWidthConstraint.constant = 0.0
             } else {
@@ -424,6 +454,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         self.destroyClientController()
         self.createClientController()
         self.hidePlayerSelection()
+        self.menuController?.refresh()
     }
     
     internal func resizeView() {
@@ -659,19 +690,19 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
             case nearbyItem:
                 hostCell.button.set(image: UIImage(named: "local"))
                 hostCell.button.set(title: "Nearby")
-                hostCell.button.set(message: "Host a local,\nbluetooth game\nfor nearby players")
+                hostCell.button.set(message: "Host a game\nfor nearby players")
             case onlineItem:
                 hostCell.button.set(image: UIImage(named: "online"))
                 hostCell.button.set(title: "Online")
-                hostCell.button.set(message: "Host an online\ngame to play\nover the internet")
+                hostCell.button.set(message: "Host a game to\nplay over the internet")
             case scoringItem:
                 hostCell.button.set(image: UIImage(named: "score"))
                 hostCell.button.set(title: "Score")
-                hostCell.button.set(message: "Score a game\n while playing with\n physical cards")
+                hostCell.button.set(message: "Score a game played\n with physical cards")
             case robotItem:
                 hostCell.button.set(image: UIImage(systemName: "desktopcomputer"))
-                hostCell.button.set(title: "Computer")
-                hostCell.button.set(message: "Play a game\nagainst\nthe computer")
+                hostCell.button.set(title: "Robot")
+                hostCell.button.set(message: "Play a game\nagainst robot players")
             default:
                 break
             }
@@ -750,7 +781,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
                 }
 
                 peerCell.label.font = UIFont.systemFont(ofSize: 18.0, weight: .bold)
-                self.ignoringGameBanners {
+                Palette.ignoringGameBanners {
                     peerCell.backgroundColor = Palette.alwaysTheme.background
                     peerCell.label.textColor = Palette.alwaysTheme.text
                 }
@@ -775,7 +806,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
             let peerScrollCell = collectionView.dequeueReusableCell(withReuseIdentifier: "Peer Scroll Cell", for: indexPath) as! PeerScrollCollectionViewCell
             
             peerScrollCell.indicator.image = UIImage(systemName: (indexPath.row == self.displayingPeer ? "circle.fill" : "circle"))
-            self.ignoringGameBanners {
+            Palette.ignoringGameBanners {
                 peerScrollCell.indicator.tintColor = Palette.banner.text
             }
             cell = peerScrollCell
@@ -946,13 +977,6 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     
     // MARK: - Utility Routines ======================================================================== -
 
-    private func ignoringGameBanners(actions: ()->()) {
-        let gameBanners = Scorecard.shared.useGameColor
-        Scorecard.shared.useGameColor = false
-        actions()
-        Scorecard.shared.useGameColor = gameBanners
-    }
-    
     private func createClientController() {
         self.availablePeers = []
         self.peerReloadData()
@@ -1125,6 +1149,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
                     // Replace placeholder
                     self.peerCollectionView.reloadItems(at: [IndexPath(row: item, section: 0)])
                 }
+                self.updateMenuNotifications()
                 self.peerScrollCollectionView.reloadData()
                 self.setScrollWidth()
             })
@@ -1147,6 +1172,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
                         }
                         self.peerScrollCollectionView.deleteItems(at: [IndexPath(row: item, section: 0)])
                     }
+                    self.updateMenuNotifications()
                     self.setScrollWidth()
                 })
             })
@@ -1196,6 +1222,52 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         self.matchProximity = nil
         self.matchGameUUID = nil
     }
+
+    private func updateMenuNotifications() {
+        if let menuController = self.menuController {
+            var count = 0
+            var message: String?
+            var deviceName: String?
+            if !self.recoveryMode {
+                for available in self.availablePeers {
+                    if available.state == .notConnected {
+                        count += 1
+                        if available.purpose == .sharing {
+                            message = "View scorecard on \(available.deviceName!)"
+                        } else {
+                            message = "Join \(available.name!)'s \(available.proximity!.rawValue) game"
+                        }
+                        deviceName = available.deviceName
+                    } else {
+                        // Connection in progress
+                        message = nil
+                        deviceName = nil
+                        count = 0
+                        break
+                    }
+                }
+                if count > 1 {
+                    message = "Games available to join / share"
+                    deviceName = nil
+                }
+            }
+            menuController.setNotification(message: message, deviceName: deviceName)
+        }
+    }
+    
+    internal func selectAvailable(deviceName: String) {
+        // Connect to a particular device based on click-through of notification
+        if let item = self.availablePeers.firstIndex(where: {$0.deviceName == deviceName}) {
+            let availableFound = availablePeers[item]
+            if availableFound.state == .notConnected {
+                let indexPath = IndexPath(item: item, section: 0)
+                if self.collectionView(peerCollectionView, shouldSelectItemAt: indexPath) {
+                    self.collectionView(peerCollectionView, didSelectItemAt: indexPath)
+                }
+            }
+        }
+    }
+    
 }
 
 // MARK: - Other UI Classes - e.g. Cells =========================================================== -
@@ -1248,7 +1320,7 @@ extension ClientViewController {
     /** _Note that this code was generated as part of the move to themed colors_ */
 
     private func DefaultScreenColors() {
-        self.ignoringGameBanners {
+        Palette.ignoringGameBanners {
             self.view.backgroundColor = Palette.darkBackground.background
             self.topSection.backgroundColor = Palette.banner.background
             self.bannerPaddingView.bannerColor = Palette.banner.background
@@ -1271,6 +1343,7 @@ extension ClientViewController {
             self.settingsBadgeButton.setBackgroundColor(Palette.alwaysTheme.background)
             self.settingsBadgeButton.setTitleColor(Palette.alwaysTheme.text, for: .normal)
             self.playerSelectionView.backgroundColor = Palette.darkBackground.background
+            self.rightPanelDefaultScreenColors()
         }
     }
     
@@ -1289,7 +1362,7 @@ extension ClientViewController {
     }
 
     private func defaultCellColors(cell: HostCollectionViewCell) {
-        self.ignoringGameBanners {
+        Palette.ignoringGameBanners {
             cell.button.set(faceColor: Palette.buttonFace.background)
             cell.button.set(titleColor: Palette.buttonFace.text)
             cell.button.set(messageColor: Palette.buttonFace.text)
@@ -1298,7 +1371,7 @@ extension ClientViewController {
     }
     
     private func defaultCellColors(cell: PeerCollectionViewCell) {
-        self.ignoringGameBanners {
+        Palette.ignoringGameBanners {
             cell.leftScrollButton.imageView?.tintColor = Palette.banner.text
             cell.rightScrollButton.imageView?.tintColor = Palette.banner.text
             cell.cancelButton.imageView?.tintColor = Palette.banner.text

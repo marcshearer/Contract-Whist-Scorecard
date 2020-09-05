@@ -9,14 +9,18 @@
 import UIKit
 import CoreData
 
-class PlayersViewController: ScorecardViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+protocol PlayersViewDelegate : class {
+    func playerRemoved(playerUUID: String)
+    func refresh()
+    func set(isEnabled: Bool)
+}
+
+class PlayersViewController: ScorecardViewController, PlayersViewDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, BannerDelegate {
     
     // MARK: - Class Properties ======================================================================== -
     
     // Properties to get state
     private var completion: (()->())?
-    private var backText = ""
-    private var backImage = "home"
     
     // Other properties
     private var playerObserver: NSObjectProtocol?
@@ -24,7 +28,10 @@ class PlayersViewController: ScorecardViewController, UICollectionViewDelegate, 
     
     private var playerDetailList: [PlayerDetail]!
     
+    internal var playerDetailView: PlayerDetailViewDelegate?
+    
     private var removing: Bool = false
+    private var isEnabled: Bool = true
     
     // UI properties
     private let minAcross: CGFloat = 3.0
@@ -38,35 +45,29 @@ class PlayersViewController: ScorecardViewController, UICollectionViewDelegate, 
     internal let syncDelegateDescription = "PlayerDetail"
 
     // MARK: - IB Outlets ============================================================================== -
-    @IBOutlet private weak var finishButton: ClearButton!
-    @IBOutlet private weak var bannerPaddingView: InsetPaddingView!
-    @IBOutlet private weak var topSection: UIView!
-    @IBOutlet private weak var titleBar: UIView!
-    @IBOutlet private weak var titleLabel: UILabel!
-    @IBOutlet private weak var addPlayerButton: ShadowButton!
-    @IBOutlet private weak var removePlayerButton: ShadowButton!
-    @IBOutlet private weak var removePlayerCancelButton: ShadowButton!
+    @IBOutlet private weak var banner: Banner!
+    @IBOutlet private weak var bannerHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var collectionView: UICollectionView!
     
     // MARK: - IB Actions ============================================================================== -
     
-    @IBAction func addPlayerPressed(_ sender: UIButton) {
+    internal func addPlayerPressed() {
         self.showSelectPlayers()
     }
     
-    @IBAction func removePlayerPressed(_ sender: UIButton) {
+    internal func removePlayerPressed() {
         self.removing = true
         self.startWiggle()
         self.enableButtons()
     }
 
-    @IBAction func removePlayerCancelPressed(_ sender: UIButton) {
+    internal func removePlayerCancelPressed() {
         self.removing = false
         self.stopWiggle()
         self.enableButtons()
     }
 
-    @IBAction func finishPressed(sender: UIButton) {
+    internal func finishPressed() { // ButtonDelegate
         
         self.dismissAction()
         self.dismiss()
@@ -74,7 +75,7 @@ class PlayersViewController: ScorecardViewController, UICollectionViewDelegate, 
     
     @IBAction func downSwipe(recognizer:UISwipeGestureRecognizer) {
         if recognizer.state == .ended {
-            self.finishPressed(sender: finishButton)
+            self.finishPressed()
         }
     }
     
@@ -98,11 +99,6 @@ class PlayersViewController: ScorecardViewController, UICollectionViewDelegate, 
         self.updatePlayersFromCloud()
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-    }
-    
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         view.setNeedsLayout()
@@ -117,8 +113,26 @@ class PlayersViewController: ScorecardViewController, UICollectionViewDelegate, 
         self.collectionView.setNeedsLayout()
         self.collectionView.layoutIfNeeded()
         
-        self.formatButtons()
+        self.setupButtons()
         self.enableButtons()
+    }
+    
+    // MARK: - Players View Delegate ================================================================= -
+    
+    internal func playerRemoved(playerUUID: String) {
+        if let index = self.playerDetailList.firstIndex(where: {$0.playerUUID == playerUUID}) {
+            self.playerDetailList.remove(at: index)
+            self.collectionView.deleteItems(at: [IndexPath(item: index, section: 0)])
+        }
+    }
+    
+    internal func refresh() {
+        self.collectionView.reloadData()
+    }
+    
+    internal func set(isEnabled: Bool) {
+        self.isEnabled = isEnabled
+        self.collectionView.reloadData()
     }
     
     // MARK: - CollectionView Overrides ================================================================ -
@@ -143,8 +157,10 @@ class PlayersViewController: ScorecardViewController, UICollectionViewDelegate, 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Player Cell", for: indexPath) as! PlayerCell
-        self.defaultCellColors(cell: cell)
         
+        cell.tile.backgroundColor = (self.isEnabled ? Palette.buttonFace.background : Palette.disabled.background)
+        cell.thumbnail.set(textColor: self.isEnabled ? Palette.buttonFace.text : Palette.disabled.faintText)
+        cell.isUserInteractionEnabled = self.isEnabled
         cell.thumbnail.set(playerMO: self.playerDetailList[indexPath.item].playerMO, nameHeight: 20, diameter: self.cellWidth - (thumbnailInset * 2))
         cell.set(thumbnailInset: self.thumbnailInset)
         if self.removing {
@@ -168,20 +184,11 @@ class PlayersViewController: ScorecardViewController, UICollectionViewDelegate, 
     
     func amendPlayer(at indexPath: IndexPath) {
         let playerDetail = self.playerDetailList[indexPath.row]
-        PlayerDetailViewController.show(from: self, playerDetail: playerDetail, mode: .amend, sourceView: self.view)
-        { (playerDetail, deletePlayer) in
-            if playerDetail != nil {
-                if deletePlayer {
-                    // Remove it
-                    self.collectionView.performBatchUpdates({
-                        self.playerDetailList.remove(at: indexPath.item)
-                        self.collectionView.deleteItems(at: [indexPath])
-                    })
-                } else {
-                    // Refresh updated player
-                    self.collectionView.reloadItems(at: [indexPath])
-                }
-            }
+        if let playerDetailView = self.playerDetailView {
+            self.setRightPanel(title: playerDetail.name, caption: "")
+            playerDetailView.refresh(playerDetail: playerDetail, mode: .amend)
+        } else {
+            PlayerDetailViewController.show(from: self, playerDetail: playerDetail, mode: .amend, sourceView: self.view, playersViewDelegate: self)
         }
     }
     
@@ -269,28 +276,37 @@ class PlayersViewController: ScorecardViewController, UICollectionViewDelegate, 
     }
     
     // MARK: - UI setup routines ======================================================================== -
-
-    func formatButtons() {
-        
-        finishButton.setImage(UIImage(named: self.backImage), for: .normal)
-        finishButton.setTitle(self.backText)
+    
+    private func setupButtons() {
+        let font = UIFont.systemFont(ofSize: 16)
+        self.banner.set(lowerButtons: [
+            BannerButton(title: "Add", width: 140, action: self.addPlayerPressed, type: .shadow, containerHide: true, containerMenuText: "Add Players", font: font, id: "add"),
+            BannerButton(title: "Remove", width: 140, action: self.removePlayerPressed, type: .shadow, containerHide: true, containerMenuText: "Remove Players", font: font, id: "remove"),
+            BannerButton(title: "Cancel", width: 140, action: self.removePlayerCancelPressed, type: .shadow, containerHide: true, containerMenuText: "End Removing Players", font: font, id: "cancel")], menuOption: .profiles)
+        self.bannerHeightConstraint.constant = (self.container == .none ? 120 : self.defaultBannerHeight)
     }
     
-    func enableButtons() {
-        self.addPlayerButton.isHidden = removing
-        self.removePlayerButton.isHidden = removing
-        self.removePlayerCancelButton.isHidden = !removing
+    private func enableButtons() {
+        self.banner.setButton("add", isHidden: removing)
+        self.banner.setButton("remove", isHidden: removing)
+        self.banner.setButton("cancel", isHidden: !removing, disableOptions: removing)
     }
         
     // MARK: - Utility routines ============================================================================== -
     
     private func showSelectPlayers() {
-        _ = SelectPlayersViewController.show(from: self, completion: { (playerList) in
+        self.hideDetail()
+        _ = SelectPlayersViewController.show(from: self, playerDetailView: self.playerDetailView) { (playerList) in
             if playerList != nil {
                 self.playerDetailList = Scorecard.shared.playerDetailList()
                 self.collectionView.reloadData()
             }
-        })
+        }
+    }
+    
+    private func hideDetail() {
+        self.playerDetailView?.hide()
+        self.setRightPanel(title: "", caption: "")
     }
     
     private func forEachCell(_ action: (String, PlayerCell)->()) {
@@ -315,19 +331,26 @@ class PlayersViewController: ScorecardViewController, UICollectionViewDelegate, 
 
     // MARK: - Function to present and dismiss this view ==============================================================
     
-    class public func show(from viewController: ScorecardViewController, backText: String = "", backImage: String = "home", completion: (()->())?){
-        
+    class public func create(completion: (()->())?) -> PlayersViewController {
+    
         let storyboard = UIStoryboard(name: "PlayersViewController", bundle: nil)
         let playersViewController: PlayersViewController = storyboard.instantiateViewController(withIdentifier: "PlayersViewController") as! PlayersViewController
         
-        playersViewController.preferredContentSize = CGSize(width: 400, height: 700)
+        playersViewController.preferredContentSize = ScorecardUI.defaultSize
         playersViewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
         
-        playersViewController.backText = backText
-        playersViewController.backImage = backImage
         playersViewController.completion = completion
         
+        return playersViewController
+    }
+    
+    @discardableResult class public func show(from viewController: ScorecardViewController, completion: (()->())?) -> PlayersViewController {
+        
+        let playersViewController = PlayersViewController.create(completion: completion)
+        
         viewController.present(playersViewController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: nil)
+        
+        return playersViewController
     }
     
     private func dismiss() {
@@ -374,19 +397,5 @@ extension PlayersViewController {
 
     private func defaultViewColors() {
         self.view.backgroundColor = Palette.normal.background
-        self.bannerPaddingView.backgroundColor = Palette.banner.background
-        self.topSection.backgroundColor = Palette.banner.background
-        self.titleLabel.textColor = Palette.banner.text
-        self.addPlayerButton.setBackgroundColor(Palette.bannerShadow.background)
-        self.addPlayerButton.setTitleColor(Palette.banner.text, for: .normal)
-        self.removePlayerButton.setBackgroundColor(Palette.bannerShadow.background)
-        self.removePlayerButton.setTitleColor(Palette.banner.text, for: .normal)
-        self.removePlayerCancelButton.setBackgroundColor(Palette.bannerShadow.background)
-        self.removePlayerCancelButton.setTitleColor(Palette.banner.text, for: .normal)
-    }
-    
-    private func defaultCellColors(cell: PlayerCell) {
-        cell.tile.backgroundColor = Palette.buttonFace.background
-        cell.thumbnail.set(textColor: Palette.buttonFace.text)
     }
 }

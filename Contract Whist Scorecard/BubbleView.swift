@@ -49,7 +49,7 @@ class BubbleView: UIView {
             y = max(50, view.frame.midY - size)
         }
         
-        self.frame = CGRect(x: view.frame.midX - (size / 2), y: y, width: size, height: size)
+        self.frame = CGRect(x: (view.frame.width - size) / 2, y: y, width: size, height: size)
         self.label.setNeedsLayout()
         self.contentView.layoutIfNeeded()
         self.alpha = 1

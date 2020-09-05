@@ -36,7 +36,7 @@ class Stepper: UIStepper {
     }
 }
 
-extension UIViewController {
+extension ScorecardViewController {
     
     func hideNavigationBar() {
         self.navigationController?.isNavigationBarHidden = true

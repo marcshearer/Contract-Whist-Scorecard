@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class SelectPlayersViewController: ScorecardViewController, SyncDelegate, ButtonDelegate, CreatePlayerViewDelegate, RelatedPlayersDelegate {
+class SelectPlayersViewController: ScorecardViewController, SyncDelegate, ButtonDelegate, CreatePlayerViewDelegate, RelatedPlayersDelegate, BannerDelegate {
     
     private enum Section: Int {
         case downloadPlayers = 0
@@ -19,14 +19,13 @@ class SelectPlayersViewController: ScorecardViewController, SyncDelegate, Button
     // Main state properties
     private var sync: Sync!
     internal let syncDelegateDescription = "SelectPlayers"
+    private var playerDetailView: PlayerDetailViewDelegate!
 
     // Properties to pass state to action controller
     private var selection: [Bool] = []
     private var playerList: [PlayerDetail] = []
     private var selected = 0
     private var completion: (([PlayerDetail]?)->())?
-    private var backText = "Back"
-    private var backImage = "back"
     
     // Properties to manage sliding views
     private var section: Section = .downloadPlayers
@@ -45,10 +44,9 @@ class SelectPlayersViewController: ScorecardViewController, SyncDelegate, Button
     // MARK: - IB Outlets ============================================================================== -
     @IBOutlet private weak var contentView: UIView!
     @IBOutlet private weak var contentViewHeightConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var bannerPaddingView: InsetPaddingView!
-    @IBOutlet private weak var topSection: UIView!
+    @IBOutlet private weak var banner: Banner!
+    @IBOutlet private weak var bannerHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var bottomSection: UIView!
-    @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var inputClippingContainerView: UIView!
     @IBOutlet private weak var inputClippingContainerTopConstraint: NSLayoutConstraint!
     @IBOutlet private weak var inputClippingContainerHeightConstraint: NSLayoutConstraint!
@@ -69,12 +67,11 @@ class SelectPlayersViewController: ScorecardViewController, SyncDelegate, Button
     @IBOutlet private weak var downloadSeparatorLabel: UILabel!
     @IBOutlet private weak var downloadRelatedPlayersCaption: UILabel!
     @IBOutlet private weak var downloadRelatedPlayersView: RelatedPlayersView!
-    @IBOutlet private weak var backButton: ClearButton!
     @IBOutlet private var formLabels: [UILabel]!
      
     // MARK: - IB Actions ============================================================================== -
     
-    @IBAction func backButtonPressed(_ sender: UIButton) {
+    internal func finishPressed() {
         self.dismiss()
     }
     
@@ -86,12 +83,9 @@ class SelectPlayersViewController: ScorecardViewController, SyncDelegate, Button
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        self.backButton.setTitle(self.backText)
-        self.backButton.setImage(UIImage(named: self.backImage), for: .normal)
-        
+                
         self.setupDefaultColors()
-        self.downloadRelatedPlayersView.set(email: nil)
+        self.downloadRelatedPlayersView.set(email: nil, playerDetailView: playerDetailView)
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -105,9 +99,10 @@ class SelectPlayersViewController: ScorecardViewController, SyncDelegate, Button
         super.viewDidLayoutSubviews()
 
         if self.firstTime || self.rotated {
+            self.bannerHeightConstraint.constant = self.defaultBannerHeight
             self.contentViewHeightConstraint.constant =
                 (ScorecardUI.landscapePhone() ? ScorecardUI.screenWidth
-                    : self.view.frame.height - self.view.safeAreaInsets.top - self.view.safeAreaInsets.bottom)
+                    : self.view.frame.height - self.view.safeAreaInsets.top - self.view.safeAreaInsets.bottom - self.bannerHeightConstraint.constant)
             self.contentView.layoutIfNeeded()
             self.setupSizes()
             self.setupControls()
@@ -166,8 +161,8 @@ class SelectPlayersViewController: ScorecardViewController, SyncDelegate, Button
     // MARK: - TextField Targets ======================================================== -
     
     private func addTargets(_ textField: UITextField) {
-        textField.addTarget(self, action: #selector(PlayerDetailViewController.textFieldDidChange(_:)), for: UIControl.Event.editingChanged)
-        textField.addTarget(self, action: #selector(PlayerDetailViewController.textFieldShouldReturn(_:)), for: UIControl.Event.editingDidEndOnExit)
+        textField.addTarget(self, action: #selector(SelectPlayersViewController.textFieldDidChange(_:)), for: UIControl.Event.editingChanged)
+        textField.addTarget(self, action: #selector(SelectPlayersViewController.textFieldShouldReturn(_:)), for: UIControl.Event.editingDidEndOnExit)
     }
     
     @objc func textFieldDidChange(_ textField: UITextField) {
@@ -201,7 +196,7 @@ class SelectPlayersViewController: ScorecardViewController, SyncDelegate, Button
             self.playerCreated(playerDetail: playerDetail, reloadRelatedPlayers: false)
         }
         // Reload the list to include players related to the new players
-        self.downloadRelatedPlayersView.set(email: nil)
+        self.downloadRelatedPlayersView.set(email: nil, playerDetailView: self.playerDetailView)
         
         let count = playerDetailList.count
         self.bubbleView.show(from: self.view, message: "\(count) player\(count == 1 ? "" : "s")\ncreated")
@@ -259,6 +254,10 @@ class SelectPlayersViewController: ScorecardViewController, SyncDelegate, Button
                         self.bubbleView.show(from: self.view, message: "\(playerDetail.name)\ndownloaded", completion: self.unlockAfterDownload)
                     }
                 }
+                if let playerDetailView = self.playerDetailView, let playerDetail = returnedList.first {
+                    self.setRightPanel(title: playerDetail.name, caption: "")
+                    playerDetailView.refresh(playerDetail: playerDetail, mode: .display)
+                }
             }
         }
     }
@@ -308,7 +307,7 @@ class SelectPlayersViewController: ScorecardViewController, SyncDelegate, Button
         // Remove from the downloaded list if it is there
         if reloadRelatedPlayers {
             // Reload the list to include players related to the new players
-            self.downloadRelatedPlayersView.set(email: nil)
+            self.downloadRelatedPlayersView.set(email: nil, playerDetailView: self.playerDetailView)
         } else {
             // Just remove this player from the list
             if let email = playerDetail.tempEmail {
@@ -324,9 +323,7 @@ class SelectPlayersViewController: ScorecardViewController, SyncDelegate, Button
     // MARK: - View defaults ============================================================================ -
     
     private func setupDefaultColors() {
-        self.view.backgroundColor = Palette.banner.background
-        
-        self.titleLabel.textColor = Palette.banner.text
+        self.view.backgroundColor = self.defaultBannerColor
         
         self.downloadPlayersTitleBar.set(faceColor: Palette.buttonFace.background)
         self.downloadPlayersTitleBar.set(textColor: Palette.buttonFace.text)
@@ -348,7 +345,7 @@ class SelectPlayersViewController: ScorecardViewController, SyncDelegate, Button
     
     private func setupSizes() {
         
-        if !Utility.animating {
+        if !Utility.animating || self.firstTime {
             
             // Setup heights for the input containers and clipping views
             let titleBarHeight: CGFloat = self.downloadPlayersTitleBar.frame.height
@@ -385,16 +382,16 @@ class SelectPlayersViewController: ScorecardViewController, SyncDelegate, Button
         
     // MARK: - Function to show and dismiss this view  ============================================================================== -
     
-    public class func show(from viewController: ScorecardViewController, appController: ScorecardAppController? = nil, backText: String = "", backImage: String = "back", completion: (([PlayerDetail]?)->())? = nil) -> SelectPlayersViewController? {
+    public class func show(from viewController: ScorecardViewController, appController: ScorecardAppController? = nil, playerDetailView: PlayerDetailViewDelegate? = nil, completion: (([PlayerDetail]?)->())? = nil) -> SelectPlayersViewController? {
         
         let storyboard = UIStoryboard(name: "SelectPlayersViewController", bundle: nil)
         let selectPlayersViewController = storyboard.instantiateViewController(withIdentifier: "SelectPlayersViewController") as! SelectPlayersViewController
         
-        selectPlayersViewController.preferredContentSize = CGSize(width: 400, height: 700)
+        selectPlayersViewController.preferredContentSize = ScorecardUI.defaultSize
         selectPlayersViewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
         
-        selectPlayersViewController.backImage = backImage
-        selectPlayersViewController.backText = backText
+        selectPlayersViewController.appController = appController
+        selectPlayersViewController.playerDetailView = playerDetailView
         selectPlayersViewController.completion = completion
     
         viewController.present(selectPlayersViewController, appController: appController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: nil)

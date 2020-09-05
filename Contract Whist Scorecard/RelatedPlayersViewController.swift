@@ -64,7 +64,7 @@ class RelatedPlayersViewController : ScorecardViewController, RelatedPlayersDele
         let storyboard = UIStoryboard(name: "RelatedPlayersViewController", bundle: nil)
         let relatedPlayersViewController: RelatedPlayersViewController = storyboard.instantiateViewController(withIdentifier: "RelatedPlayersViewController") as! RelatedPlayersViewController
         
-        relatedPlayersViewController.preferredContentSize = CGSize(width: 400, height: 700)
+        relatedPlayersViewController.preferredContentSize = ScorecardUI.defaultSize
         relatedPlayersViewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
         
         relatedPlayersViewController.email = email

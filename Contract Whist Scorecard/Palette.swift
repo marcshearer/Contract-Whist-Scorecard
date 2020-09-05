@@ -52,6 +52,7 @@ class Palette {
     @BackgroundColor(.carouselUnselected) static var carouselUnselected
     @BackgroundColor(.alwaysTheme) static var alwaysTheme
     @BackgroundColor(.watermark) static var watermark
+    @BackgroundColor(.splitSidePanel) static var splitSidePanel
 
     // Specific colors
     @SpecificColor(.suitDiamondsHearts) static var suitDiamondsHearts
@@ -65,6 +66,21 @@ class Palette {
     @SpecificColor(.stats) static var stats
     @SpecificColor(.highScores) static var highScores
     @SpecificColor(.error) static var errorCondition
+    @SpecificColor(.confetti) static var confetti
+    
+    public static func ignoringGameBanners(actions: ()->()) {
+        let gameBanners = Scorecard.shared.useGameColor
+        Scorecard.shared.useGameColor = false
+        actions()
+        Scorecard.shared.useGameColor = gameBanners
+    }
+
+    public static func forcingGameBanners(actions: ()->()) {
+        let gameBanners = Scorecard.shared.useGameColor
+        Scorecard.shared.useGameColor = true
+        actions()
+        Scorecard.shared.useGameColor = gameBanners
+    }
     
     class func colorDetail(color: UIColor) -> (red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat) {
         var red: CGFloat = 0
@@ -307,5 +323,20 @@ class PaletteColor {
         self.strongText = UIColor(dynamicProvider: { (_) in Themes.currentTheme.strongText(colorName, game: gameColorName)})
         self.faintText = UIColor(dynamicProvider: { (_) in Themes.currentTheme.faintText(colorName, game: gameColorName)})
         self.themeText = UIColor(dynamicProvider: { (_) in Themes.currentTheme.themeText(colorName, game: gameColorName)})
+    }
+    
+    public func textColor(_ type: ThemeTextType) -> UIColor {
+        switch type {
+        case .normal:
+            return self.text
+        case .contrast:
+            return self.contrastText
+        case .strong:
+            return self.strongText
+        case .faint:
+            return self.faintText
+        case .theme:
+            return self.themeText
+        }
     }
 }

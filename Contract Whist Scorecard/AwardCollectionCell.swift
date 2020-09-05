@@ -20,9 +20,9 @@ class AwardCollectionCell: UICollectionViewCell {
     @IBOutlet private weak var shortNameLabel: UILabel!
     @IBOutlet private weak var titleLabel: UITextView!
     
-    public func bind(award: Award, backgroundColor: UIColor = Palette.buttonFace.background, textColor: UIColor = Palette.buttonFace.text, alpha: CGFloat = 1.0, showBadge: Bool = false) {
-        self.nameLabel?.textColor = textColor
-        self.titleLabel?.textColor = textColor
+    public func bind(award: Award, color: PaletteColor = Palette.buttonFace, alpha: CGFloat = 1.0, showBadge: Bool = false) {
+        self.nameLabel?.textColor = color.text
+        self.titleLabel?.textColor = color.text
         self.awardView.set(award: award, alpha: alpha, showBadge: showBadge)
         self.nameLabel?.text = award.name
         self.shortNameLabel?.text = award.shortName
@@ -82,15 +82,15 @@ class AwardCollectionHeader: UICollectionReusableView {
         self.delegate?.changeMode(to: .grid, section: button.tag)
     }
 
-    public func bind(title: NSAttributedString, backgroundColor: UIColor = Palette.buttonFace.background, panelColor: UIColor = Palette.buttonFace.background, textColor: UIColor = Palette.buttonFace.text, highlightColor: UIColor = Palette.buttonFace.themeText, section: Int, mode: AwardCellMode, noAwards: Bool = false) {
-        self.panelView.backgroundColor = panelColor
+    public func bind(title: NSAttributedString, color: PaletteColor = Palette.buttonFace, section: Int, mode: AwardCellMode, noAwards: Bool = false) {
+        self.panelView.backgroundColor = color.background
         self.panelView.layoutIfNeeded()
         self.panelView.roundCorners(cornerRadius: 8, bottomRounded: false)
-        self.titleLabel.textColor = textColor
+        self.titleLabel.textColor = color.text
         self.titleLabel.attributedText = title
-        self.gridButton.tintColor = (mode == .grid ? highlightColor : textColor)
+        self.gridButton.tintColor = (mode == .grid ? color.themeText : color.text)
         self.gridButton.tag = section
-        self.listButton.tintColor = (mode == .list ? highlightColor : textColor)
+        self.listButton.tintColor = (mode == .list ? color.themeText : color.text)
         self.listButton.tag = section
         if noAwards {
             self.noAwardsHeightConstraint.constant = AwardCollectionHeader.noAwardsHeight

@@ -80,19 +80,6 @@ class Scorecard {
     public var autoPlayHands: Int = 0
     public var autoPlayGames: Int = 0
     
-    // Variables to store scorepad header and body height to re-center popups correctly
-    public var _scorepadBodyHeight: CGFloat = 0
-    public var scorepadHeaderHeight: CGFloat = 0
-    public var scorepadFooterHeight: CGFloat = 0
-    public var scorepadBodyHeight: CGFloat {
-        get {
-            return (self._scorepadBodyHeight == 0.0 ? 700.0 : self._scorepadBodyHeight)
-        }
-        set(newValue) {
-            self._scorepadBodyHeight = newValue
-        }
-    }
-    
     // Class to pass state to watch
     public var watchManager: WatchManager!
     
@@ -393,7 +380,7 @@ class Scorecard {
         }
     }
     
-    func warnShare(from: UIViewController, enabled: Bool, handler: @escaping (Bool) -> ()) {
+    func warnShare(from: ScorecardViewController, enabled: Bool, handler: @escaping (Bool) -> ()) {
         
         func internalHandler(_ enabled: Bool) {
             // Update sync group
@@ -422,30 +409,10 @@ class Scorecard {
         }
     }
     
-    func saveScorepadHeights(headerHeight: CGFloat, bodyHeight: CGFloat, footerHeight: CGFloat) {
-        
-        if UIScreen.main.bounds.size.height > 600 {
-            self.scorepadHeaderHeight = headerHeight
-            self.scorepadBodyHeight = bodyHeight
-            self.scorepadFooterHeight = footerHeight
-        } else {
-            self.scorepadBodyHeight = 700
-        }
-    }
-    
     func reCenterPopup(_ viewController: UIViewController, ignoreScorepad: Bool = false) {
         // Either recenters in parent or if top provided makes that the vertical top
-        var verticalCenter: CGFloat
         
-        
-        let midTop = (UIScreen.main.bounds.height - viewController.preferredContentSize.height) / 2
-        
-        if !ignoreScorepad && self.scorepadHeaderHeight != 0 && viewController.preferredContentSize.height <= self.scorepadBodyHeight && midTop < self.scorepadHeaderHeight {
-            // Positioning just below top
-            verticalCenter = self.scorepadHeaderHeight + CGFloat(self.scorepadBodyHeight / 2)
-        } else {
-            verticalCenter = UIScreen.main.bounds.midY
-        }
+        let verticalCenter = UIScreen.main.bounds.midY
         
         viewController.popoverPresentationController?.sourceRect = CGRect(origin: CGPoint(x: UIScreen.main.bounds.midX, y: verticalCenter), size: CGSize())
     }
@@ -533,7 +500,7 @@ class Scorecard {
         return (thisPlayerUUID == nil || thisPlayerUUID == "" ? nil : thisPlayerUUID)
     }
     
-    public func updatePrefersStatusBarHidden(from viewController : UIViewController? = nil) {
+    public func updatePrefersStatusBarHidden(from viewController : ScorecardViewController? = nil) {
         
         if AppDelegate.applicationPrefersStatusBarHidden != Scorecard.settings.prefersStatusBarHidden {
             

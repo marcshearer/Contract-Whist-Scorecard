@@ -12,7 +12,7 @@ import CloudKit
 
 class DataAdmin {
     
-    class func deleteCloudDatabase(from viewController: UIViewController) {
+    class func deleteCloudDatabase(from viewController: ScorecardViewController) {
         
         viewController.alertDecision("This will delete all player, game and participant records in the iCloud database permanently. Are you really sure you want to do this?", title: "WARNING - DATA WILL BE ERASED PERMANENTLY", okButtonText: "Delete", okHandler: {
         
@@ -36,7 +36,7 @@ class DataAdmin {
         })
     }
     
-    class func deleteAllCloudRecords(viewController: UIViewController, recordType: String, cursor: CKQueryOperation.Cursor! = nil, completion: @escaping ()->()) {
+    class func deleteAllCloudRecords(viewController: ScorecardViewController, recordType: String, cursor: CKQueryOperation.Cursor! = nil, completion: @escaping ()->()) {
         var recordIdList: [CKRecord.ID] = []
         var errors = false
         let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
@@ -99,7 +99,7 @@ class DataAdmin {
         publicDatabase.add(queryOperation)
     }
     
-    class func resetGameRecordIds(viewController: UIViewController) -> Bool {
+    class func resetGameRecordIds(viewController: ScorecardViewController) -> Bool {
         let history = History(getParticipants: true, includeBF: true)
         if !CoreData.update(updateLogic: {
             for historyGame in history.games {

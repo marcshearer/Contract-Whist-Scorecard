@@ -37,7 +37,7 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
     public weak var imagePickerDelegate: PlayerViewImagePickerDelegate?
     
     private weak var parentView: UIView!
-    private weak var parentViewController: UIViewController?
+    private weak var parentViewController: ScorecardViewController?
     public var tag: Int
     public var type: PlayerViewType
     public var thumbnailView: ThumbnailView!
@@ -47,7 +47,7 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
     public var haloWidth: CGFloat = 0.0
     public var allowHaloWidth: CGFloat = 0.0
     
-    init(type: PlayerViewType, parentViewController: UIViewController? = nil, parentView: UIView! = nil, width: CGFloat, height: CGFloat, tag: Int = 0, haloWidth: CGFloat = 0.0, allowHaloWidth: CGFloat = 0.0, tapGestureDelegate: UIGestureRecognizerDelegate? = nil, cameraTintColor: UIColor? = nil) {
+    init(type: PlayerViewType, parentViewController: ScorecardViewController? = nil, parentView: UIView! = nil, width: CGFloat, height: CGFloat, tag: Int = 0, haloWidth: CGFloat = 0.0, allowHaloWidth: CGFloat = 0.0, tapGestureDelegate: UIGestureRecognizerDelegate? = nil, cameraTintColor: UIColor? = nil) {
         
         // Save properties
         self.parentViewController = parentViewController

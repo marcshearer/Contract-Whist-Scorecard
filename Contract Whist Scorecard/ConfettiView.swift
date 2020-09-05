@@ -10,13 +10,9 @@ import UIKit
 
 class ConfettiView: UIView {
     
-    private let dimension = 4
     private var velocities = [180, 200, 150, 250]
-    private var imagesNames = ["spade", "heart", "diamond", "club"]
-    private var colors: [UIColor] = [Palette.suitClubsSpades,
-                                     Palette.suitDiamondsHearts,
-                                     Palette.suitDiamondsHearts,
-                                     Palette.suitClubsSpades]
+    private var imageNames = ["spade", "heart", "diamond", "club"]
+    private var colors: [UIColor] = [Palette.confetti]
     
     private let confettiViewEmitterLayer = CAEmitterLayer()
     
@@ -92,7 +88,7 @@ class ConfettiView: UIView {
     
     // MARK: - Helpers
     var randomNumber: Int {
-        return Int(arc4random_uniform(UInt32(dimension)))
+        return Int(arc4random_uniform(UInt32(velocities.count)))
     }
     
     var randomVelocity: Int {
@@ -100,11 +96,11 @@ class ConfettiView: UIView {
     }
     
     private func nextColor(i: Int) -> CGColor {
-        return colors[i % dimension].cgColor
+        return colors[i % colors.count].cgColor
     }
     
     private func nextImage(i: Int) -> CGImage? {
-        let image = UIImage(named: imagesNames[i % dimension])
+        let image = UIImage(named: imageNames[i % imageNames.count])
         return image?.cgImage
     }
 }

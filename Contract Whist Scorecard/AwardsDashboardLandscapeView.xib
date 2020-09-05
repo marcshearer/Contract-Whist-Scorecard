@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16097.2"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16097.3"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -18,7 +18,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DYi-Zf-xfp" customClass="AwardsTileView" customModule="Whist_2" customModuleProvider="target">
-                    <rect key="frame" x="16" y="16" width="668" height="382"/>
+                    <rect key="frame" x="16" y="16" width="668" height="398"/>
                     <color key="backgroundColor" name="Clear"/>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="string" keyPath="viewMode" value="Grid"/>
@@ -34,7 +34,7 @@
             </subviews>
             <color key="backgroundColor" name="Clear"/>
             <constraints>
-                <constraint firstAttribute="bottom" secondItem="DYi-Zf-xfp" secondAttribute="bottom" constant="16" id="93o-pO-hVM"/>
+                <constraint firstAttribute="bottom" secondItem="DYi-Zf-xfp" secondAttribute="bottom" id="93o-pO-hVM"/>
                 <constraint firstItem="DYi-Zf-xfp" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="16" id="FXF-iW-HVJ"/>
                 <constraint firstItem="DYi-Zf-xfp" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="16" id="M1t-qC-lYM"/>
                 <constraint firstAttribute="trailing" secondItem="DYi-Zf-xfp" secondAttribute="trailing" constant="16" id="w2Y-YE-oxe"/>

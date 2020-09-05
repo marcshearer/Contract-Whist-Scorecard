@@ -9,7 +9,7 @@
 import UIKit
 import Combine
 
-protocol ScorecardAlertDelegate: UIViewController {
+protocol ScorecardAlertDelegate: ScorecardViewController {
     
     func alertUser(reminder: Bool)
     

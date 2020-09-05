@@ -230,7 +230,7 @@ class HighScoreTileView: UIView, DashboardTileDelegate, UITableViewDataSource, U
         
         if detailDrill {
             let row = self.rowInfo[indexPath.row]
-            self.parentDashboardView?.drillHighScore(from: self.parentDashboardView!.parentViewController!, sourceView: self, type: row.type, occurrence: row.occurrence, detailParticipantMO: row.participantMO, playerUUID: row.playerUUID!)
+            self.parentDashboardView?.drillHighScore(from: self.parentDashboardView!.parentViewController!, sourceView: self.parentDashboardView!, type: row.type, occurrence: row.occurrence, detailParticipantMO: row.participantMO, playerUUID: row.playerUUID!)
         }
         
         return nil

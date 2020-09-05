@@ -152,7 +152,7 @@ class WalkthroughPageViewController: UIPageViewController, UIPageViewControllerD
         }
     }
     
-    public static func show(from viewController: UIViewController) {
+    public static func show(from viewController: ScorecardViewController) {
         let storyboard = UIStoryboard(name: "WalkthroughPageViewController", bundle: nil)
         if let pageViewController = storyboard.instantiateViewController(withIdentifier: "WalkthroughPageViewController") as? WalkthroughPageViewController {
             pageViewController.modalPresentationStyle = .fullScreen

@@ -12,6 +12,7 @@ import UIKit
 class AwardView: UIView {
         
     @IBOutlet private weak var contentView: UIView!
+    @IBOutlet private weak var roundedBackgroundView: UIView!
     @IBOutlet private weak var roundedView: UIView!
     @IBOutlet private weak var backgroundImageView: UIImageView!
     @IBOutlet private weak var imageView: UIImageView!
@@ -35,14 +36,17 @@ class AwardView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        self.roundedBackgroundView.layoutIfNeeded()
         self.roundedView.layoutIfNeeded()
-        self.roundedView.roundCorners(cornerRadius: 8.0)
+        self.roundedBackgroundView.roundCorners(cornerRadius: 12.0)
+        self.roundedView.roundCorners(cornerRadius: 12.0)
         self.countBadgeLabel.layoutIfNeeded()
         self.countBadgeLabel.roundCorners(cornerRadius: self.countBadgeLabel.frame.height / 2)
     }
     
     public func set(award: Award, alpha: CGFloat = 1.0, showBadge: Bool = true) {
         self.roundedView.backgroundColor = award.backgroundColor.withAlphaComponent(alpha)
+        self.roundedBackgroundView.backgroundColor = UIColor.white // To allow correct alpha on non-white backgrounds
         self.backgroundImageView?.image = (award.backgroundImageName == nil ? nil : UIImage(named: award.backgroundImageName!))
         self.backgroundImageView?.alpha = alpha
         self.imageView?.image = UIImage(named: award.imageName)

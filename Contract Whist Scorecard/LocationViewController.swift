@@ -535,7 +535,7 @@ class LocationViewController: ScorecardViewController, UITableViewDataSource, UI
         let storyboard = UIStoryboard(name: "LocationViewController", bundle: nil)
         let locationViewController = storyboard.instantiateViewController(withIdentifier: "LocationViewController") as! LocationViewController
         
-        locationViewController.preferredContentSize = CGSize(width: 400, height: Scorecard.shared.scorepadBodyHeight)
+        locationViewController.preferredContentSize = ScorecardUI.defaultSize
         locationViewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
         
         locationViewController.newLocation = gameLocation

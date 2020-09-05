@@ -17,44 +17,26 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bHq-hw-4hT" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Whist_2" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="0.0"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DW5-40-xyx" customClass="Banner" customModule="Whist_2" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="title" value="Settings"/>
+                                    <userDefinedRuntimeAttribute type="image" keyPath="finishImage" value="back"/>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="disableOptions" value="NO"/>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <outlet property="delegate" destination="btt-Xo-OBG" id="2dE-qN-57i"/>
+                                    <outlet property="parentViewController" destination="btt-Xo-OBG" id="rhY-ZU-pJ6"/>
+                                </connections>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5lP-yz-lpQ" userLabel="Top Section">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="184.5"/>
+                                <rect key="frame" x="0.0" y="44" width="375" height="140.5"/>
                                 <subviews>
-                                    <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="x1U-ho-wrZ" customClass="NavigationBar" customModule="Whist_2" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="44" id="X35-Va-dkQ"/>
-                                        </constraints>
-                                        <textAttributes key="titleTextAttributes">
-                                            <color key="textColor" name="Banner Text"/>
-                                        </textAttributes>
-                                        <items>
-                                            <navigationItem title="Settings" id="mDq-fM-SbS">
-                                                <barButtonItem key="leftBarButtonItem" id="Cb7-w4-w9e">
-                                                    <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="YIA-42-pgE" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
-                                                        <rect key="frame" x="16" y="0.0" width="44" height="44"/>
-                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                        <state key="normal" image="home"/>
-                                                        <connections>
-                                                            <action selector="finishPressed:" destination="btt-Xo-OBG" eventType="touchUpInside" id="i9n-NY-Obl"/>
-                                                        </connections>
-                                                    </button>
-                                                </barButtonItem>
-                                            </navigationItem>
-                                        </items>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="color" keyPath="bannerColor">
-                                                <color key="value" name="Clear"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                    </navigationBar>
-                                    <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tGe-nq-HO6" userLabel="Available Space">
+                                    <view clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tGe-nq-HO6" userLabel="Available Space">
                                         <rect key="frame" x="0.0" y="44" width="375" height="140.5"/>
                                         <subviews>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="l36-M1-jat" userLabel="This Player Container View">
+                                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="l36-M1-jat" userLabel="This Player Container View">
                                                 <rect key="frame" x="0.0" y="18.5" width="375" height="103.5"/>
                                                 <subviews>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fAb-rE-ICJ" customClass="ThumbnailView" customModule="Whist_2" customModuleProvider="target">
@@ -91,6 +73,7 @@
                                                     </view>
                                                 </subviews>
                                                 <color key="backgroundColor" name="Clear"/>
+                                                <accessibility key="accessibilityConfiguration" identifier="thisPlayerContainer"/>
                                                 <constraints>
                                                     <constraint firstAttribute="bottom" secondItem="ZcH-Ml-180" secondAttribute="bottom" id="0ed-mi-ngG"/>
                                                     <constraint firstItem="fAb-rE-ICJ" firstAttribute="top" secondItem="l36-M1-jat" secondAttribute="top" id="44z-A9-Kxo"/>
@@ -107,6 +90,7 @@
                                             </view>
                                         </subviews>
                                         <color key="backgroundColor" name="Clear"/>
+                                        <accessibility key="accessibilityConfiguration" identifier="availableSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="140.5" id="MOv-tW-QMz"/>
                                             <constraint firstItem="l36-M1-jat" firstAttribute="centerY" secondItem="tGe-nq-HO6" secondAttribute="centerY" id="S7u-yn-92I"/>
@@ -121,15 +105,18 @@
                                     </view>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <accessibility key="accessibilityConfiguration" identifier="topSection"/>
                                 <constraints>
                                     <constraint firstAttribute="bottom" secondItem="tGe-nq-HO6" secondAttribute="bottom" id="EOS-LT-hZd"/>
-                                    <constraint firstItem="tGe-nq-HO6" firstAttribute="top" secondItem="x1U-ho-wrZ" secondAttribute="bottom" id="RQP-xf-sYp"/>
-                                    <constraint firstItem="x1U-ho-wrZ" firstAttribute="top" secondItem="5lP-yz-lpQ" secondAttribute="top" id="dl5-gM-bjn"/>
+                                    <constraint firstAttribute="height" id="KZy-1S-Abe"/>
                                     <constraint firstAttribute="trailing" secondItem="tGe-nq-HO6" secondAttribute="trailing" id="ldU-re-caI"/>
-                                    <constraint firstItem="x1U-ho-wrZ" firstAttribute="leading" secondItem="5lP-yz-lpQ" secondAttribute="leading" id="mF3-vx-3nX"/>
-                                    <constraint firstAttribute="trailing" secondItem="x1U-ho-wrZ" secondAttribute="trailing" id="ugk-fp-Twi"/>
                                     <constraint firstItem="tGe-nq-HO6" firstAttribute="leading" secondItem="5lP-yz-lpQ" secondAttribute="leading" id="vx5-63-kwM"/>
                                 </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="KZy-1S-Abe"/>
+                                    </mask>
+                                </variation>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xcm-t8-VA2" customClass="PlayerSelectionView" customModule="Whist_2" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="184.5" width="375" height="200"/>
@@ -524,7 +511,7 @@
                                                                 <autoresizingMask key="autoresizingMask"/>
                                                                 <subviews>
                                                                     <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fk6-em-7i0" customClass="SampleTheme" customModule="Whist_2" customModuleProvider="target">
-                                                                        <rect key="frame" x="13" y="13" width="102" height="102"/>
+                                                                        <rect key="frame" x="27" y="23" width="74" height="74"/>
                                                                         <color key="backgroundColor" name="Clear"/>
                                                                         <constraints>
                                                                             <constraint firstAttribute="width" secondItem="fk6-em-7i0" secondAttribute="height" multiplier="1:1" id="het-Dq-GhB"/>
@@ -581,16 +568,16 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dHC-WH-GlX" userLabel="Light View">
-                                                    <rect key="frame" x="82.5" y="0.0" width="70" height="140"/>
+                                                    <rect key="frame" x="87" y="0.0" width="67" height="140"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Light" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eCV-88-t2V">
-                                                            <rect key="frame" x="0.0" y="93.5" width="70" height="46.5"/>
+                                                            <rect key="frame" x="0.0" y="105" width="67" height="35"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <button opaque="NO" tag="1" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LRF-Lj-uzb" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
-                                                            <rect key="frame" x="12" y="63.5" width="46" height="30"/>
+                                                            <rect key="frame" x="10.5" y="75" width="46" height="30"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" secondItem="LRF-Lj-uzb" secondAttribute="height" multiplier="23:15" id="P1x-2q-eDk"/>
                                                                 <constraint firstAttribute="height" constant="30" id="pOd-Oa-NfG"/>
@@ -609,16 +596,16 @@
                                                     </constraints>
                                                 </view>
                                                 <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="r5B-DW-xPX" userLabel="Dark View">
-                                                    <rect key="frame" x="152.5" y="0.0" width="70" height="140"/>
+                                                    <rect key="frame" x="154" y="0.0" width="67" height="140"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Dark" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tmr-1j-FSX">
-                                                            <rect key="frame" x="0.0" y="93.5" width="70" height="46.5"/>
+                                                            <rect key="frame" x="0.0" y="105" width="67" height="35"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <button opaque="NO" tag="2" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bdg-E2-c31" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
-                                                            <rect key="frame" x="12" y="63.5" width="46" height="30"/>
+                                                            <rect key="frame" x="10.5" y="75" width="46" height="30"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="30" id="AOK-v8-Qh9"/>
                                                                 <constraint firstAttribute="width" secondItem="Bdg-E2-c31" secondAttribute="height" multiplier="23:15" id="zD5-Zw-wh5"/>
@@ -636,16 +623,16 @@
                                                     </constraints>
                                                 </view>
                                                 <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MsY-Rl-vNz" userLabel="Device View">
-                                                    <rect key="frame" x="222.5" y="0.0" width="70" height="140"/>
+                                                    <rect key="frame" x="221" y="0.0" width="67" height="140"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Device" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XWz-bx-hRc">
-                                                            <rect key="frame" x="0.0" y="93.5" width="70" height="46.5"/>
+                                                            <rect key="frame" x="0.0" y="105" width="67" height="35"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <button opaque="NO" tag="3" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9gb-cl-TEY" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
-                                                            <rect key="frame" x="12" y="63.5" width="46" height="30"/>
+                                                            <rect key="frame" x="10.5" y="75" width="46" height="30"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" secondItem="9gb-cl-TEY" secondAttribute="height" multiplier="23:15" id="I5l-om-LB5"/>
                                                                 <constraint firstAttribute="height" constant="30" id="hX5-Uz-RtI"/>
@@ -910,41 +897,39 @@
                         <color key="backgroundColor" name="Background"/>
                         <gestureRecognizers/>
                         <constraints>
+                            <constraint firstItem="DW5-40-xyx" firstAttribute="top" secondItem="ktL-fo-SvR" secondAttribute="top" id="19k-Jt-gyf"/>
+                            <constraint firstAttribute="trailing" secondItem="DW5-40-xyx" secondAttribute="trailing" id="5gz-Yd-uSM"/>
                             <constraint firstItem="5lP-yz-lpQ" firstAttribute="trailing" secondItem="ktL-fo-SvR" secondAttribute="trailing" id="93w-3O-CZm"/>
-                            <constraint firstItem="bHq-hw-4hT" firstAttribute="top" secondItem="ktL-fo-SvR" secondAttribute="top" id="Caz-PV-jdf"/>
                             <constraint firstAttribute="bottom" secondItem="KFM-qF-ry7" secondAttribute="bottom" id="EkF-hY-Gmp"/>
-                            <constraint firstItem="5lP-yz-lpQ" firstAttribute="top" secondItem="bHq-hw-4hT" secondAttribute="bottom" id="IE1-Rr-h8n"/>
                             <constraint firstItem="KFM-qF-ry7" firstAttribute="top" secondItem="xcm-t8-VA2" secondAttribute="bottom" id="Jyy-eF-vWN"/>
                             <constraint firstItem="5lP-yz-lpQ" firstAttribute="leading" secondItem="ktL-fo-SvR" secondAttribute="leading" id="NcW-cD-G9E"/>
                             <constraint firstItem="iT4-V4-FZx" firstAttribute="trailing" secondItem="xcm-t8-VA2" secondAttribute="trailing" id="QhX-lS-ZIG"/>
-                            <constraint firstAttribute="trailing" secondItem="bHq-hw-4hT" secondAttribute="trailing" id="VCy-c7-kvU"/>
                             <constraint firstItem="xcm-t8-VA2" firstAttribute="top" secondItem="5lP-yz-lpQ" secondAttribute="bottom" id="WSK-51-EkA"/>
-                            <constraint firstItem="bHq-hw-4hT" firstAttribute="leading" secondItem="ktL-fo-SvR" secondAttribute="leading" id="WgB-z5-Hlx"/>
                             <constraint firstItem="KFM-qF-ry7" firstAttribute="leading" secondItem="ktL-fo-SvR" secondAttribute="leading" id="Xsk-5b-nuR"/>
-                            <constraint firstItem="5lP-yz-lpQ" firstAttribute="height" secondItem="iT4-V4-FZx" secondAttribute="height" multiplier="24:38" id="act-oI-gy0"/>
                             <constraint firstItem="xcm-t8-VA2" firstAttribute="leading" secondItem="iT4-V4-FZx" secondAttribute="leading" id="lAB-nt-day"/>
+                            <constraint firstItem="5lP-yz-lpQ" firstAttribute="height" secondItem="iT4-V4-FZx" secondAttribute="height" multiplier="24:38" constant="-44" id="mml-QT-eUj"/>
+                            <constraint firstItem="DW5-40-xyx" firstAttribute="bottom" secondItem="iT4-V4-FZx" secondAttribute="top" constant="44" id="nMy-Xu-ptW"/>
+                            <constraint firstItem="DW5-40-xyx" firstAttribute="bottom" secondItem="5lP-yz-lpQ" secondAttribute="top" id="nlq-mH-Vap"/>
                             <constraint firstAttribute="trailing" secondItem="KFM-qF-ry7" secondAttribute="trailing" id="pBQ-ER-Jq0"/>
-                            <constraint firstItem="iT4-V4-FZx" firstAttribute="top" secondItem="bHq-hw-4hT" secondAttribute="bottom" id="rVB-26-DMw"/>
-                            <constraint firstItem="5lP-yz-lpQ" firstAttribute="height" secondItem="iT4-V4-FZx" secondAttribute="height" multiplier="10.5:38" id="uaR-4F-9LY"/>
+                            <constraint firstItem="DW5-40-xyx" firstAttribute="leading" secondItem="ktL-fo-SvR" secondAttribute="leading" id="rLv-vx-Pmp"/>
+                            <constraint firstItem="5lP-yz-lpQ" firstAttribute="height" secondItem="iT4-V4-FZx" secondAttribute="height" multiplier="10.5:38" constant="-44" id="uaR-4F-9LY"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="iT4-V4-FZx"/>
                         <variation key="default">
                             <mask key="constraints">
-                                <exclude reference="uaR-4F-9LY"/>
+                                <exclude reference="mml-QT-eUj"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular-widthClass=compact">
                             <mask key="constraints">
-                                <exclude reference="act-oI-gy0"/>
-                                <include reference="uaR-4F-9LY"/>
+                                <include reference="mml-QT-eUj"/>
                             </mask>
                         </variation>
                     </view>
                     <connections>
                         <outlet property="availableSpaceHeightConstraint" destination="MOv-tW-QMz" id="oQh-zQ-NAQ"/>
-                        <outlet property="bannerPaddingView" destination="bHq-hw-4hT" id="W4m-AY-Atk"/>
-                        <outlet property="finishButton" destination="YIA-42-pgE" id="JVl-kA-qOT"/>
-                        <outlet property="navigationBar" destination="x1U-ho-wrZ" id="V7N-9I-N2B"/>
+                        <outlet property="banner" destination="DW5-40-xyx" id="85a-8o-GFo"/>
+                        <outlet property="bannerHeightConstraint" destination="nMy-Xu-ptW" id="HoY-gO-Cft"/>
                         <outlet property="playerSelectionView" destination="xcm-t8-VA2" id="r6B-pz-1YI"/>
                         <outlet property="playerSelectionViewHeightConstraint" destination="Nyr-k0-9C6" id="9RZ-kd-Xmf"/>
                         <outlet property="settingsTableView" destination="KFM-qF-ry7" id="i5B-i5-33b"/>
@@ -953,7 +938,8 @@
                         <outlet property="thisPlayerChangeButtonContainer" destination="ZcH-Ml-180" id="d2S-Vd-QjR"/>
                         <outlet property="thisPlayerContainerView" destination="l36-M1-jat" id="Qc0-tt-mkM"/>
                         <outlet property="thisPlayerThumbnailView" destination="fAb-rE-ICJ" id="hr9-4w-tNd"/>
-                        <outlet property="topSectionLandscapePhoneProportionalHeightConstraint" destination="act-oI-gy0" id="Rhc-98-g5w"/>
+                        <outlet property="topSectionHeightConstraint" destination="KZy-1S-Abe" id="qXy-3l-c1L"/>
+                        <outlet property="topSectionLandscapePhoneProportionalHeightConstraint" destination="mml-QT-eUj" id="X01-V8-Tht"/>
                         <outlet property="topSectionProportionalHeightConstraint" destination="uaR-4F-9LY" id="wha-oW-s50"/>
                         <outlet property="topSectionView" destination="5lP-yz-lpQ" id="x7g-ZR-c5p"/>
                     </connections>
@@ -969,12 +955,9 @@
         </scene>
     </scenes>
     <resources>
-        <image name="home" width="22" height="23"/>
+        <image name="back" width="22" height="22"/>
         <namedColor name="Background">
             <color red="0.94117647058823528" green="0.93725490196078431" blue="0.92941176470588238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="Banner Text">
-            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Clear">
             <color red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>

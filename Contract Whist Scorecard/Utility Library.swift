@@ -415,8 +415,8 @@ class Utility {
             view = Utility.getActiveViewController()!.view!
         }
         if animate {
-            Utility._animating = true
             view!.layoutIfNeeded()
+            Utility._animating = true
             let animation = UIViewPropertyAnimator(duration: duration, curve: curve) {
                 animations()
                 view!.layoutIfNeeded()
@@ -585,15 +585,18 @@ class Utility {
         publicDatabase.add(queryOperation)
     }
     
-    public static func screenshot() -> UIImage? {
-        let layer = self.getActiveViewController()!.view.layer
-        let scale = UIScreen.main.scale
-        UIGraphicsBeginImageContextWithOptions(layer.frame.size, false, scale);
-        layer.render(in: UIGraphicsGetCurrentContext()!)
-        let screenshot = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        
-        return screenshot
+    public static func screenshot(view: UIView? = nil) -> UIImage? {
+        if let view = view ?? self.getActiveViewController()!.view {
+            let layer = view.layer
+            let scale = UIScreen.main.scale
+            UIGraphicsBeginImageContextWithOptions(layer.frame.size, false, scale);
+            layer.render(in: UIGraphicsGetCurrentContext()!)
+            let screenshot = UIGraphicsGetImageFromCurrentImageContext()
+            UIGraphicsEndImageContext()
+            return screenshot
+        } else {
+            return nil
+        }
     }
     
 

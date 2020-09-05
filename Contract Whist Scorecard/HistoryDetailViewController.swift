@@ -395,13 +395,13 @@ class HistoryDetailViewController: ScorecardViewController, UITableViewDataSourc
         let storyboard = UIStoryboard(name: "HistoryDetailViewController", bundle: nil)
         let historyDetailViewController = storyboard.instantiateViewController(withIdentifier: "HistoryDetailViewController") as! HistoryDetailViewController
 
-        historyDetailViewController.preferredContentSize = CGSize(width: 400, height: 700)
+        historyDetailViewController.preferredContentSize = ScorecardUI.defaultSize
         historyDetailViewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
         
         historyDetailViewController.gameDetail = gameDetail
         historyDetailViewController.callerCompletion = completion
 
-        sourceViewController.present(historyDetailViewController, sourceView: sourceView, animated: true, completion: nil)
+        sourceViewController.present(historyDetailViewController, sourceView: sourceView, animated: true, container: nil, completion: nil)
     }
     
     private func dismiss() {

@@ -91,6 +91,7 @@ class ScorepadViewController: ScorecardViewController,
     @IBOutlet private weak var bannerPaddingView: InsetPaddingView!
     @IBOutlet private weak var leftPaddingView: InsetPaddingView!
     @IBOutlet private weak var rightPaddingView: InsetPaddingView!
+    @IBOutlet private var paddingViewLineWidth: [NSLayoutConstraint]!
 
     // MARK: - IB Actions ============================================================================== -
     
@@ -187,9 +188,8 @@ class ScorepadViewController: ScorecardViewController,
         if lastNavBarHeight != titleView.frame.height || lastViewHeight != scorepadView.frame.height {
             setupSize(to: scorepadView.safeAreaLayoutGuide.layoutFrame.size)
             self.headerTableView.layoutIfNeeded()
-            self.paddingViewLines.forEach {
-                $0.layoutIfNeeded()
-            }
+            self.paddingViewLineWidth.forEach { $0.constant = (ScorecardUI.landscapePhone() ? 3 : 0)}
+            self.paddingViewLines.forEach { $0.layoutIfNeeded() }
             self.headerTableView.reloadData()
             self.bodyTableView.reloadData()
             self.footerTableView.reloadData()
@@ -215,7 +215,6 @@ class ScorepadViewController: ScorecardViewController,
             NotificationCenter.default.removeObserver(self.observer!)
             observer = nil
         }
-        Scorecard.shared.scorepadHeaderHeight = 0
         UIApplication.shared.isIdleTimerDisabled = false
     }
     
@@ -407,7 +406,6 @@ class ScorepadViewController: ScorecardViewController,
         footerViewHeightConstraint.constant = CGFloat(cellHeight) + self.view.safeAreaInsets.bottom
 
         scoresHeight = min(ScorecardUI.screenHeight, CGFloat(Scorecard.game.rounds) * cellHeight, 600)
-        Scorecard.shared.saveScorepadHeights(headerHeight: headerHeight + titleView.frame.height + bannerContinuationHeight, bodyHeight: scoresHeight, footerHeight: CGFloat(cellHeight) + self.view.safeAreaInsets.bottom)
     }
     
     private func setupBorders() {
@@ -630,13 +628,13 @@ class ScorepadViewController: ScorecardViewController,
             scorepadViewController = storyboard.instantiateViewController(withIdentifier: "ScorepadViewController") as? ScorepadViewController
         }
         
-        scorepadViewController.preferredContentSize = CGSize(width: 400, height: Scorecard.shared.scorepadBodyHeight)
+        scorepadViewController.preferredContentSize = ScorecardUI.defaultSize
         scorepadViewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
         scorepadViewController.parentView = viewController.view
         scorepadViewController.scorepadMode = scorepadMode
         scorepadViewController.controllerDelegate = appController
         
-        viewController.present(scorepadViewController, appController: appController, sourceView: nil, animated: true)
+        viewController.present(scorepadViewController, appController: appController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true)
         
         return scorepadViewController
     }
@@ -694,206 +692,207 @@ class ScorepadViewController: ScorecardViewController,
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
-        var headerCell: ScorepadCollectionViewCell
-        var footerCell: ScorepadCollectionViewCell
-        var bodyCell: ScorepadCollectionViewCell
-        var cell: UICollectionViewCell
-        let row = collectionView.tag % 1000000
-        let round = row + 1
-        var headerCollection =  false
-        var footerCollection = false
-        var player = 0
-        var reuseIdentifier = ""
-        let column = indexPath.row
-        
-        if collectionView.tag >= 2000000 {
-            footerCollection = true
-        } else if collectionView.tag >= 1000000 {
-            headerCollection = true
-        }
-        
-        if headerCollection {
+        var cell = UICollectionViewCell()
+        Palette.forcingGameBanners {
+            var headerCell: ScorepadCollectionViewCell
+            var footerCell: ScorepadCollectionViewCell
+            var bodyCell: ScorepadCollectionViewCell
             
-            // Header
+            let row = collectionView.tag % 1000000
+            let round = row + 1
+            var headerCollection =  false
+            var footerCollection = false
+            var player = 0
+            var reuseIdentifier = ""
+            let column = indexPath.row
             
-            if column != 0 {
-                // Thumbnail and/or name
-                 player = column
+            if collectionView.tag >= 2000000 {
+                footerCollection = true
+            } else if collectionView.tag >= 1000000 {
+                headerCollection = true
+            }
+            
+            if headerCollection {
                 
-                let playerDetail = Scorecard.game.player(scorecardPlayerNumber: player).playerMO
+                // Header
                 
-                if row == imageRow {
-                    // Thumbnail cell
-                    reuseIdentifier = "Header Collection Image Cell"
-                } else {
-                    reuseIdentifier = "Header Collection Cell"
-                }
-                
-                headerCell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier,for: indexPath)   as! ScorepadCollectionViewCell
-                self.defaultCellColors(cell: headerCell)
-                
-                headerCell.scorepadLeftLineGradientLayer?.removeFromSuperlayer()
-                Palette.bannerStyle(view: headerCell)
-                headerCell.scorepadLeftLineWeight.constant = thickLineWeight
-                headerCell.layoutIfNeeded()
-                
-                if row == playerRow {
-                    // Setup label
-                    headerCell.scorepadCellLabel.textColor = Palette.banner.text
-                    headerCell.scorepadCellLabel.text = Scorecard.game.player(scorecardPlayerNumber: player).playerMO!.name!
-                    if column != 0 {
-                        headerCell.scorepadLeftLineGradientLayer = ScorecardUI.gradient(headerCell.scorepadLeftLine, color: Palette.grid.background, gradients: playerGradient, overrideWidth: thickLineWeight, overrideHeight: self.minCellHeight)
+                if column != 0 {
+                    // Thumbnail and/or name
+                    player = column
+                    
+                    let playerDetail = Scorecard.game.player(scorecardPlayerNumber: player).playerMO
+                    
+                    if row == imageRow {
+                        // Thumbnail cell
+                        reuseIdentifier = "Header Collection Image Cell"
+                    } else {
+                        reuseIdentifier = "Header Collection Cell"
+                    }
+                    
+                    headerCell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier,for: indexPath)   as! ScorepadCollectionViewCell
+                    self.defaultCellColors(cell: headerCell)
+                    
+                    headerCell.scorepadLeftLineGradientLayer?.removeFromSuperlayer()
+                    Palette.bannerStyle(view: headerCell)
+                    headerCell.scorepadLeftLineWeight.constant = thickLineWeight
+                    headerCell.layoutIfNeeded()
+                    
+                    if row == playerRow {
+                        // Setup label
+                        headerCell.scorepadCellLabel.textColor = Palette.banner.text
+                        headerCell.scorepadCellLabel.text = Scorecard.game.player(scorecardPlayerNumber: player).playerMO!.name!
+                        if column != 0 {
+                            headerCell.scorepadLeftLineGradientLayer = ScorecardUI.gradient(headerCell.scorepadLeftLine, color: Palette.grid.background, gradients: playerGradient, overrideWidth: thickLineWeight, overrideHeight: self.minCellHeight)
+                        }
+                        
+                    } else {
+                        // Setup the thumbnail picture / disc
+                        if playerDetail != nil {
+                            Utility.setThumbnail(data: playerDetail!.thumbnail,
+                                                 imageView: headerCell.scorepadImage,
+                                                 initials: playerDetail!.name!,
+                                                 label: headerCell.scorepadDisc)
+                            ScorecardUI.veryRoundCorners(headerCell.scorepadImage, radius: (imageRowHeight-9)/2)
+                            ScorecardUI.veryRoundCorners(headerCell.scorepadDisc, radius: (imageRowHeight-9)/2)
+                        }
+                        if column != 0 {
+                            headerCell.scorepadLeftLineGradientLayer = ScorecardUI.gradient(headerCell.scorepadLeftLine, color: Palette.grid.background, gradients: imageGradient, overrideWidth: thickLineWeight, overrideHeight: self.imageRowHeight)
+                        }
                     }
                     
                 } else {
-                    // Setup the thumbnail picture / disc
-                    if playerDetail != nil {
-                        Utility.setThumbnail(data: playerDetail!.thumbnail,
-                                             imageView: headerCell.scorepadImage,
-                                             initials: playerDetail!.name!,
-                                             label: headerCell.scorepadDisc)
-                        ScorecardUI.veryRoundCorners(headerCell.scorepadImage, radius: (imageRowHeight-9)/2)
-                        ScorecardUI.veryRoundCorners(headerCell.scorepadDisc, radius: (imageRowHeight-9)/2)
+                    // Title column
+                    headerCell = collectionView.dequeueReusableCell(withReuseIdentifier: "Header Collection Cell",for: indexPath) as! ScorepadCollectionViewCell
+                    self.defaultCellColors(cell: headerCell)
+                    
+                    headerCell.scorepadLeftLineGradientLayer?.removeFromSuperlayer()
+                    Palette.bannerStyle(view: headerCell)
+                    headerCell.scorepadCellLabel?.textColor = Palette.banner.contrastText
+                    
+                    // Row titles
+                    switch row {
+                    case imageRow:
+                        headerCell.scorepadCellLabel.text=""
+                    case playerRow:
+                        headerCell.scorepadCellLabel.text=""
+                    default:
+                        break
                     }
-                    if column != 0 {
-                        headerCell.scorepadLeftLineGradientLayer = ScorecardUI.gradient(headerCell.scorepadLeftLine, color: Palette.grid.background, gradients: imageGradient, overrideWidth: thickLineWeight, overrideHeight: self.imageRowHeight)
+                    headerCell.scorepadLeftLineWeight.constant = 0
+                    headerCell.scorepadCellLabel.numberOfLines = 1
+                }
+                
+                if row == playerRow {
+                    // Setup the name font
+                    if narrow {
+                        headerCell.scorepadCellLabel.font = UIFont.systemFont(ofSize: 20.0)
+                    } else {
+                        headerCell.scorepadCellLabel.font = UIFont.systemFont(ofSize: 24.0)
                     }
                 }
-    
-            } else {
-                // Title column
-                headerCell = collectionView.dequeueReusableCell(withReuseIdentifier: "Header Collection Cell",for: indexPath) as! ScorepadCollectionViewCell
-                self.defaultCellColors(cell: headerCell)
                 
-                headerCell.scorepadLeftLineGradientLayer?.removeFromSuperlayer()
-                Palette.bannerStyle(view: headerCell)
-                headerCell.scorepadCellLabel?.textColor = Palette.banner.contrastText
+                // Setup top line
+                headerCell.scorepadTopLineWeight.constant = (row == 0 ? 0 /* was thickLineWeight*/ : 0)
                 
-                // Row titles
-                switch row {
-                case imageRow:
-                    headerCell.scorepadCellLabel.text=""
-                case playerRow:
-                    headerCell.scorepadCellLabel.text=""
-                default:
-                    break
-                }
-                headerCell.scorepadLeftLineWeight.constant = 0
-                headerCell.scorepadCellLabel.numberOfLines = 1
-            }
-            
-            if row == playerRow {
-                // Setup the name font
-                if narrow {
-                    headerCell.scorepadCellLabel.font = UIFont.systemFont(ofSize: 20.0)
+                // Highlight current dealer
+                highlightDealer(headerCell: headerCell, playerNumber: column, row: row)
+                
+                cell=headerCell
+                
+            } else if footerCollection {
+                
+                // Footer
+                
+                footerCell = collectionView.dequeueReusableCell(withReuseIdentifier: "Footer Collection Cell",for: indexPath) as! ScorepadCollectionViewCell
+                self.defaultCellColors(cell: footerCell)
+                
+                footerCell.scorepadLeftLineGradientLayer?.removeFromSuperlayer()
+                footerCell.scorepadLeftLineGradientLayer = nil
+                footerCell.scorepadCellLabel.textColor = Palette.total.text
+                footerCell.scorepadCellLabelHeight.constant = cellHeight - thickLineWeight + (ScorecardUI.landscapePhone() ? self.view.safeAreaInsets.bottom / 2.0 : 0.0)
+                footerCell.layoutIfNeeded()
+                
+                if column == 0 {
+                    // Row titles
+                    footerCell.scorepadCellLabel.text="Total"
+                    footerCell.scorepadLeftLineWeight.constant = 0
+                    footerCell.scorepadCellLabel.numberOfLines = 1
+                    footerCell.scorepadCellLabel.accessibilityIdentifier = ""
+                    if narrow {
+                        footerCell.scorepadCellLabel.font = UIFont.systemFont(ofSize: 20.0)
+                    } else {
+                        footerCell.scorepadCellLabel.font = UIFont.systemFont(ofSize: 24.0)
+                    }
                 } else {
-                    headerCell.scorepadCellLabel.font = UIFont.systemFont(ofSize: 24.0)
+                    // Row values
+                    player = column
+                    self.updateTotalCell(cell: footerCell, playerNumber: player)
+                    footerCell.scorepadLeftLineWeight.constant = thickLineWeight
+                    footerCell.scorepadCellLabel.accessibilityIdentifier = "player\(indexPath.row)total"
+                    footerCell.scorepadCellLabel.font = UIFont.systemFont(ofSize: 26.0)
                 }
-            }
-            
-            // Setup top line
-            headerCell.scorepadTopLineWeight.constant = (row == 0 ? 0 /* was thickLineWeight*/ : 0)
-            
-            // Highlight current dealer
-            highlightDealer(headerCell: headerCell, playerNumber: column, row: row)
-            
-            cell=headerCell
-            
-        } else if footerCollection {
-            
-            // Footer
-            
-            footerCell = collectionView.dequeueReusableCell(withReuseIdentifier: "Footer Collection Cell",for: indexPath) as! ScorepadCollectionViewCell
-            self.defaultCellColors(cell: footerCell)
-            
-            footerCell.scorepadLeftLineGradientLayer?.removeFromSuperlayer()
-            footerCell.scorepadLeftLineGradientLayer = nil
-            footerCell.scorepadCellLabel.textColor = Palette.total.text
-            footerCell.scorepadCellLabelHeight.constant = cellHeight - thickLineWeight + (ScorecardUI.landscapePhone() ? self.view.safeAreaInsets.bottom / 2.0 : 0.0)
-            footerCell.layoutIfNeeded()
-            
-            if column == 0 {
-                // Row titles
-                footerCell.scorepadCellLabel.text="Total"
-                footerCell.scorepadLeftLineWeight.constant = 0
-                footerCell.scorepadCellLabel.numberOfLines = 1
-                footerCell.scorepadCellLabel.accessibilityIdentifier = ""
-                if narrow {
-                    footerCell.scorepadCellLabel.font = UIFont.systemFont(ofSize: 20.0)
+                if column != 0 {
+                    footerCell.scorepadLeftLine.backgroundColor = Palette.grid.background
+                }
+                
+                // Fade out at bottom if there is a safe area inset at the side
+                footerCell.scorepadCellGradientLayer?.removeFromSuperlayer()
+                footerCell.backgroundColor = Palette.total.background
+                
+                footerCell.scorepadTopLineWeight.constant = thinLineWeight
+                
+                cell=footerCell
+                
+            } else {
+                
+                // Body
+                
+                if column == 0 || (column % 2 == 1 && bodyColumns == 2) {
+                    reuseIdentifier = "Body Collection Text Cell"
                 } else {
-                    footerCell.scorepadCellLabel.font = UIFont.systemFont(ofSize: 24.0)
+                    reuseIdentifier = "Body Collection Image Cell"
                 }
-            } else {
-                // Row values
-                player = column
-                self.updateTotalCell(cell: footerCell, playerNumber: player)
-                footerCell.scorepadLeftLineWeight.constant = thickLineWeight
-                footerCell.scorepadCellLabel.accessibilityIdentifier = "player\(indexPath.row)total"
-                footerCell.scorepadCellLabel.font = UIFont.systemFont(ofSize: 26.0)
-            }
-            if column != 0 {
-                footerCell.scorepadLeftLine.backgroundColor = Palette.grid.background
-            }
-
-            // Fade out at bottom if there is a safe area inset at the side
-            footerCell.scorepadCellGradientLayer?.removeFromSuperlayer()
-            footerCell.backgroundColor = Palette.total.background
-            
-            footerCell.scorepadTopLineWeight.constant = thinLineWeight
-        
-            cell=footerCell
-            
-        } else {
-            
-            // Body
-            
-            if column == 0 || (column % 2 == 1 && bodyColumns == 2) {
-                reuseIdentifier = "Body Collection Text Cell"
-            } else {
-                reuseIdentifier = "Body Collection Image Cell"
-            }
-            
-            bodyCell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! ScorepadCollectionViewCell
-            self.defaultCellColors(cell: bodyCell)
-            
-            if narrow {
-                bodyCell.scorepadCellLabel.font = UIFont.systemFont(ofSize: 20.0)
-            } else {
-                bodyCell.scorepadCellLabel.font = UIFont.systemFont(ofSize: 24.0)
-            }
-            
-            if column == 0 {
-                Palette.bannerStyle(bodyCell.scorepadCellLabel)
-
-                bodyCell.scorepadRankLabel.text = "\(Scorecard.game.roundCards(round))"
-                let suit = Scorecard.game.roundSuit(round)
-                bodyCell.scorepadSuitLabel.attributedText = suit.toAttributedString(font: bodyCell.scorepadCellLabel.font, noTrumpScale: 0.8)
-                bodyCell.scorepadCellLabel.text = ""
-                bodyCell.scorepadLeftLineWeight.constant = 0
-                bodyCell.scorepadCellLabel.accessibilityIdentifier = ""
-            } else {
-                player = ((column - 1) / bodyColumns) + 1
-                if column % 2 == 1 && bodyColumns == 2 {
-                    // Bid
-                    bodyCell.scorepadLeftLineWeight.constant = thickLineWeight
-                    self.updateBodyCell(cell: bodyCell, round: round, playerNumber: player, mode: Mode.bid)
+                
+                bodyCell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! ScorepadCollectionViewCell
+                self.defaultCellColors(cell: bodyCell)
+                
+                if narrow {
+                    bodyCell.scorepadCellLabel.font = UIFont.systemFont(ofSize: 20.0)
+                } else {
+                    bodyCell.scorepadCellLabel.font = UIFont.systemFont(ofSize: 24.0)
+                }
+                
+                if column == 0 {
+                    Palette.bannerStyle(bodyCell.scorepadCellLabel)
+                    
+                    bodyCell.scorepadRankLabel.text = "\(Scorecard.game.roundCards(round))"
+                    let suit = Scorecard.game.roundSuit(round)
+                    bodyCell.scorepadSuitLabel.attributedText = suit.toAttributedString(font: bodyCell.scorepadCellLabel.font, noTrumpScale: 0.8)
+                    bodyCell.scorepadCellLabel.text = ""
+                    bodyCell.scorepadLeftLineWeight.constant = 0
                     bodyCell.scorepadCellLabel.accessibilityIdentifier = ""
                 } else {
-                    // Score
-                    bodyCell.scorepadLeftLineWeight.constant = (bodyColumns == 2 ? thinLineWeight : thickLineWeight)
-                    self.updateBodyCell(cell: bodyCell, round: round, playerNumber: player, mode: Mode.made)
-                    bodyCell.scorepadCellLabel.accessibilityIdentifier = "player\(player)round\(round)"
+                    player = ((column - 1) / bodyColumns) + 1
+                    if column % 2 == 1 && bodyColumns == 2 {
+                        // Bid
+                        bodyCell.scorepadLeftLineWeight.constant = thickLineWeight
+                        self.updateBodyCell(cell: bodyCell, round: round, playerNumber: player, mode: Mode.bid)
+                        bodyCell.scorepadCellLabel.accessibilityIdentifier = ""
+                    } else {
+                        // Score
+                        bodyCell.scorepadLeftLineWeight.constant = (bodyColumns == 2 ? thinLineWeight : thickLineWeight)
+                        self.updateBodyCell(cell: bodyCell, round: round, playerNumber: player, mode: Mode.made)
+                        bodyCell.scorepadCellLabel.accessibilityIdentifier = "player\(player)round\(round)"
+                    }
+                    bodyCell.scorepadRankLabel?.text = ""
+                    bodyCell.scorepadSuitLabel?.text = ""
                 }
-                bodyCell.scorepadRankLabel?.text = ""
-                bodyCell.scorepadSuitLabel?.text = ""
+                
+                bodyCell.scorepadTopLineWeight.constant = thinLineWeight
+                
+                cell=bodyCell
             }
-           
-            bodyCell.scorepadTopLineWeight.constant = thinLineWeight
-            
-            cell=bodyCell
         }
-        
         return cell
     }
     

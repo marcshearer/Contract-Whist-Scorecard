@@ -248,7 +248,7 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
         
         let viewController = storyboard.instantiateViewController(withIdentifier: "OverrideViewController") as! OverrideViewController
         
-        viewController.preferredContentSize = CGSize(width: 400, height: 700)
+        viewController.preferredContentSize = ScorecardUI.defaultSize
         viewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
         
         parentViewController.present(viewController, appController: appController, sourceView: parentViewController.popoverPresentationController?.sourceView ?? parentViewController.view, animated: true, completion: nil)

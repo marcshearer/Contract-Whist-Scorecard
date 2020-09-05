@@ -243,7 +243,11 @@ class DataTableTileView: UIView, DashboardTileDelegate, UITableViewDataSource, U
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Table Cell", for: indexPath) as! DataTableTileTableViewCell
         cell.setCollectionViewDataSourceDelegate(self, nib: self.collectionViewNib, forRow: indexPath.row)
-        
+        if indexPath.row == 0 && self.headings {
+            // Suppress separator on headings row
+            cell.separatorInset = UIEdgeInsets(top: 0.0, left: max(ScorecardUI.screenWidth, ScorecardUI.screenHeight), bottom: 0.0, right: 0.0)
+        }
+
         cell.selectedBackgroundView = UIView()
         cell.selectedBackgroundView?.backgroundColor = UIColor.clear
         

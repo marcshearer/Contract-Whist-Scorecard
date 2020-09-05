@@ -12,7 +12,7 @@ import MessageUI
 
 class Backup {
 
-    static func sendPlayerUUID(from: UIViewController) {
+    static func sendPlayerUUID(from: ScorecardViewController) {
         var bodyText = ""
         
         if MFMailComposeViewController.canSendMail() {

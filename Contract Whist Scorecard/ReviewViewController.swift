@@ -329,7 +329,7 @@ class ReviewViewController: ScorecardViewController, UITableViewDataSource, UITa
         let storyboard = UIStoryboard(name: "ReviewViewController", bundle: nil)
         let reviewViewController = storyboard.instantiateViewController(withIdentifier: "ReviewViewController") as! ReviewViewController
         
-        reviewViewController.preferredContentSize = CGSize(width: 400, height: Scorecard.shared.scorepadBodyHeight)
+        reviewViewController.preferredContentSize = ScorecardUI.defaultSize
         reviewViewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
         
         reviewViewController.round = round

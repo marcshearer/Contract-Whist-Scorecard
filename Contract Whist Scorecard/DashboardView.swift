@@ -38,7 +38,7 @@ class DashboardView : UIView, DashboardActionDelegate {
     private var statisticsViewer: StatisticsViewer!
 
     @IBOutlet public weak var delegate: DashboardActionDelegate?
-    @IBOutlet public weak var parentViewController: ScorecardViewController?
+    @IBOutlet public weak var parentViewController: DashboardViewController?
     @IBOutlet private weak var contentView: UIView!
 
     override init(frame: CGRect) {
@@ -49,8 +49,10 @@ class DashboardView : UIView, DashboardActionDelegate {
         super.init(coder: aDecoder)
     }
     
-    convenience init(withNibName nibName: String, frame: CGRect) {
+    convenience init(withNibName nibName: String, frame: CGRect, parent: DashboardViewController?, delegate: DashboardActionDelegate?) {
         self.init(frame: frame)
+        self.parentViewController = parent
+        self.delegate = delegate
         self.loadDashboardView(withNibName: nibName)
     }
             

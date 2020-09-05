@@ -18,6 +18,7 @@
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="otp-xs-7Jm" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Whist_2" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                <accessibility key="accessibilityConfiguration" identifier="BannerPaddingView"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="color" keyPath="bannerColor">
                                         <color key="value" name="Table Top"/>
@@ -71,6 +72,7 @@
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <accessibility key="accessibilityConfiguration" identifier="TitleView"/>
                                 <constraints>
                                     <constraint firstItem="VGH-oE-ROK" firstAttribute="top" secondItem="30M-sz-Fdm" secondAttribute="top" constant="6" id="3Z1-ce-qjp"/>
                                     <constraint firstItem="zzd-PE-N0d" firstAttribute="top" secondItem="30M-sz-Fdm" secondAttribute="top" constant="6" id="Eoq-tL-lsC"/>
@@ -84,6 +86,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Weo-LM-Q3A" customClass="BannerLogoView" customModule="Whist_2" customModuleProvider="target">
                                 <rect key="frame" x="112.66666666666667" y="0.0" width="149.66666666666663" height="88"/>
                                 <color key="backgroundColor" name="Clear"/>
+                                <accessibility key="accessibilityConfiguration" identifier="BannerLogoView"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="Weo-LM-Q3A" secondAttribute="height" multiplier="73:43" id="Ez7-FT-HKo"/>
                                     <constraint firstAttribute="height" id="fyZ-T9-zIO"/>
@@ -110,7 +113,7 @@
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Entry Player Table Cell" id="UqW-3T-hCt" customClass="EntryPlayerTableCell" customModule="Whist_2" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="UqW-3T-hCt" id="aDd-6D-WWB">
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="UqW-3T-hCt" id="aDd-6D-WWB" userLabel="TableCellContent">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
@@ -211,12 +214,14 @@
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="13" translatesAutoresizingMaskIntoConstraints="NO" id="ysS-vO-VnI">
                                                 <rect key="frame" x="8" y="4" width="343" height="42"/>
+                                                <accessibility key="accessibilityConfiguration" identifier="InstructionLabel"/>
                                                 <fontDescription key="fontDescription" name="HelveticaNeue-BoldItalic" family="Helvetica Neue" pointSize="22"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                         </subviews>
                                         <color key="backgroundColor" name="Clear"/>
+                                        <accessibility key="accessibilityConfiguration" identifier="InstructionSafeArea"/>
                                         <constraints>
                                             <constraint firstItem="ysS-vO-VnI" firstAttribute="leading" secondItem="9KR-ym-zGw" secondAttribute="leading" constant="8" id="ORk-bM-hDL"/>
                                             <constraint firstItem="ysS-vO-VnI" firstAttribute="top" secondItem="9KR-ym-zGw" secondAttribute="top" constant="4" id="OoD-6W-vfe"/>
@@ -226,6 +231,7 @@
                                     </view>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <accessibility key="accessibilityConfiguration" identifier="InstructionContainer"/>
                                 <constraints>
                                     <constraint firstItem="9KR-ym-zGw" firstAttribute="leading" secondItem="oiF-5s-tTG" secondAttribute="leading" id="0CV-G2-DB2"/>
                                     <constraint firstAttribute="height" constant="50" id="H4R-ZC-h79"/>
@@ -238,6 +244,7 @@
                             <view hidden="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="r5E-a9-sN5" userLabel="Separator">
                                 <rect key="frame" x="370" y="146" width="0.33333333333331439" height="1"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <accessibility key="accessibilityConfiguration" identifier="Separator"/>
                                 <constraints>
                                     <constraint firstAttribute="width" id="Psj-09-f9S">
                                         <variation key="heightClass=compact" constant="0.29999999999999999"/>
@@ -361,6 +368,7 @@
                                             </button>
                                         </subviews>
                                         <color key="backgroundColor" name="Clear"/>
+                                        <accessibility key="accessibilityConfiguration" identifier="ToolbarButton"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="44" id="M7f-Ri-2ky"/>
                                             <constraint firstAttribute="width" priority="1" constant="80" id="VHB-Wk-UoV"/>
@@ -368,6 +376,7 @@
                                     </view>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <accessibility key="accessibilityConfiguration" identifier="Toolbar"/>
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="fNh-i9-9lH" secondAttribute="trailing" constant="12" id="1Q9-bl-XMy"/>
                                     <constraint firstItem="fNh-i9-9lH" firstAttribute="centerY" secondItem="rSw-DA-1Lg" secondAttribute="centerY" id="Axq-xG-6mV"/>

@@ -37,7 +37,7 @@ public enum Orientation: String, CaseIterable {
     
 }
 
-class DashboardViewController: ScorecardViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, CustomCollectionViewLayoutDelegate, DashboardActionDelegate {
+class DashboardViewController: ScorecardViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, CustomCollectionViewLayoutDelegate, DashboardActionDelegate, BannerDelegate {
  
     struct DashboardViewInfo {
         var title: String
@@ -62,32 +62,34 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     private var backgroundColor: PaletteColor!
     private var completion: (()->())?
     private var allowSync = true
+    private var overrideTitle: String?
+    internal var awardDetail: AwardDetail?
+    private var bottomInset: CGFloat?
     
     private var firstTime = true
     private var rotated = false
     
     private var observer: NSObjectProtocol?
-    
-    @IBOutlet private weak var bannerPaddingView: InsetPaddingView!
-    @IBOutlet private var topSectionHeightConstraint: [NSLayoutConstraint]!
+
+    @IBOutlet private weak var banner: Banner!
+    @IBOutlet private weak var bannerHeightConstraint: NSLayoutConstraint!
     @IBOutlet private var topSectionProportionalHeightConstraint: [NSLayoutConstraint]!
-    @IBOutlet private var titleEqualHeightConstraint: [NSLayoutConstraint]!
-    @IBOutlet private var titleProportionalHeightConstraint: [NSLayoutConstraint]!
-    @IBOutlet private weak var bannerView: UIView!
-    @IBOutlet private weak var titleLabel: UILabel!
+    @IBOutlet private var topSectionHeightConstraint: [NSLayoutConstraint]!
     @IBOutlet private weak var carouselCollectionView: UICollectionView!
     @IBOutlet private weak var carouselCollectionViewFlowLayout: CustomCollectionViewLayout!
     @IBOutlet private weak var scrollCollectionView: UICollectionView!
-    @IBOutlet private weak var finishButton: ClearButton!
     @IBOutlet private weak var dashboardContainerView: UIView!
-    @IBOutlet private weak var syncButton: ShadowButton!
-    @IBOutlet private weak var smallSyncButton: ClearButton!
+    @IBOutlet private weak var dashboardContainerBottomConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var subtitleView: UIView!
+    @IBOutlet private weak var subtitleLabel: UILabel!
+    @IBOutlet private weak var subtitleViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var subtitleLabelWidthConstraint: NSLayoutConstraint!
     
-    @IBAction func finishButtonPressed(_ sender: UIButton) {
+    internal func finishPressed() {
         self.dismiss()
     }
     
-    @IBAction func syncButtonPressed(_ sender: UIButton) {
+    internal func syncPressed() {
         self.showSync()
     }
     
@@ -103,7 +105,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
                     self.changed(self.carouselCollectionView, itemAtCenter: self.currentPage - 1, forceScroll: true)
                 }
             default:
-                self.finishButtonPressed(self.finishButton)
+                self.finishPressed()
             }
         }
     }
@@ -113,8 +115,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
         
         // Setup form
         self.defaultViewColors()
-        self.finishButton.setImage(UIImage(named: self.backImage), for: .normal)
-        self.finishButton.setTitle(self.backText)
+        self.setupButtons()
         self.networkEnableSyncButton()
 
         // Add in dashboards
@@ -122,9 +123,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
         
         // Configure flow and set initial value
         self.carouselCollectionViewFlowLayout.delegate = self
-        
         self.carouselCollectionView.decelerationRate = UIScrollView.DecelerationRate.fast
-        
         self.currentPage = Int(self.dashboardViewInfo.count / 2)
     }
 
@@ -160,12 +159,16 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
                 self.firstTime = false
                 self.rotated = false
             }
+            self.setupSubtitle()
         }
     }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
+        // Configure bottom
+        let bottomSafeArea = self.view.safeAreaInsets.bottom
+        self.dashboardContainerBottomConstraint.constant = self.bottomInset ?? (bottomSafeArea == 0 ? 16 : bottomSafeArea)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -360,13 +363,10 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
         
         if self.dashboardViewInfo.count == 1 {
             // No carousel required
-            self.titleLabel.text = self.dashboardViewInfo[0]?.title
             self.carouselCollectionView.isHidden = true
             self.scrollCollectionView.isHidden = true
             self.topSectionProportionalHeightConstraint.forEach{$0.priority = UILayoutPriority(rawValue: 1)}
-            self.topSectionHeightConstraint.forEach{$0.priority = .required}
-            self.titleProportionalHeightConstraint.forEach{$0.priority = UILayoutPriority(rawValue: 1)}
-            self.titleEqualHeightConstraint.forEach{$0.priority = .required}
+            self.topSectionHeightConstraint.forEach{$0.priority = UILayoutPriority.required}
         }
     }
     
@@ -401,10 +401,8 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
             view = viewInfo.views[self.currentOrientation]
             if view == nil {
                 if let nibName = viewInfo.nibNames[self.currentOrientation] {
-                    view = DashboardView(withNibName: nibName, frame: self.dashboardContainerView.frame)
+                    view = DashboardView(withNibName: nibName, frame: self.dashboardContainerView.frame, parent: self, delegate: self)
                     view!.alpha = 0.0
-                    view!.delegate = self
-                    view!.parentViewController = self
                     self.dashboardViewInfo[page]!.views[self.currentOrientation] = view
                     self.dashboardContainerView.addSubview(view!)
                     Constraint.anchor(view: self.dashboardContainerView, control: view!, attributes: .leading, .trailing, .top, .bottom)
@@ -425,6 +423,24 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     
     // MARK: - Utility Routines ======================================================================== -
     
+    private func  setupSubtitle() {
+        if let title = self.overrideTitle {
+            self.banner.set(title: title)
+        } else if self.dashboardViewInfo.count == 1 {
+            let subTitle = self.dashboardInfo.first!.title
+            if self.container == .main || self.container == .mainRight {
+                self.subtitleLabel.text = subTitle
+                self.subtitleViewHeightConstraint.constant = 30
+                self.subtitleLabelWidthConstraint.constant = self.banner.titleWidth
+                self.subtitleView.backgroundColor = self.defaultBannerColor
+                self.subtitleLabel.textAlignment = self.defaultBannerAlignment
+                self.subtitleLabel.textColor = self.defaultBannerTextColor
+            } else {
+                self.banner.set(title: subTitle)
+            }
+        }
+    }
+    
     private func networkEnableSyncButton() {
         if !self.allowSync {
             self.syncButtons(hidden: true)
@@ -439,13 +455,24 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     }
     
     private func syncButtons(hidden: Bool) {
+        self.banner.setButton("sync", isHidden: hidden)
+    }
+    
+    private func setupButtons() {
+        var type: BannerButtonType
+        var title: String?
+        var image: UIImage?
         if ScorecardUI.smallPhoneSize() {
-            self.syncButton.isHidden = true
-            self.smallSyncButton.isHidden = hidden
+            image = UIImage(named: "cloud")
+            type = .clear
         } else {
-            self.smallSyncButton.isHidden = true
-            self.syncButton.isHidden = hidden
+            title = "Sync"
+            type = .shadow
         }
+        
+        self.banner.set(rightButtons: [
+            BannerButton(title: title, image: image, width: 60, action: self.syncPressed, type: type, containerHide: false, font: UIFont.systemFont(ofSize: 14), id: "sync")])
+        self.bannerHeightConstraint.constant = self.defaultBannerHeight
     }
 
     // MARK: - Functions to present other views ========================================================== -
@@ -459,20 +486,31 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     
     // MARK: - Function to present and dismiss this view ================================================= -
     
-    @discardableResult class public func show(from viewController: ScorecardViewController, dashboardNames: [(title: String, fileName: String, imageName: String?)], allowSync: Bool = true, backImage: String = "home", backText: String = "", backgroundColor: PaletteColor = Palette.darkBackground, completion: (()->())? = nil) -> ScorecardViewController {
+    @discardableResult class public func show(from viewController: ScorecardViewController, title: String? = nil, dashboardNames: [(title: String, fileName: String, imageName: String?)], allowSync: Bool = true, backImage: String = "home", backText: String = "", backgroundColor: PaletteColor = Palette.darkBackground, container: Container = .main, bottomInset: CGFloat? = nil, completion: (()->())? = nil) -> ScorecardViewController {
+        
+        let dashboardViewController = DashboardViewController.create(title: title, dashboardNames: dashboardNames, allowSync: allowSync, backImage: backImage, backText: backText, backgroundColor: backgroundColor, bottomInset: bottomInset, completion: completion)
+        
+        dashboardViewController.preferredContentSize = ScorecardUI.defaultSize
+        dashboardViewController.modalPresentationStyle = .fullScreen
+        
+        viewController.present(dashboardViewController, animated: true, container: container, completion: nil)
+        
+        return dashboardViewController
+    }
+    
+    class public func create(title: String? = nil, dashboardNames: [(title: String, fileName: String, imageName: String?)], allowSync: Bool = true, backImage: String = "home", backText: String = "", backgroundColor: PaletteColor = Palette.darkBackground, bottomInset: CGFloat? = nil, completion: (()->())? = nil) -> DashboardViewController {
         
         let storyboard = UIStoryboard(name: "DashboardViewController", bundle: nil)
         let dashboardViewController: DashboardViewController = storyboard.instantiateViewController(withIdentifier: "DashboardViewController") as! DashboardViewController
         
-        dashboardViewController.modalPresentationStyle = .fullScreen
+        dashboardViewController.overrideTitle = title
         dashboardViewController.dashboardInfo = dashboardNames
         dashboardViewController.allowSync = allowSync
         dashboardViewController.backText = backText
         dashboardViewController.backImage = backImage
         dashboardViewController.backgroundColor = backgroundColor
         dashboardViewController.completion = completion
-        
-        viewController.present(dashboardViewController, animated: true, completion: nil)
+        dashboardViewController.bottomInset = bottomInset
         
         return dashboardViewController
     }
@@ -496,22 +534,11 @@ extension DashboardViewController {
     
     private func defaultViewColors() {
         self.view.backgroundColor = self.backgroundColor.background
-        self.bannerPaddingView.bannerColor = Palette.banner.background
-        self.bannerView.backgroundColor = Palette.banner.background
-        self.titleLabel.textColor = Palette.banner.text
-        if ScorecardUI.smallPhoneSize() {
-            // Switch to cloud image rather than Sync text on shadowed button
-            self.smallSyncButton.tintColor = Palette.alwaysTheme.text
-        } else {
-            self.syncButton.setTitleColor(Palette.alwaysTheme.text, for: .normal)
-            self.syncButton.setBackgroundColor(Palette.alwaysTheme.background)
-        }
     }
 
     private func defaultCellColors(_ cell: DashboardScrollCell) {
         cell.indicator.tintColor = Palette.normal.themeText
     }
-
 }
 
 class DashboardCarouselCell: UICollectionViewCell {

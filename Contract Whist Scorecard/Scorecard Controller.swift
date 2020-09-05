@@ -159,8 +159,7 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
         Utility.debugMessage("appController \(self.uuid)", "Stop \(debugReference)")
         clearViewPresentingCompleteNotification(observer: clientHandlerObserver)
         if !noHideDismissImageView {
-            self.parentViewController.view.sendSubviewToBack(self.parentViewController.dismissImageView)
-            self.parentViewController.dismissImageView.image = nil
+            self.parentViewController.hideDismissImageView(animated: false)
         }
         clientHandlerObserver = nil
     }
@@ -207,12 +206,8 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
                     // Dismissing this view to present another but want it to look like new view is presenting (animated) on top of this one
                     // Put up a screenshot of this view behind it on the parent, dismiss this one without animation, and then when next view is visible
                     // remove the screenshot from behind it
-                    self.parentViewController.dismissImageView.image = Utility.screenshot()
-                    if let view = self.activeViewController?.view {
-                        self.parentViewController.dismissImageView.frame = view.superview!.convert(view.frame, to: nil)
-                    }
+                    self.parentViewController.createDismissImageView()
                     self.parentViewController.dismissView = self.activeView
-                    self.parentViewController.view.bringSubviewToFront(self.parentViewController.dismissImageView)
                     animated = false
                 }
                 if willDismiss {
@@ -544,25 +539,38 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
     }
 }
 
+public enum Container {
+    case left
+    case main
+    case right
+    case mainRight
+}
+
 class ScorecardViewController : UIViewController, UIAdaptivePresentationControllerDelegate, UIViewControllerTransitioningDelegate  {
     
-    fileprivate var dismissImageView: UIImageView!
+    typealias RootViewController = ScorecardViewController & PanelContainer
+    
     fileprivate var dismissView = ScorecardView.none
     internal weak var controllerDelegate: ScorecardAppControllerDelegate?
-    fileprivate weak var appController: ScorecardAppController?
+    internal weak var appController: ScorecardAppController?
     private var scorecardView: ScorecardView?
     private var invokedUUID: String?
     internal var launchScreenView: LaunchScreenView?
+    internal var container: Container? = .none
+    internal var rootViewController: RootViewController!
+    internal var menuController: MenuController!
+    internal var rightTitleLabel: UILabel!
+    internal var rightCaptionLabel: UILabel!
+    
+    internal var uniqueID: String!
+    internal weak var bannerClass: Banner!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // Create an image view which will be used to hold a screenshot to tidy up dismiss animations
-        self.dismissImageView = UIImageView(frame: UIScreen.main.bounds)
-        self.view.addSubview(dismissImageView)
-        self.view.sendSubviewToBack(self.dismissImageView)
-        
+                        
         self.presentationController?.delegate = self
+        self.uniqueID = self.uniqueID ?? UUID().uuidString
+
         
         Utility.debugMessage(self.className, "didLoad")
     }
@@ -579,6 +587,17 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
             // New active view - notify app controller that view display complete
             self.appController?.setViewPresentingComplete()
         }
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        self.bannerClass?.layoutIfNeeded()
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        Scorecard.shared.reCenterPopup(self)
+        self.view.setNeedsLayout()
     }
     
     func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
@@ -602,52 +621,154 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
     }
         
     // MARK: - View tweaks ========================================================================== -
-        
-    internal func present(_ viewControllerToPresent: ScorecardViewController, appController: ScorecardAppController? = nil, sourceView: UIView? = nil, animated flag: Bool, completion: (() -> Void)? = nil) {
+    
+    internal func present(_ viewControllerToPresent: ScorecardViewController, appController: ScorecardAppController? = nil, sourceView: UIView? = nil, animated: Bool, container: Container? = .main, completion: (() -> Void)? = nil) {
 
-        // Use custom animation
-        viewControllerToPresent.transitioningDelegate = self
-        
-       // Avoid silly popups on max sized phones
-        if !ScorecardUI.phoneSize() && sourceView != nil {
-            viewControllerToPresent.modalPresentationStyle = UIModalPresentationStyle.popover
-            viewControllerToPresent.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-            viewControllerToPresent.popoverPresentationController?.sourceView = sourceView
-            viewControllerToPresent.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY, width: 0 ,height: 0)
-            viewControllerToPresent.isModalInPopover = true
-            if let delegate = self as? UIPopoverPresentationControllerDelegate {
-                viewControllerToPresent.popoverPresentationController?.delegate = delegate
-            }
-        } else if !ScorecardUI.phoneSize() {
-            // Make full screen on iPad
-            viewControllerToPresent.modalPresentationStyle = .fullScreen
+        func hideAndComplete() {
+            completion?()
         }
+        
+        // Fill in controller information
         viewControllerToPresent.controllerDelegate = appController
         viewControllerToPresent.appController = appController
         viewControllerToPresent.scorecardView = Scorecard.shared.viewPresenting
+        viewControllerToPresent.container = container
+        viewControllerToPresent.rootViewController = self.rootViewController
+        viewControllerToPresent.menuController = self.rootViewController?.menuController
+        viewControllerToPresent.uniqueID = viewControllerToPresent.uniqueID ?? UUID().uuidString
         
-        super.present(viewControllerToPresent, animated: flag) { [unowned self, completion] in
-            // Clean up any screenshot that was used to tidy up the dismiss animation of the previous view presented on this view controller
-            if self.dismissImageView != nil {
-                self.view.sendSubviewToBack(self.dismissImageView)
-                self.dismissImageView.image = nil
+        if self.rootViewController?.containers ?? false && (self.container == .main || self == self.rootViewController) && container != .none {
+            // Working in containers
+            self.rootViewController?.presentInContainers([PanelContainerItem(viewController: viewControllerToPresent, container: container!)], animated: true, completion: completion)
+            
+        } else {
+        
+            // Add to view stack
+            self.rootViewController?.viewControllerStack.append((viewControllerToPresent.uniqueID, viewControllerToPresent))
+            
+            // No luck with container - go ahead and present
+            viewControllerToPresent.container = .none
+            
+            // Use custom animation
+            viewControllerToPresent.transitioningDelegate = self
+            
+            // Avoid silly popups on max sized phones
+            if !ScorecardUI.phoneSize() && sourceView != nil {
+                viewControllerToPresent.modalPresentationStyle = UIModalPresentationStyle.popover
+                viewControllerToPresent.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
+                viewControllerToPresent.popoverPresentationController?.sourceView = sourceView
+                viewControllerToPresent.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY, width: 0 ,height: 0)
+                viewControllerToPresent.isModalInPopover = true
+                if let delegate = self as? UIPopoverPresentationControllerDelegate {
+                    viewControllerToPresent.popoverPresentationController?.delegate = delegate
+                }
+            } else if !ScorecardUI.phoneSize() {
+                // Make full screen on iPad
+                viewControllerToPresent.modalPresentationStyle = .fullScreen
             }
-            self.dismissView = .none
+            
+            super.present(viewControllerToPresent, animated: animated) {
+                // Clean up any screenshot that was used to tidy up the dismiss animation of the previous view presented on this view controller
+                self.hideDismissImageView()
+                completion?()
+            }
+        }
+    }
+    
+    internal func createDismissImageView() {
+        if var rootViewController = self.rootViewController {
+            if rootViewController.dismissImageView == nil {
+                rootViewController.dismissImageView = UIImageView(frame: UIScreen.main.bounds)
+                rootViewController.view.addSubview(self.rootViewController.dismissImageView)
+                rootViewController.dismissImageView.accessibilityIdentifier = "dismissImageView"
+            }
+            rootViewController.dismissImageView.image = Utility.screenshot(view: rootViewController.view)
+            if let view = rootViewController.view {
+                rootViewController.dismissImageView.frame = view.convert(view.frame, to: nil)
+            }
+            rootViewController.view.bringSubviewToFront(rootViewController.dismissImageView)
+        }
+    }
+    
+    internal func hideDismissImageView(animated: Bool = true, completion: (()->())? = nil) {
+        
+        func hide() {
+            if self.rootViewController?.dismissImageView != nil {
+                self.rootViewController?.dismissImageView?.removeFromSuperview()
+                self.rootViewController?.dismissImageView = nil
+            }
+            self.rootViewController?.dismissView = .none
+            completion?()
+        }
+        
+        if self.rootViewController?.dismissImageView != nil {
+            if animated {
+                self.rootViewController?.dismissImageView?.alpha = 1.0
+                Utility.animate(duration: 0.5, completion: {
+                    self.rootViewController?.dismissImageView?.alpha = 1.0
+                    hide()
+                }, animations: {
+                    self.rootViewController?.dismissImageView?.alpha = 0.0
+                })
+            } else {
+                hide()
+            }
+        } else {
             completion?()
         }
     }
     
-    override internal func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
+    override internal func dismiss(animated: Bool, completion: (() -> Void)? = nil) {
+        self.dismiss(animated: animated, hideDismissImageView: false, completion: completion)
+    }
+    
+    internal func dismiss(animated flag: Bool, hideDismissImageView: Bool, removeSuboptions: Bool = true, completion: (() -> Void)? = nil) {
         // Check if this is an invoked view dismissing and if so pop it and unlock
         
-        super.dismiss(animated: flag) {
+        func popAndComplete() {
+            // Look for invoked apps
             if self.invokedUUID != nil && self.appController?.invokedViews.last?.uuid == self.invokedUUID {
                 self.appController?.invokedViews.removeLast()
                 if self.appController?.invokedViews.isEmpty ?? true {
                     self.appController?.lock(false)
                 }
             }
+            
+            // Look in main view controller stack
+            if let stack = self.rootViewController?.viewControllerStack {
+                if let thisIndex = stack.firstIndex(where: {$0.uniqueID == self.uniqueID}) {
+                    for index in (thisIndex..<stack.count).reversed() {
+                        self.rootViewController?.viewControllerStack.remove(at: index)
+                    }
+                }
+                if let viewController = self.rootViewController?.viewControllerStack.last?.viewController {
+                    viewController.bannerClass?.restored()
+                }
+            }
+            
             completion?()
+        }
+        
+        Utility.debugMessage("ViewController", "Dismiss \(self.className)")
+        if self.container != .none {
+            self.willMove(toParent: nil)
+            if removeSuboptions {
+                self.menuController?.removeSuboptions(for: self.container)
+            }
+            self.container = .none
+            self.view.removeFromSuperview()
+            self.removeFromParent()
+            if hideDismissImageView {
+                self.hideDismissImageView(animated: true) {
+                    popAndComplete()
+                }
+            } else {
+                popAndComplete()
+            }
+        } else {
+            super.dismiss(animated: flag) {
+                popAndComplete()
+            }
         }
     }
     
@@ -743,23 +864,64 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
         })
     }
     
-    // MARK: - Dismiss view under cover of a screen shot ================================================ -
+    // Methods that should be overridden (if called) in sub-classes =============================================== -
     
-    public func dismissWithScreenshot(viewController: ScorecardViewController, completion: (()->())? = nil) {
-        self.dismissImageView.image =  Utility.screenshot()
-        self.view.bringSubviewToFront(self.dismissImageView)
-        self.dismissImageView.alpha = 1.0
-        self.dismissImageView.isHidden = false
-        self.dismissImageView.frame = view.superview!.convert(view.frame, to: nil)
-        viewController.dismiss(animated: false) {
-            completion?()
-            Utility.animate(duration: 0.5, afterDelay: 1.0, completion: {
-                self.view.sendSubviewToBack(self.dismissImageView)
-                self.dismissImageView.image = nil
-                self.dismissImageView.alpha = 1.0
-            }, animations: {
-                self.dismissImageView.alpha = 0.0
-            })
+    internal func backButtonPressed() {
+        fatalError("Must be overridden")
+    }
+    
+    // MARK: - Utility routines ======================================================================== -
+    
+    public func setRightPanel(title: String, caption: String) {
+        self.rootViewController?.rightTitleLabel?.text = title
+        self.rootViewController?.rightCaptionLabel.text = caption
+    }
+    
+    public func showLastGame() {
+        let title = "Last Game\nPlayed"
+        var caption = ""
+        if let playerMO = Scorecard.shared.findPlayerByPlayerUUID(Scorecard.settings.thisPlayerUUID),
+            let datePlayed = playerMO.datePlayed {
+            var format: String
+            if Date.startOfYear(from: datePlayed) != Date.startOfYear() {
+                format = "dd MMM YYYY"
+            } else {
+                format = "dd MMM"
+            }
+            caption = Utility.dateString(datePlayed, format: format, localized: false)
+        }
+        self.setRightPanel(title: title, caption: caption)
+    }
+    
+    public var defaultBannerColor: UIColor {
+        if self.container == .main && !Scorecard.shared.useGameColor {
+            return Palette.normal.background
+        } else {
+            return Palette.banner.background
+        }
+    }
+    
+    public var defaultBannerTextColor: UIColor {
+        if self.container == .main && !Scorecard.shared.useGameColor {
+            return Palette.normal.themeText
+        } else {
+            return Palette.banner.text
+        }
+    }
+    
+    public var defaultBannerHeight: CGFloat {
+        if (self.container == .main || self.container == .mainRight) && !Scorecard.shared.useGameColor {
+            return 150
+        } else {
+            return 44
+        }
+    }
+    
+    public var defaultBannerAlignment: NSTextAlignment {
+        if (self.container == .main || self.container == .mainRight) && !Scorecard.shared.useGameColor {
+            return .left
+        } else {
+            return .center
         }
     }
 }

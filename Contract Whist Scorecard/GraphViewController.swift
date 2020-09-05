@@ -26,7 +26,7 @@ class GraphViewController: ScorecardViewController, GraphDetailDelegate {
     
     // MARK: - method to show and dismiss this view controller ========================================= -
     
-    static public func show(from sourceViewController: UIViewController, playerDetail: PlayerDetail) {
+    static public func show(from sourceViewController: ScorecardViewController, playerDetail: PlayerDetail) {
         let storyboard = UIStoryboard(name: "GraphViewController", bundle: nil)
         let graphViewController = storyboard.instantiateViewController(withIdentifier: "GraphViewController") as! GraphViewController
         graphViewController.modalPresentationStyle = .fullScreen

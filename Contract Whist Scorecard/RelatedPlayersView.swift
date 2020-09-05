@@ -28,6 +28,7 @@ class RelatedPlayersView : UIView, UITableViewDelegate, UITableViewDataSource, S
     private var syncStarted = false
     private var syncFinished = false
     internal let syncDelegateDescription = "RelatedPlayers"
+    private var playerDetailView: PlayerDetailViewDelegate!
 
     private var email: String?
     private var playerDetailList: [(playerDetail: PlayerDetail, selected: Bool)] = []
@@ -111,9 +112,10 @@ class RelatedPlayersView : UIView, UITableViewDelegate, UITableViewDataSource, S
     
     // MARK: - Public methods =========================================================================== -
     
-    public func set(email: String?, descriptionMode: DescriptionMode = .opponents) {
+    public func set(email: String?, descriptionMode: DescriptionMode = .opponents, playerDetailView: PlayerDetailViewDelegate? = nil) {
         self.email = email
         self.descriptionMode = descriptionMode
+        self.playerDetailView = playerDetailView
         self.selectCloudPlayers()
         syncStarted = true
     }
@@ -395,7 +397,13 @@ class RelatedPlayersView : UIView, UITableViewDelegate, UITableViewDataSource, S
     
     @objc private func playerDetail(_ button: UIButton) {
         let selectedIndex = button.tag
-        PlayerDetailViewController.show(from: self.parent, playerDetail: self.playerDetailList[selectedIndex].playerDetail, mode: .display, sourceView: self)
+        let playerDetail = self.playerDetailList[selectedIndex].playerDetail
+        if let playerDetailView = self.playerDetailView {
+            self.parent.setRightPanel(title: playerDetail.name, caption: "")
+            playerDetailView.refresh(playerDetail: playerDetail, mode: .display)
+        } else {
+            PlayerDetailViewController.show(from: self.parent, playerDetail: playerDetail, mode: .display, sourceView: self)
+        }
     }
     
 }

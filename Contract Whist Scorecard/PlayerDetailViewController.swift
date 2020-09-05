@@ -16,7 +16,12 @@ enum DetailMode {
     case none
 }
 
-class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource, UITableViewDelegate, SyncDelegate, PlayerViewImagePickerDelegate {
+protocol PlayerDetailViewDelegate {
+    func hide()
+    func refresh(playerDetail: PlayerDetail, mode: DetailMode)
+}
+
+class PlayerDetailViewController: ScorecardViewController, PlayerDetailViewDelegate, UITableViewDataSource, UITableViewDelegate, SyncDelegate, PlayerViewImagePickerDelegate {
     
     // MARK: - Class Properties ======================================================================== -
     
@@ -82,7 +87,7 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
     private var originalPlayer: PlayerDetail!
     private var mode: DetailMode!
     private var sourceView: UIView!
-    private var callerCompletion: ((PlayerDetail?, Bool)->())?
+    private var dismissOnSave = true
     
     // Local class variables
     private var actionSheet: ActionSheet!
@@ -95,18 +100,25 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
 
     private var nameCell: PlayerDetailCell!
     private var playerView: PlayerView!
+    private var labelFontSize: CGFloat?
+    private var textFieldFontSize: CGFloat?
+    private var heightFactor: CGFloat = 1.0
+    
+    // Players view delegate
+    internal var playersViewDelegate: PlayersViewDelegate?
 
     // MARK: - IB Outlets ============================================================================== -
     @IBOutlet private weak var titleView: UIView!
     @IBOutlet private weak var titleLabel: UILabel!
-    @IBOutlet private weak var footerPaddingView: UIView!
     @IBOutlet private weak var finishButton: UIButton!
     @IBOutlet private weak var tableView: UITableView!
-
+    @IBOutlet private weak var titleBarHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var tableViewLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var tableViewTrailingConstraint: NSLayoutConstraint!
     // MARK: - IB Actions ============================================================================== -
         
     @IBAction func backButtonPressed(_ sender: Any) {
-        self.dismiss()
+        self.dismiss(animated: true)
     }
 
     @IBAction func allSwipe(recognizer:UISwipeGestureRecognizer) {
@@ -125,14 +137,27 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
         self.setupSections()
         self.setupHeaderFields()
                
+        // Setup table view
         self.tableView.contentInset = UIEdgeInsets(top: (ScorecardUI.landscapePhone() ? 0 : 10.0), left: 0.0, bottom: 0.0, right: 0.0)
         self.tableView.contentInsetAdjustmentBehavior = .never
         
+        // Setup observer for image download changes
         self.imageObserver = setPlayerDownloadNotification(name: .playerImageDownloaded)
         
         // Save copy to a managed object
         self.originalPlayer = playerDetail.copy()
         
+        // Hide banner if in a right-hand container
+        if self.container == .right {
+            self.titleBarHeightConstraint.constant = 0
+            self.tableViewLeadingConstraint.constant = 10
+            self.tableViewTrailingConstraint.constant = 10
+            self.labelFontSize = 10
+            self.textFieldFontSize = 12
+            self.heightFactor = 0.8
+        }
+        
+        // Enable buttons
         self.enableButtons()
     }
     
@@ -148,6 +173,20 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
             Scorecard.shared.reCenterPopup(actionSheet.alertController)
         }
         self.view.setNeedsLayout()
+    }
+    
+    // MARK: - Player Detail View Delegate ============================================================= -
+    
+    internal func hide() {
+        self.view.isHidden = true
+    }
+    
+    internal func refresh(playerDetail: PlayerDetail, mode: DetailMode) {
+        self.playerDetail = playerDetail
+        self.mode = mode
+        self.view.isHidden = false
+        self.setupHeaderFields()
+        self.tableView.reloadData()
     }
 
     // MARK: - TableView Overrides ===================================================================== -
@@ -191,7 +230,7 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
         default:
             height = (ScorecardUI.landscapePhone() ? 30.0 : 50.0)
         }
-        return height
+        return height * self.heightFactor
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -251,7 +290,7 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
             height = 20.0
         }
         
-        return height
+        return height * self.heightFactor
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -303,11 +342,16 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
                 // Setup default colors (previously done in StoryBoard)
                 self.defaultCellColors(cell: cell)
                 
-                cell.actionButton.setTitle("Remove Player", for: .normal)
-                cell.actionButton.setBackgroundColor(Palette.error.background)
-                cell.actionButton.setTitleColor(Palette.error.text, for: .normal)
-                cell.actionButton.tag = self.deleteButtonTag
-                cell.actionButton.addTarget(self, action: #selector(PlayerDetailViewController.actionButtonPressed(_:)), for: .touchUpInside)
+                if mode == .amend {
+                    cell.actionButton.setTitle("Remove Player", for: .normal)
+                    cell.actionButton.setBackgroundColor(Palette.error.background)
+                    cell.actionButton.setTitleColor(Palette.error.text, for: .normal)
+                    cell.actionButton.tag = self.deleteButtonTag
+                    cell.actionButton.addTarget(self, action: #selector(PlayerDetailViewController.actionButtonPressed(_:)), for: .touchUpInside)
+                    cell.actionButton.isHidden = false
+                } else {
+                    cell.actionButton.isHidden = true
+                }
                 cell.separator.isHidden = true
             }
             
@@ -318,11 +362,15 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
                 // Setup default colors (previously done in StoryBoard)
                 self.defaultCellColors(cell: cell)
                 
-                cell.actionButton.tag = self.editButtonTag
-                cell.cancelButton.tag = self.cancelButtonTag
-                cell.confirmButton.tag = self.confirmButtonTag
-                cell.buttons.forEach { $0.addTarget(self, action: #selector(PlayerDetailViewController.actionButtonPressed(_:)), for: .touchUpInside) }
-                self.enableButtons(editButtonCell: cell)
+                if self.mode != .display {
+                    cell.actionButton.tag = self.editButtonTag
+                    cell.cancelButton.tag = self.cancelButtonTag
+                    cell.confirmButton.tag = self.confirmButtonTag
+                    cell.buttons.forEach { $0.addTarget(self, action: #selector(PlayerDetailViewController.actionButtonPressed(_:)), for: .touchUpInside) }
+                    self.enableButtons(editButtonCell: cell)
+                } else {
+                    cell.actionButton.isHidden = true
+                }
             }
             
         case lastPlayedSection:
@@ -467,6 +515,10 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
             break
         }
              
+        if let labelFontSize = self.labelFontSize, let textFieldFontSize = self.textFieldFontSize {
+            cell.setFontSize(labelFontSize, textFieldFontSize)
+        }
+        
         let backgroundView = UIView()
         backgroundView.backgroundColor = UIColor.clear
         cell!.selectedBackgroundView = backgroundView
@@ -541,39 +593,55 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
     }
 
     @objc func actionButtonPressed(_ button: UIButton) {
-        switch button.tag {
-        case self.deleteButtonTag:
-            // Delete the player
-            self.checkDeletePlayer()
-        case self.editButtonTag, cancelButtonTag:
-            // Toggle amend mode
-            if mode == .amend {
-                self.mode = .amending
-             } else {
-                self.playerDetail = originalPlayer.copy()
-                self.mode = .amend
-                self.changed = false
-            }
-            self.tableView.reloadData()
-            self.enableButtons()
-        case self.confirmButtonTag:
-            // Update core data with any changes
-            if !CoreData.update(updateLogic: {
-                if let playerMO = Scorecard.shared.findPlayerByPlayerUUID(self.playerDetail.playerUUID) {
-                    self.playerDetail.toManagedObject(playerMO: playerMO)
-                    self.dismiss(playerDetail: self.playerDetail)
+        if self.mode != .display {
+            switch button.tag {
+            case self.deleteButtonTag:
+                // Delete the player
+                self.checkDeletePlayer()
+            case self.editButtonTag, cancelButtonTag:
+                // Toggle amend mode
+                if mode == .amend {
+                    self.mode = .amending
+                    self.setOtherPanes(isEnabled: false)
+                } else {
+                    self.playerDetail = originalPlayer.copy()
+                    self.mode = .amend
+                    self.changed = false
+                    self.setOtherPanes(isEnabled: true)
                 }
-            }) {
-                self.alertMessage("Error saving player")
+                self.tableView.reloadData()
+                self.enableButtons()
+            case self.confirmButtonTag:
+                // Update core data with any changes
+                if !CoreData.update(updateLogic: {
+                    if let playerMO = Scorecard.shared.findPlayerByPlayerUUID(self.playerDetail.playerUUID) {
+                        self.playerDetail.toManagedObject(playerMO: playerMO)
+                        self.playersViewDelegate?.refresh()
+                        if self.container == .right {
+                            self.setRightPanel(title: self.playerDetail.name, caption: "")
+                        }
+                        if self.dismissOnSave {
+                            self.dismiss(animated: true)
+                        }
+                    }
+                }) {
+                    self.alertMessage("Error saving player")
+                }
+                self.originalPlayer = self.playerDetail.copy()
+                self.mode = .amend
+                self.setOtherPanes(isEnabled: true)
+                self.changed = false
+                self.tableView.reloadData()
+                self.enableButtons()
+            default:
+                break
             }
-            self.originalPlayer = self.playerDetail.copy()
-            self.mode = .amend
-            self.changed = false
-            self.tableView.reloadData()
-            self.enableButtons()
-        default:
-            break
         }
+    }
+    
+    private func setOtherPanes(isEnabled: Bool) {
+        self.rootViewController?.menuController?.setAll(isEnabled: isEnabled)
+        self.playersViewDelegate?.set(isEnabled: isEnabled)
     }
     
     private func removeImage() {
@@ -680,8 +748,18 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
                 // Delete any detached games
                 History.deleteDetachedGames()
                 
-                // Flag as deleted and return
-                self.dismiss(playerDetail: self.playerDetail, deletePlayer: true)
+                // Refresh caller
+                self.playersViewDelegate?.playerRemoved(playerUUID: self.playerDetail.playerUUID)
+                
+                // Return to caller
+                if self.dismissOnSave {
+                    self.dismiss(animated: true)
+                } else {
+                    if self.container == .right {
+                        self.setRightPanel(title: "", caption: "")
+                    }
+                    self.hide()
+                }
                 
             })
         }
@@ -712,31 +790,31 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
     
     // MARK: - method to show this view controller ============================================================================== -
     
-    static public func show(from sourceViewController: ScorecardViewController, playerDetail: PlayerDetail, mode: DetailMode, sourceView: UIView, completion: ((PlayerDetail?,Bool)->())? = nil) {
+    static public func create(playerDetail: PlayerDetail, mode: DetailMode, playersViewDelegate: PlayersViewDelegate? = nil, dismissOnSave: Bool = true) -> PlayerDetailViewController {
+        
         let storyboard = UIStoryboard(name: "PlayerDetailViewController", bundle: nil)
         let playerDetailViewController = storyboard.instantiateViewController(withIdentifier: "PlayerDetailViewController") as! PlayerDetailViewController
 
-        playerDetailViewController.preferredContentSize = CGSize(width: 400, height: 700)
-        playerDetailViewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
         
         playerDetailViewController.playerDetail = playerDetail
         playerDetailViewController.mode = mode
+        playerDetailViewController.playersViewDelegate = playersViewDelegate
+        playerDetailViewController.dismissOnSave = dismissOnSave
+        
+        return playerDetailViewController
+    }
+        
+    static public func show(from sourceViewController: ScorecardViewController, playerDetail: PlayerDetail, mode: DetailMode, sourceView: UIView, playersViewDelegate: PlayersViewDelegate? = nil, dismissOnSave: Bool = true) {
+        
+        let playerDetailViewController = PlayerDetailViewController.create(playerDetail: playerDetail, mode: mode, playersViewDelegate: playersViewDelegate, dismissOnSave: dismissOnSave)
+        
+        playerDetailViewController.preferredContentSize = ScorecardUI.defaultSize
+        playerDetailViewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
         playerDetailViewController.sourceView = sourceView
-        playerDetailViewController.callerCompletion = completion
         
         sourceViewController.present(playerDetailViewController, sourceView: sourceView, animated: true, completion: nil)
     }
     
-    private func dismiss(playerDetail: PlayerDetail? = nil, deletePlayer: Bool = false) {
-        self.dismiss(animated: true, completion: {
-            self.imageObserver = nil
-            self.callerCompletion?(playerDetail, deletePlayer)
-        })
-    }
-    
-    override internal func didDismiss() {
-        self.callerCompletion?(nil, false)
-    }
 }
 
 // MARK: - Other UI Classes - e.g. Cells =========================================================== -
@@ -760,7 +838,14 @@ class PlayerDetailCell: UITableViewCell {
     @IBOutlet fileprivate weak var separator: UIView!
     @IBOutlet fileprivate weak var imagePlayerView: UIView!
     @IBOutlet fileprivate weak var thumbnailMessageLabel: UILabel!
+    @IBOutlet fileprivate var labels: [UILabel]!
+    @IBOutlet fileprivate var textFields: [UITextField]!
     fileprivate var playerView: PlayerView!
+    
+    fileprivate func setFontSize(_ labelFontSize: CGFloat, _ textFieldFontSize: CGFloat) {
+        self.labels?.forEach { (label) in label.font = UIFont.systemFont(ofSize: labelFontSize) }
+        self.textFields?.forEach { (textField) in textField.font = UIFont.systemFont(ofSize: textFieldFontSize) }
+    }
 }
 
 class PlayerDetailHeaderFooterView: UITableViewHeaderFooterView {

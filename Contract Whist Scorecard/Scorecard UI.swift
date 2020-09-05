@@ -10,6 +10,8 @@ import UIKit
 
 class ScorecardUI {
     
+    static let defaultSize = CGSize(width: 450, height: 800)
+    
     class func gradient(_ view: UIView, color: UIColor, gradients: [(alpha: CGFloat, location: CGFloat)], overrideWidth: CGFloat? = nil, overrideHeight: CGFloat? = nil) -> CAGradientLayer {
         let gradient = CAGradientLayer()
         gradient.frame = CGRect(x: view.bounds.minX, y: view.bounds.minY, width: overrideWidth ?? view.bounds.width, height: overrideHeight ?? view.bounds.height)
@@ -56,7 +58,7 @@ class ScorecardUI {
         }
     }
     
-    class func keepPopupPosition(viewController: UIViewController) -> CGRect {
+    class func keepPopupPosition(viewController: ScorecardViewController) -> CGRect {
         return (viewController.popoverPresentationController?.sourceRect)!
     }
     

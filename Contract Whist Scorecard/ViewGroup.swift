@@ -16,6 +16,7 @@ class ViewGroup: UIView {
     
     private var viewList: [UIView] = []
     private var constraintList: [NSLayoutConstraint] = []
+    public var count: Int { get { self.viewList.count } }
     
     @IBOutlet private weak var contentView: UIView!
     
@@ -46,9 +47,18 @@ class ViewGroup: UIView {
         self.arrange()
     }
     
-    public func add(view: UIView) {
-        self.addView(view)
-        self.arrange()
+    public func clear() {
+        for view in viewList {
+            view.removeFromSuperview()
+        }
+        self.viewList = []
+    }
+    
+    public func add(views: [UIView]) {
+        for view in views {
+            self.addView(view)
+        }
+        self.arrange(layout: true)
     }
     
     public func isHidden(view: UIView, _ hidden: Bool) {
@@ -78,7 +88,7 @@ class ViewGroup: UIView {
         contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
     }
     
-    private func arrange() {
+    private func arrange(layout: Bool = false) {
         var width: CGFloat = 0
         var lastView: UIView?
         
@@ -87,6 +97,10 @@ class ViewGroup: UIView {
             self.contentView.removeConstraint(constraint)
         }
         self.constraintList = []
+        if layout {
+            self.contentView.setNeedsLayout()
+            self.contentView.layoutIfNeeded()
+        }
         
         // Bind each control to the one before it
         for view in self.viewList {
@@ -116,7 +130,9 @@ class ViewGroup: UIView {
         // Set total width
         self.constraintList.append(Constraint.setWidth(control: self.contentView, width: width))
         
-        self.contentView.setNeedsLayout()
-        self.layoutIfNeeded()
+        if layout {
+            self.contentView.setNeedsLayout()
+            self.layoutIfNeeded()
+        }
     }
 }

@@ -25,7 +25,7 @@ class ConfirmPlayedViewController : ScorecardViewController, UIPopoverPresentati
     private var confirmHandler: (()->())?
     private var cancelHandler: (()->())?
     private var blurredBackgroundView: UIView!
-    static private var parentViewController: UIViewController!
+    static private var parentViewController: ScorecardViewController!
     static private var sourceView: UIView!
     static private var preferredHeight: CGFloat!
     static private var offsets: (portrait: CGFloat?, landscape: CGFloat?) = (0.0, 0.0)

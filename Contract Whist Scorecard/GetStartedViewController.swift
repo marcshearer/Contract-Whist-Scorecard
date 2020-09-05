@@ -571,7 +571,7 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
         let storyboard = UIStoryboard(name: "GetStartedViewController", bundle: nil)
         let getStartedViewController: GetStartedViewController = storyboard.instantiateViewController(withIdentifier: "GetStartedViewController") as! GetStartedViewController
         
-        getStartedViewController.preferredContentSize = CGSize(width: 400, height: 700)
+        getStartedViewController.preferredContentSize = ScorecardUI.defaultSize
         getStartedViewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
         getStartedViewController.completion = completion
         

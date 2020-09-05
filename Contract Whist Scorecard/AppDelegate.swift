@@ -49,6 +49,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
         
+        // Setup initial view controller
+        self.window = UIWindow(frame: UIScreen.main.bounds)
+        let storyboard = UIStoryboard(name: "ClientViewController", bundle: nil)
+        let initialViewController = storyboard.instantiateViewController(withIdentifier: "ClientViewController") as! ClientViewController
+        initialViewController.rootViewController = initialViewController
+        
+        self.window?.rootViewController = initialViewController
+        self.window?.makeKeyAndVisible()
+       
         return true
     }
 

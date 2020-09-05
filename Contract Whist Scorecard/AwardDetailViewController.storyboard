@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="ipad11_0rounded" orientation="portrait" layout="fullscreen" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Award Detail View Controller-->
+        <scene sceneID="UEl-Yh-RWf">
+            <objects>
+                <viewController storyboardIdentifier="AwardDetailViewController" id="62S-Lb-xlI" customClass="AwardDetailViewController" customModule="Whist_2" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="zQz-XC-dns">
+                        <rect key="frame" x="0.0" y="0.0" width="834" height="1194"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wnV-SE-WTy" customClass="AwardDetailView" customModule="Whist_2" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="64" width="834" height="350"/>
+                                <color key="backgroundColor" name="Clear"/>
+                                <accessibility key="accessibilityConfiguration" identifier="awardDetailView"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="350" id="JsS-ys-nxX"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" name="Clear"/>
+                        <accessibility key="accessibilityConfiguration" identifier="awardDetailContentView"/>
+                        <constraints>
+                            <constraint firstItem="wnV-SE-WTy" firstAttribute="trailing" secondItem="zQz-XC-dns" secondAttribute="trailing" id="Gwo-Bn-Z24"/>
+                            <constraint firstItem="wnV-SE-WTy" firstAttribute="leading" secondItem="zQz-XC-dns" secondAttribute="leading" id="Ioe-xH-ZE7"/>
+                            <constraint firstItem="wnV-SE-WTy" firstAttribute="top" secondItem="zQz-XC-dns" secondAttribute="top" constant="64" id="sZ4-E7-2aD"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="awardDetailView" destination="wnV-SE-WTy" id="MUT-SK-r5j"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="iul-IK-qAd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="135" y="102"/>
+        </scene>
+    </scenes>
+    <resources>
+        <namedColor name="Clear">
+            <color red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+    </resources>
+</document>

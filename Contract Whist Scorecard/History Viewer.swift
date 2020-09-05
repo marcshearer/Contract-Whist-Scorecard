@@ -28,7 +28,7 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
    
     private var history: History!
     private var winStreakPlayer: String?
-    private var sourceViewController: UIViewController!
+    private var sourceViewController: ScorecardViewController!
     private var dataTableViewController: DataTableViewController!
     private var callerCompletion: (()->())?
     private var customView: UIView!
@@ -67,7 +67,7 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
         DataTableField("datePlayed",    "",          sequence: 4,   width: 60,  type: .time,        combineHeading: "Date")
     ]
     
-    init(from viewController: UIViewController, winStreakPlayer: String? = nil, completion: (()->())? = nil) {
+    init(from viewController: ScorecardViewController, winStreakPlayer: String? = nil, completion: (()->())? = nil) {
         super.init()
         
         self.sourceViewController = viewController

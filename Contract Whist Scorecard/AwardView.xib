@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
@@ -14,6 +14,7 @@
                 <outlet property="countBadgeImageView" destination="7TL-TW-6qV" id="IsI-B5-ydx"/>
                 <outlet property="countBadgeLabel" destination="Uj7-jg-0py" id="nd3-io-ey8"/>
                 <outlet property="imageView" destination="zIs-Vc-VYl" id="gRu-6d-wEH"/>
+                <outlet property="roundedBackgroundView" destination="ABv-4t-EtT" id="a20-01-Ieg"/>
                 <outlet property="roundedView" destination="EJM-m3-Wch" id="AUK-a2-tOw"/>
             </connections>
         </placeholder>
@@ -22,35 +23,47 @@
             <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EJM-m3-Wch" userLabel="Rounded View">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ABv-4t-EtT" userLabel="Rounded Background View">
                     <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
                     <subviews>
-                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="1e3-HI-gqt" userLabel="Background Image View">
+                        <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EJM-m3-Wch" userLabel="Rounded View">
                             <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
-                        </imageView>
-                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="zIs-Vc-VYl">
-                            <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
-                        </imageView>
+                            <subviews>
+                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="1e3-HI-gqt" userLabel="Background Image View">
+                                    <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
+                                </imageView>
+                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="zIs-Vc-VYl">
+                                    <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
+                                </imageView>
+                            </subviews>
+                            <color key="backgroundColor" name="Clear"/>
+                            <constraints>
+                                <constraint firstAttribute="trailing" secondItem="1e3-HI-gqt" secondAttribute="trailing" id="0NO-6t-4dy"/>
+                                <constraint firstItem="zIs-Vc-VYl" firstAttribute="top" secondItem="EJM-m3-Wch" secondAttribute="top" id="EAB-Ct-24M"/>
+                                <constraint firstAttribute="bottom" secondItem="zIs-Vc-VYl" secondAttribute="bottom" id="Gsg-gX-rwx"/>
+                                <constraint firstAttribute="bottom" secondItem="1e3-HI-gqt" secondAttribute="bottom" id="Ng5-qc-SxA"/>
+                                <constraint firstItem="1e3-HI-gqt" firstAttribute="top" secondItem="EJM-m3-Wch" secondAttribute="top" id="bhA-m8-ryk"/>
+                                <constraint firstItem="1e3-HI-gqt" firstAttribute="leading" secondItem="EJM-m3-Wch" secondAttribute="leading" id="jgQ-Kr-FHu"/>
+                                <constraint firstAttribute="trailing" secondItem="zIs-Vc-VYl" secondAttribute="trailing" id="lY6-6N-ZDA"/>
+                                <constraint firstItem="zIs-Vc-VYl" firstAttribute="leading" secondItem="EJM-m3-Wch" secondAttribute="leading" id="sDk-o8-TKV"/>
+                            </constraints>
+                        </view>
                     </subviews>
                     <color key="backgroundColor" name="Clear"/>
                     <constraints>
-                        <constraint firstAttribute="trailing" secondItem="1e3-HI-gqt" secondAttribute="trailing" id="0NO-6t-4dy"/>
-                        <constraint firstItem="zIs-Vc-VYl" firstAttribute="top" secondItem="EJM-m3-Wch" secondAttribute="top" id="EAB-Ct-24M"/>
-                        <constraint firstAttribute="bottom" secondItem="zIs-Vc-VYl" secondAttribute="bottom" id="Gsg-gX-rwx"/>
-                        <constraint firstAttribute="bottom" secondItem="1e3-HI-gqt" secondAttribute="bottom" id="Ng5-qc-SxA"/>
-                        <constraint firstItem="1e3-HI-gqt" firstAttribute="top" secondItem="EJM-m3-Wch" secondAttribute="top" id="bhA-m8-ryk"/>
-                        <constraint firstItem="1e3-HI-gqt" firstAttribute="leading" secondItem="EJM-m3-Wch" secondAttribute="leading" id="jgQ-Kr-FHu"/>
-                        <constraint firstAttribute="trailing" secondItem="zIs-Vc-VYl" secondAttribute="trailing" id="lY6-6N-ZDA"/>
-                        <constraint firstItem="zIs-Vc-VYl" firstAttribute="leading" secondItem="EJM-m3-Wch" secondAttribute="leading" id="sDk-o8-TKV"/>
+                        <constraint firstItem="EJM-m3-Wch" firstAttribute="leading" secondItem="ABv-4t-EtT" secondAttribute="leading" id="49J-nV-SYY"/>
+                        <constraint firstItem="EJM-m3-Wch" firstAttribute="top" secondItem="ABv-4t-EtT" secondAttribute="top" id="9Qk-tz-dX9"/>
+                        <constraint firstItem="EJM-m3-Wch" firstAttribute="bottom" secondItem="ABv-4t-EtT" secondAttribute="bottom" id="HPL-Ui-4gt"/>
+                        <constraint firstItem="EJM-m3-Wch" firstAttribute="trailing" secondItem="ABv-4t-EtT" secondAttribute="trailing" id="hUe-rI-DRJ"/>
                     </constraints>
                 </view>
-                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="7TL-TW-6qV" userLabel="Count Badge Image">
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7TL-TW-6qV" userLabel="Count Badge Image">
                     <rect key="frame" x="87" y="-7.5" width="26" height="25"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="7TL-TW-6qV" secondAttribute="height" multiplier="1:1" constant="1" id="KM8-bO-qLx"/>
                     </constraints>
                 </imageView>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.20000000000000001" translatesAutoresizingMaskIntoConstraints="NO" id="Uj7-jg-0py" userLabel="Count Badge">
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.20000000000000001" translatesAutoresizingMaskIntoConstraints="NO" id="Uj7-jg-0py" userLabel="Count Badge">
                     <rect key="frame" x="82.5" y="5" width="25" height="0.0"/>
                     <fontDescription key="fontDescription" type="system" weight="light" pointSize="10"/>
                     <nil key="textColor"/>
@@ -62,13 +75,10 @@
                 <constraint firstItem="Uj7-jg-0py" firstAttribute="trailing" secondItem="7TL-TW-6qV" secondAttribute="trailing" id="Elr-TI-hFp"/>
                 <constraint firstItem="Uj7-jg-0py" firstAttribute="leading" secondItem="7TL-TW-6qV" secondAttribute="leading" id="Gf0-zI-w9P"/>
                 <constraint firstItem="Uj7-jg-0py" firstAttribute="top" secondItem="7TL-TW-6qV" secondAttribute="top" id="NHi-5K-8sU"/>
-                <constraint firstItem="7TL-TW-6qV" firstAttribute="centerY" secondItem="EJM-m3-Wch" secondAttribute="top" constant="5" id="Rfa-QW-CNG"/>
-                <constraint firstItem="EJM-m3-Wch" firstAttribute="trailing" secondItem="1TZ-J7-WRJ" secondAttribute="trailing" id="SCK-bw-xEu"/>
-                <constraint firstItem="7TL-TW-6qV" firstAttribute="centerX" secondItem="EJM-m3-Wch" secondAttribute="trailing" id="ZSG-3L-N5W"/>
-                <constraint firstItem="7TL-TW-6qV" firstAttribute="height" secondItem="EJM-m3-Wch" secondAttribute="height" multiplier="1:10" constant="15" id="aLc-uD-fQT"/>
-                <constraint firstItem="EJM-m3-Wch" firstAttribute="bottom" secondItem="1TZ-J7-WRJ" secondAttribute="bottom" id="b0A-wG-1Va"/>
-                <constraint firstItem="EJM-m3-Wch" firstAttribute="top" secondItem="1TZ-J7-WRJ" secondAttribute="top" id="cGp-lP-t1M"/>
-                <constraint firstItem="EJM-m3-Wch" firstAttribute="leading" secondItem="1TZ-J7-WRJ" secondAttribute="leading" id="lNU-iC-Qig"/>
+                <constraint firstAttribute="bottom" secondItem="ABv-4t-EtT" secondAttribute="bottom" id="ew0-Pl-Zh7"/>
+                <constraint firstItem="ABv-4t-EtT" firstAttribute="top" secondItem="1TZ-J7-WRJ" secondAttribute="top" id="gGG-nu-Hig"/>
+                <constraint firstAttribute="trailing" secondItem="ABv-4t-EtT" secondAttribute="trailing" id="quH-3Q-aVI"/>
+                <constraint firstItem="ABv-4t-EtT" firstAttribute="leading" secondItem="1TZ-J7-WRJ" secondAttribute="leading" id="tgO-SP-DjE"/>
                 <constraint firstItem="Uj7-jg-0py" firstAttribute="bottom" secondItem="7TL-TW-6qV" secondAttribute="bottom" id="xGD-bj-cgy"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

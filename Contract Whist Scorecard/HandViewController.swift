@@ -1086,7 +1086,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
             handViewController = storyboard.instantiateViewController(withIdentifier: "HandViewController") as? HandViewController
         }
         
-        handViewController!.preferredContentSize = CGSize(width: 400, height: Scorecard.shared.scorepadBodyHeight)
+        handViewController!.preferredContentSize = ScorecardUI.defaultSize
         handViewController!.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
         
         handViewController!.controllerDelegate = appController

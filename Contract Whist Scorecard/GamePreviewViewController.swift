@@ -713,7 +713,7 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
         let storyboard = UIStoryboard(name: "GamePreviewViewController", bundle: nil)
         let gamePreviewViewController = storyboard.instantiateViewController(withIdentifier: "GamePreviewViewController") as! GamePreviewViewController
         
-        gamePreviewViewController.preferredContentSize = CGSize(width: 400, height: 700)
+        gamePreviewViewController.preferredContentSize = ScorecardUI.defaultSize
         gamePreviewViewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
         
         gamePreviewViewController.selectedPlayers = selectedPlayers

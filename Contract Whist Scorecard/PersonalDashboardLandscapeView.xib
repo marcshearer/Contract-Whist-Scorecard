@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="landscape" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16097"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16097.3"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -18,7 +18,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pl0-f3-t82" customClass="CountTileView" customModule="Whist_2" customModuleProvider="target">
-                    <rect key="frame" x="16" y="8" width="159" height="398"/>
+                    <rect key="frame" x="16" y="8" width="159" height="406"/>
                     <color key="backgroundColor" name="Clear"/>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="number" keyPath="countValue">
@@ -37,7 +37,7 @@
                     </connections>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vcm-lb-pqY" customClass="DataTableTileView" customModule="Whist_2" customModuleProvider="target">
-                    <rect key="frame" x="191" y="8" width="159" height="398"/>
+                    <rect key="frame" x="191" y="8" width="159" height="406"/>
                     <color key="backgroundColor" name="Clear"/>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="personal" value="YES"/>
@@ -56,7 +56,7 @@
                     </connections>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aE4-O4-rLp" customClass="DataTableTileView" customModule="Whist_2" customModuleProvider="target">
-                    <rect key="frame" x="366" y="8" width="159" height="398"/>
+                    <rect key="frame" x="366" y="8" width="159" height="406"/>
                     <color key="backgroundColor" name="Clear"/>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="personal" value="YES"/>
@@ -75,7 +75,7 @@
                     </connections>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qK4-5E-vDg" customClass="HighScoreTileView" customModule="Whist_2" customModuleProvider="target">
-                    <rect key="frame" x="541" y="8" width="151" height="398"/>
+                    <rect key="frame" x="541" y="8" width="151" height="406"/>
                     <color key="backgroundColor" name="Clear"/>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="number" keyPath="detail">
@@ -97,18 +97,18 @@
             <constraints>
                 <constraint firstItem="aE4-O4-rLp" firstAttribute="width" secondItem="pl0-f3-t82" secondAttribute="width" id="0qH-TD-y0l"/>
                 <constraint firstItem="Vcm-lb-pqY" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="8" id="6hb-a1-lIz"/>
-                <constraint firstAttribute="bottom" secondItem="aE4-O4-rLp" secondAttribute="bottom" constant="8" id="9Ru-HF-2Sm"/>
+                <constraint firstAttribute="bottom" secondItem="aE4-O4-rLp" secondAttribute="bottom" id="9Ru-HF-2Sm"/>
                 <constraint firstItem="aE4-O4-rLp" firstAttribute="leading" secondItem="Vcm-lb-pqY" secondAttribute="trailing" constant="16" id="Bhz-EK-WUB"/>
                 <constraint firstItem="Vcm-lb-pqY" firstAttribute="width" secondItem="pl0-f3-t82" secondAttribute="width" id="Dn7-AN-iMk"/>
                 <constraint firstItem="qK4-5E-vDg" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="8" id="GQy-am-WfJ"/>
                 <constraint firstItem="pl0-f3-t82" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" multiplier="1:4" constant="-16" id="I2b-Bx-hDL"/>
                 <constraint firstItem="Vcm-lb-pqY" firstAttribute="leading" secondItem="pl0-f3-t82" secondAttribute="trailing" constant="16" id="Nbk-g2-Z4u"/>
-                <constraint firstAttribute="bottom" secondItem="Vcm-lb-pqY" secondAttribute="bottom" constant="8" id="YfV-27-5cM"/>
+                <constraint firstAttribute="bottom" secondItem="Vcm-lb-pqY" secondAttribute="bottom" id="YfV-27-5cM"/>
                 <constraint firstItem="pl0-f3-t82" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="16" id="Zg8-OF-elj"/>
                 <constraint firstItem="qK4-5E-vDg" firstAttribute="leading" secondItem="aE4-O4-rLp" secondAttribute="trailing" constant="16" id="cJO-TC-V53"/>
-                <constraint firstAttribute="bottom" secondItem="pl0-f3-t82" secondAttribute="bottom" constant="8" id="gI3-Oc-fQO"/>
+                <constraint firstAttribute="bottom" secondItem="pl0-f3-t82" secondAttribute="bottom" id="gI3-Oc-fQO"/>
                 <constraint firstItem="pl0-f3-t82" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="8" id="iiW-Ud-3iV"/>
-                <constraint firstAttribute="bottom" secondItem="qK4-5E-vDg" secondAttribute="bottom" constant="8" id="ioF-xB-5DM"/>
+                <constraint firstAttribute="bottom" secondItem="qK4-5E-vDg" secondAttribute="bottom" id="ioF-xB-5DM"/>
                 <constraint firstItem="aE4-O4-rLp" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="8" id="yyc-Hr-Wq6"/>
                 <constraint firstAttribute="trailing" secondItem="qK4-5E-vDg" secondAttribute="trailing" constant="8" id="zy1-S6-n44"/>
             </constraints>

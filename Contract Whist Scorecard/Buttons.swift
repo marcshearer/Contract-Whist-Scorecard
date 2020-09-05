@@ -47,6 +47,10 @@ class RoundedButton: UIButton {
         }
     }
     
+    public func setTitleFont(_ font: UIFont) {
+        self.titleLabel?.font = font
+    }
+    
     func toCircle() {
         self.cornerRadius = self.layer.bounds.height / 2
         self.layer.cornerRadius = self.cornerRadius
@@ -126,7 +130,15 @@ class ShadowButton: UIButton {
         self.internalUpdate = true
         self.inheritProperties()
         self.internalUpdate = false
-        self.layoutSubviews()
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.titleOuterLabel?.layoutIfNeeded()
+        self.titleInnerLabel?.setNeedsLayout()
+        if self.titleOuterLabel != nil {
+            self.addShadow()
+        }
     }
     
     private func inheritProperties() {
@@ -136,6 +148,7 @@ class ShadowButton: UIButton {
         let title = self.currentTitle
         self.titleOuterLabel = UILabel(frame: self.frame)
         self.titleOuterLabel?.backgroundColor = self.backgroundColor
+        self.titleOuterLabel?.accessibilityIdentifier = "outerLabel"
         self.addSubview(self.titleOuterLabel!)
         Constraint.anchor(view: self, control: self.titleOuterLabel!)
         
@@ -147,6 +160,7 @@ class ShadowButton: UIButton {
         self.titleInnerLabel?.textAlignment = .center
         self.titleInnerLabel?.font = self.titleLabel!.font
         self.titleInnerLabel?.adjustsFontSizeToFitWidth = true
+        self.titleInnerLabel?.accessibilityIdentifier = "innerLabel"
         self.titleOuterLabel?.addSubview(self.titleInnerLabel!)
         Constraint.anchor(view: self.titleOuterLabel!, control: self.titleInnerLabel!, attributes: .centerX, .centerY)
         Constraint.setWidth(control: self.titleInnerLabel!, width: self.frame.width - 10)
@@ -187,6 +201,14 @@ class ShadowButton: UIButton {
         }
     }
     
+    public func setTitleFont(_ font: UIFont) {
+        if !self.hasInherited {
+            // Haven't taken control yet
+        } else {
+            self.titleInnerLabel?.font = font
+        }
+    }
+    
     public func toCircle() {
         if let layer = self.titleOuterLabel?.layer {
             self.cornerRadius = layer.bounds.height / 2
@@ -223,14 +245,6 @@ class ShadowButton: UIButton {
         self.addShadow(shadowSize: self.shadowSize)
     }
     
-    override func layoutSubviews() {
-        Utility.mainThread {
-            super.layoutSubviews()
-            if self.titleOuterLabel != nil {
-                self.addShadow()
-            }
-        }
-    }
 }
 
 class LightRoundedButton: RoundedButton {
@@ -450,6 +464,15 @@ class RightClearButton: ClearButton {
     // Moves the image to the right
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+        self.reflect()
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.reflect()
+    }
+    
+    private func reflect() {
         self.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
         self.titleLabel?.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
         self.imageView?.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)

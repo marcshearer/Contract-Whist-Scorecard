@@ -750,7 +750,6 @@
                             <constraint firstAttribute="trailing" secondItem="2V4-Rn-jn9" secondAttribute="trailing" id="QsG-AD-V0A"/>
                             <constraint firstAttribute="bottom" secondItem="4mH-Ut-Ta9" secondAttribute="bottom" id="RLa-dJ-cNA"/>
                             <constraint firstItem="3XV-9u-tCY" firstAttribute="top" secondItem="Qc8-yN-AYf" secondAttribute="top" id="S7M-oq-U0A"/>
-                            <constraint firstItem="Qc8-yN-AYf" firstAttribute="leading" secondItem="4mH-Ut-Ta9" secondAttribute="trailing" id="TUN-Wl-aGJ"/>
                             <constraint firstItem="3XV-9u-tCY" firstAttribute="leading" secondItem="4mH-Ut-Ta9" secondAttribute="trailing" id="U4M-vw-0Pn"/>
                             <constraint firstItem="CoM-o8-drH" firstAttribute="top" secondItem="hre-aD-pgw" secondAttribute="bottom" id="U5b-im-9rh"/>
                             <constraint firstItem="2V4-Rn-jn9" firstAttribute="leading" secondItem="Qc8-yN-AYf" secondAttribute="trailing" id="VDa-Rv-cho"/>
@@ -803,6 +802,8 @@
                         <outlet property="titleView" destination="3XV-9u-tCY" id="XOg-pp-BwZ"/>
                         <outletCollection property="paddingViewLines" destination="gJV-Ai-5A3" collectionClass="NSMutableArray" id="131-b6-hlp"/>
                         <outletCollection property="paddingViewLines" destination="SeV-1g-Tzl" collectionClass="NSMutableArray" id="gnN-Cm-Npx"/>
+                        <outletCollection property="paddingViewLineWidth" destination="FXN-PX-YPU" collectionClass="NSMutableArray" id="lxK-ry-onv"/>
+                        <outletCollection property="paddingViewLineWidth" destination="y2X-L5-1Yu" collectionClass="NSMutableArray" id="TBa-r3-r2L"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

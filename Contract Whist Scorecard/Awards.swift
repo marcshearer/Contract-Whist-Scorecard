@@ -222,7 +222,7 @@ public class Awards {
             self.achieved = CoreData.fetch(from: "Award", filter: NSPredicate(format: "playerUUID = %@", playerUUID), sort: ("dateAwarded", .descending)) as? [AwardMO]
             if self.achieved?.isEmpty ?? true {
                 let achieved = self.defaultAchieved(playerUUID: playerUUID)
-                self.save(playerUUID: playerUUID, achieved: achieved.map{Award(from: $0, config: self.config)})
+                self.save(playerUUID: playerUUID, achieved: achieved.map{Award(from: $0, config: self.config)}, allNew: true)
                 self.achieved = achieved
             }
             self.playerUUID = playerUUID
@@ -319,8 +319,8 @@ public class Awards {
         
     /// Create the core data for the list of awards achieved
     /// - Parameter achieved: List of awards
-    public func save(playerUUID: String, achieved: [Award]) {
-        let existing = self.getAchieved(playerUUID: playerUUID)
+    public func save(playerUUID: String, achieved: [Award], allNew: Bool = false) {
+        let existing = (allNew ? [] : self.getAchieved(playerUUID: playerUUID))
         for award in achieved {
             var awardMO = self.hasAchieved(existing, code: award.code, awardLevel: award.awardLevel)
             if awardMO != nil {

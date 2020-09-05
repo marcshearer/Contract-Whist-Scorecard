@@ -158,6 +158,7 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
         if !self.alreadyDrawing {
             self.selectedPlayersView.layoutIfNeeded()
         }
+        
         self.setupScreenSize()
         self.setSize()
         
@@ -799,7 +800,7 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
             let storyboard = UIStoryboard(name: "SelectionViewController", bundle: nil)
             selectionViewController = storyboard.instantiateViewController(withIdentifier: "SelectionViewController") as? SelectionViewController
         }
-        selectionViewController!.preferredContentSize = CGSize(width: 400, height: min(viewController.view.frame.height, 700))
+        selectionViewController!.preferredContentSize = ScorecardUI.defaultSize
         selectionViewController!.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
         
         selectionViewController!.selectionMode = mode

@@ -20,7 +20,7 @@ class StatisticsViewer : NSObject, DataTableViewerDelegate {
     public let bodyRowHeight:CGFloat = 52.0
         
     private var recordList: [PlayerDetail]
-    private var sourceViewController: UIViewController
+    private var sourceViewController: ScorecardViewController
     private var dataTableViewController: DataTableViewController!
     private var callerCompletion: (()->())?
     private var observer: NSObjectProtocol?
@@ -48,7 +48,7 @@ class StatisticsViewer : NSObject, DataTableViewerDelegate {
         DataTableField("handsPlayed",  "Hands Played",     sequence: 8,     width: 75.0,  type: .int),
     ]
     
-    init(from viewController: UIViewController, completion: (()->())? = nil) {
+    init(from viewController: ScorecardViewController, completion: (()->())? = nil) {
         self.sourceViewController = viewController
         self.recordList = Scorecard.shared.playerDetailList()
         self.callerCompletion = completion

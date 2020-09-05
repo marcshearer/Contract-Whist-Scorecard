@@ -274,7 +274,7 @@ class DataTableViewController: ScorecardViewController, UITableViewDataSource, U
     
     // MARK: - methods to show/dismiss this view controller ======================================================= -
     
-    static public func show(from sourceViewController: UIViewController, delegate: DataTableViewerDelegate, recordList: [DataTableViewerDataSource], completion: (()->())? = nil) -> DataTableViewController {
+    static public func show(from sourceViewController: ScorecardViewController, delegate: DataTableViewerDelegate, recordList: [DataTableViewerDataSource], completion: (()->())? = nil) -> DataTableViewController {
         
         let storyboard = UIStoryboard(name: "DataTableViewController", bundle: nil)
         let dataTableviewController = storyboard.instantiateViewController(withIdentifier: "DataTableViewController") as! DataTableViewController

@@ -266,7 +266,7 @@ class SyncViewController: ScorecardViewController, UITableViewDelegate, UITableV
         let storyboard = UIStoryboard(name: "SyncViewController", bundle: nil)
         let SyncViewController: SyncViewController = storyboard.instantiateViewController(withIdentifier: "SyncViewController") as! SyncViewController
         
-        SyncViewController.preferredContentSize = CGSize(width: 400, height: 700)
+        SyncViewController.preferredContentSize = ScorecardUI.defaultSize
         SyncViewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
         
         SyncViewController.completion = completion

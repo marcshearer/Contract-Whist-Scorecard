@@ -11,7 +11,7 @@ import UserNotifications
 import GameKit
 
 
-class SettingsViewController: ScorecardViewController, UITableViewDataSource, UITableViewDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, CustomCollectionViewLayoutDelegate, PlayerSelectionViewDelegate {
+class SettingsViewController: ScorecardViewController, UITableViewDataSource, UITableViewDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, CustomCollectionViewLayoutDelegate, PlayerSelectionViewDelegate, BannerDelegate {
     
     // MARK: - Class Properties ======================================================================== -
         
@@ -101,10 +101,9 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     }
     
     // MARK: - IB Outlets ============================================================================== -
-    @IBOutlet private weak var bannerPaddingView: InsetPaddingView!
-    @IBOutlet private weak var finishButton: RoundedButton!
+    @IBOutlet private weak var banner: Banner!
+    @IBOutlet private weak var bannerHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var settingsTableView: UITableView!
-    @IBOutlet private weak var navigationBar: NavigationBar!
     @IBOutlet private weak var thisPlayerContainerView: UIView!
     @IBOutlet private weak var thisPlayerThumbnailView: ThumbnailView!
     @IBOutlet private weak var thisPlayerChangeButton: RoundedButton!
@@ -113,6 +112,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     @IBOutlet private weak var tapGestureRecognizer: UITapGestureRecognizer!
     @IBOutlet private weak var topSectionView: UIView!
     @IBOutlet private weak var playerSelectionViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private var topSectionHeightConstraint: NSLayoutConstraint!               // Need to be strong as are deactivated
     @IBOutlet private var availableSpaceHeightConstraint: NSLayoutConstraint!           // Need to be strong as are deactivated
     @IBOutlet private var topSectionProportionalHeightConstraint: NSLayoutConstraint!   // Need to be strong as are deactivated
     @IBOutlet private var topSectionLandscapePhoneProportionalHeightConstraint: NSLayoutConstraint!   // Need to be strong as are deactivated
@@ -120,13 +120,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
 
     // MARK: - IB Actions ============================================================================== -
     
-    @IBAction func finishPressed(_ sender: UIButton) {
-        Scorecard.settings.save()
-        
-        // Save to iCloud
-        Scorecard.settings.saveToICloud()
-
-
+    internal func finishPressed() {
         self.dismiss()
     }
     
@@ -142,9 +136,6 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
         
         // Setup default colors (previously done in StoryBoard)
         self.defaultViewColors()
-
-        finishButton.setImage(UIImage(named: self.backImage), for: .normal)
-        finishButton.setTitle(self.backText)
         
         if let testModeValue = ProcessInfo.processInfo.environment["TEST_MODE"] {
             if testModeValue.lowercased() == "true" {
@@ -181,6 +172,9 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        
+        self.setupPanelModeBannerSize()
+        
         if reload {
             self.settingsTableView.reloadData()
         }
@@ -745,24 +739,26 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     
     internal func scrollViewDidScroll(_ tableView: UIScrollView) {
         // Configure collapsible header
-        if tableView == self.settingsTableView {
-            if tableView.contentOffset.y > 10.0 && !self.availableSpaceHeightConstraint.isActive {
-                Utility.animate(view: self.view, duration: 0.3) {
-                    if ScorecardUI.landscapePhone() {
-                        self.topSectionLandscapePhoneProportionalHeightConstraint.isActive = false
-                    } else {
-                        self.topSectionProportionalHeightConstraint.isActive = false
+        if self.menuController == nil { // Change player will be in menu panel otherwise
+            if tableView == self.settingsTableView {
+                if tableView.contentOffset.y > 10.0 && !self.availableSpaceHeightConstraint.isActive {
+                    Utility.animate(view: self.view, duration: 0.3) {
+                        if ScorecardUI.landscapePhone() {
+                            self.topSectionLandscapePhoneProportionalHeightConstraint.isActive = false
+                        } else {
+                            self.topSectionProportionalHeightConstraint.isActive = false
+                        }
+                        self.availableSpaceHeightConstraint.isActive = true
+                        self.availableSpaceHeightConstraint.constant = 0.0
                     }
-                    self.availableSpaceHeightConstraint.isActive = true
-                    self.availableSpaceHeightConstraint.constant = 0.0
-                }
-            } else if tableView.contentOffset.y < 10.0 && self.availableSpaceHeightConstraint.isActive {
-                Utility.animate(view: self.view, duration: 0.3) {
-                    self.availableSpaceHeightConstraint.isActive = false
-                    if ScorecardUI.landscapePhone() {
-                        self.topSectionLandscapePhoneProportionalHeightConstraint.isActive = true
-                    } else {
-                        self.topSectionProportionalHeightConstraint.isActive = true
+                } else if tableView.contentOffset.y < 10.0 && self.availableSpaceHeightConstraint.isActive {
+                    Utility.animate(view: self.view, duration: 0.3) {
+                        self.availableSpaceHeightConstraint.isActive = false
+                        if ScorecardUI.landscapePhone() {
+                            self.topSectionLandscapePhoneProportionalHeightConstraint.isActive = true
+                        } else {
+                            self.topSectionProportionalHeightConstraint.isActive = true
+                        }
                     }
                 }
             }
@@ -1377,10 +1373,13 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
         Scorecard.settings.colorTheme = self.themeNames[item]
         Themes.selectTheme(self.themeNames[item])
         self.defaultViewColors()
+        self.banner.refresh()
         self.view.setNeedsDisplay()
         self.view.setNeedsLayout()
         self.view.layoutIfNeeded()
         self.settingsTableView.reloadData()
+        self.menuController?.refresh()
+        self.rootViewController.rightPanelDefaultScreenColors()
     }
     
     // MARK: - Utility Routines ======================================================================== -
@@ -1561,6 +1560,17 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
         }
     }
     
+    private func setupPanelModeBannerSize() {
+        if self.menuController != nil {
+            // Change player will be in menu panel
+            self.bannerHeightConstraint.constant = self.defaultBannerHeight
+            self.topSectionHeightConstraint.isActive = true
+            self.availableSpaceHeightConstraint.isActive = false
+            self.topSectionProportionalHeightConstraint.isActive = false
+            self.topSectionLandscapePhoneProportionalHeightConstraint.isActive = false
+        }
+    }
+    
     // MARK: - Online game methods ========================================================== -
     
     private func setOnlinePlayerUUID(playerUUID: String!) {
@@ -1581,25 +1591,40 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     
     // MARK: - Function to present and dismiss this view ==============================================================
     
-    class public func show(from viewController: ScorecardViewController, backText: String = "Back", backImage: String = "back", completion: (()->())?){
+    class public func create(backText: String = "Back", backImage: String = "back", completion: (()->())?) -> SettingsViewController {
         
         let storyboard = UIStoryboard(name: "SettingsViewController", bundle: nil)
         let settingsViewController: SettingsViewController = storyboard.instantiateViewController(withIdentifier: "SettingsViewController") as! SettingsViewController
-        
-        settingsViewController.preferredContentSize = CGSize(width: 400, height: 700)
-        settingsViewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
         
         settingsViewController.backText = backText
         settingsViewController.backImage = backImage
         settingsViewController.completion = completion
         
+        return settingsViewController
+    }
+    
+    class public func show(from viewController: ScorecardViewController, backText: String = "Back", backImage: String = "back", completion: (()->())?){
+        
+        let settingsViewController = SettingsViewController.create(backText: backText, backImage: backImage, completion: completion)
+        
+        settingsViewController.preferredContentSize = ScorecardUI.defaultSize
+        settingsViewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
+        
         viewController.present(settingsViewController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: nil)
     }
     
     private func dismiss() {
+        self.willDismiss()
         self.dismiss(animated: true, completion: {
             self.didDismiss()
         })
+    }
+    
+    override internal func willDismiss() {
+        Scorecard.settings.save()
+        
+        // Save to iCloud
+        Scorecard.settings.saveToICloud()
     }
     
     override internal func didDismiss() {
@@ -1737,9 +1762,7 @@ extension SettingsViewController {
 
     private func defaultViewColors() {
 
-        self.bannerPaddingView.backgroundColor = Palette.banner.background
         self.topSectionView.backgroundColor = Palette.banner.background
-        self.navigationBar.textColor = Palette.banner.text
         self.view.backgroundColor = Palette.normal.background
         self.settingsTableView.backgroundColor = Palette.normal.background
         self.thisPlayerChangeButton.backgroundColor = Palette.bannerShadow.background

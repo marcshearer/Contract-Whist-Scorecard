@@ -153,8 +153,10 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
         // Send state to watch
         Scorecard.shared.watchManager.updateScores()
         
+        self.view.layoutIfNeeded()
         self.setupSize()
-
+        self.scoreButtonCollectionView.reloadData()
+        
         if self.lastViewHeight != self.view.frame.height || self.firstTime {
             self.playerTableView.reloadData()
             self.lastViewHeight = self.view.frame.height
@@ -221,11 +223,13 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
         self.defaultCellColors(cell: entryPlayerTableCell)
         
         entryPlayerTableCell.setCollectionViewDataSourceDelegate(self, forRow: indexPath.row)
-        if indexPath.row==0 {
-            Palette.bannerStyle(view: entryPlayerTableCell)
-            entryPlayerTableCell.entryPlayerSeparator.isHidden = true
-        } else {
-            Palette.normalStyle(entryPlayerTableCell)
+        Palette.forcingGameBanners {
+            if indexPath.row==0 {
+                Palette.bannerStyle(view: entryPlayerTableCell)
+                entryPlayerTableCell.entryPlayerSeparator.isHidden = true
+            } else {
+                Palette.normalStyle(entryPlayerTableCell)
+            }
         }
         
         return entryPlayerTableCell
@@ -261,7 +265,7 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
     func setupScreen() {
         let title = Scorecard.game.roundTitle(Scorecard.game.selectedRound, rankColor: Palette.total.text)
         footerRoundTitle.attributedText = title
-        if ScorecardUI.screenHeight < 667.0 || !ScorecardUI.phoneSize() {
+        if ScorecardUI.screenHeight < 667.0 {
             // Smaller than an iPhone 7 portrait or on a tablet
             self.smallScreen = true
         } else {
@@ -618,7 +622,7 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
             entryViewController.refreshScreen(firstTime: true)
         }
         
-        entryViewController.preferredContentSize = CGSize(width: 400, height: Scorecard.shared.scorepadBodyHeight)
+        entryViewController.preferredContentSize = ScorecardUI.defaultSize
         entryViewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
         
         entryViewController.reeditMode = reeditMode
@@ -648,18 +652,20 @@ extension EntryViewController: UICollectionViewDelegate, UICollectionViewDataSou
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-        collectionView.setNeedsLayout()
-        collectionView.layoutIfNeeded()
-        let totalHeight: CGFloat = collectionView.bounds.size.height
-        let totalWidth: CGFloat = collectionView.bounds.size.width
+       
         var width: CGFloat = 0.0
         var height: CGFloat = 0.0
-        
-        let nameWidth = totalWidth - (CGFloat(columns - 1) * self.scoreWidth)
-        
+                
         if collectionView.tag >= 0 {
             // Player score summary
+            collectionView.setNeedsLayout()
+            collectionView.layoutIfNeeded()
+            
+            let totalHeight: CGFloat = collectionView.bounds.size.height
+            let totalWidth: CGFloat = collectionView.bounds.size.width
             let column = indexPath.row
+            let nameWidth = totalWidth - (CGFloat(columns - 1) * self.scoreWidth)
+            
             if column == self.playerColumn {
                 // Name
                 width = nameWidth
@@ -706,7 +712,9 @@ extension EntryViewController: UICollectionViewDelegate, UICollectionViewDataSou
                 default:
                     playerLabel.text="Score"
                 }
-                Palette.bannerStyle(playerLabel)
+                Palette.forcingGameBanners {
+                    Palette.bannerStyle(playerLabel)
+                }
                 entryPlayerCell.isUserInteractionEnabled = false
                 
             } else {

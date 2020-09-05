@@ -283,7 +283,8 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
         } else {
             let awardView = AwardDetailView(frame: self.view.frame)
             let award = self.awardList[indexPath.row]
-            awardView.set(awards: self.awards, playerUUID: Scorecard.settings.thisPlayerUUID, award: award, mode: .awarding, backgroundColor: Palette.buttonFace.background, textColor: Palette.buttonFace.text)
+            awardView.set(backgroundColor: Palette.buttonFace.background, textColor: Palette.buttonFace.text)
+            awardView.set(awards: self.awards, playerUUID: Scorecard.settings.thisPlayerUUID, award: award, mode: .awarding)
             awardView.show(from: self.view)
         }
     }
@@ -692,7 +693,7 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
         let storyboard = UIStoryboard(name: "GameSummaryViewController", bundle: nil)
         let gameSummaryViewController: GameSummaryViewController = storyboard.instantiateViewController(withIdentifier: "GameSummaryViewController") as! GameSummaryViewController
  
-        gameSummaryViewController.preferredContentSize = CGSize(width: 400, height: Scorecard.shared.scorepadBodyHeight)
+        gameSummaryViewController.preferredContentSize = ScorecardUI.defaultSize
         gameSummaryViewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
 
         gameSummaryViewController.gameSummaryMode = gameSummaryMode

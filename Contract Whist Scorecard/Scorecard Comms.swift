@@ -177,7 +177,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
         }
     }
     
-    public func playHand(from viewController: ScorecardViewController, appController: ScorecardAppController? = nil, sourceView: UIView, animated: Bool = true) -> HandViewController? {
+    public func playHand(from viewController: ScorecardViewController, appController: ScorecardAppController? = nil, animated: Bool = true) -> HandViewController? {
         var handViewController: HandViewController?
         
         if Scorecard.game.isHosting || Scorecard.game.hasJoined {
@@ -186,7 +186,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
                 appController?.robotAction(action: .deal)
             }
             if Scorecard.game.handState.hand != nil && (Scorecard.game.handState.hand.cards.count > 0 || Scorecard.game.handState.trickCards.count != 0) {
-                handViewController = HandViewController.show(from: viewController, appController: appController, sourceView: sourceView, existing: handViewController, animated: animated)
+                handViewController = HandViewController.show(from: viewController, appController: appController, existing: handViewController, animated: animated)
             } else {
                 fatalError("Trying to display hand with no hand setup")
             }

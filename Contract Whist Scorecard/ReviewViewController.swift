@@ -329,13 +329,10 @@ class ReviewViewController: ScorecardViewController, UITableViewDataSource, UITa
         let storyboard = UIStoryboard(name: "ReviewViewController", bundle: nil)
         let reviewViewController = storyboard.instantiateViewController(withIdentifier: "ReviewViewController") as! ReviewViewController
         
-        reviewViewController.preferredContentSize = ScorecardUI.defaultSize
-        reviewViewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
-        
         reviewViewController.round = round
         reviewViewController.thisPlayer = thisPlayer
         
-        viewController.present(reviewViewController, appController: appController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: nil)
+        viewController.present(reviewViewController, appController: appController, animated: true, completion: nil)
      
         return reviewViewController
     }

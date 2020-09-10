@@ -92,6 +92,14 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     private var playersItem: Int = -1
     private var resultsItem: Int = -2
     private var settingsItem: Int = -3
+    internal var hostsAcross = 3
+    internal var hostsDown = 1
+    internal var hostVerticalSpacing: CGFloat = 0
+    internal var hostHorizontalSpacing: CGFloat = 0
+    internal var hostRoundedContainer: Bool = true
+    internal var containerTitle = "Play Game"
+    internal var centeredFlowLayout = CenteredCollectionViewLayout()
+    private var lastWidth: CGFloat?
     
     internal var containers = false
     
@@ -108,24 +116,26 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     @IBOutlet internal weak var rightPanelTitleLabel: UILabel!
     @IBOutlet internal weak var rightPanelCaptionLabel: UILabel!
 
-    @IBOutlet private weak var topSection: UIView!
-    @IBOutlet private weak var upperMiddleSection: UIView!
-    @IBOutlet private weak var lowerMiddleSection: UIView!
-    @IBOutlet private weak var bottomSection: UIView!
-    @IBOutlet private weak var bannerPaddingView: InsetPaddingView!
+    @IBOutlet internal weak var topSection: UIView!
+    @IBOutlet internal weak var upperMiddleSection: UIView!
+    @IBOutlet internal weak var lowerMiddleSection: UIView!
+    @IBOutlet internal weak var bottomSection: UIView!
+    @IBOutlet internal weak var topSectionTopConstraint: NSLayoutConstraint!
+    @IBOutlet internal weak var banner: Banner!
     @IBOutlet private weak var leftPaddingView: InsetPaddingView!
-    @IBOutlet private weak var bannerView: UIView!
-    @IBOutlet private weak var bannerContinuation: BannerContinuation!
-    @IBOutlet private weak var bannerOverlap: UIView!
-    @IBOutlet private weak var adminMenuButton: ClearButton!
-    @IBOutlet private weak var titleLabel: UILabel!
+    @IBOutlet private weak var bannerHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var thisPlayerContainerView: UIView!
+    @IBOutlet private weak var thisPlayerOverlap: UIView!
     @IBOutlet private weak var thisPlayerThumbnail: ThumbnailView!
-    @IBOutlet private weak var infoButton: ShadowButton!
-    @IBOutlet private weak var hostTitleBar: TitleBar!
-    @IBOutlet private weak var hostCollectionContainerView: UIView!
-    @IBOutlet private weak var hostCollectionContentView: UIView!
-    @IBOutlet private weak var hostCollectionView: UICollectionView!
-    @IBOutlet private weak var peerTitleBar: TitleBar!
+    @IBOutlet internal weak var infoButton: ShadowButton!
+    @IBOutlet internal weak var hostTitleBar: TitleBar!
+    @IBOutlet internal weak var hostCollectionContainerView: UIView!
+    @IBOutlet internal var hostCollectionContainerInsets: [NSLayoutConstraint]!
+    @IBOutlet internal weak var hostCollectionContentView: UIView!
+    @IBOutlet internal weak var hostCollectionView: UICollectionView!
+    @IBOutlet internal var hostCollectionViewLayout: UICollectionViewLayout!
+    @IBOutlet internal weak var peerTitleBar: TitleBar!
+    @IBOutlet internal weak var peerTitleBarTopConstraint: NSLayoutConstraint!
     @IBOutlet private weak var peerCollectionContainerView: UIView!
     @IBOutlet private weak var peerCollectionContentView: UIView!
     @IBOutlet private weak var peerCollectionView: UICollectionView!
@@ -139,6 +149,8 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     @IBOutlet private weak var tapGestureRecognizer: UITapGestureRecognizer!
     @IBOutlet private weak var flowLayout: CustomCollectionViewLayout!
     @IBOutlet private var actionButtons: [ImageButton]!
+    @IBOutlet internal var menuHeightConstraints: [NSLayoutConstraint]!
+    @IBOutlet internal var noMenuHeightConstraints: [NSLayoutConstraint]!
     @IBOutlet private weak var settingsBadgeButton: ShadowButton!
 
     // MARK: - IB Actions ============================================================================== -
@@ -151,7 +163,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         }
     }
     
-    @IBAction func actionButtonPressed(_ sender: UIButton) {
+    internal func adminButtonPressed() {
         self.showActionMenu()
     }
     
@@ -176,7 +188,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
                     if matching == code.count {
                         // Code correct - set admin mode
                         Scorecard.adminMode = !Scorecard.adminMode
-                        self.adminMenuButton.isHidden = false
+                        self.banner.setButton("admin", isHidden: false)
                         self.restart()
                         matching = 0
                     }
@@ -199,9 +211,11 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         
         // Show menu container if necessary
         self.allocateContainerSizes()
-        let menuPanelViewController = MenuPanelViewController.create()
-        self.menuController = menuPanelViewController
-        self.presentInContainers([PanelContainerItem(viewController: menuPanelViewController, container: Container.left)], animated: false, completion: nil)
+        if self.containers {
+            let menuPanelViewController = MenuPanelViewController.create()
+            self.menuController = menuPanelViewController
+            self.presentInContainers([PanelContainerItem(viewController: menuPanelViewController, container: Container.left)], animated: false, completion: nil)
+        }
         
         self.hideNavigationBar()
 
@@ -246,7 +260,8 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         // Clear hand state
         Scorecard.game?.handState = nil
         
-        // Setup action menu
+        // Setup action menu, banner etc
+        self.setupBanner()
         self.setupMenuActions()
                 
         // Set flow layout delegate
@@ -313,6 +328,9 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         
         Palette.ignoringGameBanners {
             
+            self.panelLayoutSubviews()
+            self.setupBanner()
+            
             // Update sizes to layout constraints immediately to aid calculations
             self.view.layoutIfNeeded()
             
@@ -324,9 +342,10 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
                 self.showPlayerSelection()
             }
 
-            if rotated {
+            if rotated || self.lastWidth != self.view.frame.width {
                 self.launchScreenView?.layoutSubviews()
                 self.hostCollectionView.reloadData()
+                self.lastWidth = self.view.frame.width
             }
             
             if self.firstTime || self.rotated {
@@ -425,7 +444,9 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         
         let playerList = Scorecard.shared.playerList.filter { $0.playerUUID != self.thisPlayer }
         self.playerSelectionView.set(players: playerList, addButton: true, updateBeforeSelect: false, scrollEnabled: true, collectionViewInsets: UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10))
-        
+        if self.containers {
+            self.banner.set(title: "Select Player")
+        }
     }
     
     internal func hidePlayerSelection(completion: (()->())? = nil) {
@@ -442,6 +463,10 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
             self.bottomSectionTrailingConstraint?.constant = (self.view.safeAreaInsets.right == 0.0 ? 10.0 : 0.0)
         }
         self.peerReloadData()
+        if self.containers {
+            self.banner.set(title: self.containerTitle)
+        }
+        self.showLastGame()
     }
     
     internal func didSelect(playerMO: PlayerMO) {
@@ -470,7 +495,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         
         self.addAction(title: "Leave admin mode", isHidden: {!Scorecard.adminMode}, action: { () in
             Scorecard.adminMode = false
-            self.adminMenuButton.isHidden = true
+            self.banner.setButton("admin", isHidden: true)
         })
 
         self.addAction(title: "Delete iCloud Database", isHidden: {!Scorecard.adminMode}, action: { () in
@@ -543,6 +568,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         self.peerCollectionView.contentOffset = CGPoint()
         self.peerReloadData()
         self.updateSettingsBadge()
+        self.menuController.set(playingGame: false)
 
         if createController {
             // Create controller after short delay
@@ -663,7 +689,8 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         var size = CGSize()
         switch collectionView.tag {
         case hostCollection:
-            size = CGSize(width: (self.hostCollectionView.frame.width / 3.0) - 0.01, height: self.hostCollectionView.frame.height)
+            self.hostCollectionView.layoutIfNeeded()
+            size = CGSize(width: ((self.hostCollectionView.frame.width + self.hostHorizontalSpacing) / CGFloat(self.hostsAcross)) - self.hostHorizontalSpacing, height: ((self.hostCollectionView.frame.height + self.hostVerticalSpacing) / CGFloat(self.hostsDown)) - self.hostVerticalSpacing - 1)
         case peerScrollCollection:
             size = CGSize(width: 10, height: 10)
         case peerCollection:
@@ -672,6 +699,21 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
             break
         }
         return size
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout: UICollectionViewLayout, minimumLineSpacingForSectionAt: Int) -> CGFloat {
+        if collectionView.tag == hostCollection {
+            return self.hostHorizontalSpacing
+        } else {
+            return 0
+        }
+    }
+    func collectionView(_ collectionView: UICollectionView, layout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt: Int) -> CGFloat {
+        if collectionView.tag == hostCollection {
+            return self.hostVerticalSpacing
+        } else {
+            return 0
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -714,9 +756,9 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
              
              if self.availablePeers.count == 0 && !self.recoveryMode {
                 
-                peerCell.backgroundColor = Palette.midBackground.background
-                peerCell.label.textColor = Palette.midBackground.text
-                peerCell.label.text = "No devices are currently offering to host a game"
+                peerCell.backgroundColor = Palette.mid.background
+                peerCell.label.textColor = Palette.mid.text
+                peerCell.label.text = "No devices are currently\noffering to host a game"
                 peerCell.label.font = UIFont.systemFont(ofSize: 18.0, weight: .light)
                 peerCell.leftScrollButton.isHidden = true
                 peerCell.rightScrollButton.isHidden = true
@@ -908,6 +950,9 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
             self.clientController = nil
         }
         
+        // Move menu to in-game mode
+        self.menuController.set(playingGame: true)
+
         // Create Host controller
         if self.hostController == nil {
             self.hostController = HostController(from: self)
@@ -936,6 +981,9 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
             self.scoringController = ScoringController(from: self)
         }
         
+        // Move menu to in-game mode
+        self.menuController.set(playingGame: true)
+        
         // Start Host controller
         scoringController.start(recoveryMode: recoveryMode, completion: { (returnHome) in
             if returnHome {
@@ -956,6 +1004,9 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         self.checkFaceTime(peer: availableFound, completion: { (faceTimeAddress) in
             self.clientController.connect(row: item, faceTimeAddress: faceTimeAddress ?? "")
         })
+        
+        // Move menu to in-game mode
+        self.menuController.set(playingGame: true)
     }
     
     private func checkFaceTime(peer: AvailablePeer, completion: @escaping (String?)->()) {
@@ -1012,8 +1063,10 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         }
         self.scoringItem = self.hostingOptions
         self.hostingOptions += 1
-        self.robotItem = self.hostingOptions
-        self.hostingOptions += 1
+        if Scorecard.shared.iCloudUserIsMe {
+            self.robotItem = self.hostingOptions
+            self.hostingOptions += 1
+        }
     }
     
     private func setupThisPlayer() {
@@ -1130,6 +1183,18 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
                 }
             }
         }
+    }
+    
+    private func setupBanner() {
+        self.banner.set(rightButtons: [
+            BannerButton(image: UIImage(systemName: "line.horizontal.3"), width: 30, action: self.adminButtonPressed, containerHide: false, id: "admin")])
+        self.banner.setButton("admin", isHidden: true)
+        if self.menuController.isVisible() && self.container == .main {
+            self.banner.set(title: self.containerTitle, titleFont: Banner.panelFont, titleColor: self.defaultBannerTextColor)
+        } else {
+            self.banner.set(title: "W H I S T", titleFont: Banner.heavyFont, titleColor: Palette.banner.themeText)
+        }
+        self.bannerHeightConstraint.constant = (self.containers ? self.defaultBannerHeight : 75)
     }
     
     // MARK: - Client controller delegates ======================================================================== -
@@ -1321,15 +1386,11 @@ extension ClientViewController {
 
     private func DefaultScreenColors() {
         Palette.ignoringGameBanners {
-            self.view.backgroundColor = Palette.darkBackground.background
+            self.view.backgroundColor = Palette.dark.background
             self.topSection.backgroundColor = Palette.banner.background
-            self.bannerPaddingView.bannerColor = Palette.banner.background
             self.leftPaddingView.bannerColor = Palette.banner.background
             self.hostTitleBar.set(faceColor: Palette.buttonFace.background)
             self.hostTitleBar.set(textColor: Palette.buttonFace.text)
-            self.adminMenuButton.tintColor = Palette.banner.themeText
-            self.titleLabel.textColor = Palette.banner.themeText
-            self.titleLabel.setNeedsDisplay() // Doesn't seem to change color otherwise!
             self.thisPlayerThumbnail.set(textColor: Palette.banner.text)
             self.thisPlayerThumbnail.set(font: UIFont.systemFont(ofSize: 15, weight: .bold))
             self.infoButton.setBackgroundColor(Palette.bannerShadow.background)
@@ -1342,16 +1403,20 @@ extension ClientViewController {
             self.actionButtons.forEach{(button) in button.set(titleFont: UIFont.systemFont(ofSize: 18, weight: .bold))}
             self.settingsBadgeButton.setBackgroundColor(Palette.alwaysTheme.background)
             self.settingsBadgeButton.setTitleColor(Palette.alwaysTheme.text, for: .normal)
-            self.playerSelectionView.backgroundColor = Palette.darkBackground.background
+            self.playerSelectionView.backgroundColor = self.view.backgroundColor
             self.rightPanelDefaultScreenColors()
         }
     }
     
     private func layoutControls() {
         self.infoButton.toCircle()
-        self.hostCollectionContentView.roundCorners(cornerRadius: 8.0, topRounded: false, bottomRounded: true)
-        self.hostCollectionContainerView.addShadow(shadowSize: CGSize(width: 4.0, height: 4.0), shadowOpacity: 0.1, shadowRadius: 2.0)
-        self.peerCollectionContentView.roundCorners(cornerRadius: 8.0, topRounded: false, bottomRounded: true)
+        if self.hostRoundedContainer {
+            self.hostCollectionContentView.roundCorners(cornerRadius: 8.0, topRounded: false, bottomRounded: true)
+        } else {
+            self.hostCollectionContentView.removeRoundCorners()
+        }
+        self.hostCollectionContentView.layoutIfNeeded()
+        self.peerCollectionContentView.roundCorners(cornerRadius: 8.0, topRounded: self.menuController?.isVisible() ?? false, bottomRounded: true)
         self.peerCollectionContainerView.addShadow(shadowSize: CGSize(width: 4.0, height: 4.0), shadowOpacity: 0.1, shadowRadius: 2.0)
         self.peerScrollCollectionView.isHidden = (self.availablePeers.count <= 1)
         if self.firstTime {

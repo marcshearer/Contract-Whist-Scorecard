@@ -64,14 +64,11 @@ class RelatedPlayersViewController : ScorecardViewController, RelatedPlayersDele
         let storyboard = UIStoryboard(name: "RelatedPlayersViewController", bundle: nil)
         let relatedPlayersViewController: RelatedPlayersViewController = storyboard.instantiateViewController(withIdentifier: "RelatedPlayersViewController") as! RelatedPlayersViewController
         
-        relatedPlayersViewController.preferredContentSize = ScorecardUI.defaultSize
-        relatedPlayersViewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
-        
         relatedPlayersViewController.email = email
         relatedPlayersViewController.descriptionMode = descriptionMode
         relatedPlayersViewController.completion = completion
         relatedPlayersViewController.delegate = viewController
         
-        viewController.present(relatedPlayersViewController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: nil)
+        viewController.present(relatedPlayersViewController, animated: true, completion: nil)
     }
 }

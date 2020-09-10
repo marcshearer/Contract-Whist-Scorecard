@@ -16,10 +16,10 @@ class Palette {
     @BackgroundColor(.bannerShadow, game: .gameBannerShadow) static var bannerShadow
     
     // Other background colors
-    @BackgroundColor(.alternateBackground) static var alternateBackground
+    @BackgroundColor(.alternate) static var alternate
     @BackgroundColor(.background) static var normal
-    @BackgroundColor(.darkBackground) static var darkBackground
-    @BackgroundColor(.midBackground) static var midBackground
+    @BackgroundColor(.dark) static var dark
+    @BackgroundColor(.mid) static var mid
     @BackgroundColor(.bidButton) static var bidButton
     @BackgroundColor(.bold) static var bold
     @BackgroundColor(.buttonFace) static var buttonFace
@@ -53,6 +53,7 @@ class Palette {
     @BackgroundColor(.alwaysTheme) static var alwaysTheme
     @BackgroundColor(.watermark) static var watermark
     @BackgroundColor(.splitSidePanel) static var splitSidePanel
+    @BackgroundColor(.splitSideBorder) static var splitSideBorder
 
     // Specific colors
     @SpecificColor(.suitDiamondsHearts) static var suitDiamondsHearts
@@ -91,6 +92,40 @@ class Palette {
         color.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
         
         return (red: red, green: green, blue: blue, alpha: alpha)
+    }
+    
+    class func colorMatch(color: UIColor) -> String {
+        var matches = ""
+        
+        func addColor(_ color: String) {
+            if matches == "" {
+                matches = color
+            } else {
+                matches = matches + ", " + color
+            }
+        }
+        
+        for colorName in ThemeBackgroundColorName.allCases {
+            if color.cgColor == Themes.currentTheme.background(colorName).cgColor {
+                addColor("\(colorName)")
+            }
+        }
+        
+        for colorName in ThemeTextColorSetName.allCases {
+            for colorType in ThemeTextType.allCases {
+                if color.cgColor == Themes.currentTheme.textColor(textColorSetName: colorName, textType: colorType)?.cgColor {
+                    addColor("\(colorName)-\(colorType)")
+                }
+            }
+        }
+        
+        for colorName in ThemeSpecificColorName.allCases {
+            if color.cgColor == Themes.currentTheme.specific(colorName).cgColor {
+                addColor("\(colorName)")
+            }
+        }
+        
+        return matches
     }
     
     class func sectionHeadingStyle(_ cell: UITableViewCell) {
@@ -259,7 +294,7 @@ class Palette {
     }
     
     class func alternateStyle(_ label: UILabel, setFont: Bool = true) {
-        label.backgroundColor = Palette.alternateBackground.background
+        label.backgroundColor = Palette.alternate.background
         label.textColor = Palette.normal.text
         if setFont {
             label.font = UIFont.systemFont(ofSize: 15.0, weight: .thin)

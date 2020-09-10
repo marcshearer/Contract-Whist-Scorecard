@@ -20,6 +20,8 @@ protocol PanelContainer {
 
     var containers: Bool {get}
     
+    func panelLayoutSubviews()
+    
     func presentInContainers(_ items: [PanelContainerItem], rightPanelTitle: String?, animated: Bool, completion: (() -> ())?)
         
     @discardableResult func invokeOption(_ option: MenuOption, completion: (()->())?) -> ScorecardViewController?
@@ -37,29 +39,88 @@ extension PanelContainer {
 
 extension ClientViewController : PanelContainer {
     
+    internal func panelLayoutSubviews() {
+        let menuVisible = self.menuController?.isVisible() ?? false
+        self.topSection.isHidden = menuVisible
+        self.bottomSection.isHidden = menuVisible
+        
+        // Set all menu-dependent constraints to inactive
+        self.noMenuHeightConstraints.forEach{ (constraint) in constraint.isActive = false ; constraint.priority = UILayoutPriority(rawValue: 1)}
+        self.menuHeightConstraints.forEach{ (constraint) in constraint.isActive = false ; constraint.priority = UILayoutPriority(rawValue: 1) }
+        
+        // Now activate dependent on manu visisble
+        if menuVisible {
+            self.menuHeightConstraints.forEach{ (constraint) in
+                constraint.isActive = true
+                constraint.priority = .required
+            }
+        } else {
+            self.noMenuHeightConstraints.forEach{ (constraint) in
+                constraint.isActive = true
+                constraint.priority = .required
+            }
+        }
+        
+        // Set variable constraints
+        self.topSectionTopConstraint.constant = (menuVisible ? 40 : 0)
+        self.hostCollectionContainerInsets.forEach{(constraint) in constraint.constant = (menuVisible ? 40 : 20)}
+        self.peerTitleBarTopConstraint.constant = (menuVisible ? 20 : 8)
+        
+        // Set colors
+        self.banner.set(backgroundColor: (menuVisible ? Palette.dark.background : self.defaultBannerColor))
+        self.hostCollectionView.backgroundColor = (menuVisible ? UIColor.clear : Palette.buttonFace.background)
+        
+        // Set shadows and flow layouts
+        if menuVisible {
+            self.hostCollectionContainerView.removeShadow()
+            self.hostCollectionView.setCollectionViewLayout(self.centeredFlowLayout, animated: false)
+            self.centeredFlowLayout.invalidateLayout()
+        } else {
+            self.hostCollectionContainerView.addShadow(shadowSize: CGSize(width: 4.0, height: 4.0), shadowOpacity: 0.1, shadowRadius: 2.0)
+            self.hostCollectionView.setCollectionViewLayout(self.hostCollectionViewLayout, animated: false)
+            self.hostCollectionViewLayout.invalidateLayout()
+        }
+        
+        // Show / hide controls
+        self.hostTitleBar.set(transparent: menuVisible, alignment: .center)
+        self.peerTitleBar.set(transparent: menuVisible, alignment: .center)
+        self.infoButton.isHidden = menuVisible
+        
+        // Setup behaviour for hosts collection view
+        self.hostsAcross = (menuVisible ? 2 : 3)
+        self.hostsDown = (menuVisible ? 2 : 1)
+        self.hostVerticalSpacing = (menuVisible ? 20 : 0)
+        self.hostHorizontalSpacing = (menuVisible ? 12 : 0) // Allows for spacing in cell around button
+        self.hostRoundedContainer = !menuVisible
+    }
+    
     internal func allocateContainerSizes() {
         repeat {
             self.containers = true
             if !ScorecardUI.phoneSize() && self.leftPanelWidthConstraint != nil && self.rightPanelWidthConstraint != nil {
                 if self.view.frame.width >= 1000 {
                     // Room for all 3
-                    self.leftPanelWidthConstraint.constant = ScorecardUI.screenWidth * 0.32
-                    self.rightPanelWidthConstraint.constant =  ScorecardUI.screenWidth * 0.3
+                    self.leftPanelWidthConstraint.constant = self.view.frame.width * 0.29
+                    self.rightPanelWidthConstraint.constant =  self.view.frame.width * 0.32
                     break
                 }
                 if self.view.frame.width >= 750 {
                     // Room for 2
-                    self.leftPanelWidthConstraint.constant =  ScorecardUI.screenWidth * 0.4
+                    self.leftPanelWidthConstraint.constant =  self.view.frame.width * 0.4
                     self.rightPanelWidthConstraint.constant = 0
                     break
                 }
             }
             // Just 1
-            self.containers = false
             self.leftPanelWidthConstraint?.constant = 0
             self.rightPanelWidthConstraint?.constant = 0
-            
+            if min(UIScreen.main.bounds.width, UIScreen.main.bounds.height) < 750 {
+                // Looks like we're on a phone
+                self.containers = false
+            }
         } while false
+        
+        self.container = (self.containers ? .main : .none)
         
         self.leftContainer?.setNeedsLayout()
         self.rightContainer?.setNeedsLayout()
@@ -119,12 +180,12 @@ extension ClientViewController : PanelContainer {
                 if let containerView = containerView {
                     // Got a container - add view controller / view to container
                     rootViewController.addChild(viewController)
-                    viewController.didMove(toParent: rootViewController)
+                    view.frame = rootView.convert(containerView.frame, to: rootView)
                     rootView.addSubview(view)
+                    viewController.didMove(toParent: rootViewController)
                     rootView.bringSubviewToFront(view)
                     
-                    // Position view
-                    view.frame = rootView.convert(containerView.frame, to: rootView)
+                    // Add layout constraints
                     view.translatesAutoresizingMaskIntoConstraints = false
                     Constraint.anchor(view: rootView, control: containerView, to: view)
                     if container == .right {

@@ -48,7 +48,7 @@ enum ThemeName: String, CaseIterable {
     }
 }
 
-enum ThemeTextType {
+enum ThemeTextType: CaseIterable {
     case normal
     case contrast
     case strong
@@ -56,8 +56,8 @@ enum ThemeTextType {
     case theme
 }
 
-enum ThemeBackgroundColorName {
-    case alternateBackground
+enum ThemeBackgroundColorName: CaseIterable {
+    case alternate
     case background
     case banner
     case bannerShadow
@@ -97,22 +97,23 @@ enum ThemeBackgroundColorName {
     case whisper
     case carouselSelected
     case carouselUnselected
-    case darkBackground
-    case midBackground
+    case dark
+    case mid
     case alwaysTheme
     case watermark
     case pageIndicator
     case splitSidePanel
+    case splitSideBorder
 }
 
-enum ThemeTextColorName {
+enum ThemeTextColorSetName: CaseIterable {
     case darkBackground
     case midBackground
     case midGameBackground
     case lightBackground
 }
 
-enum ThemeSpecificColorName {
+enum ThemeSpecificColorName: CaseIterable {
     case suitDiamondsHearts
     case suitClubsSpades
     case suitNoTrumps
@@ -129,7 +130,7 @@ enum ThemeSpecificColorName {
 
 class Theme {
     private var themeName: ThemeName
-    private var textColorConfig: [ThemeTextColorName: ThemeTextColor] = [:]
+    private var textColorConfig: [ThemeTextColorSetName: ThemeTextColor] = [:]
     private var backgroundColor: [ThemeBackgroundColorName : UIColor] = [:]
     private var textColor: [ThemeBackgroundColorName : UIColor] = [:]
     private var contrastTextColor: [ThemeBackgroundColorName : UIColor] = [:]
@@ -163,11 +164,22 @@ class Theme {
         }
     }
     
-    public func text(_ backgroundColorName: ThemeBackgroundColorName, game gameBackgroundColorName: ThemeBackgroundColorName? = nil) -> UIColor {
-        if let gameBackgroundColorName = gameBackgroundColorName {
-            return self.gameColor(self.textColor[backgroundColorName] ?? UIColor.clear, self.textColor[gameBackgroundColorName])
-        } else {
-            return self.textColor[backgroundColorName] ?? UIColor.clear
+    public func text(_ backgroundColorName: ThemeBackgroundColorName, game gameBackgroundColorName: ThemeBackgroundColorName? = nil, textType: ThemeTextType = .normal) -> UIColor {
+        switch textType {
+        case .contrast:
+            return self.contrastText(backgroundColorName, game: gameBackgroundColorName)
+        case .strong:
+            return self.strongText(backgroundColorName, game: gameBackgroundColorName)
+        case .faint:
+            return self.faintText(backgroundColorName, game: gameBackgroundColorName)
+        case .theme:
+            return self.themeText(backgroundColorName, game: gameBackgroundColorName)
+        default:
+            if let gameBackgroundColorName = gameBackgroundColorName {
+                return self.gameColor(self.textColor[backgroundColorName] ?? UIColor.clear, self.textColor[gameBackgroundColorName])
+            } else {
+                return self.textColor[backgroundColorName] ?? UIColor.clear
+            }
         }
     }
     
@@ -203,6 +215,10 @@ class Theme {
         }
     }
     
+    public func textColor(textColorSetName: ThemeTextColorSetName, textType: ThemeTextType) -> UIColor? {
+        return self.textColorConfig[textColorSetName]?.color(textType)?.uiColor
+    }
+    
     public func specific(_ specificColorName: ThemeSpecificColorName) -> UIColor {
         return self.specificColor[specificColorName] ?? UIColor.black
     }
@@ -217,8 +233,8 @@ class Theme {
         
         // Iterate background colors filling in detail
         for (name, themeBackgroundColor) in from.backgroundColor {
-            var anyTextColorName: ThemeTextColorName
-            var darkTextColorName: ThemeTextColorName
+            var anyTextColorName: ThemeTextColorSetName
+            var darkTextColorName: ThemeTextColorSetName
             if all || self.backgroundColor[name] == nil {
                 self.backgroundColor[name] = themeBackgroundColor.backgroundColor.uiColor
             }
@@ -306,10 +322,10 @@ class ThemeTraitColor {
 
 class ThemeColor {
     fileprivate let backgroundColor: ThemeTraitColor
-    fileprivate let anyTextColorName: ThemeTextColorName
-    fileprivate let darkTextColorName: ThemeTextColorName?
+    fileprivate let anyTextColorName: ThemeTextColorSetName
+    fileprivate let darkTextColorName: ThemeTextColorSetName?
     
-    init(_ anyColor: UIColor, _ darkColor: UIColor? = nil, _ anyTextColorName: ThemeTextColorName, _ darkTextColorName: ThemeTextColorName? = nil) {
+    init(_ anyColor: UIColor, _ darkColor: UIColor? = nil, _ anyTextColorName: ThemeTextColorSetName, _ darkTextColorName: ThemeTextColorSetName? = nil) {
         self.backgroundColor = ThemeTraitColor(anyColor, darkColor)
         self.anyTextColorName = anyTextColorName
         self.darkTextColorName = darkTextColorName
@@ -359,10 +375,10 @@ class ThemeConfig {
     
     let basedOn: ThemeName?
     var backgroundColor: [ThemeBackgroundColorName: ThemeColor]
-    var textColor: [ThemeTextColorName: ThemeTextColor]
+    var textColor: [ThemeTextColorSetName: ThemeTextColor]
     var specificColor: [ThemeSpecificColorName: ThemeTraitColor]
     
-    init(basedOn: ThemeName? = nil, background backgroundColor: [ThemeBackgroundColorName : ThemeColor], text textColor: [ThemeTextColorName : ThemeTextColor], specific specificColor: [ThemeSpecificColorName: ThemeTraitColor] = [:]) {
+    init(basedOn: ThemeName? = nil, background backgroundColor: [ThemeBackgroundColorName : ThemeColor], text textColor: [ThemeTextColorSetName : ThemeTextColor], specific specificColor: [ThemeSpecificColorName: ThemeTraitColor] = [:]) {
         self.basedOn = basedOn
         self.backgroundColor = backgroundColor
         self.textColor = textColor
@@ -378,10 +394,10 @@ class Themes {
     fileprivate static let themes: [ThemeName : ThemeConfig] = [
         .standard : ThemeConfig(
             background: [
-                .alternateBackground         : ThemeColor(#colorLiteral(red: 0.9724639058, green: 0.9726034999, blue: 0.9724336267, alpha: 1), nil, .lightBackground), //w
+                .alternate         : ThemeColor(#colorLiteral(red: 0.9724639058, green: 0.9726034999, blue: 0.9724336267, alpha: 1), nil, .lightBackground), //w
                 .background                  : ThemeColor(#colorLiteral(red: 0.9724639058, green: 0.9726034999, blue: 0.9724336267, alpha: 1), #colorLiteral(red: 0.2605174184, green: 0.2605243921, blue: 0.260520637, alpha: 1),  .lightBackground, .darkBackground), //w
-                .midBackground               : ThemeColor(#colorLiteral(red: 0.9724639058, green: 0.9726034999, blue: 0.9724336267, alpha: 1), #colorLiteral(red: 0.2605174184, green: 0.2605243921, blue: 0.260520637, alpha: 1),  .lightBackground, .darkBackground), //      Home screen No devices... background
-                .darkBackground              : ThemeColor(#colorLiteral(red: 0.9098039216, green: 0.9098039216, blue: 0.9098039216, alpha: 1), #colorLiteral(red: 0.1298420429, green: 0.1298461258, blue: 0.1298439503, alpha: 1),  .lightBackground, .darkBackground), //      Home screen & Results background
+                .mid               : ThemeColor(#colorLiteral(red: 0.9724639058, green: 0.9726034999, blue: 0.9724336267, alpha: 1), #colorLiteral(red: 0.2605174184, green: 0.2605243921, blue: 0.260520637, alpha: 1),  .lightBackground, .darkBackground), //      Home screen No devices... background
+                .dark              : ThemeColor(#colorLiteral(red: 0.9098039216, green: 0.9098039216, blue: 0.9098039216, alpha: 1), #colorLiteral(red: 0.1298420429, green: 0.1298461258, blue: 0.1298439503, alpha: 1),  .lightBackground, .darkBackground), //      Home screen & Results background
                 .banner                      : ThemeColor(#colorLiteral(red: 0.6745098039, green: 0.2196078431, blue: 0.2, alpha: 1), #colorLiteral(red: 0.1298420429, green: 0.1298461258, blue: 0.1298439503, alpha: 1),  .midBackground,   .darkBackground),   //1     Banner
                 .bannerShadow                : ThemeColor(#colorLiteral(red: 0.7294117647, green: 0.2392156863, blue: 0.2156862745, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1),  .midBackground,   .darkBackground),
                 .carouselSelected            : ThemeColor(#colorLiteral(red: 0.7294117647, green: 0.2392156863, blue: 0.2156862745, alpha: 1), nil, .midBackground),
@@ -420,7 +436,8 @@ class Themes {
                 .whisper                     : ThemeColor(#colorLiteral(red: 0.4745098054, green: 0.8392156959, blue: 0.9764705896, alpha: 1), nil, .lightBackground),
                 .alwaysTheme                 : ThemeColor(#colorLiteral(red: 0.6745098039, green: 0.2196078431, blue: 0.2, alpha: 1), nil, .midBackground),
                 .watermark                   : ThemeColor(#colorLiteral(red: 0.9724639058, green: 0.9726034999, blue: 0.9724336267, alpha: 1), #colorLiteral(red: 0.2195822597, green: 0.2196257114, blue: 0.2195765674, alpha: 1),  .lightBackground, .darkBackground),
-                .splitSidePanel              : ThemeColor(#colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1),  .darkBackground)],
+                .splitSidePanel              : ThemeColor(#colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1),  .darkBackground),
+                .splitSideBorder             : ThemeColor(#colorLiteral(red: 0.4509385824, green: 0.4510071278, blue: 0.4509235024, alpha: 1), #colorLiteral(red: 0.4509385824, green: 0.4510071278, blue: 0.4509235024, alpha: 1),  .darkBackground)],
             text: [
                 .lightBackground             : ThemeTextColor(normal: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), contrast: #colorLiteral(red: 0.337254902, green: 0.4509803922, blue: 0.4549019608, alpha: 1), strong: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), faint: #colorLiteral(red: 0.6235294118, green: 0.6235294118, blue: 0.6235294118, alpha: 1), theme: #colorLiteral(red: 0.6745098039, green: 0.2196078431, blue: 0.2, alpha: 1)) ,
                 .midBackground               : ThemeTextColor(normal: #colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1), contrast: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), strong: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), theme: #colorLiteral(red: 0.5058823529, green: 0.1647058824, blue: 0.1490196078, alpha: 1), #colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1)) ,

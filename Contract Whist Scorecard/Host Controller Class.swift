@@ -40,7 +40,6 @@ enum InviteStatus {
     private var startMode: ConnectionMode?
     private var unique = 0
     private var gameInProgress = false
-    private var alertController: UIAlertController!
     private var connectionMode: ConnectionMode!
     private var defaultConnectionMode: ConnectionMode!
     private var nearbyHostService: CommsHostServiceDelegate!
@@ -753,7 +752,7 @@ enum InviteStatus {
         Scorecard.shared.sendPlayHand()
         
         if let parentViewController = self.parentViewController {
-            handViewController = Scorecard.shared.playHand(from: parentViewController, appController: self, sourceView: parentViewController.view, animated: true)
+            handViewController = Scorecard.shared.playHand(from: parentViewController, appController: self, animated: true)
         }
         
         return handViewController
@@ -924,8 +923,7 @@ enum InviteStatus {
     
     private func showSelection() -> ScorecardViewController {
         if let viewController = self.fromViewController() {
-            self.selectionViewController = SelectionViewController.show(from: viewController, appController: self, existing: self.selectionViewController, mode: .invitees, thisPlayer: self.playerData[0].playerUUID, formTitle: "Choose Players", smallFormTitle: "Select", backText: "", backImage: "home",
-                                                                        completion:
+            self.selectionViewController = SelectionViewController.show(from: viewController, appController: self, existing: self.selectionViewController, mode: .invitees, thisPlayer: self.playerData[0].playerUUID, formTitle: "Choose Players", smallFormTitle: "Select", completion:
                 { [weak self] (returnHome, selectedPlayers) in
                     // Returned values coming back from select players. Just store them - should get a didProceed immediately after
                     self?.selectedPlayers = selectedPlayers

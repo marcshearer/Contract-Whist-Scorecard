@@ -33,7 +33,6 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
     private var clientService: CommsClientServiceDelegate?
     
     private weak var gamePreviewViewController: GamePreviewViewController!
-    private weak var alertController: UIAlertController!
     
     private var gameOver = false
     
@@ -686,7 +685,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
         var handViewController: HandViewController?
         
         if let parentViewController = self.parentViewController {
-            handViewController = Scorecard.shared.playHand(from: parentViewController, appController: self, sourceView: parentViewController.view, animated: true)
+            handViewController = Scorecard.shared.playHand(from: parentViewController, appController: self, animated: true)
         }
         
         return handViewController

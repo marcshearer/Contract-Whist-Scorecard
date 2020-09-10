@@ -71,27 +71,32 @@ class ConfirmCountViewController : ScorecardViewController, UIPopoverPresentatio
     }
     
     static func show(title: String, message: String, defaultValue: Int = 1, minimumValue: Int? = nil, maximumValue: Int? = nil, height: Int = 260, handler: @escaping ((Int)->())) {
+        
         let storyboard = UIStoryboard(name: "ConfirmCountViewController", bundle: nil)
         let viewController = storyboard.instantiateViewController(withIdentifier: "ConfirmCountViewController") as! ConfirmCountViewController
-    
-        let parentViewController = Utility.getActiveViewController()!
+        
         viewController.minimumValue = minimumValue
         viewController.maximumValue = maximumValue
         viewController.formTitle = title
         viewController.message = message
         viewController.value = defaultValue
         viewController.confirmHandler = handler
- 
+        
+        let parentViewController = Utility.getActiveViewController()!
+        let sourceView = parentViewController.popoverPresentationController?.sourceView ?? parentViewController.view
+        let sourceRect = CGRect(x: UIScreen.main.bounds.size.width/2, y: UIScreen.main.bounds.size.height/2, width: 0 ,height: 0)
+        let popoverSize = CGSize(width: 280, height: height)
+        
         viewController.modalPresentationStyle = UIModalPresentationStyle.popover
-        viewController.popoverPresentationController?.delegate = viewController
         viewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-        viewController.popoverPresentationController?.sourceView = parentViewController.popoverPresentationController?.sourceView ?? parentViewController.view
-        viewController.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.size.width/2, y: UIScreen.main.bounds.size.height/2, width: 0 ,height: 0)
-        viewController.preferredContentSize = CGSize(width: 280, height: height)
+        viewController.preferredContentSize = popoverSize
+        viewController.popoverPresentationController?.sourceView = sourceView
+        viewController.popoverPresentationController?.sourceRect = sourceRect
+        viewController.popoverPresentationController?.delegate = viewController
 
         parentViewController.present(viewController, animated: true, completion: nil)
     }
-    
+       
     private func dismiss(completion: (()->())? = nil) {
         self.dismiss(animated: true, completion: {
             completion?()
@@ -114,7 +119,7 @@ extension ConfirmCountViewController {
         self.labelTitle.backgroundColor = Palette.roomInterior.background
         self.labelTitle.textColor = Palette.roomInterior.text
         self.stepperCount.tintColor = Palette.normal.text
-        self.textFieldCount.backgroundColor = Palette.alternateBackground.background
+        self.textFieldCount.backgroundColor = Palette.alternate.background
         self.textFieldCount.textColor = Palette.normal.text
         self.verticalSeparator.backgroundColor = Palette.separator.background
         self.view.backgroundColor = Palette.normal.background

@@ -26,6 +26,7 @@ extension UIView {
     
     public func removeShadow() {
         self.layer.shadowOffset = CGSize()
+        self.clipsToBounds = false
     }
        
     public func roundCorners(cornerRadius: CGFloat, topRounded:Bool = true, bottomRounded: Bool = true) {
@@ -43,7 +44,13 @@ extension UIView {
             layer.frame = self.bounds
             layer.path = layerMask.cgPath
             self.layer.mask = layer
+        } else {
+            self.layer.mask = nil
         }
+    }
+    
+    public func removeRoundCorners() {
+        self.layer.mask = nil
     }
 }
 

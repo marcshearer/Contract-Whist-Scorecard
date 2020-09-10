@@ -36,76 +36,85 @@ class ScorecardAnimator: NSObject, UIViewControllerAnimatedTransitioning {
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         
         let containerView = transitionContext.containerView
-        if let toView = transitionContext.view(forKey: .to) ?? transitionContext.viewController(forKey:.to)?.view,
-            let fromView = transitionContext.view(forKey: .from) ?? transitionContext.viewController(forKey:.from)?.view{
-        
-            // Avoid layout bug if rotated since last shown
-            let toViewController = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.to)!
-            toView.frame = transitionContext.finalFrame(for: toViewController)
-            
-            containerView.addSubview(toView)
-            
-            switch self.animation {
-            case .fade:
-                toView.alpha = 0.0
-                UIView.animate(
-                    withDuration: duration,
-                    animations: {
-                        toView.alpha = 1.0
-                },
-                    completion: { _ in
-                        transitionContext.completeTransition(true)
-                })
+        if let toViewController = transitionContext.viewController(forKey:.to),
+            let fromViewController = transitionContext.viewController(forKey:.from) {
+            if let toView = transitionContext.view(forKey: .to) ?? toViewController.view,
+                var fromView = transitionContext.view(forKey: .from) ?? fromViewController.view {
                 
-            case .fromLeft:
-                let frame = fromView.frame
-                toView.frame = CGRect(x: -frame.width, y: 0.0, width: frame.width, height: frame.height)
-                toView.clipsToBounds = true
-                UIView.animate(
-                    withDuration: duration,
-                    animations: {
-                        toView.frame = frame
-                        fromView.frame = CGRect(x: frame.width, y: 0.0, width: frame.width, height: frame.height)
-                },
-                    completion: { _ in
-                        transitionContext.completeTransition(true)
-                })
+                if let rootViewController = fromViewController as? PanelContainer {
+                    if let dismissImageView = rootViewController.dismissImageView {
+                        fromView = dismissImageView
+                    }
+                }
                 
-            case .fromRight:
-                let frame = fromView.frame
-                toView.frame = CGRect(x: frame.width, y: 0.0, width: frame.width, height: frame.height)
-                UIView.animate(
-                    withDuration: duration,
-                    animations: {
-                        toView.frame = frame
-                        fromView.frame = CGRect(x: -frame.width, y: 0.0, width: frame.width, height: frame.height)
-                },
-                    completion: { _ in
-                        transitionContext.completeTransition(true)
-                })
-            case .fromTop:
-                let frame = fromView.frame
-                toView.frame = CGRect(x: 0.0, y: -frame.height, width: frame.width, height: frame.height)
-                UIView.animate(
-                    withDuration: duration,
-                    animations: {
-                        toView.frame = frame
-                },
-                    completion: { _ in
-                        transitionContext.completeTransition(true)
-                })
-            case .toTop:
-                let frame = fromView.frame
-                toView.frame = frame
-                fromView.superview?.bringSubviewToFront(fromView)
-                UIView.animate(
-                    withDuration: duration,
-                    animations: {
-                        fromView.frame = CGRect(x: 0.0, y: -frame.height, width: frame.width, height: frame.height)
-                },
-                    completion: { _ in
-                        transitionContext.completeTransition(true)
-                })
+                // Avoid layout bug if rotated since last shown
+                let toViewController = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.to)!
+                toView.frame = transitionContext.finalFrame(for: toViewController)
+                
+                containerView.addSubview(toView)
+                
+                switch self.animation {
+                case .fade:
+                    toView.alpha = 0.0
+                    UIView.animate(
+                        withDuration: duration,
+                        animations: {
+                            toView.alpha = 1.0
+                    },
+                        completion: { _ in
+                            transitionContext.completeTransition(true)
+                    })
+                    
+                case .fromLeft:
+                    let frame = fromView.frame
+                    toView.frame = CGRect(x: -frame.width, y: 0.0, width: frame.width, height: frame.height)
+                    toView.clipsToBounds = true
+                    UIView.animate(
+                        withDuration: duration,
+                        animations: {
+                            toView.frame = frame
+                            fromView.frame = CGRect(x: frame.width, y: 0.0, width: frame.width, height: frame.height)
+                    },
+                        completion: { _ in
+                            transitionContext.completeTransition(true)
+                    })
+                    
+                case .fromRight:
+                    let frame = fromView.frame
+                    toView.frame = CGRect(x: frame.width, y: 0.0, width: frame.width, height: frame.height)
+                    UIView.animate(
+                        withDuration: duration,
+                        animations: {
+                            toView.frame = frame
+                            fromView.frame = CGRect(x: -frame.width, y: 0.0, width: frame.width, height: frame.height)
+                    },
+                        completion: { _ in
+                            transitionContext.completeTransition(true)
+                    })
+                case .fromTop:
+                    let frame = fromView.frame
+                    toView.frame = CGRect(x: 0.0, y: -frame.height, width: frame.width, height: frame.height)
+                    UIView.animate(
+                        withDuration: duration,
+                        animations: {
+                            toView.frame = frame
+                    },
+                        completion: { _ in
+                            transitionContext.completeTransition(true)
+                    })
+                case .toTop:
+                    let frame = fromView.frame
+                    toView.frame = frame
+                    fromView.superview?.bringSubviewToFront(fromView)
+                    UIView.animate(
+                        withDuration: duration,
+                        animations: {
+                            fromView.frame = CGRect(x: 0.0, y: -frame.height, width: frame.width, height: frame.height)
+                    },
+                        completion: { _ in
+                            transitionContext.completeTransition(true)
+                    })
+                }
             }
         }
     }

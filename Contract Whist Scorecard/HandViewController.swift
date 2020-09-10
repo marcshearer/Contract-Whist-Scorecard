@@ -185,8 +185,8 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
         view.setNeedsLayout()
     }
     
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         viewHeight = view.safeAreaLayoutGuide.layoutFrame.height
         viewWidth = view.safeAreaLayoutGuide.layoutFrame.width
         self.instructionViewLeadingConstraint.constant = self.view.safeAreaInsets.left
@@ -1078,7 +1078,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
 
     // MARK: - Function to present this view ==============================================================
     
-    class func show(from viewController: ScorecardViewController, appController: ScorecardAppController? = nil, sourceView: UIView, existing handViewController: HandViewController? = nil, RobotDelegate: [Int : RobotDelegate?]? = nil, animated: Bool = true) -> HandViewController {
+    class func show(from viewController: ScorecardViewController, appController: ScorecardAppController? = nil, existing handViewController: HandViewController? = nil, RobotDelegate: [Int : RobotDelegate?]? = nil, animated: Bool = true) -> HandViewController {
         var handViewController: HandViewController! = handViewController
         
         if handViewController == nil {
@@ -1086,13 +1086,10 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
             handViewController = storyboard.instantiateViewController(withIdentifier: "HandViewController") as? HandViewController
         }
         
-        handViewController!.preferredContentSize = ScorecardUI.defaultSize
-        handViewController!.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
-        
         handViewController!.controllerDelegate = appController
         
         Utility.mainThread("playHand", execute: {
-            viewController.present(handViewController!, appController: appController, sourceView: sourceView, animated: animated, completion: nil)
+            viewController.present(handViewController!, appController: appController, animated: animated, completion: nil)
         })
         
         return handViewController

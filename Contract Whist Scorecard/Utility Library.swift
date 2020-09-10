@@ -454,7 +454,7 @@ class Utility {
                 break
             }
             viewController = viewController?.children[(viewController?.children.count)!-1]
-            if (!fullScreenOnly || viewController?.view.frame.height == fullHeight) && (!ignoreAlertController || !(viewController is UIAlertController)) {
+            if (!fullScreenOnly || viewController?.view.frame.height == fullHeight) && (!ignoreAlertController || !(viewController is AlertViewController)) {
                 activeViewController = viewController
             }
         }
@@ -464,7 +464,7 @@ class Utility {
                 break
             }
             viewController = viewController?.presentedViewController
-            if (!fullScreenOnly || viewController?.view.frame.height == fullHeight) && (!ignoreAlertController || !(viewController is UIAlertController)) {
+            if (!fullScreenOnly || viewController?.view.frame.height == fullHeight) && (!ignoreAlertController || !(viewController is AlertViewController)) {
                 activeViewController = viewController
             }
         }
@@ -586,17 +586,14 @@ class Utility {
     }
     
     public static func screenshot(view: UIView? = nil) -> UIImage? {
-        if let view = view ?? self.getActiveViewController()!.view {
-            let layer = view.layer
-            let scale = UIScreen.main.scale
-            UIGraphicsBeginImageContextWithOptions(layer.frame.size, false, scale);
-            layer.render(in: UIGraphicsGetCurrentContext()!)
-            let screenshot = UIGraphicsGetImageFromCurrentImageContext()
-            UIGraphicsEndImageContext()
-            return screenshot
-        } else {
-            return nil
-        }
+        let layer = view?.layer ?? UIApplication.shared.keyWindow!.layer
+        let scale = UIScreen.main.scale
+        UIGraphicsBeginImageContextWithOptions(layer.frame.size, false, scale)
+        layer.render(in: UIGraphicsGetCurrentContext()!)
+        let screenshot = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        UIImageWriteToSavedPhotosAlbum(screenshot!, nil, nil, nil)
+        return screenshot
     }
     
 

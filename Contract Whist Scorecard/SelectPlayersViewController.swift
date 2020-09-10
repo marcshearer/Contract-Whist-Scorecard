@@ -387,14 +387,11 @@ class SelectPlayersViewController: ScorecardViewController, SyncDelegate, Button
         let storyboard = UIStoryboard(name: "SelectPlayersViewController", bundle: nil)
         let selectPlayersViewController = storyboard.instantiateViewController(withIdentifier: "SelectPlayersViewController") as! SelectPlayersViewController
         
-        selectPlayersViewController.preferredContentSize = ScorecardUI.defaultSize
-        selectPlayersViewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
-        
         selectPlayersViewController.appController = appController
         selectPlayersViewController.playerDetailView = playerDetailView
         selectPlayersViewController.completion = completion
     
-        viewController.present(selectPlayersViewController, appController: appController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: nil)
+        viewController.present(selectPlayersViewController, appController: appController, animated: true, completion: nil)
         
         return selectPlayersViewController
     }

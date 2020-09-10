@@ -267,10 +267,6 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
         }
     }
     
-    internal func transitionViews() -> (from: ScorecardView, to: ScorecardView) {
-        return (from: self.lastView, to: self.activeView)
-    }
-    
     internal func appControllerCompletion() {
         self.processQueue()
     }
@@ -622,7 +618,7 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
         
     // MARK: - View tweaks ========================================================================== -
     
-    internal func present(_ viewControllerToPresent: ScorecardViewController, appController: ScorecardAppController? = nil, sourceView: UIView? = nil, animated: Bool, container: Container? = .main, completion: (() -> Void)? = nil) {
+    internal func present(_ viewControllerToPresent: ScorecardViewController, appController: ScorecardAppController? = nil, popoverSize: CGSize? = nil, sourceView: UIView? = nil, sourceRect: CGRect? = nil, popoverDelegate: UIPopoverPresentationControllerDelegate? = nil, animated: Bool, container: Container? = .main, completion: (() -> Void)? = nil) {
 
         func hideAndComplete() {
             completion?()
@@ -637,33 +633,35 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
         viewControllerToPresent.menuController = self.rootViewController?.menuController
         viewControllerToPresent.uniqueID = viewControllerToPresent.uniqueID ?? UUID().uuidString
         
-        if self.rootViewController?.containers ?? false && (self.container == .main || self == self.rootViewController) && container != .none {
+        if self.rootViewController?.containers ?? false && (self.container == .main || self == self.rootViewController) && popoverSize == nil {
             // Working in containers
             self.rootViewController?.presentInContainers([PanelContainerItem(viewController: viewControllerToPresent, container: container!)], animated: true, completion: completion)
             
         } else {
-        
-            // Add to view stack
-            self.rootViewController?.viewControllerStack.append((viewControllerToPresent.uniqueID, viewControllerToPresent))
             
             // No luck with container - go ahead and present
             viewControllerToPresent.container = .none
             
+            // Add to view stack
+            self.rootViewController?.viewControllerStack.append((viewControllerToPresent.uniqueID, viewControllerToPresent))
+            
             // Use custom animation
             viewControllerToPresent.transitioningDelegate = self
             
-            // Avoid silly popups on max sized phones
-            if !ScorecardUI.phoneSize() && sourceView != nil {
+            if popoverSize != nil {
+                // Show as popup
                 viewControllerToPresent.modalPresentationStyle = UIModalPresentationStyle.popover
                 viewControllerToPresent.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
+                viewControllerToPresent.preferredContentSize = popoverSize!
                 viewControllerToPresent.popoverPresentationController?.sourceView = sourceView
-                viewControllerToPresent.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY, width: 0 ,height: 0)
+                viewControllerToPresent.popoverPresentationController?.sourceRect = sourceRect ?? CGRect()
+                viewControllerToPresent.popoverPresentationController?.delegate = popoverDelegate
                 viewControllerToPresent.isModalInPopover = true
                 if let delegate = self as? UIPopoverPresentationControllerDelegate {
                     viewControllerToPresent.popoverPresentationController?.delegate = delegate
                 }
-            } else if !ScorecardUI.phoneSize() {
-                // Make full screen on iPad
+            } else {
+                // Make full screen
                 viewControllerToPresent.modalPresentationStyle = .fullScreen
             }
             
@@ -677,12 +675,13 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
     
     internal func createDismissImageView() {
         if var rootViewController = self.rootViewController {
+            Utility.debugMessage("Scorecard", "Creating dismiss image view on \(rootViewController.className)")
             if rootViewController.dismissImageView == nil {
                 rootViewController.dismissImageView = UIImageView(frame: UIScreen.main.bounds)
                 rootViewController.view.addSubview(self.rootViewController.dismissImageView)
                 rootViewController.dismissImageView.accessibilityIdentifier = "dismissImageView"
             }
-            rootViewController.dismissImageView.image = Utility.screenshot(view: rootViewController.view)
+            rootViewController.dismissImageView.image = Utility.screenshot()
             if let view = rootViewController.view {
                 rootViewController.dismissImageView.frame = view.convert(view.frame, to: nil)
             }
@@ -702,6 +701,7 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
         }
         
         if self.rootViewController?.dismissImageView != nil {
+            Utility.debugMessage("Scorecard", "Removing dismiss image view")
             if animated {
                 self.rootViewController?.dismissImageView?.alpha = 1.0
                 Utility.animate(duration: 0.5, completion: {
@@ -894,7 +894,7 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
     }
     
     public var defaultBannerColor: UIColor {
-        if self.container == .main && !Scorecard.shared.useGameColor {
+        if self.menuController?.isVisible() ?? false && (self.container == .main || self.container == .mainRight)  {
             return Palette.normal.background
         } else {
             return Palette.banner.background
@@ -902,7 +902,7 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
     }
     
     public var defaultBannerTextColor: UIColor {
-        if self.container == .main && !Scorecard.shared.useGameColor {
+        if self.menuController?.isVisible() ?? false && (self.container == .main || self.container == .mainRight) {
             return Palette.normal.themeText
         } else {
             return Palette.banner.text
@@ -910,7 +910,7 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
     }
     
     public var defaultBannerHeight: CGFloat {
-        if (self.container == .main || self.container == .mainRight) && !Scorecard.shared.useGameColor {
+        if self.menuController?.isVisible() ?? false && (self.container == .main || self.container == .mainRight) {
             return 150
         } else {
             return 44
@@ -918,7 +918,7 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
     }
     
     public var defaultBannerAlignment: NSTextAlignment {
-        if (self.container == .main || self.container == .mainRight) && !Scorecard.shared.useGameColor {
+        if self.menuController?.isVisible() ?? false && (self.container == .main || self.container == .mainRight) {
             return .left
         } else {
             return .center

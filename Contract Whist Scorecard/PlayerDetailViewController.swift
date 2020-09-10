@@ -94,10 +94,6 @@ class PlayerDetailViewController: ScorecardViewController, PlayerDetailViewDeleg
     private var changed = false
     private var imageObserver: NSObjectProtocol!
  
-    // Alert controller while waiting for cloud download
-    private var cloudAlertController: UIAlertController!
-    private var cloudIndicatorView: UIActivityIndicatorView!
-
     private var nameCell: PlayerDetailCell!
     private var playerView: PlayerView!
     private var labelFontSize: CGFloat?
@@ -807,12 +803,11 @@ class PlayerDetailViewController: ScorecardViewController, PlayerDetailViewDeleg
     static public func show(from sourceViewController: ScorecardViewController, playerDetail: PlayerDetail, mode: DetailMode, sourceView: UIView, playersViewDelegate: PlayersViewDelegate? = nil, dismissOnSave: Bool = true) {
         
         let playerDetailViewController = PlayerDetailViewController.create(playerDetail: playerDetail, mode: mode, playersViewDelegate: playersViewDelegate, dismissOnSave: dismissOnSave)
+                
+        let popoverSize = (ScorecardUI.phoneSize() ? nil : ScorecardUI.defaultSize)
+        let sourceView = (ScorecardUI.phoneSize() ? nil : sourceView)
         
-        playerDetailViewController.preferredContentSize = ScorecardUI.defaultSize
-        playerDetailViewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
-        playerDetailViewController.sourceView = sourceView
-        
-        sourceViewController.present(playerDetailViewController, sourceView: sourceView, animated: true, completion: nil)
+        sourceViewController.present(playerDetailViewController, popoverSize: popoverSize, sourceView: sourceView, animated: true, completion: nil)
     }
     
 }

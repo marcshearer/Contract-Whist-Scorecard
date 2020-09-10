@@ -314,9 +314,7 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
                 let date = formatter.string(from: Scorecard.game.player(enteredPlayerNumber: playerNumber).previousMaxScoreDate)
                 message = "Congratulations \(name!) on your new personal best of \(playerResults.score).\n\nYour previous best was \(Scorecard.game.player(enteredPlayerNumber: playerNumber).previousMaxScore) which you achieved on \(date)"
             }
-            let alertController = UIAlertController(title: "Congratulations", message: message, preferredStyle: UIAlertController.Style.alert)
-            alertController.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
-            present(alertController, animated: true, completion: nil)
+            self.alertMessage(message)
         } else {
             // Not a PB - Link to high scores
             if Scorecard.activeSettings.saveHistory {
@@ -619,24 +617,13 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
             self.synchroniseAndReturn(returnMode: returnMode, advanceDealer: advanceDealer, resetOverrides: resetOverrides)
         }
         
-        if confirm {
-            var message: String
-            if self.excludeHistory {
-                message = "If you continue you will not be able to return to this game.\n\n Are you sure you want to do this?"
-            } else {
-                message = "Your game has been saved. However if you continue you will not be able to return to it.\n\n Are you sure you want to do this?"
-            }
-            let alertController = UIAlertController(title: "Finish Game", message: message, preferredStyle: UIAlertController.Style.alert)
-            alertController.addAction(UIAlertAction(title: "Confirm", style: UIAlertAction.Style.default,
-                                                    handler: { (action:UIAlertAction!) -> Void in
-                finish()
-            }))
-            alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel,
-                                                    handler:nil))
-            self.present(alertController, animated: true, completion: nil)
+        var message: String
+        if self.excludeHistory {
+            message = "If you continue you will not be able to return to this game.\n\n Are you sure you want to do this?"
         } else {
-            finish()
+            message = "Your game has been saved. However if you continue you will not be able to return to it.\n\n Are you sure you want to do this?"
         }
+        self.alertDecision(if: confirm, message, title: "Finish Game", okButtonText: "Confirm", okHandler: finish)
     }
 
     // MARK: - Sync routines including the delegate methods ======================================== -
@@ -693,13 +680,10 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
         let storyboard = UIStoryboard(name: "GameSummaryViewController", bundle: nil)
         let gameSummaryViewController: GameSummaryViewController = storyboard.instantiateViewController(withIdentifier: "GameSummaryViewController") as! GameSummaryViewController
  
-        gameSummaryViewController.preferredContentSize = ScorecardUI.defaultSize
-        gameSummaryViewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
-
         gameSummaryViewController.gameSummaryMode = gameSummaryMode
         gameSummaryViewController.controllerDelegate = appController
        
-        viewController.present(gameSummaryViewController, appController: appController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: nil)
+        viewController.present(gameSummaryViewController, appController: appController, animated: true, completion: nil)
         
         return gameSummaryViewController
     }

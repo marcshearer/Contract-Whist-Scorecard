@@ -108,10 +108,7 @@ class RoundSummaryViewController: ScorecardViewController {
             roundSummaryViewController = storyboard.instantiateViewController(withIdentifier: "RoundSummaryViewController") as? RoundSummaryViewController
         }
         
-        roundSummaryViewController.preferredContentSize = ScorecardUI.defaultSize
-        roundSummaryViewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
-        
-        viewController.present(roundSummaryViewController, appController: appController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: nil)
+        viewController.present(roundSummaryViewController, appController: appController, animated: true, completion: nil)
         
         return roundSummaryViewController
     }

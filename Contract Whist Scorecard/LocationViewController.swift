@@ -535,16 +535,13 @@ class LocationViewController: ScorecardViewController, UITableViewDataSource, UI
         let storyboard = UIStoryboard(name: "LocationViewController", bundle: nil)
         let locationViewController = storyboard.instantiateViewController(withIdentifier: "LocationViewController") as! LocationViewController
         
-        locationViewController.preferredContentSize = ScorecardUI.defaultSize
-        locationViewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
-        
         locationViewController.newLocation = gameLocation
         locationViewController.useCurrentLocation = useCurrentLocation
         locationViewController.mustChange = mustChange
         locationViewController.bannerColor = bannerColor
         locationViewController.completion = completion
         
-        viewController.present(locationViewController, appController: appController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: nil)
+        viewController.present(locationViewController, appController: appController, animated: true, completion: nil)
         
         return locationViewController
     }

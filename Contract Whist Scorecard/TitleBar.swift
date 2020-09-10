@@ -10,6 +10,8 @@ import UIKit
 
 class TitleBar: UIView {
  
+    private var alignment: NSTextAlignment?
+    
     @IBInspectable private var title = ""
     @IBInspectable private var topRounded = true
     @IBInspectable private var bottomRounded = false
@@ -23,6 +25,7 @@ class TitleBar: UIView {
     @IBInspectable private var shadowGradient = false
     @IBInspectable private var shadowRadius: CGFloat = 0.0
     @IBInspectable private var labelProportion: CGFloat = 1.0
+    @IBInspectable private var transparent: Bool = false
     
     @IBOutlet weak public var delegate: ButtonDelegate?
     
@@ -77,6 +80,19 @@ class TitleBar: UIView {
         self.layoutIfNeeded()
     }
     
+    public func set(transparent: Bool, alignment: NSTextAlignment) {
+        self.transparent = transparent
+        self.alignment = alignment
+        if self.font == nil {
+            if transparent {
+                self.titleLabel.font = UIFont.systemFont(ofSize: 28, weight: .semibold)
+            } else {
+                self.titleLabel.font = UIFont.systemFont(ofSize: 24, weight: .light)
+            }
+        }
+        self.layoutSubviews()
+    }
+    
     private func loadTitleBarView() {
         Bundle.main.loadNibNamed("TitleBar", owner: self, options: nil)
         self.addSubview(contentView)
@@ -100,9 +116,10 @@ class TitleBar: UIView {
         self.sendSubviewToBack(self.contentView)
         self.titleLabelHeight.constant = labelProportion * self.contentView.frame.height
         self.backgroundColor = UIColor.clear
-        self.contentView.backgroundColor = self.faceColor
+        self.contentView.backgroundColor = (transparent ? UIColor.clear : self.faceColor)
         self.titleLabel.text = self.title
         self.titleLabel.textColor = self.textColor
+        self.titleLabel.textAlignment = self.alignment ?? .center
         
         // Round corners
         if self.cornerRadius != 0.0 {
@@ -110,8 +127,10 @@ class TitleBar: UIView {
         }
         
         // Add shadow
-        if self.shadowSize != CGSize() {
+        if self.shadowSize != CGSize() && !transparent {
             self.addShadow(shadowSize: self.shadowSize, shadowColor: self.shadowColor, shadowOpacity: self.shadowOpacity, shadowRadius: self.shadowRadius)
+        } else {
+            self.removeShadow()
         }
     }
 }

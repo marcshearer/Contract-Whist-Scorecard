@@ -15,15 +15,13 @@ enum SelectionMode {
     case players
 }
 
-class SelectionViewController: ScorecardViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIDropInteractionDelegate, UIGestureRecognizerDelegate, PlayerViewDelegate, SelectedPlayersViewDelegate {
+class SelectionViewController: ScorecardViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIDropInteractionDelegate, UIGestureRecognizerDelegate, PlayerViewDelegate, SelectedPlayersViewDelegate, BannerDelegate {
 
     // MARK: - Class Properties ======================================================================== -
 
     // Variables to decide how view behaves
     private var selectionMode: SelectionMode!
     private var completion: ((Bool, [PlayerMO]?)->())? = nil
-    private var backText: String = "Back"
-    private var backImage: String = "back"
     private var thisPlayer: String?
     private var formTitle = "Selection"
     private var smallFormTitle: String?
@@ -57,27 +55,26 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
     
     // MARK: - IB Outlets ============================================================================== -
     
+    @IBOutlet private weak var banner: Banner!
+    @IBOutlet private weak var bannerHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var unselectedCollectionView: UICollectionView!
-    @IBOutlet private weak var cancelButton: ClearButton!
-    @IBOutlet private weak var bannerContinueButton: ClearButton!
     @IBOutlet private weak var topSectionView: UIView!
     @IBOutlet private weak var selectedPlayersView: SelectedPlayersView!
     @IBOutlet private weak var bottomSection: UIView!
     @IBOutlet private weak var bottomSectionHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var clearAllButton: ShadowButton!
     @IBOutlet private weak var continueButton: ShadowButton!
-    @IBOutlet private weak var bannerPaddingView: InsetPaddingView!
-    @IBOutlet private weak var titleView: UIView!
-    @IBOutlet private weak var titleLabel: UILabel!
+    @IBOutlet private var sideBySideConstraints: [NSLayoutConstraint]!
+    @IBOutlet private var aboveAndBelowConstraints: [NSLayoutConstraint]!
 
     
     // MARK: - IB Actions ============================================================================== -
     
-    @IBAction func continuePressed(_ sender: UIButton) {
+    internal func continuePressed() {
         continueAction()
     }
 
-    @IBAction func finishPressed(_ sender: UIButton) {
+    internal func finishPressed() {
         finishAction()       
     }
     
@@ -154,6 +151,10 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        
+        if firstTime || rotated {
+            self.setupConstraints()
+        }
         
         if !self.alreadyDrawing {
             self.selectedPlayersView.layoutIfNeeded()
@@ -301,23 +302,21 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
         
         let hidden = (selectedList.count < 3 && !testMode)
 
-        if self.smallScreen {
+        if self.smallScreen || self.menuController.isVisible() {
             // Banner continuation button used on small or landscape phone
             self.continueButton.isHidden = true
-            self.bannerContinueButton.isHidden = hidden
-            self.bannerContinueButton.setTitle("Continue", for: .normal)
+            self.banner.setButton("continue", isHidden: hidden)
             self.bottomSectionHeightConstraint.constant = 0
         } else {
             // Main continue button used on other devices
             self.continueButton.isHidden = false
-            self.bannerContinueButton.setTitle("X", for: .normal)
             self.continueButton.isEnabled = !hidden
-            self.bannerContinueButton.isHidden = true
+            self.banner.setButton("continue", isHidden: true)
             self.bottomSectionHeightConstraint.constant = 58 + (self.view.safeAreaInsets.bottom == 0 ? 8.0 : 0.0)
         }
         clearAllButton.isHidden = true // Left this in case we reinstate (selectedList.count > (self.selectionMode == .invitees ? 1 : 0))
         
-        self.titleLabel.text = (self.smallScreen && !ScorecardUI.landscapePhone() ? (smallFormTitle ?? self.formTitle) : self.formTitle)
+        self.banner.set(title: (self.smallScreen && !ScorecardUI.landscapePhone() ? (smallFormTitle ?? self.formTitle) : self.formTitle))
 
     }
     
@@ -409,9 +408,11 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
     
     private func setupButtons() {
         
+        self.banner.set(rightButtons: [
+            BannerButton(title: "Continue", image: UIImage(named: "forward"), width: 60, action: self.continuePressed, containerHide: true, containerMenuText: (self.selectionMode == .invitees ? "Invite Players" : "Preview Game"), id: "continue")])
+        self.bannerHeightConstraint.constant = self.defaultBannerHeight
+        
         // Set cancel button and title
-        self.cancelButton.setImage(UIImage(named: self.backImage), for: .normal)
-        self.cancelButton.setTitle(self.backText, for: .normal)
         self.continueButton.toCircle()
     }
     
@@ -481,6 +482,23 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
     private func setupDragAndDrop() {
         let unselectedDropInteraction = UIDropInteraction(delegate: self)
         self.unselectedCollectionView.addInteraction(unselectedDropInteraction)
+    }
+    
+    private func setupConstraints() {
+        var sideBySide = false
+        if ScorecardUI.landscapePhone() {
+            sideBySide = true
+        } else if self.container == .mainRight && self.view.frame.width > 700 {
+            sideBySide = true
+        }
+        self.sideBySideConstraints.forEach { (constraint) in
+            constraint.isActive = sideBySide
+            constraint.priority = (sideBySide ? .required : UILayoutPriority(1.0))
+        }
+        self.aboveAndBelowConstraints.forEach { (constraint) in
+            constraint.isActive = !sideBySide
+            constraint.priority = (!sideBySide ? .required : UILayoutPriority(1.0))
+        }
     }
     
    // MARK: - Add / remove player from selection ============================================================== -
@@ -793,29 +811,25 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
     
     // MARK: - Function to present and dismiss this view ==============================================================
     
-    class func show(from viewController: ScorecardViewController, appController: ScorecardAppController? = nil, existing selectionViewController: SelectionViewController? = nil, mode: SelectionMode, thisPlayer: String? = nil, formTitle: String = "Selection", smallFormTitle: String? = nil, backText: String = "Back", backImage: String = "", completion: ((Bool, [PlayerMO]?)->())? = nil) -> SelectionViewController {
+    class func show(from viewController: ScorecardViewController, appController: ScorecardAppController? = nil, existing selectionViewController: SelectionViewController? = nil, mode: SelectionMode, thisPlayer: String? = nil, formTitle: String = "Selection", smallFormTitle: String? = nil, completion: ((Bool, [PlayerMO]?)->())? = nil) -> SelectionViewController {
         var selectionViewController = selectionViewController
         
         if selectionViewController == nil {
             let storyboard = UIStoryboard(name: "SelectionViewController", bundle: nil)
             selectionViewController = storyboard.instantiateViewController(withIdentifier: "SelectionViewController") as? SelectionViewController
         }
-        selectionViewController!.preferredContentSize = ScorecardUI.defaultSize
-        selectionViewController!.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
         
         selectionViewController!.selectionMode = mode
         selectionViewController!.thisPlayer = thisPlayer ?? ""
         selectionViewController!.formTitle = formTitle
         selectionViewController!.smallFormTitle = smallFormTitle
-        selectionViewController!.backText = backText
-        selectionViewController!.backImage = backImage
         selectionViewController!.completion = completion
         selectionViewController?.controllerDelegate = appController
 
         // Let view controller know that this is a new 'instance' even though possibly re-using
         selectionViewController!.firstTime = true
         
-        viewController.present(selectionViewController!, appController: appController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true)
+        viewController.present(selectionViewController!, appController: appController, animated: true, container: .mainRight)
         
         return selectionViewController!
     }
@@ -857,15 +871,12 @@ extension SelectionViewController {
 
     private func defaultViewColors() {
 
-        self.bannerPaddingView.bannerColor = Palette.banner.background
-        self.topSectionView.backgroundColor = Palette.banner.background
+        self.topSectionView.backgroundColor = (menuController.isVisible() ? Palette.normal.background : Palette.banner.background)
         self.bottomSection.backgroundColor = Palette.normal.background
         self.clearAllButton.setBackgroundColor(Palette.buttonFace.background)
         self.clearAllButton.setTitleColor(Palette.buttonFace.text, for: .normal)
         self.continueButton.setBackgroundColor(Palette.continueButton.background)
         self.continueButton.setTitleColor(Palette.continueButton.text, for: .normal)
-        self.titleView.backgroundColor = Palette.banner.background
-        self.titleLabel.textColor = Palette.banner.text
         self.view.backgroundColor = Palette.normal.background
     }
 }

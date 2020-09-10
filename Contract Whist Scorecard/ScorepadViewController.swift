@@ -102,7 +102,6 @@ class ScorepadViewController: ScorecardViewController,
     }
     
     @IBAction private func finishGamePressed(_ sender: Any) {
-        Utility.debugMessage("scorepad", "Cancel pressed")
         if scorepadMode == .hosting || scorepadMode == .scoring {
             self.alertDecision("Warning: This will clear the existing score card and start a new game.\n\n Are you sure you want to do this?", title: "Finish Game", okButtonText: "Confirm", okHandler: {
             
@@ -184,7 +183,7 @@ class ScorepadViewController: ScorecardViewController,
     }
     
     override internal func viewDidLayoutSubviews() {
-        super.viewWillLayoutSubviews()
+        super.viewDidLayoutSubviews()
         if lastNavBarHeight != titleView.frame.height || lastViewHeight != scorepadView.frame.height {
             setupSize(to: scorepadView.safeAreaLayoutGuide.layoutFrame.size)
             self.headerTableView.layoutIfNeeded()
@@ -628,13 +627,11 @@ class ScorepadViewController: ScorecardViewController,
             scorepadViewController = storyboard.instantiateViewController(withIdentifier: "ScorepadViewController") as? ScorepadViewController
         }
         
-        scorepadViewController.preferredContentSize = ScorecardUI.defaultSize
-        scorepadViewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
         scorepadViewController.parentView = viewController.view
         scorepadViewController.scorepadMode = scorepadMode
         scorepadViewController.controllerDelegate = appController
         
-        viewController.present(scorepadViewController, appController: appController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true)
+        viewController.present(scorepadViewController, appController: appController, animated: true)
         
         return scorepadViewController
     }

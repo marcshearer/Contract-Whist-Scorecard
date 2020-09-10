@@ -1607,10 +1607,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
         
         let settingsViewController = SettingsViewController.create(backText: backText, backImage: backImage, completion: completion)
         
-        settingsViewController.preferredContentSize = ScorecardUI.defaultSize
-        settingsViewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
-        
-        viewController.present(settingsViewController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: nil)
+        viewController.present(settingsViewController, animated: true, completion: nil)
     }
     
     private func dismiss() {

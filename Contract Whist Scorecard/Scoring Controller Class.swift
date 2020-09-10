@@ -414,8 +414,7 @@ class ScoringController: ScorecardAppController, ScorecardAppPlayerDelegate, Gam
     
     private func showSelection() -> ScorecardViewController {
         if let viewController = self.fromViewController() {
-            self.selectionViewController = SelectionViewController.show(from: viewController, appController: self, existing: self.selectionViewController, mode: .players, formTitle: "Choose Players", smallFormTitle: "Select", backText: "", backImage: "home",
-                                                                        completion:
+            self.selectionViewController = SelectionViewController.show(from: viewController, appController: self, existing: self.selectionViewController, mode: .players, formTitle: "Choose Players", smallFormTitle: "Select", completion:
                 { [weak self] (returnHome, selectedPlayers) in
                     // Returned values coming back from select players. Just store them - should get a didProceed immediately after
                     self?.selectedPlayers = selectedPlayers

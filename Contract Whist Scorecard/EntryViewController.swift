@@ -544,9 +544,8 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
                 }
             }
             message="\(message)\n\nYou must correct all errors before exiting"
-            let alertController = UIAlertController(title: "Warning", message: message, preferredStyle: UIAlertController.Style.alert)
-            alertController.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
-            present(alertController, animated: true, completion: nil)
+            self.alertMessage(message)
+            
             canFinish=false
         } else {
             canFinish=true
@@ -622,13 +621,10 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
             entryViewController.refreshScreen(firstTime: true)
         }
         
-        entryViewController.preferredContentSize = ScorecardUI.defaultSize
-        entryViewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
-        
         entryViewController.reeditMode = reeditMode
         entryViewController.firstTime = true
         
-        viewController.present(entryViewController, appController: appController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: nil)
+        viewController.present(entryViewController, appController: appController, animated: true, completion: nil)
         
         return entryViewController
     }

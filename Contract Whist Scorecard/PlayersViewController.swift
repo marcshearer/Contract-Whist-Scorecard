@@ -336,9 +336,6 @@ class PlayersViewController: ScorecardViewController, PlayersViewDelegate, UICol
         let storyboard = UIStoryboard(name: "PlayersViewController", bundle: nil)
         let playersViewController: PlayersViewController = storyboard.instantiateViewController(withIdentifier: "PlayersViewController") as! PlayersViewController
         
-        playersViewController.preferredContentSize = ScorecardUI.defaultSize
-        playersViewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
-        
         playersViewController.completion = completion
         
         return playersViewController
@@ -348,7 +345,7 @@ class PlayersViewController: ScorecardViewController, PlayersViewDelegate, UICol
         
         let playersViewController = PlayersViewController.create(completion: completion)
         
-        viewController.present(playersViewController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: nil)
+        viewController.present(playersViewController, animated: true, completion: nil)
         
         return playersViewController
     }

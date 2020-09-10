@@ -571,11 +571,9 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
         let storyboard = UIStoryboard(name: "GetStartedViewController", bundle: nil)
         let getStartedViewController: GetStartedViewController = storyboard.instantiateViewController(withIdentifier: "GetStartedViewController") as! GetStartedViewController
         
-        getStartedViewController.preferredContentSize = ScorecardUI.defaultSize
-        getStartedViewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
         getStartedViewController.completion = completion
         
-        viewController.present(getStartedViewController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: nil)
+        viewController.present(getStartedViewController, animated: true, completion: nil)
     }
     
     private func dismiss() {

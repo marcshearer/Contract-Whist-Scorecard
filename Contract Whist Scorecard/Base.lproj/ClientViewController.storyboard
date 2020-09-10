@@ -77,61 +77,30 @@ Played</string>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hFM-Q5-ViO" userLabel="Main Container">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Clx-ll-10L" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Whist_2" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Clx-ll-10L" customClass="Banner" customModule="Whist_2" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="88"/>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="color" keyPath="bannerColor">
                                                 <color key="value" name="Clear"/>
                                             </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="title" value="W H I S T"/>
                                         </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <outlet property="parentViewController" destination="iu4-6y-nl5" id="Df6-sQ-sMT"/>
+                                        </connections>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YSU-nf-o4R" customClass="InsetPaddingView" customModule="Whist_2" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="0.0" height="896"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="baT-Lm-DyX" userLabel="Top Section">
-                                        <rect key="frame" x="0.0" y="44" width="414" height="226"/>
+                                        <rect key="frame" x="0.0" y="88" width="414" height="151"/>
                                         <subviews>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yhA-Gb-reU" userLabel="Banner">
-                                                <rect key="frame" x="0.0" y="0.0" width="414" height="74.5"/>
-                                                <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="W H I S T" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9EB-QT-Tnd">
-                                                        <rect key="frame" x="0.0" y="30" width="414" height="41"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="height" constant="41" id="OSQ-jV-UcD"/>
-                                                        </constraints>
-                                                        <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="30"/>
-                                                        <nil key="textColor"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                    <button hidden="YES" opaque="NO" contentMode="scaleAspectFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jVd-cr-1qi" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
-                                                        <rect key="frame" x="364" y="11" width="30" height="27.5"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="height" constant="30" id="0K0-Vk-Ti1"/>
-                                                            <constraint firstAttribute="width" constant="30" id="hDS-hn-8b5"/>
-                                                        </constraints>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="30"/>
-                                                        <state key="normal" backgroundImage="equal.square" catalog="system">
-                                                            <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="large"/>
-                                                        </state>
-                                                        <connections>
-                                                            <action selector="actionButtonPressed:" destination="iu4-6y-nl5" eventType="touchUpInside" id="lx0-BN-LNp"/>
-                                                        </connections>
-                                                    </button>
-                                                </subviews>
-                                                <color key="backgroundColor" name="Clear"/>
-                                                <constraints>
-                                                    <constraint firstItem="9EB-QT-Tnd" firstAttribute="top" secondItem="yhA-Gb-reU" secondAttribute="top" constant="30" id="7Sa-Vt-3nv"/>
-                                                    <constraint firstItem="9EB-QT-Tnd" firstAttribute="leading" secondItem="yhA-Gb-reU" secondAttribute="leading" id="9Xl-YT-BIp"/>
-                                                    <constraint firstAttribute="trailing" secondItem="jVd-cr-1qi" secondAttribute="trailing" constant="20" id="SUY-CY-FET"/>
-                                                    <constraint firstAttribute="trailing" secondItem="9EB-QT-Tnd" secondAttribute="trailing" id="fRl-D8-dOE"/>
-                                                </constraints>
-                                            </view>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XTv-6o-LLq" userLabel="Banner Continuation" customClass="BannerContinuation" customModule="Whist_2" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="74.5" width="414" height="124.5"/>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XTv-6o-LLq" userLabel="This Player Container View">
+                                                <rect key="frame" x="0.0" y="0.0" width="414" height="121"/>
                                                 <subviews>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qjq-rE-5ew" customClass="ThumbnailView" customModule="Whist_2" customModuleProvider="target">
-                                                        <rect key="frame" x="173.5" y="24" width="67" height="88.5"/>
+                                                        <rect key="frame" x="174.5" y="23.5" width="65" height="86"/>
                                                         <color key="backgroundColor" name="Clear"/>
                                                         <gestureRecognizers/>
                                                         <constraints>
@@ -143,6 +112,7 @@ Played</string>
                                                     </view>
                                                 </subviews>
                                                 <color key="backgroundColor" name="Clear"/>
+                                                <accessibility key="accessibilityConfiguration" identifier="thisPlayerContainer"/>
                                                 <constraints>
                                                     <constraint firstItem="Qjq-rE-5ew" firstAttribute="height" secondItem="XTv-6o-LLq" secondAttribute="height" multiplier="1:1.4" id="7Tq-nc-kgx"/>
                                                     <constraint firstItem="Qjq-rE-5ew" firstAttribute="centerX" secondItem="XTv-6o-LLq" secondAttribute="centerX" id="HXe-JG-JIu"/>
@@ -158,11 +128,12 @@ Played</string>
                                                 </userDefinedRuntimeAttributes>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="x7j-7w-yJj">
-                                                <rect key="frame" x="0.0" y="199" width="414" height="27"/>
+                                                <rect key="frame" x="0.0" y="121" width="414" height="18"/>
                                                 <color key="backgroundColor" name="Clear"/>
+                                                <accessibility key="accessibilityConfiguration" identifier="thisPlayerOverlap"/>
                                             </view>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rhg-YK-v6u" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
-                                                <rect key="frame" x="20" y="161" width="28" height="28"/>
+                                                <rect key="frame" x="20" y="83" width="28" height="28"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="28" id="M3g-Di-BnU"/>
                                                     <constraint firstAttribute="width" secondItem="rhg-YK-v6u" secondAttribute="height" multiplier="1:1" id="QQQ-Gk-Tmr"/>
@@ -179,6 +150,7 @@ Played</string>
                                             </button>
                                         </subviews>
                                         <color key="backgroundColor" name="Clear"/>
+                                        <accessibility key="accessibilityConfiguration" identifier="topSection"/>
                                         <constraints>
                                             <constraint firstItem="rhg-YK-v6u" firstAttribute="leading" secondItem="baT-Lm-DyX" secondAttribute="leading" constant="20" id="6U5-Zj-hn0"/>
                                             <constraint firstItem="rhg-YK-v6u" firstAttribute="bottom" secondItem="XTv-6o-LLq" secondAttribute="bottom" constant="-10" id="9kK-nZ-tJc"/>
@@ -187,16 +159,13 @@ Played</string>
                                             <constraint firstAttribute="bottom" secondItem="x7j-7w-yJj" secondAttribute="bottom" id="Grw-b1-DeL"/>
                                             <constraint firstItem="XTv-6o-LLq" firstAttribute="height" secondItem="baT-Lm-DyX" secondAttribute="height" multiplier="0.4" id="MZt-h6-3zi"/>
                                             <constraint firstItem="x7j-7w-yJj" firstAttribute="leading" secondItem="baT-Lm-DyX" secondAttribute="leading" id="Pdl-Kb-AA4"/>
-                                            <constraint firstItem="yhA-Gb-reU" firstAttribute="leading" secondItem="baT-Lm-DyX" secondAttribute="leading" id="UAe-m7-Uht"/>
-                                            <constraint firstItem="yhA-Gb-reU" firstAttribute="top" secondItem="baT-Lm-DyX" secondAttribute="top" id="Zm4-Qy-E7z"/>
+                                            <constraint firstItem="XTv-6o-LLq" firstAttribute="top" secondItem="baT-Lm-DyX" secondAttribute="top" id="YHA-Pn-pco"/>
                                             <constraint firstAttribute="trailing" secondItem="XTv-6o-LLq" secondAttribute="trailing" id="a7q-9L-hle"/>
                                             <constraint firstItem="x7j-7w-yJj" firstAttribute="height" secondItem="baT-Lm-DyX" secondAttribute="height" multiplier="0.12" id="bsM-gr-gao"/>
-                                            <constraint firstAttribute="trailing" secondItem="yhA-Gb-reU" secondAttribute="trailing" id="gYO-e5-pxp"/>
-                                            <constraint firstItem="XTv-6o-LLq" firstAttribute="top" secondItem="yhA-Gb-reU" secondAttribute="bottom" id="hPt-TH-Lkk"/>
                                             <constraint firstAttribute="trailing" secondItem="x7j-7w-yJj" secondAttribute="trailing" id="jmq-QI-Us8"/>
-                                            <constraint firstItem="jVd-cr-1qi" firstAttribute="top" secondItem="baT-Lm-DyX" secondAttribute="top" constant="10" id="qfE-XP-bMn"/>
+                                            <constraint firstAttribute="height" priority="1" id="l4b-QK-6GL"/>
                                             <constraint firstItem="XTv-6o-LLq" firstAttribute="bottom" secondItem="x7j-7w-yJj" secondAttribute="top" id="u1j-SS-ZBA"/>
-                                            <constraint firstItem="XTv-6o-LLq" firstAttribute="height" secondItem="baT-Lm-DyX" secondAttribute="height" multiplier="0.55" id="zCm-db-ZhY"/>
+                                            <constraint firstItem="XTv-6o-LLq" firstAttribute="height" secondItem="baT-Lm-DyX" secondAttribute="height" multiplier="0.8" id="zCm-db-ZhY"/>
                                         </constraints>
                                         <variation key="default">
                                             <mask key="constraints">
@@ -220,7 +189,7 @@ Played</string>
                                         </variation>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0OQ-Wp-Xtp" customClass="PlayerSelectionView" customModule="Whist_2" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="270" width="414" height="0.0"/>
+                                        <rect key="frame" x="0.0" y="239" width="414" height="0.0"/>
                                         <color key="backgroundColor" name="Background"/>
                                         <constraints>
                                             <constraint firstAttribute="width" id="9iF-tu-zqC"/>
@@ -249,7 +218,7 @@ Played</string>
                                         </connections>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="e3D-oK-CzW" userLabel="Upper Middle Section">
-                                        <rect key="frame" x="0.0" y="270" width="414" height="204.5"/>
+                                        <rect key="frame" x="0.0" y="239" width="414" height="204.5"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tZH-0W-X3K">
                                                 <rect key="frame" x="20" y="18.5" width="374" height="176"/>
@@ -257,7 +226,7 @@ Played</string>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FhF-F8-jiI" userLabel="Host Collection Content View">
                                                         <rect key="frame" x="0.0" y="0.0" width="374" height="176"/>
                                                         <subviews>
-                                                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="1" contentMode="scaleToFill" alwaysBounceHorizontal="YES" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="QLu-uS-rp7">
+                                                            <collectionView multipleTouchEnabled="YES" tag="1" contentMode="scaleToFill" alwaysBounceHorizontal="YES" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="QLu-uS-rp7">
                                                                 <rect key="frame" x="0.0" y="0.0" width="374" height="176"/>
                                                                 <color key="backgroundColor" name="Clear"/>
                                                                 <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="e6U-UB-5RB">
@@ -311,7 +280,8 @@ Played</string>
                                                                 </connections>
                                                             </collectionView>
                                                         </subviews>
-                                                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                                        <color key="backgroundColor" name="Clear"/>
+                                                        <accessibility key="accessibilityConfiguration" identifier="hostCollectionContent"/>
                                                         <constraints>
                                                             <constraint firstItem="QLu-uS-rp7" firstAttribute="leading" secondItem="FhF-F8-jiI" secondAttribute="leading" id="2bj-Te-P0E"/>
                                                             <constraint firstItem="QLu-uS-rp7" firstAttribute="top" secondItem="FhF-F8-jiI" secondAttribute="top" id="6KM-Rf-dZ1"/>
@@ -321,6 +291,7 @@ Played</string>
                                                     </view>
                                                 </subviews>
                                                 <color key="backgroundColor" name="Clear"/>
+                                                <accessibility key="accessibilityConfiguration" identifier="hostCollectionContainer"/>
                                                 <constraints>
                                                     <constraint firstItem="FhF-F8-jiI" firstAttribute="leading" secondItem="tZH-0W-X3K" secondAttribute="leading" id="1md-tG-EVD"/>
                                                     <constraint firstAttribute="bottom" secondItem="FhF-F8-jiI" secondAttribute="bottom" id="RIs-wA-UCB"/>
@@ -351,9 +322,11 @@ Played</string>
                                             </view>
                                         </subviews>
                                         <color key="backgroundColor" name="Clear"/>
+                                        <accessibility key="accessibilityConfiguration" identifier="upperMiddleSection"/>
                                         <constraints>
                                             <constraint firstAttribute="trailing" secondItem="w0v-BL-Raf" secondAttribute="trailing" constant="20" id="9gr-K6-pdR"/>
-                                            <constraint firstAttribute="top" secondItem="w0v-BL-Raf" secondAttribute="centerY" id="Amc-BQ-QmY"/>
+                                            <constraint firstItem="w0v-BL-Raf" firstAttribute="centerY" secondItem="e3D-oK-CzW" secondAttribute="top" id="Amc-BQ-QmY"/>
+                                            <constraint firstAttribute="height" priority="1" constant="380" id="Jbe-qg-ohL"/>
                                             <constraint firstAttribute="bottom" secondItem="tZH-0W-X3K" secondAttribute="bottom" constant="10" id="OFI-E2-RLx"/>
                                             <constraint firstAttribute="trailing" secondItem="tZH-0W-X3K" secondAttribute="trailing" constant="20" id="R0k-tL-Xiu"/>
                                             <constraint firstItem="w0v-BL-Raf" firstAttribute="height" secondItem="e3D-oK-CzW" secondAttribute="height" multiplier="2:11" id="Twt-wC-9L4"/>
@@ -380,16 +353,16 @@ Played</string>
                                         </variation>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="X53-w8-J5S" userLabel="Lower Middle Section">
-                                        <rect key="frame" x="0.0" y="474.5" width="414" height="237"/>
+                                        <rect key="frame" x="0.0" y="443.5" width="414" height="268"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3t1-6y-FZY" userLabel="Peer Collection Container">
-                                                <rect key="frame" x="20" y="45" width="374" height="182"/>
+                                                <rect key="frame" x="20" y="45" width="374" height="213"/>
                                                 <subviews>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0Mr-Ou-UxW" userLabel="Peer Collection Content View">
-                                                        <rect key="frame" x="0.0" y="0.0" width="374" height="182"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="374" height="213"/>
                                                         <subviews>
                                                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="2" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Lq4-Ij-9pl" userLabel="Peer Collection View">
-                                                                <rect key="frame" x="0.0" y="0.0" width="374" height="182"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="374" height="213"/>
                                                                 <color key="backgroundColor" name="Clear"/>
                                                                 <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="Aec-a3-Pfk" customClass="CustomCollectionViewLayout" customModule="Whist_2" customModuleProvider="target">
                                                                     <size key="itemSize" width="128" height="128"/>
@@ -407,7 +380,7 @@ Played</string>
                                                                 </collectionViewFlowLayout>
                                                                 <cells>
                                                                     <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Peer Cell" id="P8R-55-D1X" userLabel="Peer Cell" customClass="PeerCollectionViewCell" customModule="Whist_2" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="27" width="128" height="128"/>
+                                                                        <rect key="frame" x="0.0" y="42.5" width="128" height="128"/>
                                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                         <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="e3M-8L-XIx">
                                                                             <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
@@ -473,7 +446,7 @@ Played</string>
                                                                 </connections>
                                                             </collectionView>
                                                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="3" contentMode="scaleToFill" alwaysBounceHorizontal="YES" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="vDb-os-978">
-                                                                <rect key="frame" x="182" y="168" width="10" height="10"/>
+                                                                <rect key="frame" x="182" y="199" width="10" height="10"/>
                                                                 <color key="backgroundColor" name="Clear"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" constant="10" id="Upz-y7-JWa"/>
@@ -516,6 +489,7 @@ Played</string>
                                                             </collectionView>
                                                         </subviews>
                                                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                                        <accessibility key="accessibilityConfiguration" identifier="peerCollectionContnent"/>
                                                         <constraints>
                                                             <constraint firstAttribute="bottom" secondItem="Lq4-Ij-9pl" secondAttribute="bottom" id="0YD-js-b10"/>
                                                             <constraint firstAttribute="trailing" secondItem="Lq4-Ij-9pl" secondAttribute="trailing" id="5Sz-Gw-37C"/>
@@ -527,6 +501,7 @@ Played</string>
                                                     </view>
                                                 </subviews>
                                                 <color key="backgroundColor" name="Clear"/>
+                                                <accessibility key="accessibilityConfiguration" identifier="peerCollectionContainer"/>
                                                 <constraints>
                                                     <constraint firstAttribute="bottom" secondItem="0Mr-Ou-UxW" secondAttribute="bottom" id="K8f-CQ-DSq"/>
                                                     <constraint firstAttribute="trailing" secondItem="0Mr-Ou-UxW" secondAttribute="trailing" id="Rz3-rV-OM9"/>
@@ -557,6 +532,7 @@ Played</string>
                                             </view>
                                         </subviews>
                                         <color key="backgroundColor" name="Clear"/>
+                                        <accessibility key="accessibilityConfiguration" identifier="lowerMiddleSection"/>
                                         <constraints>
                                             <constraint firstAttribute="trailing" secondItem="1FM-AB-vSS" secondAttribute="trailing" constant="20" id="80T-D7-EvO"/>
                                             <constraint firstItem="3t1-6y-FZY" firstAttribute="leading" secondItem="X53-w8-J5S" secondAttribute="leading" constant="20" id="MuZ-OL-CRG"/>
@@ -658,6 +634,7 @@ Played</string>
                                             </button>
                                         </subviews>
                                         <color key="backgroundColor" name="Clear"/>
+                                        <accessibility key="accessibilityConfiguration" identifier="bottomSection"/>
                                         <constraints>
                                             <constraint firstItem="bNw-dF-hBm" firstAttribute="top" secondItem="7pG-RR-uCS" secondAttribute="top" constant="10" id="6DQ-hq-0QC"/>
                                             <constraint firstItem="pB1-JM-2cb" firstAttribute="leading" secondItem="7pG-RR-uCS" secondAttribute="leading" id="6v9-uo-FDd"/>
@@ -680,6 +657,7 @@ Played</string>
                                             <constraint firstAttribute="bottom" secondItem="aq5-vX-83I" secondAttribute="bottom" id="npL-IB-VXw"/>
                                             <constraint firstItem="bNw-dF-hBm" firstAttribute="height" secondItem="7pG-RR-uCS" secondAttribute="height" multiplier="1:3" constant="-13" id="q8S-oB-ewV"/>
                                             <constraint firstAttribute="trailing" secondItem="bNw-dF-hBm" secondAttribute="trailing" constant="10" id="rbp-sT-OcB"/>
+                                            <constraint firstAttribute="height" priority="1" id="spI-RO-HdZ"/>
                                             <constraint firstItem="bNw-dF-hBm" firstAttribute="centerX" secondItem="7pG-RR-uCS" secondAttribute="centerX" id="vbX-qN-GAd"/>
                                             <constraint firstAttribute="bottom" secondItem="pB1-JM-2cb" secondAttribute="bottom" constant="10" id="vtI-kS-VwN"/>
                                         </constraints>
@@ -739,7 +717,7 @@ Played</string>
                                         </variation>
                                     </view>
                                 </subviews>
-                                <color key="backgroundColor" name="Background"/>
+                                <color key="backgroundColor" name="Clear"/>
                                 <accessibility key="accessibilityConfiguration" identifier="MainContainer"/>
                                 <gestureRecognizers/>
                                 <constraints>
@@ -768,10 +746,10 @@ Played</string>
                                     <constraint firstItem="e3D-oK-CzW" firstAttribute="top" secondItem="Clx-ll-10L" secondAttribute="bottom" id="Sew-ep-bqo"/>
                                     <constraint firstItem="N76-hf-VXY" firstAttribute="bottom" secondItem="0OQ-Wp-Xtp" secondAttribute="bottom" id="Snw-iS-dDR"/>
                                     <constraint firstItem="0OQ-Wp-Xtp" firstAttribute="leading" secondItem="baT-Lm-DyX" secondAttribute="trailing" id="VZ7-0b-g2b"/>
+                                    <constraint firstItem="Clx-ll-10L" firstAttribute="bottom" secondItem="N76-hf-VXY" secondAttribute="top" constant="44" id="WJj-L2-o8a"/>
                                     <constraint firstItem="7pG-RR-uCS" firstAttribute="height" secondItem="N76-hf-VXY" secondAttribute="height" multiplier="7:38" id="Z5M-Gl-zFr"/>
                                     <constraint firstItem="0OQ-Wp-Xtp" firstAttribute="leading" secondItem="hFM-Q5-ViO" secondAttribute="leading" id="ZCV-Iz-ViU"/>
                                     <constraint firstItem="Clx-ll-10L" firstAttribute="leading" secondItem="hFM-Q5-ViO" secondAttribute="leading" id="cjh-Jn-lzp"/>
-                                    <constraint firstItem="N76-hf-VXY" firstAttribute="top" secondItem="Clx-ll-10L" secondAttribute="bottom" id="f7K-cq-gB7"/>
                                     <constraint firstItem="e3D-oK-CzW" firstAttribute="leading" secondItem="N76-hf-VXY" secondAttribute="leading" id="fSW-34-Uk4"/>
                                     <constraint firstAttribute="bottom" secondItem="baT-Lm-DyX" secondAttribute="bottom" id="fnP-9P-Cib"/>
                                     <constraint firstItem="X53-w8-J5S" firstAttribute="trailing" secondItem="N76-hf-VXY" secondAttribute="trailing" id="gjO-ps-Vws"/>
@@ -786,7 +764,7 @@ Played</string>
                                     <constraint firstItem="e3D-oK-CzW" firstAttribute="top" secondItem="0OQ-Wp-Xtp" secondAttribute="bottom" id="n2D-zv-RsK"/>
                                     <constraint firstItem="N76-hf-VXY" firstAttribute="trailing" secondItem="7pG-RR-uCS" secondAttribute="trailing" id="rh3-oH-Lxh"/>
                                     <constraint firstItem="baT-Lm-DyX" firstAttribute="top" secondItem="Clx-ll-10L" secondAttribute="bottom" id="s8O-kv-JSw"/>
-                                    <constraint firstItem="baT-Lm-DyX" firstAttribute="height" secondItem="N76-hf-VXY" secondAttribute="height" multiplier="10.5:38" id="tDV-xc-iia"/>
+                                    <constraint firstItem="baT-Lm-DyX" firstAttribute="height" secondItem="N76-hf-VXY" secondAttribute="height" multiplier="10.5:38" constant="-75" id="tDV-xc-iia"/>
                                     <constraint firstItem="e3D-oK-CzW" firstAttribute="height" secondItem="N76-hf-VXY" secondAttribute="height" multiplier="9.5:38" id="uN4-Sq-JxP"/>
                                     <constraint firstItem="e3D-oK-CzW" firstAttribute="trailing" secondItem="N76-hf-VXY" secondAttribute="trailing" id="weM-wy-810"/>
                                     <constraint firstItem="X53-w8-J5S" firstAttribute="top" secondItem="e3D-oK-CzW" secondAttribute="bottom" id="xhR-bu-qfe"/>
@@ -879,7 +857,7 @@ Played</string>
                                 </variation>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <color key="backgroundColor" name="Clear"/>
                         <constraints>
                             <constraint firstItem="4k6-G2-xLf" firstAttribute="leading" secondItem="hFM-Q5-ViO" secondAttribute="leading" id="2Dq-Z9-raE"/>
                             <constraint firstAttribute="trailing" secondItem="hbD-Y0-uhD" secondAttribute="trailing" id="5fO-Nh-ZkT"/>
@@ -902,11 +880,8 @@ Played</string>
                         </connections>
                     </view>
                     <connections>
-                        <outlet property="adminMenuButton" destination="jVd-cr-1qi" id="xDC-MW-gpf"/>
-                        <outlet property="bannerContinuation" destination="XTv-6o-LLq" id="5aK-tn-3Y3"/>
-                        <outlet property="bannerOverlap" destination="x7j-7w-yJj" id="VKp-L2-are"/>
-                        <outlet property="bannerPaddingView" destination="Clx-ll-10L" id="GCR-lb-HOw"/>
-                        <outlet property="bannerView" destination="yhA-Gb-reU" id="dm4-fS-4Lq"/>
+                        <outlet property="banner" destination="Clx-ll-10L" id="TH8-kA-9wb"/>
+                        <outlet property="bannerHeightConstraint" destination="WJj-L2-o8a" id="dlX-qb-zP2"/>
                         <outlet property="bottomSection" destination="7pG-RR-uCS" id="gnf-zo-ShE"/>
                         <outlet property="bottomSectionBottomConstraint" destination="inc-aR-TRM" id="ggs-wg-usb"/>
                         <outlet property="bottomSectionTrailingConstraint" destination="Ibo-5M-oqI" id="Yin-EP-iJX"/>
@@ -914,6 +889,7 @@ Played</string>
                         <outlet property="hostCollectionContainerView" destination="tZH-0W-X3K" id="N86-SF-zNr"/>
                         <outlet property="hostCollectionContentView" destination="FhF-F8-jiI" id="S4a-dM-8Sm"/>
                         <outlet property="hostCollectionView" destination="QLu-uS-rp7" id="Nrs-Zc-g7G"/>
+                        <outlet property="hostCollectionViewLayout" destination="e6U-UB-5RB" id="YGd-cY-4fg"/>
                         <outlet property="hostTitleBar" destination="w0v-BL-Raf" id="5Wc-zV-ZDs"/>
                         <outlet property="infoButton" destination="rhg-YK-v6u" id="ciR-wp-2ns"/>
                         <outlet property="leftContainer" destination="Zmp-Pb-RbJ" id="pWv-qD-aLJ"/>
@@ -928,6 +904,7 @@ Played</string>
                         <outlet property="peerScrollCollectionView" destination="vDb-os-978" id="mu6-ft-IKk"/>
                         <outlet property="peerScrollCollectionViewWidthConstraint" destination="Upz-y7-JWa" id="WKq-ez-oOI"/>
                         <outlet property="peerTitleBar" destination="1FM-AB-vSS" id="Uvc-1V-Iod"/>
+                        <outlet property="peerTitleBarTopConstraint" destination="rrw-uN-Ffo" id="7zE-QH-ogh"/>
                         <outlet property="playerSelectionView" destination="0OQ-Wp-Xtp" id="AP8-Cb-WZ5"/>
                         <outlet property="playerSelectionViewHeightConstraint" destination="zrf-Q7-qL5" id="uoi-bn-2wi"/>
                         <outlet property="playerSelectionViewWidthConstraint" destination="9iF-tu-zqC" id="wtR-cS-jcm"/>
@@ -938,13 +915,29 @@ Played</string>
                         <outlet property="rightPanelWidthConstraint" destination="zzI-c7-daZ" id="LCv-bc-wJg"/>
                         <outlet property="settingsBadgeButton" destination="KF8-nE-69M" id="m26-F0-YE1"/>
                         <outlet property="tapGestureRecognizer" destination="xiI-Mr-Bry" id="SUV-uq-mY3"/>
+                        <outlet property="thisPlayerContainerView" destination="XTv-6o-LLq" id="5aK-tn-3Y3"/>
+                        <outlet property="thisPlayerOverlap" destination="x7j-7w-yJj" id="VKp-L2-are"/>
                         <outlet property="thisPlayerThumbnail" destination="Qjq-rE-5ew" id="AJd-bY-2rI"/>
-                        <outlet property="titleLabel" destination="9EB-QT-Tnd" id="KRl-T6-D85"/>
                         <outlet property="topSection" destination="baT-Lm-DyX" id="Wnn-13-fZ2"/>
+                        <outlet property="topSectionTopConstraint" destination="s8O-kv-JSw" id="P5n-iM-aec"/>
                         <outlet property="upperMiddleSection" destination="e3D-oK-CzW" id="e1f-a9-apC"/>
                         <outletCollection property="actionButtons" destination="aq5-vX-83I" collectionClass="NSMutableArray" id="pNO-u0-ezn"/>
                         <outletCollection property="actionButtons" destination="bNw-dF-hBm" collectionClass="NSMutableArray" id="CoN-OA-mqd"/>
                         <outletCollection property="actionButtons" destination="pB1-JM-2cb" collectionClass="NSMutableArray" id="LlA-c0-LkT"/>
+                        <outletCollection property="hostCollectionContainerInsets" destination="s3E-OH-aHa" collectionClass="NSMutableArray" id="w1b-k2-auz"/>
+                        <outletCollection property="hostCollectionContainerInsets" destination="R0k-tL-Xiu" collectionClass="NSMutableArray" id="Zzn-qk-9z8"/>
+                        <outletCollection property="hostCollectionContainerInsets" destination="MuZ-OL-CRG" collectionClass="NSMutableArray" id="fS1-el-gG2"/>
+                        <outletCollection property="hostCollectionContainerInsets" destination="Wxf-aQ-QXW" collectionClass="NSMutableArray" id="0j0-6t-XLb"/>
+                        <outletCollection property="hostCollectionContainerInsets" destination="9gr-K6-pdR" collectionClass="NSMutableArray" id="xsE-gR-A3Q"/>
+                        <outletCollection property="hostCollectionContainerInsets" destination="jGy-tK-rxG" collectionClass="NSMutableArray" id="phv-X3-DSU"/>
+                        <outletCollection property="hostCollectionContainerInsets" destination="80T-D7-EvO" collectionClass="NSMutableArray" id="znC-Wa-ja0"/>
+                        <outletCollection property="hostCollectionContainerInsets" destination="v8y-8o-eew" collectionClass="NSMutableArray" id="u5k-QI-ixL"/>
+                        <outletCollection property="menuHeightConstraints" destination="Jbe-qg-ohL" collectionClass="NSMutableArray" id="p36-Yx-gjA"/>
+                        <outletCollection property="menuHeightConstraints" destination="spI-RO-HdZ" collectionClass="NSMutableArray" id="gfT-m1-Wcd"/>
+                        <outletCollection property="noMenuHeightConstraints" destination="tDV-xc-iia" collectionClass="NSMutableArray" id="YLW-lK-sVU"/>
+                        <outletCollection property="noMenuHeightConstraints" destination="uN4-Sq-JxP" collectionClass="NSMutableArray" id="jW7-qQ-JYl"/>
+                        <outletCollection property="noMenuHeightConstraints" destination="Z5M-Gl-zFr" collectionClass="NSMutableArray" id="tmq-Zy-ruQ"/>
+                        <outletCollection property="menuHeightConstraints" destination="l4b-QK-6GL" collectionClass="NSMutableArray" id="5pt-ym-ZOI"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="39f-Od-anh" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -966,7 +959,6 @@ Played</string>
         <image name="chevron.left.circle" catalog="system" width="128" height="121"/>
         <image name="chevron.right.circle" catalog="system" width="128" height="121"/>
         <image name="cross white" width="20" height="20"/>
-        <image name="equal.square" catalog="system" width="128" height="114"/>
         <image name="players background" width="120" height="120"/>
         <image name="results background" width="120" height="120"/>
         <image name="settings background" width="120" height="120"/>

@@ -164,15 +164,10 @@ class ConfirmPlayedViewController : ScorecardViewController, UIPopoverPresentati
         ConfirmPlayedViewController.offsets = offsets
         ConfirmPlayedViewController.preferredHeight = max(minHeight, content.frame.height + 100.0)
             
-        viewController.modalPresentationStyle = UIModalPresentationStyle.popover
-        viewController.popoverPresentationController?.delegate = viewController
-        viewController.isModalInPopover = true
-        viewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-        viewController.popoverPresentationController?.sourceView = sourceView
-        viewController.preferredContentSize = CGSize(width: max(minWidth, content.frame.width), height: ConfirmPlayedViewController.preferredHeight)
-        viewController.popoverPresentationController?.sourceRect = CGRect(origin: CGPoint(x: sourceView!.bounds.midX, y: sourceView!.bounds.midY - self.yOffset()), size: CGSize())
+        let popoverSize = CGSize(width: max(minWidth, content.frame.width), height: ConfirmPlayedViewController.preferredHeight)
+        let sourceRect = CGRect(origin: CGPoint(x: sourceView!.bounds.midX, y: sourceView!.bounds.midY - self.yOffset()), size: CGSize())
         
-        parentViewController.present(viewController, appController: appController, animated: true)
+        parentViewController.present(viewController, appController: appController, popoverSize: popoverSize, sourceView: sourceView, sourceRect: sourceRect, popoverDelegate: viewController, animated: true)
         
         return viewController
     }

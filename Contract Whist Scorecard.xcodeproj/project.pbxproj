@@ -127,7 +127,7 @@
 		B26A11A82460728400449FCC /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26A11A72460728300449FCC /* Settings.swift */; };
 		B26A11AA2460803500449FCC /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26A11A92460803500449FCC /* Game.swift */; };
 		B2767C1E2110061B0029155E /* Loopback Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2767C1D2110061B0029155E /* Loopback Class.swift */; };
-		B2784DB6248607A5006E49F0 /* Collection View Flow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2784DB5248607A5006E49F0 /* Collection View Flow.swift */; };
+		B2784DB6248607A5006E49F0 /* Custom Collection View Flow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2784DB5248607A5006E49F0 /* Custom Collection View Flow.swift */; };
 		B27B1FEA1F9B55ED00ED6FFF /* Scorecard Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27B1FE91F9B55ED00ED6FFF /* Scorecard Tests.swift */; };
 		B27C88FF22CDBB2D009F8FE1 /* Palette.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27C88FE22CDBB2D009F8FE1 /* Palette.swift */; };
 		B28033341F7E046B00CF4696 /* Sync Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28033331F7E046B00CF4696 /* Sync Class.swift */; };
@@ -152,6 +152,9 @@
 		B2A3D9A1248E2804008556B8 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2A3D9A0248E2804008556B8 /* Location.swift */; };
 		B2A44F222500DB970071F899 /* AwardDetailViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B2A44F212500DB970071F899 /* AwardDetailViewController.storyboard */; };
 		B2A44F262500DBB50071F899 /* AwardDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2A44F252500DBB50071F899 /* AwardDetailViewController.swift */; };
+		B2A44F282503F2740071F899 /* Centered Collection View Flow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2A44F272503F2740071F899 /* Centered Collection View Flow.swift */; };
+		B2A44F2B2506889A0071F899 /* AlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2A44F2A2506889A0071F899 /* AlertViewController.swift */; };
+		B2A44F2D250688A80071F899 /* AlertViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B2A44F2C250688A80071F899 /* AlertViewController.storyboard */; };
 		B2A9096324A1BBDB00B35B69 /* DataTableTileView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2A9096224A1BBDB00B35B69 /* DataTableTileView.xib */; };
 		B2A9096524A1BBEC00B35B69 /* DataTableTileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2A9096424A1BBEC00B35B69 /* DataTableTileView.swift */; };
 		B2A9096724A1C15700B35B69 /* DataTableTileTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2A9096624A1C15700B35B69 /* DataTableTileTableViewCell.xib */; };
@@ -402,7 +405,7 @@
 		B26A11A72460728300449FCC /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		B26A11A92460803500449FCC /* Game.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
 		B2767C1D2110061B0029155E /* Loopback Class.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Loopback Class.swift"; sourceTree = "<group>"; };
-		B2784DB5248607A5006E49F0 /* Collection View Flow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Collection View Flow.swift"; sourceTree = "<group>"; };
+		B2784DB5248607A5006E49F0 /* Custom Collection View Flow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Custom Collection View Flow.swift"; sourceTree = "<group>"; };
 		B27B1FE71F9B55ED00ED6FFF /* Contract Whist Scorecard UI Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Contract Whist Scorecard UI Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B27B1FE91F9B55ED00ED6FFF /* Scorecard Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Scorecard Tests.swift"; sourceTree = "<group>"; };
 		B27B1FEB1F9B55ED00ED6FFF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -429,6 +432,9 @@
 		B2A3D9A0248E2804008556B8 /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 		B2A44F212500DB970071F899 /* AwardDetailViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = AwardDetailViewController.storyboard; sourceTree = "<group>"; };
 		B2A44F252500DBB50071F899 /* AwardDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AwardDetailViewController.swift; sourceTree = "<group>"; };
+		B2A44F272503F2740071F899 /* Centered Collection View Flow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Centered Collection View Flow.swift"; sourceTree = "<group>"; };
+		B2A44F2A2506889A0071F899 /* AlertViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertViewController.swift; sourceTree = "<group>"; };
+		B2A44F2C250688A80071F899 /* AlertViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = AlertViewController.storyboard; sourceTree = "<group>"; };
 		B2A9096224A1BBDB00B35B69 /* DataTableTileView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DataTableTileView.xib; sourceTree = "<group>"; };
 		B2A9096424A1BBEC00B35B69 /* DataTableTileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTableTileView.swift; sourceTree = "<group>"; };
 		B2A9096624A1C15700B35B69 /* DataTableTileTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DataTableTileTableViewCell.xib; sourceTree = "<group>"; };
@@ -1103,6 +1109,7 @@
 		B288FAB71FB8024A00633FD7 /* Miscellaneous Views */ = {
 			isa = PBXGroup;
 			children = (
+				B2A44F292506887B0071F899 /* Alert */,
 				B221EEF5210B1C1D00F7FBA0 /* Graph */,
 				B221EEF4210B1C1500F7FBA0 /* Settings */,
 				B221EEF3210B1C0E00F7FBA0 /* Sync */,
@@ -1124,7 +1131,8 @@
 				B2F41B221FB6BBA70043F974 /* Other Extensions.swift */,
 				B2519456230C4284006240DE /* Custom Transitions.swift */,
 				B247A72E2483657600591BBA /* Shadow View.swift */,
-				B2784DB5248607A5006E49F0 /* Collection View Flow.swift */,
+				B2784DB5248607A5006E49F0 /* Custom Collection View Flow.swift */,
+				B2A44F272503F2740071F899 /* Centered Collection View Flow.swift */,
 				B24C5A4324C1783A0069759A /* Date Extensions.swift */,
 			);
 			name = "Core Class Extensions";
@@ -1251,6 +1259,15 @@
 				B2A44F252500DBB50071F899 /* AwardDetailViewController.swift */,
 			);
 			name = "Award Detail";
+			sourceTree = "<group>";
+		};
+		B2A44F292506887B0071F899 /* Alert */ = {
+			isa = PBXGroup;
+			children = (
+				B2A44F2C250688A80071F899 /* AlertViewController.storyboard */,
+				B2A44F2A2506889A0071F899 /* AlertViewController.swift */,
+			);
+			name = Alert;
 			sourceTree = "<group>";
 		};
 		B2A9096A24A1C64200B35B69 /* Count Tile */ = {
@@ -1713,6 +1730,7 @@
 				B298496924E6DF4400FADC06 /* LaunchScreenView.xib in Resources */,
 				B20CF54424A7BD3B00F27A9C /* PersonalDashboardLandscapeView.xib in Resources */,
 				B227893C1FB8932A009BABCA /* SyncViewController.storyboard in Resources */,
+				B2A44F2D250688A80071F899 /* AlertViewController.storyboard in Resources */,
 				B2430CC722EABD1D00C4FC77 /* SlideOutButtonView.xib in Resources */,
 				B2A44F222500DB970071F899 /* AwardDetailViewController.storyboard in Resources */,
 				B24B473324C467D300C0B131 /* AwardCollectionHeader.xib in Resources */,
@@ -1829,6 +1847,7 @@
 				B2E894D42369EF2E0011AD3D /* ConfettiView.swift in Sources */,
 				B203ECCE24F8EC8B001E2CED /* Banner.swift in Sources */,
 				B247A72F2483657600591BBA /* Shadow View.swift in Sources */,
+				B2A44F2B2506889A0071F899 /* AlertViewController.swift in Sources */,
 				B24ABA3D24B31BB900E3F130 /* BannerLogoView.swift in Sources */,
 				B2767C1E2110061B0029155E /* Loopback Class.swift in Sources */,
 				B20A66FC1E23921E00E75190 /* Buttons.swift in Sources */,
@@ -1839,6 +1858,7 @@
 				CC395F511E0905BE00165D1C /* Utility Library.swift in Sources */,
 				B23970CF24AF506F00E3C2A9 /* DataTableTilePersonalStatsDataSource.swift in Sources */,
 				CC395F4D1E064EC500165D1C /* Card Class.swift in Sources */,
+				B2A44F282503F2740071F899 /* Centered Collection View Flow.swift in Sources */,
 				B26A11AA2460803500449FCC /* Game.swift in Sources */,
 				B28033341F7E046B00CF4696 /* Sync Class.swift in Sources */,
 				B2BFB5C0247AD6770044F8B6 /* Scoring Controller Class.swift in Sources */,
@@ -1853,7 +1873,7 @@
 				B28DFC2D1F79618700E991E4 /* Config Class.swift in Sources */,
 				B24C5A5324C316910069759A /* AwardsTileView.swift in Sources */,
 				B2B1801D21195FB0008D3BAA /* Robot Bidding.swift in Sources */,
-				B2784DB6248607A5006E49F0 /* Collection View Flow.swift in Sources */,
+				B2784DB6248607A5006E49F0 /* Custom Collection View Flow.swift in Sources */,
 				CC9EF4001E003582006E8930 /* PlayerDetailViewController.swift in Sources */,
 				B2B3501E24BC539B0004DCB1 /* ViewGroup.swift in Sources */,
 				B2E7621E1E73E6A6001DAF4F /* GetStartedViewController.swift in Sources */,

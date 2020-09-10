@@ -28,9 +28,7 @@ extension UIViewController {
         }
         
         Utility.mainThread {
-            let alertController = UIAlertController(title: title, message: message, preferredStyle: UIAlertController.Style.alert)
-            alertController.addAction(UIAlertAction(title: buttonText, style: UIAlertAction.Style.default, handler: alertMessageCompletion))
-            self.present(alertController, animated: true, completion: nil)
+            AlertViewController.show(from: self, message, title: title, okButtonText: buttonText, okHandler: okHandler)
         }
     }
     
@@ -44,27 +42,9 @@ extension UIViewController {
     }
 
     public func alertDecision(_ message: String, title: String = "Warning", okButtonText: String = "OK", okHandler: (() -> ())? = nil, otherButtonText: String? = nil, otherHandler: (() -> ())? = nil, cancelButtonText: String = "Cancel", cancelHandler: (() -> ())? = nil) {
-  
-        func alertDecisionOkCompletion(alertAction: UIAlertAction) {
-            okHandler?()
-        }
-        
-        func alertDecisionOtherCompletion(alertAction: UIAlertAction) {
-            otherHandler?()
-        }
-        
-        func alertDecisionCancelCompletion(alertAction: UIAlertAction) {
-            cancelHandler?()
-        }
         
         Utility.mainThread {
-            let alertController = UIAlertController(title: title, message: message, preferredStyle: UIAlertController.Style.alert)
-            alertController.addAction(UIAlertAction(title: okButtonText, style: UIAlertAction.Style.default, handler: alertDecisionOkCompletion))
-            if otherButtonText != nil {
-                 alertController.addAction(UIAlertAction(title: otherButtonText, style: UIAlertAction.Style.default, handler: alertDecisionOtherCompletion))
-            }
-            alertController.addAction(UIAlertAction(title: cancelButtonText, style: UIAlertAction.Style.cancel, handler: alertDecisionCancelCompletion))
-            self.present(alertController, animated: true, completion: nil)
+            AlertViewController.show(from: self, message, title: title, okButtonText: okButtonText, okHandler: okHandler, otherButtonText: otherButtonText, otherHandler: otherHandler, cancelButtonText: cancelButtonText, cancelHandler: cancelHandler)
         }
     }
 
@@ -180,7 +160,6 @@ class ActionSheet : NSObject, UIPopoverPresentationControllerDelegate {
             let titleString = NSAttributedString(string: title, attributes: attributes)
 
             alertController.setValue(titleString, forKey: "attributedTitle")
-
         }
         if let message = message {
             // Set attributed message

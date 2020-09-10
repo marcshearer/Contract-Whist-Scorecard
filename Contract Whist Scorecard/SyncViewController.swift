@@ -149,12 +149,9 @@ class SyncViewController: ScorecardViewController, UITableViewDelegate, UITableV
             self.errors=errors
             if self.errors > 0 {
                 // Warn user of errors
-                let alertController = UIAlertController(title: "Warning", message: "Warning: Errors occurred during synchronisation", preferredStyle: UIAlertController.Style.alert)
-                alertController.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler:  {
-                    (action:UIAlertAction!) -> Void in
+                self.alertMessage("Warning: Errors occurred during synchronisation", title: "Warning", okHandler: {
                     self.finishButton.isHidden = false
-                }))
-                self.present(alertController, animated: true)
+                })
             } else if self.errors == 0 {
                 // All OK - return but run out any backed up time first and then wait for 2 secs
                 self.reportAfter(delay: 0.0, completion: {
@@ -266,12 +263,12 @@ class SyncViewController: ScorecardViewController, UITableViewDelegate, UITableV
         let storyboard = UIStoryboard(name: "SyncViewController", bundle: nil)
         let SyncViewController: SyncViewController = storyboard.instantiateViewController(withIdentifier: "SyncViewController") as! SyncViewController
         
-        SyncViewController.preferredContentSize = ScorecardUI.defaultSize
-        SyncViewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
-        
         SyncViewController.completion = completion
         
-        viewController.present(SyncViewController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: nil)
+        let popoverSize = (ScorecardUI.phoneSize() ? nil : ScorecardUI.defaultSize)
+        let sourceView = (ScorecardUI.phoneSize() ? nil : viewController.view)
+        
+        viewController.present(SyncViewController, popoverSize: popoverSize, sourceView: sourceView, animated: true, completion: nil)
     }
     
     private func dismiss() {

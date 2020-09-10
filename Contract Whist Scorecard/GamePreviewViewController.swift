@@ -88,7 +88,6 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
     
     @IBAction func finishGamePressed(_ sender: Any) {
         // Link back to selection
-        Utility.debugMessage("gamePreview", "Cancel pressed")
         self.willDismiss()
         self.controllerDelegate?.didCancel()
     }
@@ -175,12 +174,13 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
     override internal func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         self.rotated = true
-        Scorecard.shared.reCenterPopup(self)
         self.view.setNeedsLayout()
     }
     
     override internal func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+
+        Scorecard.shared.reCenterPopup(self)
         
         if !exiting {
             
@@ -713,9 +713,6 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
         let storyboard = UIStoryboard(name: "GamePreviewViewController", bundle: nil)
         let gamePreviewViewController = storyboard.instantiateViewController(withIdentifier: "GamePreviewViewController") as! GamePreviewViewController
         
-        gamePreviewViewController.preferredContentSize = ScorecardUI.defaultSize
-        gamePreviewViewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
-        
         gamePreviewViewController.selectedPlayers = selectedPlayers
         gamePreviewViewController.formTitle = formTitle
         gamePreviewViewController.smallFormTitle = smallFormTitle ?? formTitle
@@ -727,7 +724,7 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
                 
         gamePreviewViewController.firstTime =  true
         
-        viewController.present(gamePreviewViewController, appController: appController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: animated)
+        viewController.present(gamePreviewViewController, appController: appController, animated: animated)
         return gamePreviewViewController
     }
 }

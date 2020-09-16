@@ -128,7 +128,7 @@ extension UIView {
     }
 }
 
-class ActionSheet : NSObject, UIPopoverPresentationControllerDelegate {
+class ActionSheetOLD : NSObject, UIPopoverPresentationControllerDelegate {
     
     public var alertController: UIAlertController
     private var dark: Bool

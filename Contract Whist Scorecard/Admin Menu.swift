@@ -26,7 +26,8 @@ class AdminMenu {
         if availableOptions || Scorecard.adminMode || (Scorecard.shared.commsDelegate != nil && Scorecard.shared.commsDelegate?.connectionMode != .loopback) {
             // There are some options to display
             
-            let actionSheet = ActionSheet("Admin Options")
+            let viewController = Utility.getActiveViewController()!
+            let actionSheet = ActionSheet("Admin Options", sourceView:  viewController.view, sourceRect: CGRect( origin: viewController.view.center, size: CGSize()), direction: UIPopoverArrowDirection())
             
             if availableOptions {
                 for (description, action, available) in options! {
@@ -60,7 +61,7 @@ class AdminMenu {
                         
             // Present the action sheet
             actionSheet.add("Cancel", style: .cancel)
-            actionSheet.present()
+            actionSheet.present(from: viewController)
         }
     }
 }

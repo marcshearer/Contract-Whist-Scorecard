@@ -107,10 +107,12 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     
     @IBOutlet internal weak var leftContainer: UIView!
     @IBOutlet internal weak var mainContainer: UIView!
-    @IBOutlet internal weak var rightPanel: UIView!
     @IBOutlet internal weak var rightContainer: UIView!
+    @IBOutlet internal weak var rightInsetContainer: UIView!
     @IBOutlet internal weak var mainRightContainer: UIView!
+    @IBOutlet internal weak var leftPanelTrailingConstraint: NSLayoutConstraint!
     @IBOutlet internal weak var leftPanelWidthConstraint: NSLayoutConstraint!
+    @IBOutlet internal weak var rightPanelLeadingConstraint: NSLayoutConstraint!
     @IBOutlet internal weak var rightPanelWidthConstraint: NSLayoutConstraint!
 
     @IBOutlet internal weak var rightPanelTitleLabel: UILabel!
@@ -290,7 +292,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         
         Palette.ignoringGameBanners {
             
-            self.changePlayerAvailable()
+            self.checkPlayingGame()
             
             if self.firstTime {
                 
@@ -323,10 +325,11 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        self.mainContainer?.layoutIfNeeded()
-        self.allocateContainerSizes()
         
         Palette.ignoringGameBanners {
+            
+            self.mainContainer?.layoutIfNeeded()
+            self.allocateContainerSizes()
             
             self.panelLayoutSubviews()
             self.setupBanner()
@@ -526,7 +529,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     }
     
     private func showActionMenu() {
-        let actionSheet = ActionSheet("Other Options")
+        let actionSheet = ActionSheet("Other Options", sourceView: self.view, sourceRect: self.banner?.getButtonFrame("admin"), direction: UIPopoverArrowDirection.down)
         
         for action in self.menuActions {
             if !(action.isHidden?() ?? false) {
@@ -538,7 +541,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         
         // Present the action sheet
         actionSheet.add("Cancel", style: .cancel)
-        actionSheet.present()
+        actionSheet.present(from: self)
     }
     
     // MARK: - Send playerUUID and delegate methods =========================================================== -
@@ -560,7 +563,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         self.scoringController = nil
         self.setupHostingOptions()
         self.appStateChange(to: .notConnected)
-        self.changePlayerAvailable()
+        self.checkPlayingGame()
         Scorecard.game?.resetValues()
         Scorecard.game.setGameInProgress(false)
         self.availablePeers = []
@@ -568,7 +571,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         self.peerCollectionView.contentOffset = CGPoint()
         self.peerReloadData()
         self.updateSettingsBadge()
-        self.menuController.set(playingGame: false)
+        self.menuController?.set(playingGame: false)
 
         if createController {
             // Create controller after short delay
@@ -951,7 +954,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         }
         
         // Move menu to in-game mode
-        self.menuController.set(playingGame: true)
+        self.menuController?.set(playingGame: true)
 
         // Create Host controller
         if self.hostController == nil {
@@ -982,7 +985,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         }
         
         // Move menu to in-game mode
-        self.menuController.set(playingGame: true)
+        self.menuController?.set(playingGame: true)
         
         // Start Host controller
         scoringController.start(recoveryMode: recoveryMode, completion: { (returnHome) in
@@ -1006,7 +1009,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         })
         
         // Move menu to in-game mode
-        self.menuController.set(playingGame: true)
+        self.menuController?.set(playingGame: true)
     }
     
     private func checkFaceTime(peer: AvailablePeer, completion: @escaping (String?)->()) {
@@ -1133,13 +1136,14 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
             Utility.debugMessage("client", "Application state \(newState)")
 
             self.appState = newState
-            self.changePlayerAvailable()
+            self.checkPlayingGame()
         }
     }
     
-    internal func changePlayerAvailable() {
-        let available = (self.appState == .notConnected && !self.recoveryMode)
-        self.tapGestureRecognizer.isEnabled = available
+    internal func checkPlayingGame() {
+        let playingGame = ((self.appState != .notConnected && self.appState != .finished) || self.recoveryMode)
+        self.tapGestureRecognizer.isEnabled = !playingGame
+        self.menuController?.set(playingGame: playingGame)
     }
     
     internal func updateSettingsBadge() {
@@ -1187,9 +1191,9 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     
     private func setupBanner() {
         self.banner.set(rightButtons: [
-            BannerButton(image: UIImage(systemName: "line.horizontal.3"), width: 30, action: self.adminButtonPressed, containerHide: false, id: "admin")])
+            BannerButton(image: UIImage(systemName: "line.horizontal.3"), width: 30, action: self.adminButtonPressed, menuHide: false, id: "admin")])
         self.banner.setButton("admin", isHidden: true)
-        if self.menuController.isVisible() && self.container == .main {
+        if (self.menuController?.isVisible() ?? false) && self.container == .main {
             self.banner.set(title: self.containerTitle, titleFont: Banner.panelFont, titleColor: self.defaultBannerTextColor)
         } else {
             self.banner.set(title: "W H I S T", titleFont: Banner.heavyFont, titleColor: Palette.banner.themeText)

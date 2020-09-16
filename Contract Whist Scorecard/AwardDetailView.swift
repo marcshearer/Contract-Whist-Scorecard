@@ -18,7 +18,7 @@ class AwardDetailView: UIView {
         
     private var tapGesture: UITapGestureRecognizer!
     private var shadow = true
-    private var widthPercent: CGFloat = 0.8
+    private var widthPercent: CGFloat = 80
     private var dismiss = false
     
     @IBOutlet private weak var contentView: UIView!
@@ -56,15 +56,16 @@ class AwardDetailView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        self.contentView.layoutIfNeeded()
+        self.shadowViewWidthConstraint.constant = self.contentView.frame.width * (self.widthPercent / 100)
+        self.shadowView.layoutIfNeeded()
         self.shadowView.roundCorners(cornerRadius: 16.0)
         if self.shadow {
             self.contentView.addShadow(shadowSize: CGSize(width: 8.0, height: 8.0), shadowColor: UIColor.black)
         }
-        self.contentView.layoutIfNeeded()
-        self.shadowViewWidthConstraint.constant = self.contentView.frame.width * self.widthPercent
     }
     
-    public func set(backgroundColor: UIColor? = nil, textColor: UIColor? = nil, detailFont: UIFont? = nil, shadow: Bool = true, dismiss: Bool = true, widthPercent: CGFloat = 0.8) {
+    public func set(backgroundColor: UIColor? = nil, textColor: UIColor? = nil, detailFont: UIFont? = nil, shadow: Bool = true, dismiss: Bool = true, widthPercent: CGFloat = 80) {
         self.dismiss = dismiss
         self.widthPercent = widthPercent
         self.exitButton.isHidden = !dismiss

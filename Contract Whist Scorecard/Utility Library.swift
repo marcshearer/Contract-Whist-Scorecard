@@ -592,7 +592,6 @@ class Utility {
         layer.render(in: UIGraphicsGetCurrentContext()!)
         let screenshot = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-        UIImageWriteToSavedPhotosAlbum(screenshot!, nil, nil, nil)
         return screenshot
     }
     

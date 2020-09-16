@@ -8,7 +8,7 @@
 
 import UIKit
 
-class OverrideViewController : ScorecardViewController, UITableViewDelegate, UITableViewDataSource, UIPopoverPresentationControllerDelegate {
+class OverrideViewController : ScorecardViewController, UITableViewDelegate, UITableViewDataSource, UIPopoverPresentationControllerDelegate, BannerDelegate {
     
     private enum Options: Int, CaseIterable {
         case saveHistory = 0
@@ -31,18 +31,20 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
     private var existingOverride = false
     
     // MARK: - IB Outlets ============================================================================== -
-    @IBOutlet private weak var confirmButton: UIButton!
-    @IBOutlet private weak var revertButton: UIButton!
-    @IBOutlet private weak var bannerPaddingView: InsetPaddingView!
-    @IBOutlet private weak var insetPaddingView: InsetPaddingView!
+    @IBOutlet private weak var banner: Banner!
+    @IBOutlet private weak var bannerHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var instructionView: UIView!
     @IBOutlet private weak var instructionLabel: UILabel!
-    @IBOutlet private weak var titleView: UIView!
-    @IBOutlet private weak var titleLabel: UILabel!
+    @IBOutlet private weak var bottomSectionHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var confirmButton: ShadowButton!
     
     // MARK: - IB Actions ============================================================================== -
     
     @IBAction func confirmPressed(_ sender: UIButton) {
+        self.confirmPressed()
+    }
+    
+    internal func confirmPressed() {
         if Scorecard.settings != Scorecard.game.settings && (Scorecard.game.settings.saveStats || Scorecard.game.settings.saveHistory) {
             // Overriding but still saving stats and history
             var includedIn = ""
@@ -59,7 +61,7 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
         }
     }
     
-    @IBAction func revertPressed(_ sender: UIButton) {
+    internal func finishPressed() {
         // Disable override
         Scorecard.game.reset()
         self.dismiss()
@@ -77,19 +79,23 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
         
         self.skipOptions = (Scorecard.settings.saveHistory ? 0 : 2)
         
-        self.revertButton.setTitleColor(Palette.banner.text, for: .normal)
-        self.confirmButton.setTitleColor(Palette.banner.text, for: .normal)
+        self.confirmButton.setBackgroundColor(Palette.continueButton.background)
+        self.confirmButton.setTitleColor(Palette.continueButton.text, for: .normal)
 
-        self.enableButtons()
+        self.setupButtons()
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
+        Scorecard.shared.reCenterPopup(self)
         self.view.setNeedsLayout()
     }
     
     override func viewWillLayoutSubviews() {
-        Scorecard.shared.reCenterPopup(self)
+        super.viewDidLayoutSubviews()
+        
+        self.bottomSectionHeightConstraint.constant = (ScorecardUI.smallPhoneSize() || ScorecardUI.landscapePhone() ? 0 : ((self.menuController?.isVisible() ?? false) ? 75 : 58) + (self.view.safeAreaInsets.bottom == 0 ? 8.0 : 0.0))
+
     }
     
     // MARK: - TableView Overrides ===================================================================== -
@@ -234,10 +240,27 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
         self.saveStatsSelection?.setEnabled(Scorecard.game.settings.saveHistory, forSegmentAt: 1)
     }
     
-    func enableButtons() {
+    private func setupButtons() {
+        
+        // Add banner confirm button
+        self.banner.set(rightButtons: [
+        BannerButton(title: "Confirm", image: UIImage(named: "forward"), width: 100, action: self.confirmPressed, menuHide: true, id: "confirm")])
+        
+        // Set confirm button and title
+        self.confirmButton.toCircle()
+        
+        // Set banner height
+        self.bannerHeightConstraint.constant = self.defaultBannerHeight
+        
+        self.enableButtons()
+    }
+    
+    private func enableButtons() {
         let changed = (Scorecard.settings != Scorecard.game.settings)
-        self.confirmButton.isHidden = !changed
-        self.revertButton.setTitle((changed && self.existingOverride ? "Revert" : "Cancel"), for: .normal)
+        let compact = ScorecardUI.smallPhoneSize() || ScorecardUI.landscapePhone()
+        self.confirmButton.isHidden = !changed || compact
+        self.banner.setButton("confirm", isHidden: !changed || !compact)
+        self.banner.setButton(Banner.finishButton, title: (changed && self.existingOverride ? "Revert" : "Cancel"))
     }
     
     // Mark: - Main instatiation routine =============================================================== -
@@ -251,7 +274,7 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
         viewController.preferredContentSize = ScorecardUI.defaultSize
         viewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
         
-        parentViewController.present(viewController, appController: appController, animated: true, completion: nil)
+        parentViewController.present(viewController, appController: appController, animated: true, container: .mainRight, completion: nil)
         
         return viewController
     }
@@ -292,13 +315,7 @@ extension OverrideViewController {
 
     private func defaultViewColors() {
 
-        self.bannerPaddingView.bannerColor = Palette.banner.background
-        self.insetPaddingView.backgroundColor = Palette.normal.background
-        self.insetPaddingView.bannerColor = Palette.normal.background
-        self.instructionLabel.textColor = Palette.banner.text
-        self.instructionView.backgroundColor = Palette.banner.background
-        self.titleLabel.textColor = Palette.banner.text
-        self.titleView.backgroundColor = Palette.banner.background
+        self.instructionLabel.textColor = Palette.normal.text
         self.view.backgroundColor = Palette.normal.background
     }
 

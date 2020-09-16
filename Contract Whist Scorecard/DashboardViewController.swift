@@ -471,7 +471,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
         }
         
         self.banner.set(rightButtons: [
-            BannerButton(title: title, image: image, width: 60, action: self.syncPressed, type: type, containerHide: false, font: UIFont.systemFont(ofSize: 14), id: "sync")])
+            BannerButton(title: title, image: image, width: 60, action: self.syncPressed, type: type, menuHide: false, font: UIFont.systemFont(ofSize: 14), id: "sync")])
         self.bannerHeightConstraint.constant = self.defaultBannerHeight
     }
 

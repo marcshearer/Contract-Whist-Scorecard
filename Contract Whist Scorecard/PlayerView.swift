@@ -37,7 +37,7 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
     public weak var imagePickerDelegate: PlayerViewImagePickerDelegate?
     
     private weak var parentView: UIView!
-    private weak var parentViewController: ScorecardViewController?
+    private weak var parentViewController: ScorecardViewController!
     public var tag: Int
     public var type: PlayerViewType
     public var thumbnailView: ThumbnailView!
@@ -270,7 +270,7 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
     // MARK: - Image Picker Routines / Overrides ============================================================ -
 
     private func imagePickerTapped() {
-        let actionSheet = ActionSheet("Thumbnail Image", message: "\(self.playerMO?.thumbnail == nil ? "Add a" : "Replace") thumbnail image for this player", view: parentView)
+        let actionSheet = ActionSheet("Thumbnail Image", message: "\(self.playerMO?.thumbnail == nil ? "Add a" : "Replace") thumbnail image for this player", sourceView: parentView, sourceRect: thumbnailView.frame, direction: UIPopoverArrowDirection.right)
         if !Utility.isSimulator {
             actionSheet.add("Take Photo", handler: {
                 self.getPicture(from: .camera)
@@ -287,7 +287,7 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
             })
         }
         actionSheet.add("Cancel", style: .cancel, handler:nil)
-        actionSheet.present()
+        actionSheet.present(from: self.parentViewController)
     }
     
     private func getPicture(from: UIImagePickerController.SourceType) {

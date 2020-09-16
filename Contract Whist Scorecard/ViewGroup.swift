@@ -14,9 +14,15 @@ class ViewGroup: UIView {
     
     @IBInspectable private var spacing: CGFloat = 4.0
     
-    private var viewList: [UIView] = []
+    struct Item {
+        let view: UIView
+        let width: CGFloat
+        var widthConstraint: NSLayoutConstraint?
+    }
+    
+    private var itemList: [Item] = []
     private var constraintList: [NSLayoutConstraint] = []
-    public var count: Int { get { self.viewList.count } }
+    public var count: Int { get { self.itemList.count } }
     
     @IBOutlet private weak var contentView: UIView!
     
@@ -48,10 +54,10 @@ class ViewGroup: UIView {
     }
     
     public func clear() {
-        for view in viewList {
-            view.removeFromSuperview()
+        for item in itemList {
+            item.view.removeFromSuperview()
         }
-        self.viewList = []
+        self.itemList = []
     }
     
     public func add(views: [UIView]) {
@@ -70,15 +76,15 @@ class ViewGroup: UIView {
     
     private func addView(_ view: UIView) {
         self.contentView.addSubview(view)
-        self.viewList.append(view)
         // Remove any existing constraints on subviews
         for constraint in view.constraints {
             view.removeConstraint(constraint)
         }
         // Add height, width and vertical center constraints
-        Constraint.setWidth(control: view, width: view.frame.width)
+        let widthConstraint = Constraint.setWidth(control: view, width: view.frame.width)
         Constraint.setHeight(control: view, height: view.frame.height)
         Constraint.anchor(view: self.contentView, control: view, attributes: .centerY)
+        self.itemList.append(Item(view: view, width: view.frame.width, widthConstraint: widthConstraint))
     }
     
     private func loadButtonGroupView() {
@@ -103,22 +109,28 @@ class ViewGroup: UIView {
         }
         
         // Bind each control to the one before it
-        for view in self.viewList {
+        for item in self.itemList {
 
-            if !view.isHidden {
+            if item.view.isHidden {
+                
+                item.widthConstraint?.constant = 0
+                
+            } else {
+                
+                item.widthConstraint?.constant = item.width
                 
                 if lastView == nil {
                     // Bind first control to start of container
-                    self.constraintList.append(contentsOf: Constraint.anchor(view: self.contentView, control: view, attributes: .leading))
+                    self.constraintList.append(contentsOf: Constraint.anchor(view: self.contentView, control: item.view, attributes: .leading))
                 }
                 
                 // Set constraints for view relative to previous views
                 if lastView != nil {
-                    self.constraintList.append(contentsOf: Constraint.anchor(view: self.contentView, control: view, to: lastView, constant: self.spacing, toAttribute: .trailing, attributes: .leading))
+                    self.constraintList.append(contentsOf: Constraint.anchor(view: self.contentView, control: item.view, to: lastView, constant: self.spacing, toAttribute: .trailing, attributes: .leading))
                     width += spacing
                 }
-                width += view.frame.width
-                lastView = view
+                width += item.width
+                lastView = item.view
             }
         }
         
@@ -131,8 +143,9 @@ class ViewGroup: UIView {
         self.constraintList.append(Constraint.setWidth(control: self.contentView, width: width))
         
         if layout {
+            self.contentView.setNeedsUpdateConstraints()
             self.contentView.setNeedsLayout()
-            self.layoutIfNeeded()
+            self.contentView.layoutIfNeeded()
         }
     }
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <device id="retina6_1" orientation="landscape" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
@@ -14,27 +14,27 @@
             <objects>
                 <viewController storyboardIdentifier="ClientViewController" id="iu4-6y-nl5" customClass="ClientViewController" customModule="Whist_2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Ibw-xE-9yM" userLabel="Client View">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="896" height="414"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zmp-Pb-RbJ" userLabel="Left Container">
-                                <rect key="frame" x="0.0" y="0.0" width="0.0" height="896"/>
+                                <rect key="frame" x="-300" y="0.0" width="300" height="414"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <accessibility key="accessibilityConfiguration" identifier="LeftContainer"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" id="rFr-J4-RNI"/>
+                                    <constraint firstAttribute="width" constant="300" id="rFr-J4-RNI"/>
                                 </constraints>
                             </view>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hbD-Y0-uhD" userLabel="Right Panel">
-                                <rect key="frame" x="414" y="0.0" width="0.0" height="896"/>
+                                <rect key="frame" x="896" y="0.0" width="300" height="414"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Liw-Kx-YGP" userLabel="Right Container">
-                                        <rect key="frame" x="30" y="172" width="240" height="674"/>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Liw-Kx-YGP" userLabel="Right Container">
+                                        <rect key="frame" x="30" y="172" width="240" height="192"/>
                                         <color key="backgroundColor" name="Clear"/>
                                         <accessibility key="accessibilityConfiguration" identifier="RightContainer"/>
                                     </view>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="6vV-nZ-CxI">
-                                        <rect key="frame" x="32" y="85" width="159.5" height="79"/>
+                                        <rect key="frame" x="32" y="85" width="236" height="79"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="79" id="Yls-fF-Yhj"/>
                                         </constraints>
@@ -66,23 +66,20 @@ Played</string>
                                     <constraint firstItem="NeI-VM-vAB" firstAttribute="top" secondItem="6vV-nZ-CxI" secondAttribute="bottom" constant="50" id="awB-C4-kAz"/>
                                     <constraint firstItem="NeI-VM-vAB" firstAttribute="leading" secondItem="hbD-Y0-uhD" secondAttribute="leading" constant="32" id="yAK-Kp-pdE"/>
                                     <constraint firstItem="6vV-nZ-CxI" firstAttribute="leading" secondItem="hbD-Y0-uhD" secondAttribute="leading" constant="32" id="yti-85-jya"/>
-                                    <constraint firstAttribute="width" id="zzI-c7-daZ"/>
+                                    <constraint firstAttribute="width" constant="300" id="zzI-c7-daZ"/>
                                 </constraints>
                             </view>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4k6-G2-xLf" userLabel="Main Right Container">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                                <rect key="frame" x="0.0" y="0.0" width="896" height="414"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <accessibility key="accessibilityConfiguration" identifier="MainRightContainer"/>
                             </view>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hFM-Q5-ViO" userLabel="Main Container">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                                <rect key="frame" x="0.0" y="0.0" width="896" height="414"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Clx-ll-10L" customClass="Banner" customModule="Whist_2" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="88"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="246" height="44"/>
                                         <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="color" keyPath="bannerColor">
-                                                <color key="value" name="Clear"/>
-                                            </userDefinedRuntimeAttribute>
                                             <userDefinedRuntimeAttribute type="string" keyPath="title" value="W H I S T"/>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
@@ -90,17 +87,17 @@ Played</string>
                                         </connections>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YSU-nf-o4R" customClass="InsetPaddingView" customModule="Whist_2" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="0.0" height="896"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="44" height="414"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="baT-Lm-DyX" userLabel="Top Section">
-                                        <rect key="frame" x="0.0" y="88" width="414" height="151"/>
+                                        <rect key="frame" x="44" y="44" width="202" height="370"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XTv-6o-LLq" userLabel="This Player Container View">
-                                                <rect key="frame" x="0.0" y="0.0" width="414" height="121"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="202" height="148"/>
                                                 <subviews>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qjq-rE-5ew" customClass="ThumbnailView" customModule="Whist_2" customModuleProvider="target">
-                                                        <rect key="frame" x="174.5" y="23.5" width="65" height="86"/>
+                                                        <rect key="frame" x="61.5" y="27" width="79" height="106"/>
                                                         <color key="backgroundColor" name="Clear"/>
                                                         <gestureRecognizers/>
                                                         <constraints>
@@ -118,22 +115,14 @@ Played</string>
                                                     <constraint firstItem="Qjq-rE-5ew" firstAttribute="centerX" secondItem="XTv-6o-LLq" secondAttribute="centerX" id="HXe-JG-JIu"/>
                                                     <constraint firstItem="Qjq-rE-5ew" firstAttribute="centerY" secondItem="XTv-6o-LLq" secondAttribute="centerY" constant="6" id="pao-W5-HZc"/>
                                                 </constraints>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="color" keyPath="bannerColor">
-                                                        <color key="value" name="Clear"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                                        <color key="value" name="Clear"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                </userDefinedRuntimeAttributes>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="x7j-7w-yJj">
-                                                <rect key="frame" x="0.0" y="121" width="414" height="18"/>
+                                                <rect key="frame" x="0.0" y="148" width="202" height="122"/>
                                                 <color key="backgroundColor" name="Clear"/>
                                                 <accessibility key="accessibilityConfiguration" identifier="thisPlayerOverlap"/>
                                             </view>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rhg-YK-v6u" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
-                                                <rect key="frame" x="20" y="83" width="28" height="28"/>
+                                                <rect key="frame" x="87" y="321" width="28" height="28"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="28" id="M3g-Di-BnU"/>
                                                     <constraint firstAttribute="width" secondItem="rhg-YK-v6u" secondAttribute="height" multiplier="1:1" id="QQQ-Gk-Tmr"/>
@@ -161,6 +150,7 @@ Played</string>
                                             <constraint firstItem="x7j-7w-yJj" firstAttribute="leading" secondItem="baT-Lm-DyX" secondAttribute="leading" id="Pdl-Kb-AA4"/>
                                             <constraint firstItem="XTv-6o-LLq" firstAttribute="top" secondItem="baT-Lm-DyX" secondAttribute="top" id="YHA-Pn-pco"/>
                                             <constraint firstAttribute="trailing" secondItem="XTv-6o-LLq" secondAttribute="trailing" id="a7q-9L-hle"/>
+                                            <constraint firstItem="rhg-YK-v6u" firstAttribute="centerX" secondItem="baT-Lm-DyX" secondAttribute="centerX" id="b0M-Fp-ruV"/>
                                             <constraint firstItem="x7j-7w-yJj" firstAttribute="height" secondItem="baT-Lm-DyX" secondAttribute="height" multiplier="0.12" id="bsM-gr-gao"/>
                                             <constraint firstAttribute="trailing" secondItem="x7j-7w-yJj" secondAttribute="trailing" id="jmq-QI-Us8"/>
                                             <constraint firstAttribute="height" priority="1" id="l4b-QK-6GL"/>
@@ -173,23 +163,29 @@ Played</string>
                                                 <exclude reference="zCm-db-ZhY"/>
                                                 <exclude reference="Bzi-e3-1sg"/>
                                                 <exclude reference="bsM-gr-gao"/>
+                                                <exclude reference="6U5-Zj-hn0"/>
+                                                <exclude reference="9kK-nZ-tJc"/>
+                                                <exclude reference="b0M-Fp-ruV"/>
                                             </mask>
                                         </variation>
                                         <variation key="heightClass=compact">
                                             <mask key="constraints">
                                                 <include reference="MZt-h6-3zi"/>
                                                 <include reference="Bzi-e3-1sg"/>
+                                                <include reference="b0M-Fp-ruV"/>
                                             </mask>
                                         </variation>
                                         <variation key="heightClass=regular">
                                             <mask key="constraints">
                                                 <include reference="zCm-db-ZhY"/>
                                                 <include reference="bsM-gr-gao"/>
+                                                <include reference="6U5-Zj-hn0"/>
+                                                <include reference="9kK-nZ-tJc"/>
                                             </mask>
                                         </variation>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0OQ-Wp-Xtp" customClass="PlayerSelectionView" customModule="Whist_2" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="239" width="414" height="0.0"/>
+                                        <rect key="frame" x="246" y="0.0" width="0.0" height="393"/>
                                         <color key="backgroundColor" name="Background"/>
                                         <constraints>
                                             <constraint firstAttribute="width" id="9iF-tu-zqC"/>
@@ -218,16 +214,16 @@ Played</string>
                                         </connections>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="e3D-oK-CzW" userLabel="Upper Middle Section">
-                                        <rect key="frame" x="0.0" y="239" width="414" height="204.5"/>
+                                        <rect key="frame" x="246" y="0.0" width="404" height="196.5"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tZH-0W-X3K">
-                                                <rect key="frame" x="20" y="18.5" width="374" height="176"/>
+                                                <rect key="frame" x="20" y="45.5" width="364" height="141"/>
                                                 <subviews>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FhF-F8-jiI" userLabel="Host Collection Content View">
-                                                        <rect key="frame" x="0.0" y="0.0" width="374" height="176"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="364" height="141"/>
                                                         <subviews>
                                                             <collectionView multipleTouchEnabled="YES" tag="1" contentMode="scaleToFill" alwaysBounceHorizontal="YES" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="QLu-uS-rp7">
-                                                                <rect key="frame" x="0.0" y="0.0" width="374" height="176"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="364" height="141"/>
                                                                 <color key="backgroundColor" name="Clear"/>
                                                                 <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="e6U-UB-5RB">
                                                                     <size key="itemSize" width="128" height="128"/>
@@ -237,7 +233,7 @@ Played</string>
                                                                 </collectionViewFlowLayout>
                                                                 <cells>
                                                                     <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Host Cell" id="740-ai-dFv" customClass="HostCollectionViewCell" customModule="Whist_2" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="24" width="128" height="128"/>
+                                                                        <rect key="frame" x="0.0" y="6.5" width="128" height="128"/>
                                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                         <collectionViewCellContentView key="contentView" opaque="NO" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="5oJ-Ci-gtK">
                                                                             <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
@@ -300,7 +296,7 @@ Played</string>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="w0v-BL-Raf" customClass="TitleBar" customModule="Whist_2" customModuleProvider="target">
-                                                <rect key="frame" x="20" y="-18.5" width="374" height="37"/>
+                                                <rect key="frame" x="20" y="10" width="364" height="35.5"/>
                                                 <color key="backgroundColor" name="Clear"/>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="string" keyPath="title" value="Start a Game"/>
@@ -353,16 +349,16 @@ Played</string>
                                         </variation>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="X53-w8-J5S" userLabel="Lower Middle Section">
-                                        <rect key="frame" x="0.0" y="443.5" width="414" height="268"/>
+                                        <rect key="frame" x="246" y="196.5" width="404" height="217.5"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3t1-6y-FZY" userLabel="Peer Collection Container">
-                                                <rect key="frame" x="20" y="45" width="374" height="213"/>
+                                                <rect key="frame" x="20" y="43.5" width="364" height="164"/>
                                                 <subviews>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0Mr-Ou-UxW" userLabel="Peer Collection Content View">
-                                                        <rect key="frame" x="0.0" y="0.0" width="374" height="213"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="364" height="164"/>
                                                         <subviews>
                                                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="2" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Lq4-Ij-9pl" userLabel="Peer Collection View">
-                                                                <rect key="frame" x="0.0" y="0.0" width="374" height="213"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="364" height="164"/>
                                                                 <color key="backgroundColor" name="Clear"/>
                                                                 <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="Aec-a3-Pfk" customClass="CustomCollectionViewLayout" customModule="Whist_2" customModuleProvider="target">
                                                                     <size key="itemSize" width="128" height="128"/>
@@ -380,7 +376,7 @@ Played</string>
                                                                 </collectionViewFlowLayout>
                                                                 <cells>
                                                                     <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Peer Cell" id="P8R-55-D1X" userLabel="Peer Cell" customClass="PeerCollectionViewCell" customModule="Whist_2" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="42.5" width="128" height="128"/>
+                                                                        <rect key="frame" x="0.0" y="18" width="128" height="128"/>
                                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                         <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="e3M-8L-XIx">
                                                                             <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
@@ -446,7 +442,7 @@ Played</string>
                                                                 </connections>
                                                             </collectionView>
                                                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="3" contentMode="scaleToFill" alwaysBounceHorizontal="YES" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="vDb-os-978">
-                                                                <rect key="frame" x="182" y="199" width="10" height="10"/>
+                                                                <rect key="frame" x="177" y="150" width="10" height="10"/>
                                                                 <color key="backgroundColor" name="Clear"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" constant="10" id="Upz-y7-JWa"/>
@@ -504,13 +500,14 @@ Played</string>
                                                 <accessibility key="accessibilityConfiguration" identifier="peerCollectionContainer"/>
                                                 <constraints>
                                                     <constraint firstAttribute="bottom" secondItem="0Mr-Ou-UxW" secondAttribute="bottom" id="K8f-CQ-DSq"/>
+                                                    <constraint firstAttribute="height" relation="lessThanOrEqual" constant="200" id="Lfn-tq-sih"/>
                                                     <constraint firstAttribute="trailing" secondItem="0Mr-Ou-UxW" secondAttribute="trailing" id="Rz3-rV-OM9"/>
                                                     <constraint firstItem="0Mr-Ou-UxW" firstAttribute="top" secondItem="3t1-6y-FZY" secondAttribute="top" id="val-Wb-Ft3"/>
                                                     <constraint firstItem="0Mr-Ou-UxW" firstAttribute="leading" secondItem="3t1-6y-FZY" secondAttribute="leading" id="wr3-VP-YYp"/>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1FM-AB-vSS" customClass="TitleBar" customModule="Whist_2" customModuleProvider="target">
-                                                <rect key="frame" x="20" y="8" width="374" height="37"/>
+                                                <rect key="frame" x="20" y="8" width="364" height="35.5"/>
                                                 <color key="backgroundColor" name="Clear"/>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="string" keyPath="title" value="Join a Game"/>
@@ -538,16 +535,16 @@ Played</string>
                                             <constraint firstItem="3t1-6y-FZY" firstAttribute="leading" secondItem="X53-w8-J5S" secondAttribute="leading" constant="20" id="MuZ-OL-CRG"/>
                                             <constraint firstAttribute="trailing" secondItem="3t1-6y-FZY" secondAttribute="trailing" constant="20" id="Wxf-aQ-QXW"/>
                                             <constraint firstItem="3t1-6y-FZY" firstAttribute="top" secondItem="1FM-AB-vSS" secondAttribute="bottom" id="YyK-9l-9ei"/>
-                                            <constraint firstAttribute="bottom" secondItem="3t1-6y-FZY" secondAttribute="bottom" constant="10" id="rba-Py-yiY"/>
+                                            <constraint firstAttribute="bottom" secondItem="3t1-6y-FZY" secondAttribute="bottom" priority="750" constant="10" id="rba-Py-yiY"/>
                                             <constraint firstItem="1FM-AB-vSS" firstAttribute="top" secondItem="X53-w8-J5S" secondAttribute="top" constant="8" id="rrw-uN-Ffo"/>
                                             <constraint firstItem="1FM-AB-vSS" firstAttribute="leading" secondItem="X53-w8-J5S" secondAttribute="leading" constant="20" id="v8y-8o-eew"/>
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7pG-RR-uCS" userLabel="Bottom Section">
-                                        <rect key="frame" x="0.0" y="711.5" width="414" height="150.5"/>
+                                        <rect key="frame" x="650" y="0.0" width="202" height="414"/>
                                         <subviews>
                                             <view tag="-1" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aq5-vX-83I" userLabel="Profiles Button" customClass="ImageButton" customModule="Whist_2" customModuleProvider="target">
-                                                <rect key="frame" x="20" y="10" width="116.5" height="140.5"/>
+                                                <rect key="frame" x="0.0" y="10" width="192" height="125"/>
                                                 <color key="backgroundColor" name="Clear"/>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="string" keyPath="title" value="Profiles"/>
@@ -570,7 +567,7 @@ Played</string>
                                                 </connections>
                                             </view>
                                             <view tag="-2" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bNw-dF-hBm" userLabel="Results Button" customClass="ImageButton" customModule="Whist_2" customModuleProvider="target">
-                                                <rect key="frame" x="148.5" y="10" width="117" height="140.5"/>
+                                                <rect key="frame" x="0.0" y="145" width="192" height="125"/>
                                                 <color key="backgroundColor" name="Clear"/>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="string" keyPath="title" value="Results"/>
@@ -593,7 +590,7 @@ Played</string>
                                                 </connections>
                                             </view>
                                             <view tag="-3" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pB1-JM-2cb" userLabel="Settings Button" customClass="ImageButton" customModule="Whist_2" customModuleProvider="target">
-                                                <rect key="frame" x="277.5" y="10" width="116.5" height="140.5"/>
+                                                <rect key="frame" x="0.0" y="280" width="192" height="124"/>
                                                 <color key="backgroundColor" name="Clear"/>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="string" keyPath="title" value="Settings"/>
@@ -616,7 +613,7 @@ Played</string>
                                                 </connections>
                                             </view>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KF8-nE-69M" userLabel="Settings Badge" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
-                                                <rect key="frame" x="379" y="5" width="20" height="20"/>
+                                                <rect key="frame" x="177" y="275" width="20" height="20"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="20" id="70S-62-QpK"/>
                                                     <constraint firstAttribute="height" constant="20" id="wii-Nd-NPC"/>
@@ -727,7 +724,6 @@ Played</string>
                                     <constraint firstItem="X53-w8-J5S" firstAttribute="centerX" secondItem="e3D-oK-CzW" secondAttribute="centerX" id="Abo-gB-bUX"/>
                                     <constraint firstItem="baT-Lm-DyX" firstAttribute="trailing" secondItem="N76-hf-VXY" secondAttribute="trailing" id="CKy-zs-657"/>
                                     <constraint firstItem="0OQ-Wp-Xtp" firstAttribute="top" secondItem="N76-hf-VXY" secondAttribute="top" id="DzQ-08-4lK"/>
-                                    <constraint firstItem="Clx-ll-10L" firstAttribute="bottom" secondItem="N76-hf-VXY" secondAttribute="top" id="F2W-Af-vzi"/>
                                     <constraint firstItem="pB1-JM-2cb" firstAttribute="width" secondItem="N76-hf-VXY" secondAttribute="width" multiplier="0.33" constant="-20" id="FqD-3H-3Iu"/>
                                     <constraint firstItem="X53-w8-J5S" firstAttribute="width" secondItem="e3D-oK-CzW" secondAttribute="width" id="I3Z-qF-HCV"/>
                                     <constraint firstItem="N76-hf-VXY" firstAttribute="trailing" secondItem="7pG-RR-uCS" secondAttribute="trailing" id="Ibo-5M-oqI"/>
@@ -736,14 +732,16 @@ Played</string>
                                     <constraint firstAttribute="bottom" secondItem="7pG-RR-uCS" secondAttribute="bottom" id="KNZ-Ph-Ift"/>
                                     <constraint firstItem="aq5-vX-83I" firstAttribute="width" secondItem="N76-hf-VXY" secondAttribute="width" multiplier="0.33" constant="-20" id="LCb-p5-y1v"/>
                                     <constraint firstItem="N76-hf-VXY" firstAttribute="leading" secondItem="YSU-nf-o4R" secondAttribute="trailing" id="Lhw-S7-HsR"/>
+                                    <constraint firstItem="Clx-ll-10L" firstAttribute="trailing" secondItem="0OQ-Wp-Xtp" secondAttribute="leading" id="M1T-vp-Xk5"/>
                                     <constraint firstAttribute="trailing" secondItem="0OQ-Wp-Xtp" secondAttribute="trailing" id="MGB-uA-Kgc"/>
+                                    <constraint firstItem="N76-hf-VXY" firstAttribute="bottom" secondItem="rhg-YK-v6u" secondAttribute="bottom" id="O08-2h-ok2"/>
                                     <constraint firstItem="e3D-oK-CzW" firstAttribute="width" secondItem="N76-hf-VXY" secondAttribute="width" multiplier="1:2" id="OUH-j5-s4S"/>
                                     <constraint firstItem="7pG-RR-uCS" firstAttribute="leading" secondItem="e3D-oK-CzW" secondAttribute="trailing" id="Pbt-4A-WEe"/>
                                     <constraint firstItem="X53-w8-J5S" firstAttribute="bottom" secondItem="hFM-Q5-ViO" secondAttribute="bottom" id="Pw7-uy-HLs"/>
                                     <constraint firstItem="bNw-dF-hBm" firstAttribute="width" secondItem="N76-hf-VXY" secondAttribute="width" multiplier="0.33" constant="-20" id="R42-ps-Y1J"/>
                                     <constraint firstItem="7pG-RR-uCS" firstAttribute="top" secondItem="X53-w8-J5S" secondAttribute="bottom" id="RCD-dj-VDi"/>
-                                    <constraint firstItem="7pG-RR-uCS" firstAttribute="top" secondItem="Clx-ll-10L" secondAttribute="bottom" id="Ri7-b4-470"/>
-                                    <constraint firstItem="e3D-oK-CzW" firstAttribute="top" secondItem="Clx-ll-10L" secondAttribute="bottom" id="Sew-ep-bqo"/>
+                                    <constraint firstItem="7pG-RR-uCS" firstAttribute="top" secondItem="hFM-Q5-ViO" secondAttribute="top" id="Ri7-b4-470"/>
+                                    <constraint firstItem="e3D-oK-CzW" firstAttribute="top" secondItem="hFM-Q5-ViO" secondAttribute="top" id="Sew-ep-bqo"/>
                                     <constraint firstItem="N76-hf-VXY" firstAttribute="bottom" secondItem="0OQ-Wp-Xtp" secondAttribute="bottom" id="Snw-iS-dDR"/>
                                     <constraint firstItem="0OQ-Wp-Xtp" firstAttribute="leading" secondItem="baT-Lm-DyX" secondAttribute="trailing" id="VZ7-0b-g2b"/>
                                     <constraint firstItem="Clx-ll-10L" firstAttribute="bottom" secondItem="N76-hf-VXY" secondAttribute="top" constant="44" id="WJj-L2-o8a"/>
@@ -773,8 +771,10 @@ Played</string>
                                 <viewLayoutGuide key="safeArea" id="N76-hf-VXY"/>
                                 <variation key="default">
                                     <mask key="constraints">
-                                        <exclude reference="F2W-Af-vzi"/>
+                                        <exclude reference="M1T-vp-Xk5"/>
+                                        <exclude reference="ixm-Te-QmJ"/>
                                         <exclude reference="Ibo-5M-oqI"/>
+                                        <exclude reference="O08-2h-ok2"/>
                                         <exclude reference="Snw-iS-dDR"/>
                                         <exclude reference="inc-aR-TRM"/>
                                         <exclude reference="rh3-oH-Lxh"/>
@@ -813,8 +813,9 @@ Played</string>
                                 </variation>
                                 <variation key="heightClass=compact">
                                     <mask key="constraints">
-                                        <include reference="F2W-Af-vzi"/>
+                                        <include reference="M1T-vp-Xk5"/>
                                         <include reference="Ibo-5M-oqI"/>
+                                        <include reference="O08-2h-ok2"/>
                                         <include reference="Snw-iS-dDR"/>
                                         <include reference="9Wk-c7-FdU"/>
                                         <include reference="fnP-9P-Cib"/>
@@ -834,6 +835,7 @@ Played</string>
                                 </variation>
                                 <variation key="heightClass=regular">
                                     <mask key="constraints">
+                                        <include reference="ixm-Te-QmJ"/>
                                         <include reference="inc-aR-TRM"/>
                                         <include reference="rh3-oH-Lxh"/>
                                         <include reference="CKy-zs-657"/>
@@ -860,17 +862,17 @@ Played</string>
                         <color key="backgroundColor" name="Clear"/>
                         <constraints>
                             <constraint firstItem="4k6-G2-xLf" firstAttribute="leading" secondItem="hFM-Q5-ViO" secondAttribute="leading" id="2Dq-Z9-raE"/>
-                            <constraint firstAttribute="trailing" secondItem="hbD-Y0-uhD" secondAttribute="trailing" id="5fO-Nh-ZkT"/>
+                            <constraint firstItem="Zmp-Pb-RbJ" firstAttribute="trailing" secondItem="Ibw-xE-9yM" secondAttribute="leading" id="2VJ-kS-vQV"/>
+                            <constraint firstItem="hbD-Y0-uhD" firstAttribute="leading" secondItem="Ibw-xE-9yM" secondAttribute="trailing" id="8XD-KB-E92"/>
                             <constraint firstAttribute="bottom" secondItem="Zmp-Pb-RbJ" secondAttribute="bottom" id="AyR-7Y-tzH"/>
                             <constraint firstItem="hFM-Q5-ViO" firstAttribute="leading" secondItem="Zmp-Pb-RbJ" secondAttribute="trailing" id="PXp-Ml-YBr"/>
                             <constraint firstItem="4k6-G2-xLf" firstAttribute="top" secondItem="hbD-Y0-uhD" secondAttribute="top" id="Q3J-wl-kX8"/>
                             <constraint firstItem="hbD-Y0-uhD" firstAttribute="leading" secondItem="hFM-Q5-ViO" secondAttribute="trailing" id="Y13-FM-Wma"/>
                             <constraint firstItem="Zmp-Pb-RbJ" firstAttribute="top" secondItem="Ibw-xE-9yM" secondAttribute="top" id="Ypi-g9-wrz"/>
                             <constraint firstItem="hFM-Q5-ViO" firstAttribute="top" secondItem="Ibw-xE-9yM" secondAttribute="top" id="b9g-Oa-SRV"/>
-                            <constraint firstItem="Zmp-Pb-RbJ" firstAttribute="leading" secondItem="Ibw-xE-9yM" secondAttribute="leading" id="igY-sB-aEY"/>
                             <constraint firstItem="4k6-G2-xLf" firstAttribute="bottom" secondItem="hbD-Y0-uhD" secondAttribute="bottom" id="k0c-xZ-oPi"/>
                             <constraint firstAttribute="bottom" secondItem="hFM-Q5-ViO" secondAttribute="bottom" id="pqP-L8-Atx"/>
-                            <constraint firstItem="4k6-G2-xLf" firstAttribute="trailing" secondItem="hbD-Y0-uhD" secondAttribute="trailing" id="sdq-bS-2FS"/>
+                            <constraint firstItem="4k6-G2-xLf" firstAttribute="trailing" secondItem="Ibw-xE-9yM" secondAttribute="trailing" id="sdq-bS-2FS"/>
                             <constraint firstAttribute="bottom" secondItem="hbD-Y0-uhD" secondAttribute="bottom" id="tZY-ya-1RD"/>
                             <constraint firstItem="hbD-Y0-uhD" firstAttribute="top" secondItem="Ibw-xE-9yM" secondAttribute="top" id="vXM-4K-MNi"/>
                         </constraints>
@@ -894,6 +896,7 @@ Played</string>
                         <outlet property="infoButton" destination="rhg-YK-v6u" id="ciR-wp-2ns"/>
                         <outlet property="leftContainer" destination="Zmp-Pb-RbJ" id="pWv-qD-aLJ"/>
                         <outlet property="leftPaddingView" destination="YSU-nf-o4R" id="OqB-1Z-KOH"/>
+                        <outlet property="leftPanelTrailingConstraint" destination="2VJ-kS-vQV" id="w9i-pN-gHz"/>
                         <outlet property="leftPanelWidthConstraint" destination="rFr-J4-RNI" id="P0r-9V-fh1"/>
                         <outlet property="lowerMiddleSection" destination="X53-w8-J5S" id="I9Q-JJ-RUD"/>
                         <outlet property="mainContainer" destination="hFM-Q5-ViO" id="RM7-VH-EdA"/>
@@ -908,9 +911,10 @@ Played</string>
                         <outlet property="playerSelectionView" destination="0OQ-Wp-Xtp" id="AP8-Cb-WZ5"/>
                         <outlet property="playerSelectionViewHeightConstraint" destination="zrf-Q7-qL5" id="uoi-bn-2wi"/>
                         <outlet property="playerSelectionViewWidthConstraint" destination="9iF-tu-zqC" id="wtR-cS-jcm"/>
-                        <outlet property="rightContainer" destination="Liw-Kx-YGP" id="i2h-99-OZB"/>
-                        <outlet property="rightPanel" destination="hbD-Y0-uhD" id="STO-dg-ncT"/>
+                        <outlet property="rightContainer" destination="hbD-Y0-uhD" id="STO-dg-ncT"/>
+                        <outlet property="rightInsetContainer" destination="Liw-Kx-YGP" id="i2h-99-OZB"/>
                         <outlet property="rightPanelCaptionLabel" destination="NeI-VM-vAB" id="9zx-PG-6H4"/>
+                        <outlet property="rightPanelLeadingConstraint" destination="8XD-KB-E92" id="nEp-tA-L0P"/>
                         <outlet property="rightPanelTitleLabel" destination="6vV-nZ-CxI" id="rxt-8n-33b"/>
                         <outlet property="rightPanelWidthConstraint" destination="zzI-c7-daZ" id="LCv-bc-wJg"/>
                         <outlet property="settingsBadgeButton" destination="KF8-nE-69M" id="m26-F0-YE1"/>

@@ -479,12 +479,28 @@ class Game {
             return self.enteredPlayerNumber(roundPlayerNumber: playerNumber, round: round)
         }
     }
+    
+    /**
+     Returns the entered player number for a player UUID
+     - Parameter playerUUID: Player UUID
+     - Returns: Entered player number
+    */
+    public func enteredPlayerNumber(playerUUID: String) -> Int? {
+        var enteredPlayerNumber: Int?
+        for playerNumber in 1...self.currentPlayers {
+            if self.player?[playerNumber - 1].playerMO?.playerUUID == playerUUID {
+                enteredPlayerNumber = playerNumber
+                break
+            }
+        }
+        return enteredPlayerNumber
+    }
 
     /**
      Everything in data is in entered player sequence but the scorepad will be entered offset by the first dealer
      This converts between them
      - Parameter enteredPlayerNumber:   The player number (1-4) in the order they were first entered
-      - Returns: Player number (1-4) in scorecard sequence
+     - Returns: Player number (1-4) in scorecard sequence
     */
     public func scorecardPlayerNumber(enteredPlayerNumber: Int) -> Int {
         return self.player(enteredPlayerNumber: enteredPlayerNumber).roundPlayerNumber(round:1)

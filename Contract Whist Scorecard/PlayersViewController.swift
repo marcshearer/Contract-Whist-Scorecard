@@ -280,9 +280,9 @@ class PlayersViewController: ScorecardViewController, PlayersViewDelegate, UICol
     private func setupButtons() {
         let font = UIFont.systemFont(ofSize: 16)
         self.banner.set(lowerButtons: [
-            BannerButton(title: "Add", width: 140, action: self.addPlayerPressed, type: .shadow, containerHide: true, containerMenuText: "Add Players", font: font, id: "add"),
-            BannerButton(title: "Remove", width: 140, action: self.removePlayerPressed, type: .shadow, containerHide: true, containerMenuText: "Remove Players", font: font, id: "remove"),
-            BannerButton(title: "Cancel", width: 140, action: self.removePlayerCancelPressed, type: .shadow, containerHide: true, containerMenuText: "End Removing Players", font: font, id: "cancel")], menuOption: .profiles)
+            BannerButton(title: "Add", width: 140, action: self.addPlayerPressed, type: .shadow, menuHide: true, menuText: "Add Players", font: font, id: "add"),
+            BannerButton(title: "Remove", width: 140, action: self.removePlayerPressed, type: .shadow, menuHide: true, menuText: "Remove Players", font: font, id: "remove"),
+            BannerButton(title: "Cancel", width: 140, action: self.removePlayerCancelPressed, type: .shadow, menuHide: true, menuText: "End Removing Players", font: font, id: "cancel")], menuOption: .profiles)
         self.bannerHeightConstraint.constant = (self.container == .none ? 120 : self.defaultBannerHeight)
     }
     

@@ -57,7 +57,7 @@ protocol ScorecardAppControllerDelegate : class {
     
     func didAppear()
     
-    func didCancel()
+    func didCancel(context: [String: Any]?)
     
     func didInvoke(_ invokedView: ScorecardView, context: [String:Any?]?, completion: (([String:Any?]?)->())?)
     
@@ -74,6 +74,10 @@ extension ScorecardAppControllerDelegate {
     
     func robotAction(action: RobotAction) {
         robotAction(playerNumber: nil, action: action)
+    }
+    
+    func didCancel() {
+        didCancel(context: nil)
     }
 }
 
@@ -127,6 +131,8 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
     fileprivate var noHideDismissImageView: Bool = false
     fileprivate var invokedViews: [(view: ScorecardView, viewController: ScorecardViewController?, uuid: String)] = []
     private var whisper: [String : Whisper] = [:]
+    private var gameDetailPanelViewController: GameDetailPanelViewController!
+    internal var gameDetailDelegate: GameDetailDelegate?
     
     // Properties for shared methods (client and server)
     internal weak var scorepadViewController: ScorepadViewController!
@@ -226,12 +232,33 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
         }
     }
     
+    internal func presentControllerView(view: ScorecardView, context: [String:Any?]? = nil, completion: (([String:Any?]?)->())? = nil) -> ScorecardViewController? {
+        // Wrapper for controllers present view
+        
+        // Call any generic actions before present
+        
+        // Now call controller present view
+        let viewController = self.presentView(view: view, context: context) { (completionContext) in
+            // Call any generic actions before completion
+            
+            // Completion after view presented - note not always called
+            completion?(completionContext)
+        }
+        
+        // Call any generic actions after present initiated
+
+        // Refesh game detail if present
+        self.gameDetailDelegate?.refresh(activeView: view)
+        
+        return viewController
+    }
+    
     internal func didInvoke(_ invokedView: ScorecardView, context: [String:Any?]? = nil, completion: (([String:Any?]?)->())? = nil) {
         // Lock network and other views
         self.lock(true)
         Scorecard.shared.viewPresenting = invokedView
         self.invokedViews.append((view: invokedView, viewController: nil, uuid: UUID().uuidString))
-        let invokedViewController = self.presentView(view: invokedView, context: context, completion: completion)
+        let invokedViewController = self.presentControllerView(view: invokedView, context: context, completion: completion)
         invokedViews[invokedViews.count - 1].viewController = invokedViewController
     }
     
@@ -255,7 +282,7 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
             Scorecard.shared.viewPresenting = nextView
             
             if self.activeView != .none {
-                self.activeViewController = self.presentView(view: self.activeView, context: context)
+                self.activeViewController = self.presentControllerView(view: self.activeView, context: context)
             }
             
             if self.activeView == .exit || self.activeView == .none || self.activeViewController == nil {
@@ -442,6 +469,22 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
         return overrideViewController
     }
     
+    internal func showGameDetailPanel() {
+        if self.gameDetailPanelViewController == nil {
+            self.gameDetailPanelViewController = GameDetailPanelViewController.create()
+            self.parentViewController?.rootViewController.presentInContainers([PanelContainerItem(viewController: gameDetailPanelViewController, container: .right)], animated: true, completion: nil)
+            self.gameDetailDelegate = self.gameDetailPanelViewController
+        }
+    }
+    
+    internal func hideGameDetailPanel() {
+        self.gameDetailPanelViewController.didDismiss()
+        self.gameDetailPanelViewController.dismiss(animated: true) {
+            self.gameDetailPanelViewController = nil
+            self.gameDetailDelegate = nil
+        }
+    }
+    
     // MARK: - Presenting view complete ================================================================== -
     
     fileprivate func setViewPresentingComplete() {
@@ -487,7 +530,7 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
         fatalError("Must be overridden")
     }
     
-    internal func didCancel() {
+    internal func didCancel(context: [String: Any]?) {
         fatalError("Must be overridden")
     }
     
@@ -539,6 +582,7 @@ public enum Container {
     case left
     case main
     case right
+    case rightInset
     case mainRight
 }
 
@@ -560,6 +604,7 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
     
     internal var uniqueID: String!
     internal weak var bannerClass: Banner!
+    internal var gameDetailDelegate: GameDetailDelegate? { return self.rootViewController?.gameDetailDelegate }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -633,7 +678,7 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
         viewControllerToPresent.menuController = self.rootViewController?.menuController
         viewControllerToPresent.uniqueID = viewControllerToPresent.uniqueID ?? UUID().uuidString
         
-        if self.rootViewController?.containers ?? false && (self.container == .main || self == self.rootViewController) && popoverSize == nil {
+        if self.rootViewController?.containers ?? false && (self.container == .main || self.container == .mainRight || self == self.rootViewController) && popoverSize == nil {
             // Working in containers
             self.rootViewController?.presentInContainers([PanelContainerItem(viewController: viewControllerToPresent, container: container!)], animated: true, completion: completion)
             

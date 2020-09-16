@@ -11,19 +11,21 @@ import UIKit
 public enum BannerButtonType {
     case clear
     case shadow
+    case nonBanner
 }
 
 public class BannerButton {
-    fileprivate let title: String?
+    fileprivate var title: String?
     fileprivate let image: UIImage?
-    fileprivate let width: CGFloat
+    fileprivate let width: CGFloat?
     fileprivate let action: (()->())?
     fileprivate let type: BannerButtonType
-    fileprivate let containerHide: Bool
-    fileprivate let containerMenuText: String?
-    fileprivate let backgroundColor: ThemeBackgroundColorName
-    fileprivate let textColorType: ThemeTextType
-    fileprivate let font: UIFont
+    fileprivate let menuHide: Bool
+    fileprivate let menuText: String?
+    fileprivate var menuSpaceBefore: CGFloat = 0.0
+    fileprivate let backgroundColor: ThemeBackgroundColorName?
+    fileprivate let textColorType: ThemeTextType?
+    fileprivate let font: UIFont?
     fileprivate let alignment: UIControl.ContentHorizontalAlignment?
     fileprivate let id: AnyHashable
     fileprivate weak var control: UIButton?
@@ -31,18 +33,38 @@ public class BannerButton {
     fileprivate var isHidden = false
     fileprivate var isEnabled = true
     
-    init(title: String? = nil, image: UIImage? = nil, width: CGFloat = 30.0, action: (()->())?, type: BannerButtonType = .clear, containerHide: Bool, containerMenuText: String? = nil, backgroundColor: ThemeBackgroundColorName? = nil, textColorType: ThemeTextType = .normal, font: UIFont = UIFont.systemFont(ofSize: 18), alignment: UIControl.ContentHorizontalAlignment? = .none, id: AnyHashable? = nil) {
+    /// Used for genuine banner buttons
+    init(title: String? = nil, image: UIImage? = nil, width: CGFloat = 30.0, action: (()->())?, type: BannerButtonType = .clear, menuHide: Bool, menuText: String? = nil, menuSpaceBefore: CGFloat = 0, backgroundColor: ThemeBackgroundColorName? = nil, textColorType: ThemeTextType? = .normal, font: UIFont = UIFont.systemFont(ofSize: 18), alignment: UIControl.ContentHorizontalAlignment? = .none, id: AnyHashable? = nil) {
         self.title = title
         self.image = image
         self.width = width
         self.action = action
         self.type = type
-        self.containerHide = containerHide
-        self.containerMenuText = containerMenuText
-        self.backgroundColor = backgroundColor ?? (type == .clear ? .clear : .bannerShadow)
+        self.menuHide = menuHide
+        self.menuText = menuText
+        self.backgroundColor = backgroundColor ?? .bannerShadow
         self.textColorType = textColorType
         self.font = font
         self.alignment = alignment
+        self.menuSpaceBefore = menuSpaceBefore
+        self.id = id ?? UUID().uuidString as AnyHashable
+    }
+    
+    /// Used for non-banner buttons
+    init(control: UIButton?, action: (()->())?, menuHide: Bool, menuText: String? = nil, menuSpaceBefore: CGFloat = 0, id: AnyHashable? = nil) {
+        self.title = nil
+        self.image = nil
+        self.width = nil
+        self.control = control
+        self.action = action
+        self.type = .nonBanner
+        self.menuHide = menuHide
+        self.menuText = menuText
+        self.backgroundColor = nil
+        self.textColorType = nil
+        self.font = nil
+        self.alignment = nil
+        self.menuSpaceBefore = menuSpaceBefore
         self.id = id ?? UUID().uuidString as AnyHashable
     }
 }
@@ -56,27 +78,31 @@ class Banner : UIView {
     @IBInspectable var title: String?
     @IBInspectable var finishText: String?
     @IBInspectable var finishImage: UIImage?
-    @IBInspectable var containerHide: Bool = true
-    @IBInspectable var containerMenuText: String?
+    @IBInspectable var menuHide: Bool = true
+    @IBInspectable var menuText: String?
+    @IBInspectable var menuSpaceBefore: CGFloat = 0.0
     @IBInspectable var disableOptions: Bool = false
     @IBInspectable var lowerViewHeight: CGFloat = 0
     
     public static let defaultFont = UIFont.systemFont(ofSize: 28, weight: .semibold)
     public static let heavyFont = UIFont(name: "Avenir-Heavy", size: 34)
     public static let panelFont = UIFont.systemFont(ofSize: 33, weight: .semibold)
-    
+    public static let finishButton = UUID().uuidString
+
     private var leftButtons: [BannerButton] = []
     private var rightButtons: [BannerButton] = []
     private var lowerButtons: [BannerButton] = []
+    private var nonBannerButtonsBefore: [BannerButton] = []
+    private var nonBannerButtonsAfter: [BannerButton] = []
     private var overrideColor: UIColor?
     private var titleFont = Banner.defaultFont
     private var titleColor: UIColor?
     private let buttonHeight: CGFloat = 30.0
     private var buttonIds: [AnyHashable : BannerButton] = [:]
-    private var containerMenuOption: MenuOption?
+    private var menuOption: MenuOption?
     private lazy var menuController = self.parentViewController?.rootViewController?.menuController
     public var titleWidth: CGFloat {
-        return self.titleWidthConstraint.constant
+        return self.titleLabel.frame.width
     }
 
     @IBOutlet private weak var contentView: UIView!
@@ -84,7 +110,7 @@ class Banner : UIView {
     @IBOutlet private weak var leftViewGroup: ViewGroup!
     @IBOutlet private weak var rightViewGroup: ViewGroup!
     @IBOutlet private weak var lowerViewGroup: ViewGroup!
-    @IBOutlet private weak var titleWidthConstraint: NSLayoutConstraint!
+    @IBOutlet private var titleLabelInset: [NSLayoutConstraint]!
     @IBOutlet private weak var lowerViewGroupHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var parentViewController: ScorecardViewController!
     @IBOutlet private weak var delegate: BannerDelegate?
@@ -111,14 +137,14 @@ class Banner : UIView {
         }
         
         if finishText != nil || finishImage != nil {
-            self.leftButtons = [BannerButton(title: self.finishText, image: self.finishImage, action: self.delegate?.finishPressed, containerHide: self.containerHide, containerMenuText: self.containerMenuText, id: 0)]
+            self.leftButtons = [BannerButton(title: self.finishText, image: self.finishImage, width: (self.finishText == nil ? 30 : 100), action: self.delegate?.finishPressed, menuHide: self.menuHide, menuText: self.menuText, menuSpaceBefore: self.menuSpaceBefore, id: Banner.finishButton)]
             arrange = true
         }
         
-        if menuController?.isVisible() ?? false {
+        if self.menuController?.isVisible() ?? false {
             self.titleFont = Banner.panelFont
         }
-        menuController?.set(gamePlayingTitle: self.title)
+        self.menuController?.set(gamePlayingTitle: self.title)
         
         if arrange {
             self.arrange()
@@ -132,41 +158,50 @@ class Banner : UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
 
+        self.showHideButtons()
         self.leftViewGroup.layoutIfNeeded()
         self.rightViewGroup.layoutIfNeeded()
-        if self.titleLabel.textAlignment == .left {
-            self.titleWidthConstraint.constant = self.contentView.frame.width - (self.leftViewGroup.frame.maxX * 2)
-        } else {
-            let midX = self.titleLabel.frame.midX
-            self.titleWidthConstraint.constant = min(midX - self.leftViewGroup.frame.maxX, self.rightViewGroup.frame.minX - midX) * 2.0
-        }
         
-        self.showHideButtons()
+        // Set title inset based on button groups
+        var inset: CGFloat
+        if self.titleLabel.textAlignment == .left {
+            inset = self.leftViewGroup.frame.width
+        } else {
+            inset = max(self.leftViewGroup.frame.width, self.rightViewGroup.frame.width)
+        }
+        self.titleLabelInset.forEach{(constraint) in constraint.constant = inset}
     }
     
-    public func set(title: String? = nil, leftButtons: [BannerButton]? = nil, rightButtons: [BannerButton]? = nil, lowerButtons: [BannerButton]? = nil, menuOption: MenuOption? = nil, backgroundColor: UIColor? = nil, titleFont: UIFont? = nil, titleColor: UIColor? = nil, disableOptions: Bool? = nil) {
+    public func set(title: String? = nil, leftButtons: [BannerButton]? = nil, rightButtons: [BannerButton]? = nil, lowerButtons: [BannerButton]? = nil, nonBannerButtonsBefore: [BannerButton]? = nil, nonBannerButtonsAfter: [BannerButton]? = nil, menuOption: MenuOption? = nil, backgroundColor: UIColor? = nil, titleFont: UIFont? = nil, titleColor: UIColor? = nil, disableOptions: Bool? = nil) {
         var arrange = false
-        if let title = title                     { self.title = title ; self.titleLabel.text = title}
-        if let leftButtons = leftButtons         { self.leftButtons = leftButtons ; arrange = true }
-        if let rightButtons = rightButtons       { self.rightButtons = rightButtons ; arrange = true }
-        if let lowerButtons = lowerButtons       { self.lowerButtons = lowerButtons ; arrange = true }
-        if let menuOption = menuOption           { self.containerMenuOption = menuOption ; arrange = true }
-        if let backgroundColor = backgroundColor { self.overrideColor = backgroundColor ; self.backgroundColor = backgroundColor}
-        if let titleFont = titleFont             { self.titleFont = titleFont ; self.titleLabel.font = titleFont}
-        if let titleColor = titleColor           { self.titleColor = titleColor ; self.titleLabel.textColor = titleColor}
-        if let disableOptions = disableOptions   { self.disableOptions = disableOptions }
+        if let title = title { self.title = title
+            self.titleLabel.text = title
+            self.menuController?.set(gamePlayingTitle: self.title)
+        }
+        if let leftButtons = leftButtons           { self.leftButtons = leftButtons ; arrange = true }
+        if let rightButtons = rightButtons         { self.rightButtons = rightButtons ; arrange = true }
+        if let lowerButtons = lowerButtons         { self.lowerButtons = lowerButtons ; arrange = true }
+        if let nonBannerButtonsBefore = nonBannerButtonsBefore { self.nonBannerButtonsBefore = nonBannerButtonsBefore ; arrange = true }
+        if let nonBannerButtonsAfter = nonBannerButtonsAfter { self.nonBannerButtonsAfter = nonBannerButtonsAfter ; arrange = true }
+        if let menuOption = menuOption             { self.menuOption = menuOption ; arrange = true }
+        if let backgroundColor = backgroundColor   { self.overrideColor = backgroundColor ; self.backgroundColor = backgroundColor}
+        if let titleFont = titleFont               { self.titleFont = titleFont ; self.titleLabel.font = titleFont}
+        if let titleColor = titleColor             { self.titleColor = titleColor ; self.titleLabel.textColor = titleColor}
+        if let disableOptions = disableOptions     { self.disableOptions = disableOptions }
         if arrange {
             self.arrange()
         }
     }
     
-    public func setButton(_ id: AnyHashable = 0, isHidden: Bool? = nil, isEnabled: Bool? = nil, disableOptions: Bool? = nil) {
+    public func setButton(_ id: AnyHashable = Banner.finishButton, title: String? = nil, isHidden: Bool? = nil, isEnabled: Bool? = nil, disableOptions: Bool? = nil) {
         if let button = buttonIds[id] {
             if let isHidden = isHidden {
                 if button.isHidden != isHidden {
-                    button.control?.isHidden = isHidden || (self.containerHideButtons() && button.containerHide)
+                    button.control?.isHidden = (isHidden || (self.menuHideButtons() && button.menuHide))
                     buttonIds[id]?.isHidden = isHidden
+                    button.viewGroup?.layoutSubviews()
                     button.viewGroup?.setNeedsLayout()
+                    self.layoutSubviews()
                 }
             }
             if let isEnabled = isEnabled {
@@ -175,9 +210,17 @@ class Banner : UIView {
                     buttonIds[id]?.isEnabled = isEnabled
                 }
             }
+            if let title = title {
+                button.title = title
+                button.control?.setTitle(title, for: .normal)
+            }
         }
         if let disableOptions = disableOptions   { self.disableOptions = disableOptions }
         self.setupMenuEntries()
+    }
+    
+    public func getButtonFrame(_ id: AnyHashable = Banner.finishButton) -> CGRect? {
+        return buttonIds[id]?.control?.frame
     }
     
     public func refresh() {
@@ -194,24 +237,26 @@ class Banner : UIView {
         self.lowerViewGroupHeightConstraint.constant = self.lowerViewHeight
         
         self.buttonIds = [:]
-        self.createButtons(buttons: &self.leftButtons, viewGroup: self.leftViewGroup, defaultAlignment: .left, tagOffset: 0)
-        self.createButtons(buttons: &self.rightButtons, viewGroup: self.rightViewGroup, defaultAlignment: .right, tagOffset: leftButtons.count)
-        self.createButtons(buttons: &self.lowerButtons, viewGroup: self.lowerViewGroup, defaultAlignment: .center, tagOffset: leftButtons.count + rightButtons.count)
+        self.createBannerButtons(buttons: &self.leftButtons, viewGroup: self.leftViewGroup, defaultAlignment: .left)
+        self.createBannerButtons(buttons: &self.rightButtons, viewGroup: self.rightViewGroup, defaultAlignment: .right)
+        self.createBannerButtons(buttons: &self.lowerButtons, viewGroup: self.lowerViewGroup, defaultAlignment: .center)
+        self.createNonBannerButtons(buttons: &self.nonBannerButtonsBefore)
+        self.createNonBannerButtons(buttons: &self.nonBannerButtonsAfter)
         self.lowerViewGroupHeightConstraint.constant = (self.lowerViewGroup.count == 0 ? 0 : self.lowerViewHeight)
         self.setupMenuEntries()
         self.layoutSubviews()
     }
     
-    private func createButtons(buttons: inout [BannerButton], viewGroup: ViewGroup, defaultAlignment: UIControl.ContentHorizontalAlignment, tagOffset: Int) {
+    private func createBannerButtons(buttons: inout [BannerButton], viewGroup: ViewGroup, defaultAlignment: UIControl.ContentHorizontalAlignment) {
         
         viewGroup.clear()
         var views: [UIView] = []
         
         for (index, button) in buttons.enumerated() {
-            var buttonView: UIButton
+            var buttonControl: UIButton
             var alignment: UIControl.ContentHorizontalAlignment
-            let frame = CGRect(x: 0, y: 0, width: button.width, height: self.buttonHeight)
-            let color = PaletteColor(button.backgroundColor)
+            let frame = CGRect(x: 0, y: 0, width: button.width!, height: self.buttonHeight)
+            let color = PaletteColor(button.backgroundColor!)
             
             switch button.type {
             case .clear:
@@ -224,82 +269,98 @@ class Banner : UIView {
                     clearButton = ClearButton(frame: frame)
                 }
                 if let title = button.title { clearButton.setTitle(title) }
-                clearButton.backgroundColor = color.background
-                clearButton.setTitleFont(button.font)
-                buttonView = clearButton
+                clearButton.backgroundColor = UIColor.clear
+                clearButton.setTitleFont(button.font!)
+                buttonControl = clearButton
                 
             case .shadow:
                 let shadowButton = ShadowButton(frame: frame)
                 if let title = button.title { shadowButton.setTitle(title, for: .normal) }
                 shadowButton.setBackgroundColor(color.background)
-                shadowButton.setTitleFont(button.font)
-                buttonView = shadowButton
+                shadowButton.setTitleFont(button.font!)
+                buttonControl = shadowButton
                 alignment = .center
+                
+            case .nonBanner:
+                fatalError("Shouldn't use non-banner buttons in a banner group")
             }
             
-            if let image = button.image { buttonView.setImage(image, for: .normal)}
-            buttonView.contentHorizontalAlignment = alignment
-            let textColor = color.textColor(button.textColorType)
-            buttonView.setTitleColor(textColor, for: .normal)
-            buttonView.tintColor = textColor
-            buttonView.tag = tagOffset + index
-            buttonView.addTarget(self, action: #selector(Banner.buttonClicked(_:)), for: .touchUpInside)
-            views.append(buttonView)
-            buttons[index].control = buttonView
+            if let image = button.image { buttonControl.setImage(image, for: .normal)}
+            buttonControl.contentHorizontalAlignment = alignment
+            let textColor = color.textColor(button.textColorType!)
+            buttonControl.setTitleColor(textColor, for: .normal)
+            buttonControl.tintColor = textColor
+            buttonControl.addTarget(self, action: #selector(Banner.buttonClicked(_:)), for: .touchUpInside)
+            views.append(buttonControl)
+            buttons[index].control = buttonControl
             buttons[index].viewGroup = viewGroup
             self.buttonIds[button.id] = buttons[index]
         }
         viewGroup.add(views: views)
     }
     
-    private func showHideButtons() {
-        let containerHide = self.containerHideButtons()
-        for (_, button) in self.buttonIds {
-            if button.containerHide {
-                button.control?.isHidden = containerHide || button.isHidden
-            }
+    private func createNonBannerButtons(buttons: inout [BannerButton]) {
+        
+        for (index, button) in buttons.enumerated() {
+            button.control?.addTarget(self, action: #selector(Banner.buttonClicked(_:)), for: .touchUpInside)
+            self.buttonIds[button.id] = buttons[index]
         }
     }
     
-    private func containerHideButtons() -> Bool {
+    private func showHideButtons() {
+        var viewGroups: Set<ViewGroup?> = []
+        
+        let menuHide = self.menuHideButtons()
+        for (_, button) in self.buttonIds {
+            if button.menuHide {
+                button.control?.isHidden = menuHide || button.isHidden
+                viewGroups.insert(button.viewGroup)
+            }
+        }
+        for viewGroup in viewGroups {
+            viewGroup?.layoutSubviews()
+            viewGroup?.setNeedsLayout()
+        }
+    }
+    
+    private func menuHideButtons() -> Bool {
         let container = self.parentViewController.container
         return (menuController?.isVisible() ?? false) && (container == .main || container == .mainRight)
     }
     
     private func setupMenuEntries() {
         if let container = self.parentViewController.container {
-            if let menuOption = self.containerMenuOption ?? menuController?.currentOption {
+            if let menuOption = self.menuOption ?? menuController?.currentOption {
                 if menuController?.isVisible() ?? false {
                     // A menu panel exists - update it
                     var menuSuboptions: [Option] = []
-                    menuSuboptions.append(contentsOf: self.setupMenuEntries(buttons: leftButtons, viewGroup: leftViewGroup))
-                    menuSuboptions.append(contentsOf: self.setupMenuEntries(buttons: rightButtons, viewGroup: rightViewGroup))
-                    menuSuboptions.append(contentsOf: self.setupMenuEntries(buttons: lowerButtons, viewGroup: lowerViewGroup))
+                    menuSuboptions.append(contentsOf: self.setupMenuEntries(buttons: rightButtons))
+                    menuSuboptions.append(contentsOf: self.setupMenuEntries(buttons: lowerButtons))
+                    menuSuboptions.append(contentsOf: self.setupMenuEntries(buttons: nonBannerButtonsBefore))
+                    menuSuboptions.append(contentsOf: self.setupMenuEntries(buttons: leftButtons))
+                    menuSuboptions.append(contentsOf: self.setupMenuEntries(buttons: nonBannerButtonsAfter))
+                    
                     menuController?.add(suboptions: menuSuboptions, to: menuOption, on: container, highlight: nil, disableOptions: self.disableOptions)
                 }
             }
         }
     }
     
-    private func setupMenuEntries(buttons: [BannerButton], viewGroup: ViewGroup) -> [Option] {
+    private func setupMenuEntries(buttons: [BannerButton]) -> [Option] {
         var results: [Option] = []
         for button in buttons {
             if !button.isHidden && button.isEnabled {
-                if let title = button.containerMenuText, let action = button.action {
-                    results.append(Option(title: title, action: action))
+                if let title = button.menuText, let action = button.action {
+                    results.append(Option(title: title, spaceBefore: button.menuSpaceBefore, action: action))
                 }
             }
         }
         return results
     }
     
-    @objc private func buttonClicked(_ button: UIButton) {
-        if button.tag < self.leftButtons.count {
-            self.leftButtons[button.tag].action?()
-        } else if button.tag < self.leftButtons.count + self.rightButtons.count {
-            self.rightButtons[button.tag - self.leftButtons.count].action?()
-        } else {
-            self.lowerButtons[button.tag - self.leftButtons.count - self.rightButtons.count].action?()
+    @objc private func buttonClicked(_ buttonControl: UIButton) {
+        if let button = buttonIds.first(where: {$0.value.control == buttonControl})?.value {
+            button.action?()
         }
     }
     

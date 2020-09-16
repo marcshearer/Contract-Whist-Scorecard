@@ -78,6 +78,7 @@ class RoundedButton: UIButton {
 class ShadowButton: UIButton {
     
     @IBInspectable var shadowSize = CGSize(width: 4.0, height: 4.0)
+    @IBInspectable var shadowOpacity: CGFloat = 0.2
     @IBInspectable var cornerRadius: CGFloat = 5.0
     
     private var internalUpdate = false
@@ -242,7 +243,7 @@ class ShadowButton: UIButton {
         self.titleOuterLabel?.frame = CGRect(origin: CGPoint(), size: self.frame.size)
         Constraint.anchor(view: self, control: titleOuterLabel!)
         self.titleOuterLabel?.roundCorners(cornerRadius: self.cornerRadius)
-        self.addShadow(shadowSize: self.shadowSize)
+        self.addShadow(shadowSize: self.shadowSize, shadowOpacity: self.shadowOpacity)
     }
     
 }

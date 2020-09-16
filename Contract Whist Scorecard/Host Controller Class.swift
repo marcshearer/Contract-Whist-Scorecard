@@ -276,7 +276,7 @@ enum InviteStatus {
          }
      }
      
-    override internal func didCancel() {
+    override internal func didCancel(context: [String: Any]?) {
         switch self.activeView {
         case .selection:
             self.present(nextView: .exit)
@@ -285,7 +285,8 @@ enum InviteStatus {
             self.gameInProgress = false
             
             self.stopBroadcast() {
-                if self.connectionMode == .online {
+                let home = context?["home"] as? Bool ?? false
+                if !home && self.connectionMode == .online {
                     self.present(nextView: .selection)
                 } else {
                     self.present(nextView: .exit)
@@ -379,6 +380,9 @@ enum InviteStatus {
         Scorecard.recovery.saveInitialValues()
         self.setHandState()
         _ = self.statusMessage()
+        
+        // Create right panel
+        self.showGameDetailPanel()
         
         // Link to hand or location
         if Scorecard.game.gameComplete() {
@@ -935,7 +939,7 @@ enum InviteStatus {
     private func showGamePreview(selectedPlayers: [PlayerMO]) -> ScorecardViewController? {
         
         if let viewController = self.fromViewController() {
-            self.gamePreviewViewController = GamePreviewViewController.show(from: viewController, appController: self, selectedPlayers: selectedPlayers, formTitle: (self.startMode == .loopback ? "Play Computer" : "Host a Game"), smallFormTitle: (self.startMode == .loopback ? "Play" : "Host"), backText: "", readOnly: false, faceTimeAddress: self.faceTimeAddress, animated: !self.recoveryMode, delegate: self)
+            self.gamePreviewViewController = GamePreviewViewController.show(from: viewController, appController: self, selectedPlayers: selectedPlayers, formTitle: (self.startMode == .loopback ? "Play Computer" : "Host a Game"), smallFormTitle: (self.startMode == .loopback ? "Play" : "Host"), backText: (self.startMode == .online ? "Change Players" : nil), readOnly: false, faceTimeAddress: self.faceTimeAddress, animated: !self.recoveryMode, delegate: self)
         }
         return self.gamePreviewViewController
     }

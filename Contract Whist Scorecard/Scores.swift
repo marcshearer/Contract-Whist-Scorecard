@@ -116,6 +116,28 @@ class Scores {
         return total
     }
     
+    public func completedRound() -> Int? {
+        var result: Int?
+        
+        for round in 1...Scorecard.game.rounds {
+            var ok = true
+            for playerNumber in 1...Scorecard.game.currentPlayers {
+                let roundScore = self.score(round: round, playerNumber: playerNumber)
+                if roundScore == nil {
+                    ok = false
+                    break
+                }
+                if ok {
+                    result = round
+                } else {
+                    break
+                }
+            }
+        }
+        
+        return result
+    }
+    
     public func error(round: Int) -> Bool {
         var result = false
      

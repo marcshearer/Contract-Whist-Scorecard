@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DealView" customModule="Whist_2" customModuleProvider="target">
+            <connections>
+                <outlet property="contentView" destination="iN0-l3-epB" id="wa4-Tk-N2p"/>
+                <outlet property="tableTopView" destination="YjJ-xs-JG4" id="gf0-Cx-A5k"/>
+                <outletCollection property="tableView" destination="BC1-3i-x5h" collectionClass="NSMutableArray" id="iWt-pS-h98"/>
+                <outletCollection property="tableView" destination="Z5o-5h-mF7" collectionClass="NSMutableArray" id="kc7-AZ-geN"/>
+                <outletCollection property="tableView" destination="lYw-cj-STp" collectionClass="NSMutableArray" id="Z3R-Gx-iB2"/>
+                <outletCollection property="tableView" destination="1jg-Rg-aGj" collectionClass="NSMutableArray" id="dBl-HP-xFp"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" userLabel="Content View">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="800"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <tableView clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="BC1-3i-x5h" userLabel="Hand 1 Table View">
+                    <rect key="frame" x="117" y="310" width="180" height="180"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <color key="backgroundColor" name="Clear"/>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="4fz-YT-HEN"/>
+                        <outlet property="delegate" destination="-1" id="Uq6-F5-65u"/>
+                    </connections>
+                </tableView>
+                <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YjJ-xs-JG4">
+                    <rect key="frame" x="187" y="375" width="39" height="49"/>
+                    <color key="backgroundColor" name="Background"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="39" id="u4M-Mx-VzK"/>
+                        <constraint firstAttribute="height" constant="49" id="zwj-em-aCn"/>
+                    </constraints>
+                </view>
+                <tableView clipsSubviews="YES" userInteractionEnabled="NO" tag="2" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Z5o-5h-mF7" userLabel="Hand 2 Table View">
+                    <rect key="frame" x="137" y="310" width="140" height="180"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <color key="backgroundColor" name="Clear"/>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="Wv2-dn-sgt"/>
+                        <outlet property="delegate" destination="-1" id="5Jp-pH-Yg8"/>
+                    </connections>
+                </tableView>
+                <tableView clipsSubviews="YES" userInteractionEnabled="NO" tag="4" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="1jg-Rg-aGj" userLabel="Hand 4 Table View">
+                    <rect key="frame" x="137" y="310" width="140" height="180"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <color key="backgroundColor" name="Clear"/>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="cwB-b5-jaP"/>
+                        <outlet property="delegate" destination="-1" id="pQx-Bb-0xQ"/>
+                    </connections>
+                </tableView>
+                <tableView clipsSubviews="YES" userInteractionEnabled="NO" tag="3" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="lYw-cj-STp" userLabel="Hand 3 Table View">
+                    <rect key="frame" x="117" y="310" width="180" height="180"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <color key="backgroundColor" name="Clear"/>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="Ut9-on-ZMD"/>
+                        <outlet property="delegate" destination="-1" id="8rk-Z4-pDq"/>
+                    </connections>
+                </tableView>
+            </subviews>
+            <color key="backgroundColor" name="Clear"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <point key="canvasLocation" x="132" y="108"/>
+        </view>
+    </objects>
+    <resources>
+        <namedColor name="Background">
+            <color red="0.94117647058823528" green="0.93725490196078431" blue="0.92941176470588238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Clear">
+            <color red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+    </resources>
+</document>

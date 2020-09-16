@@ -213,7 +213,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
         }
     }
     
-    override internal func didCancel() {
+    override internal func didCancel(context: [String: Any]?) {
         switch self.activeView {
         case .gamePreview:
             // Exit
@@ -479,6 +479,10 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
                     if self.purpose == .playing {
                         Scorecard.game.setGameInProgress(true)
                     }
+                    
+                    // Create right panel
+                    self.showGameDetailPanel()
+                    
                     self.present(nextView: .hand, willDismiss: true)
                     stopProcessing = true
                     
@@ -819,7 +823,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
             selectedPlayers = getSelectedPlayers()
         }
         if let parentViewController = self.parentViewController {
-            self.gamePreviewViewController = GamePreviewViewController.show(from: parentViewController, appController: self, selectedPlayers: selectedPlayers, formTitle: "Join a Game", smallFormTitle: "Join", backText: "", delegate: self)
+            self.gamePreviewViewController = GamePreviewViewController.show(from: parentViewController, appController: self, selectedPlayers: selectedPlayers, formTitle: "Join a Game", smallFormTitle: "Join", delegate: self)
         }
         return self.gamePreviewViewController
     }

@@ -144,7 +144,7 @@ class PlayerDetailViewController: ScorecardViewController, PlayerDetailViewDeleg
         self.originalPlayer = playerDetail.copy()
         
         // Hide banner if in a right-hand container
-        if self.container == .right {
+        if self.container == .rightInset {
             self.titleBarHeightConstraint.constant = 0
             self.tableViewLeadingConstraint.constant = 10
             self.tableViewTrailingConstraint.constant = 10
@@ -165,9 +165,6 @@ class PlayerDetailViewController: ScorecardViewController, PlayerDetailViewDeleg
         super.viewWillTransition(to: size, with: coordinator)
         
         Scorecard.shared.reCenterPopup(self)
-        if actionSheet != nil {
-            Scorecard.shared.reCenterPopup(actionSheet.alertController)
-        }
         self.view.setNeedsLayout()
     }
     
@@ -613,7 +610,7 @@ class PlayerDetailViewController: ScorecardViewController, PlayerDetailViewDeleg
                     if let playerMO = Scorecard.shared.findPlayerByPlayerUUID(self.playerDetail.playerUUID) {
                         self.playerDetail.toManagedObject(playerMO: playerMO)
                         self.playersViewDelegate?.refresh()
-                        if self.container == .right {
+                        if self.container == .rightInset {
                             self.setRightPanel(title: self.playerDetail.name, caption: "")
                         }
                         if self.dismissOnSave {
@@ -751,7 +748,7 @@ class PlayerDetailViewController: ScorecardViewController, PlayerDetailViewDeleg
                 if self.dismissOnSave {
                     self.dismiss(animated: true)
                 } else {
-                    if self.container == .right {
+                    if self.container == .rightInset {
                         self.setRightPanel(title: "", caption: "")
                     }
                     self.hide()

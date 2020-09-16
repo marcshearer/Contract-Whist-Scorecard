@@ -25,10 +25,12 @@ struct Option {
     let title: String
     let menuOption: MenuOption?
     let action: (()->())?
+    let spaceBefore: CGFloat
     
-    init(title: String, menuOption: MenuOption? = nil, action: (()->())? = nil) {
+    init(title: String, menuOption: MenuOption? = nil, spaceBefore:CGFloat = 0.0, action: (()->())? = nil) {
         self.title = title
         self.menuOption = menuOption
+        self.spaceBefore = spaceBefore
         self.action = action
     }
 }
@@ -86,6 +88,7 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
     // MARK: - IB Outlets ============================================================================== -
     
     @IBOutlet private weak var titleLabel: UILabel!
+    @IBOutlet private weak var thisPlayerContainer: UIView!
     @IBOutlet private weak var thisPlayerThumbnail: ThumbnailView!
     @IBOutlet private weak var infoButton: ShadowButton!
     @IBOutlet private weak var optionsTableView: UITableView!
@@ -123,10 +126,18 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
         
         // Configure notifications panel
         self.setupNotifications()
+        
+        // Show this player
+        self.showThisPlayer()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+    }
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        self.view.setNeedsLayout()
     }
     
     override internal func viewDidLayoutSubviews() {
@@ -134,10 +145,6 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
     
         // Layout notifications
         self.layoutNotifications()
-        
-        // Layout thumbnail
-        self.thisPlayerThumbnail.layoutIfNeeded()
-        self.showThisPlayer()
     }
     
     // MARK: - Menu Delegates ===================================================================== -
@@ -207,9 +214,11 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
     }
     
     internal func set(playingGame: Bool) {
-        self.playingGame = playingGame
-        self.setupOptionMap()
-        self.reloadData()
+        if self.playingGame != playingGame {
+            self.playingGame = playingGame
+            self.setupOptionMap()
+            self.reloadData()
+        }
     }
     
     internal func set(gamePlayingTitle: String?) {
@@ -257,7 +266,8 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch TableView(rawValue: tableView.tag)! {
         case .options:
-            return (self.optionMap[indexPath.row].mainOption ? 40 : 35)
+            let (option, mainOption, _) = self.getOption(tag: tableView.tag, row: indexPath.row)
+            return (mainOption ? 40 : 35) + option.spaceBefore
         case .settings:
             return 40
         }
@@ -270,7 +280,7 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
         if mainOption {
             let disabled = self.disableOptions || self.disableAll
             cell.titleLabel.text = (self.playingGame && self.gamePlayingTitle != nil ? self.gamePlayingTitle! : option.title)
-            cell.titleLabel.textColor = (option.menuOption == self.currentOption ? Palette.splitSidePanel.themeText : (disabled ? Palette.normal.faintText : Palette.splitSidePanel.text))
+            cell.titleLabel.textColor = (option.menuOption == self.currentOption ? Palette.leftSidePanel.themeText : (disabled ? Palette.normal.faintText : Palette.leftSidePanel.text))
             cell.isUserInteractionEnabled = !disabled
             cell.titleLabel.font = UIFont.systemFont(ofSize: 24, weight: .semibold)
             if option.menuOption == .playGame {
@@ -279,10 +289,11 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
         } else {
             let disabled = self.disableAll
             cell.titleLabel.text = "      \(option.title)"
-            cell.titleLabel.textColor = (self.suboptionHighlight == index ? Palette.splitSidePanel.themeText : (disabled ? Palette.normal.faintText : Palette.splitSidePanel.text))
+            cell.titleLabel.textColor = (self.suboptionHighlight == index ? Palette.leftSidePanel.themeText : (disabled ? Palette.normal.faintText : Palette.leftSidePanel.text))
             cell.titleLabel.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
             cell.isUserInteractionEnabled = !disabled
         }
+        cell.titleLabelTopConstraint.constant = option.spaceBefore
         cell.titleLabel.setNeedsDisplay()
         cell.selectedBackgroundView = UIView()
         cell.selectedBackgroundView?.backgroundColor = UIColor.clear
@@ -380,14 +391,14 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
     
     private func defaultScreenColors() {
         Palette.ignoringGameBanners {
-            self.view.backgroundColor = Palette.splitSidePanel.background
-            self.rightBorderView.backgroundColor = Palette.splitSideBorder.background
-            self.titleLabel.textColor = Palette.splitSidePanel.contrastText
+            self.view.backgroundColor = Palette.leftSidePanel.background
+            self.rightBorderView.backgroundColor = Palette.leftSidePanelBorder.background
+            self.titleLabel.textColor = Palette.leftSidePanel.contrastText
             self.titleLabel.setNeedsDisplay()
-            self.thisPlayerThumbnail.set(textColor: Palette.splitSidePanel.text)
+            self.thisPlayerThumbnail.set(textColor: Palette.leftSidePanel.text)
             self.thisPlayerThumbnail.setNeedsDisplay()
-            self.infoButton.setBackgroundColor(Palette.splitSidePanel.faintText)
-            self.infoButton.setTitleColor(Palette.splitSidePanel.text, for: .normal)
+            self.infoButton.setBackgroundColor(Palette.leftSidePanel.faintText)
+            self.infoButton.setTitleColor(Palette.leftSidePanel.text, for: .normal)
             self.infoButton.setNeedsDisplay()
         }
     }
@@ -500,7 +511,7 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
             let detailViewController = AwardDetailViewController.create()
             viewController.awardDetail = detailViewController
             self.presentInContainers([PanelContainerItem(viewController: viewController, container: .main),
-                                      PanelContainerItem(viewController: detailViewController, container: .right)],
+                                      PanelContainerItem(viewController: detailViewController, container: .rightInset)],
                                      rightPanelTitle: "", animated: true, completion: completion)
             
         case .profiles:
@@ -511,7 +522,7 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
             let detailViewController = PlayerDetailViewController.create(playerDetail: playerDetail, mode: .amend, playersViewDelegate: viewController, dismissOnSave: false)
             viewController.playerDetailView = detailViewController
             self.presentInContainers([PanelContainerItem(viewController: viewController, container: .main),
-                                      PanelContainerItem(viewController: detailViewController, container: .right)],
+                                      PanelContainerItem(viewController: detailViewController, container: .rightInset)],
                                      rightPanelTitle: playerDetail.name, animated: true, completion: completion)
             
         case .settings:
@@ -550,21 +561,24 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
     }
     
     private func playerPressed() {
-        self.rootViewController.view.isUserInteractionEnabled = false
-        if !changingPlayer {
-            self.dismissAndSelectOption(option: .changePlayer)
-            self.thisPlayerThumbnail.name.text = "Cancel"
-            self.removeSuboptions(for: nil)
-        } else {
-            self.rootViewController.invokeOption(.cancelChangePlayer) {
-                self.rootViewController.view.isUserInteractionEnabled = true
+        if !self.playingGame {
+            self.rootViewController.view.isUserInteractionEnabled = false
+            if !changingPlayer {
+                self.dismissAndSelectOption(option: .changePlayer)
+                self.thisPlayerThumbnail.name.text = "Cancel"
+                self.removeSuboptions(for: nil)
+            } else {
+                self.rootViewController.invokeOption(.cancelChangePlayer) {
+                    self.rootViewController.view.isUserInteractionEnabled = true
+                }
+                self.showThisPlayer()
             }
-            self.showThisPlayer()
+            changingPlayer.toggle()
         }
-        changingPlayer.toggle()
     }
 }
 
 class MenuPanelTableCell: UITableViewCell {
     @IBOutlet fileprivate weak var titleLabel: UILabel!
+    @IBOutlet fileprivate weak var titleLabelTopConstraint: NSLayoutConstraint!
 }

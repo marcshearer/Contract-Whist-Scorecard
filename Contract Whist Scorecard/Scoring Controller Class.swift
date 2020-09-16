@@ -180,14 +180,19 @@ class ScoringController: ScorecardAppController, ScorecardAppPlayerDelegate, Gam
          }
      }
      
-    override internal func didCancel() {
+    override internal func didCancel(context: [String: Any]?) {
         switch self.activeView {
         case .selection:
             self.present(nextView: .exit)
             
         case .gamePreview:
             self.gameInProgress = false
-            self.present(nextView: .selection)
+            let home = context?["home"] as? Bool ?? false
+            if home {
+                self.present(nextView: .exit)
+            } else {
+                self.present(nextView: .selection)
+            }
             
         case .location:
             // Link back to game preview
@@ -268,6 +273,9 @@ class ScoringController: ScorecardAppController, ScorecardAppPlayerDelegate, Gam
         Scorecard.shared.saveMaxScores()
         Scorecard.recovery.saveInitialValues()
         _ = self.statusMessage()
+        
+        // Create right panel
+        self.showGameDetailPanel()
         
         // Link to entry or location
         if Scorecard.game.gameComplete() {
@@ -426,7 +434,7 @@ class ScoringController: ScorecardAppController, ScorecardAppPlayerDelegate, Gam
     private func showGamePreview(selectedPlayers: [PlayerMO]) -> ScorecardViewController? {
         
         if let viewController = self.fromViewController() {
-            self.gamePreviewViewController = GamePreviewViewController.show(from: viewController, appController: self, selectedPlayers: selectedPlayers, formTitle: "Score a Game", smallFormTitle: "Score", backText: "", readOnly: false, animated: !self.recoveryMode, delegate: self)
+            self.gamePreviewViewController = GamePreviewViewController.show(from: viewController, appController: self, selectedPlayers: selectedPlayers, formTitle: "Score a Game", smallFormTitle: "Score", backText: "Change Players", readOnly: false, animated: !self.recoveryMode, delegate: self)
         }
         return self.gamePreviewViewController
     }

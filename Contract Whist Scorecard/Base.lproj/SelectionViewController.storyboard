@@ -22,8 +22,8 @@
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="string" keyPath="title" value="Choose Players"/>
                                     <userDefinedRuntimeAttribute type="image" keyPath="finishImage" value="home"/>
-                                    <userDefinedRuntimeAttribute type="boolean" keyPath="containerHide" value="YES"/>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="containerMenuText" value="Abandon Game"/>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="menuHide" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="menuText" value="Abandon Game"/>
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="disableOptions" value="YES"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
@@ -42,7 +42,7 @@
                                         </constraints>
                                     </view>
                                 </subviews>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <color key="backgroundColor" name="Clear"/>
                                 <constraints>
                                     <constraint firstItem="jtX-GA-7ms" firstAttribute="centerY" secondItem="fMn-h0-pxo" secondAttribute="centerY" id="8SR-co-FAh">
                                         <variation key="heightClass=compact" constant="-20"/>
@@ -54,7 +54,7 @@
                                 </constraints>
                             </view>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="1" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" bounces="NO" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" indicatorStyle="black" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Tlx-l1-ig7" userLabel="Unselected Collection View">
-                                <rect key="frame" x="54" y="209.5" width="788" height="183.5"/>
+                                <rect key="frame" x="54" y="209.5" width="788" height="133.5"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="5" minimumInteritemSpacing="10" id="gIj-Vz-0t7">
                                     <size key="itemSize" width="75" height="100"/>
@@ -86,7 +86,7 @@
                                 </connections>
                             </collectionView>
                             <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="InS-yo-Fkz" userLabel="Bottom Section">
-                                <rect key="frame" x="44" y="393" width="808" height="0.0"/>
+                                <rect key="frame" x="44" y="343" width="808" height="50"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Eyy-DC-T6m" userLabel="Clear All Button (not used)" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
                                         <rect key="frame" x="332" y="0.0" width="100" height="30"/>
@@ -104,9 +104,10 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7SY-Bw-ahm" userLabel="Continue Button" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
-                                        <rect key="frame" x="161.5" y="8" width="485" height="50"/>
+                                        <rect key="frame" x="279" y="8" width="250" height="50"/>
                                         <color key="backgroundColor" name="Clear"/>
                                         <constraints>
+                                            <constraint firstAttribute="width" relation="lessThanOrEqual" constant="250" id="FVT-mx-Ofy"/>
                                             <constraint firstAttribute="height" constant="50" id="lcc-Fx-5g7"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" weight="thin" pointSize="24"/>
@@ -118,13 +119,11 @@
                                         </connections>
                                     </button>
                                 </subviews>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <color key="backgroundColor" name="Clear"/>
                                 <constraints>
                                     <constraint firstItem="7SY-Bw-ahm" firstAttribute="top" secondItem="InS-yo-Fkz" secondAttribute="top" constant="8" id="LhN-3G-hQJ"/>
-                                    <constraint firstAttribute="height" constant="58" id="aWA-CG-uRM">
-                                        <variation key="heightClass=compact" constant="0.0"/>
-                                    </constraint>
-                                    <constraint firstItem="7SY-Bw-ahm" firstAttribute="width" secondItem="InS-yo-Fkz" secondAttribute="width" multiplier="0.6" id="abp-8F-8O6"/>
+                                    <constraint firstAttribute="height" constant="50" id="aWA-CG-uRM"/>
+                                    <constraint firstItem="7SY-Bw-ahm" firstAttribute="width" secondItem="InS-yo-Fkz" secondAttribute="width" multiplier="0.6" priority="750" id="abp-8F-8O6"/>
                                     <constraint firstAttribute="top" secondItem="Eyy-DC-T6m" secondAttribute="top" id="gmJ-6B-tAZ"/>
                                     <constraint firstItem="7SY-Bw-ahm" firstAttribute="centerX" secondItem="InS-yo-Fkz" secondAttribute="centerX" id="lts-PP-AAf"/>
                                 </constraints>
@@ -148,7 +147,6 @@
                             <constraint firstItem="InS-yo-Fkz" firstAttribute="top" secondItem="Tlx-l1-ig7" secondAttribute="bottom" id="jyG-TV-zAh"/>
                             <constraint firstItem="fMn-h0-pxo" firstAttribute="height" secondItem="Mqr-Sp-LZb" secondAttribute="height" multiplier="16:38" id="kFI-I5-9w8"/>
                             <constraint firstItem="InS-yo-Fkz" firstAttribute="trailing" secondItem="Mqr-Sp-LZb" secondAttribute="trailing" id="kJ3-Kw-xfA"/>
-                            <constraint firstItem="fMn-h0-pxo" firstAttribute="top" secondItem="I6P-n6-4nd" secondAttribute="bottom" id="nEg-3x-fby"/>
                             <constraint firstItem="I6P-n6-4nd" firstAttribute="bottom" secondItem="Mqr-Sp-LZb" secondAttribute="top" constant="44" id="p6C-RB-Xzn"/>
                             <constraint firstItem="Mqr-Sp-LZb" firstAttribute="trailing" secondItem="Tlx-l1-ig7" secondAttribute="trailing" constant="10" id="s3n-Cw-bEf"/>
                             <constraint firstAttribute="bottom" secondItem="fMn-h0-pxo" secondAttribute="bottom" priority="1" id="tJO-U5-bHd"/>
@@ -175,10 +173,10 @@
                         <outletCollection property="sideBySideConstraints" destination="tJO-U5-bHd" collectionClass="NSMutableArray" id="W53-se-ZlB"/>
                         <outletCollection property="sideBySideConstraints" destination="vA4-Kv-n2j" collectionClass="NSMutableArray" id="NsX-do-5tz"/>
                         <outletCollection property="sideBySideConstraints" destination="UbI-7T-apz" collectionClass="NSMutableArray" id="cQv-Wt-Pfk"/>
-                        <outletCollection property="aboveAndBelowConstraints" destination="8SR-co-FAh" collectionClass="NSMutableArray" id="cYJ-30-YUx"/>
-                        <outletCollection property="aboveAndBelowConstraints" destination="IFR-bY-9Oh" collectionClass="NSMutableArray" id="hvC-47-BhH"/>
-                        <outletCollection property="sideBySideConstraints" destination="de2-gi-2za" collectionClass="NSMutableArray" id="aYt-5e-eXa"/>
-                        <outletCollection property="sideBySideConstraints" destination="Tt8-TI-dee" collectionClass="NSMutableArray" id="2Kw-bE-0Gc"/>
+                        <outletCollection property="sideBySideTabletConstraints" destination="Tt8-TI-dee" collectionClass="NSMutableArray" id="I2D-Ih-HjW"/>
+                        <outletCollection property="sideBySideTabletConstraints" destination="de2-gi-2za" collectionClass="NSMutableArray" id="PJD-Ny-UzI"/>
+                        <outletCollection property="notSideBySideTabletConstraints" destination="8SR-co-FAh" collectionClass="NSMutableArray" id="gPQ-IQ-2RB"/>
+                        <outletCollection property="notSideBySideTabletConstraints" destination="IFR-bY-9Oh" collectionClass="NSMutableArray" id="8xz-EW-cGm"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Pg0-6i-AIz" userLabel="First Responder" sceneMemberID="firstResponder"/>

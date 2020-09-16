@@ -24,6 +24,10 @@
 		B202A06B1FD122F30070D5DC /* OverrideViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B202A0671FD118940070D5DC /* OverrideViewController.swift */; };
 		B203ECCB24F8EBE6001E2CED /* Banner.xib in Resources */ = {isa = PBXBuildFile; fileRef = B203ECCA24F8EBE6001E2CED /* Banner.xib */; };
 		B203ECCE24F8EC8B001E2CED /* Banner.swift in Sources */ = {isa = PBXBuildFile; fileRef = B203ECCD24F8EC8B001E2CED /* Banner.swift */; };
+		B204A760250DF1B100248915 /* GameDetailPanelViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B204A75F250DF1B100248915 /* GameDetailPanelViewController.storyboard */; };
+		B204A763250DF1FA00248915 /* GameDetailPanelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B204A762250DF1FA00248915 /* GameDetailPanelViewController.swift */; };
+		B204A766250F352600248915 /* ActionSheetViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B204A765250F352600248915 /* ActionSheetViewController.storyboard */; };
+		B204A768250F353600248915 /* ActionSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B204A767250F353600248915 /* ActionSheetViewController.swift */; };
 		B206A1361E50522B00E26E96 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B206A1351E50522B00E26E96 /* MapKit.framework */; };
 		B206A1381E50526100E26E96 /* LocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B206A1371E50526100E26E96 /* LocationViewController.swift */; };
 		B20A66FA1E2385B500E75190 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20A66F91E2385B500E75190 /* Reachability.swift */; };
@@ -74,6 +78,9 @@
 		B22E38DA24A05F8900D61BBA /* CountTileView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B22E38D924A05F8900D61BBA /* CountTileView.xib */; };
 		B22E38DC24A05FA100D61BBA /* CountTileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22E38DB24A05FA100D61BBA /* CountTileView.swift */; };
 		B235D2BE1F82288A0019384B /* Notification Simulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B235D2BD1F82288A0019384B /* Notification Simulator.swift */; };
+		B235D78C25108272002F5BB6 /* DealView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B235D78B25108272002F5BB6 /* DealView.xib */; };
+		B235D78E2510829C002F5BB6 /* DealView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B235D78D2510829C002F5BB6 /* DealView.swift */; };
+		B235D790251096BF002F5BB6 /* DealViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B235D78F251096BF002F5BB6 /* DealViewCell.xib */; };
 		B2361A3722D5B965007D88BB /* ConfirmPlayedViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B2361A3622D5B965007D88BB /* ConfirmPlayedViewController.storyboard */; };
 		B2361A3A22D5B9DD007D88BB /* ConfirmPlayedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2361A3922D5B9DD007D88BB /* ConfirmPlayedViewController.swift */; };
 		B2372E262489351800A6872D /* SampleTheme.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2372E252489351800A6872D /* SampleTheme.xib */; };
@@ -299,6 +306,10 @@
 		B202A0671FD118940070D5DC /* OverrideViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OverrideViewController.swift; sourceTree = "<group>"; };
 		B203ECCA24F8EBE6001E2CED /* Banner.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Banner.xib; sourceTree = "<group>"; };
 		B203ECCD24F8EC8B001E2CED /* Banner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Banner.swift; sourceTree = "<group>"; };
+		B204A75F250DF1B100248915 /* GameDetailPanelViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = GameDetailPanelViewController.storyboard; sourceTree = "<group>"; };
+		B204A762250DF1FA00248915 /* GameDetailPanelViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameDetailPanelViewController.swift; sourceTree = "<group>"; };
+		B204A765250F352600248915 /* ActionSheetViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ActionSheetViewController.storyboard; sourceTree = "<group>"; };
+		B204A767250F353600248915 /* ActionSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionSheetViewController.swift; sourceTree = "<group>"; };
 		B206A1351E50522B00E26E96 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		B206A1371E50526100E26E96 /* LocationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationViewController.swift; sourceTree = "<group>"; };
 		B20A66F91E2385B500E75190 /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
@@ -352,6 +363,9 @@
 		B22E38D924A05F8900D61BBA /* CountTileView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CountTileView.xib; sourceTree = "<group>"; };
 		B22E38DB24A05FA100D61BBA /* CountTileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountTileView.swift; sourceTree = "<group>"; };
 		B235D2BD1F82288A0019384B /* Notification Simulator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notification Simulator.swift"; sourceTree = "<group>"; };
+		B235D78B25108272002F5BB6 /* DealView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DealView.xib; sourceTree = "<group>"; };
+		B235D78D2510829C002F5BB6 /* DealView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DealView.swift; sourceTree = "<group>"; };
+		B235D78F251096BF002F5BB6 /* DealViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DealViewCell.xib; sourceTree = "<group>"; };
 		B2361A3622D5B965007D88BB /* ConfirmPlayedViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ConfirmPlayedViewController.storyboard; sourceTree = "<group>"; };
 		B2361A3922D5B9DD007D88BB /* ConfirmPlayedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmPlayedViewController.swift; sourceTree = "<group>"; };
 		B2372E252489351800A6872D /* SampleTheme.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SampleTheme.xib; sourceTree = "<group>"; };
@@ -612,6 +626,24 @@
 				B203ECCD24F8EC8B001E2CED /* Banner.swift */,
 			);
 			name = Banner;
+			sourceTree = "<group>";
+		};
+		B204A761250DF1C700248915 /* Game Detail Panel */ = {
+			isa = PBXGroup;
+			children = (
+				B204A75F250DF1B100248915 /* GameDetailPanelViewController.storyboard */,
+				B204A762250DF1FA00248915 /* GameDetailPanelViewController.swift */,
+			);
+			name = "Game Detail Panel";
+			sourceTree = "<group>";
+		};
+		B204A764250F350800248915 /* Action Sheet */ = {
+			isa = PBXGroup;
+			children = (
+				B204A765250F352600248915 /* ActionSheetViewController.storyboard */,
+				B204A767250F353600248915 /* ActionSheetViewController.swift */,
+			);
+			name = "Action Sheet";
 			sourceTree = "<group>";
 		};
 		B20DA0501E1FED040040221D /* Frameworks */ = {
@@ -884,6 +916,16 @@
 			name = "Tile Views";
 			sourceTree = "<group>";
 		};
+		B235D78A2510823A002F5BB6 /* Deal View */ = {
+			isa = PBXGroup;
+			children = (
+				B235D78B25108272002F5BB6 /* DealView.xib */,
+				B235D78F251096BF002F5BB6 /* DealViewCell.xib */,
+				B235D78D2510829C002F5BB6 /* DealView.swift */,
+			);
+			name = "Deal View";
+			sourceTree = "<group>";
+		};
 		B2361A3822D5B975007D88BB /* Confirm Played */ = {
 			isa = PBXGroup;
 			children = (
@@ -926,12 +968,13 @@
 			name = "High Scores Dashboards";
 			sourceTree = "<group>";
 		};
-		B23CCC8624EA547B00CF518C /* Left Menu Panel */ = {
+		B23CCC8624EA547B00CF518C /* Container Panels */ = {
 			isa = PBXGroup;
 			children = (
-				B2E37D0D24E959940074C8F3 /* Menu Panel View Controller */,
+				B2E37D0D24E959940074C8F3 /* Menu Panel */,
+				B204A761250DF1C700248915 /* Game Detail Panel */,
 			);
-			name = "Left Menu Panel";
+			name = "Container Panels";
 			sourceTree = "<group>";
 		};
 		B2430CCA22EABD4800C4FC77 /* Slide Out Button */ = {
@@ -970,6 +1013,7 @@
 				B247A729248359D700591BBA /* Title Bar */,
 				B2430CCA22EABD4800C4FC77 /* Slide Out Button */,
 				B28E8C2124BEC0020053E237 /* Award View */,
+				B235D78A2510823A002F5BB6 /* Deal View */,
 			);
 			name = "Custom Views";
 			sourceTree = "<group>";
@@ -1109,7 +1153,6 @@
 		B288FAB71FB8024A00633FD7 /* Miscellaneous Views */ = {
 			isa = PBXGroup;
 			children = (
-				B2A44F292506887B0071F899 /* Alert */,
 				B221EEF5210B1C1D00F7FBA0 /* Graph */,
 				B221EEF4210B1C1500F7FBA0 /* Settings */,
 				B221EEF3210B1C0E00F7FBA0 /* Sync */,
@@ -1356,13 +1399,13 @@
 			name = "Related Players View";
 			sourceTree = "<group>";
 		};
-		B2E37D0D24E959940074C8F3 /* Menu Panel View Controller */ = {
+		B2E37D0D24E959940074C8F3 /* Menu Panel */ = {
 			isa = PBXGroup;
 			children = (
 				B2E37D0E24E959C00074C8F3 /* MenuPanelViewController.storyboard */,
 				B2E37D1024E959CE0074C8F3 /* MenuPanelViewController.swift */,
 			);
-			name = "Menu Panel View Controller";
+			name = "Menu Panel";
 			sourceTree = "<group>";
 		};
 		B2E57A1F24CAA52F00347A89 /* Award Cells */ = {
@@ -1439,10 +1482,12 @@
 			isa = PBXGroup;
 			children = (
 				B221EEE3210B1A7000F7FBA0 /* Scorepad Views */,
-				B23CCC8624EA547B00CF518C /* Left Menu Panel */,
+				B23CCC8624EA547B00CF518C /* Container Panels */,
 				B288FAB61FB801FC00633FD7 /* Online Game Views */,
 				B288FAB51FB801E200633FD7 /* Other Main Views */,
 				B288FAB71FB8024A00633FD7 /* Miscellaneous Views */,
+				B2A44F292506887B0071F899 /* Alert */,
+				B204A764250F350800248915 /* Action Sheet */,
 				B243385622E0A67C002EBD40 /* Custom Views */,
 				B2E8E49523571CA2007A2FE7 /* Hexagon View */,
 			);
@@ -1668,6 +1713,7 @@
 				B28E8C2024BEBFFC0053E237 /* AwardListCollectionCell.xib in Resources */,
 				B2DCEFDC246FFBE2007D409B /* View flow host.xlsx in Resources */,
 				B2E065C424AB02B80055C376 /* RelatedPlayersViewController.storyboard in Resources */,
+				B204A760250DF1B100248915 /* GameDetailPanelViewController.storyboard in Resources */,
 				B22789081FB83AC4009BABCA /* WalkthroughPageViewController.storyboard in Resources */,
 				CCEA53E31DF3D19F0045292C /* Notes.txt in Resources */,
 				B22789241FB882F7009BABCA /* ClientViewController.storyboard in Resources */,
@@ -1727,8 +1773,10 @@
 				B22789421FB894AE009BABCA /* PlayerDetailViewController.storyboard in Resources */,
 				B28DDA9E24A325500029FE36 /* HighScoreTileView.xib in Resources */,
 				B283A1B024AF438D0065994B /* BubbleView.xib in Resources */,
+				B235D790251096BF002F5BB6 /* DealViewCell.xib in Resources */,
 				B298496924E6DF4400FADC06 /* LaunchScreenView.xib in Resources */,
 				B20CF54424A7BD3B00F27A9C /* PersonalDashboardLandscapeView.xib in Resources */,
+				B235D78C25108272002F5BB6 /* DealView.xib in Resources */,
 				B227893C1FB8932A009BABCA /* SyncViewController.storyboard in Resources */,
 				B2A44F2D250688A80071F899 /* AlertViewController.storyboard in Resources */,
 				B2430CC722EABD1D00C4FC77 /* SlideOutButtonView.xib in Resources */,
@@ -1738,6 +1786,7 @@
 				B20CF54724A7D74500F27A9C /* AwardsDashboardLandscapeView.xib in Resources */,
 				B2A9096724A1C15700B35B69 /* DataTableTileTableViewCell.xib in Resources */,
 				B22789121FB844CD009BABCA /* ScorepadViewController.storyboard in Resources */,
+				B204A766250F352600248915 /* ActionSheetViewController.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1892,6 +1941,7 @@
 				B2BBCCAA2327ECD0005678B2 /* HexagonView.swift in Sources */,
 				B2A44F262500DBB50071F899 /* AwardDetailViewController.swift in Sources */,
 				B2CBB81924A9D81500B336CB /* CreatePlayerView.swift in Sources */,
+				B204A768250F353600248915 /* ActionSheetViewController.swift in Sources */,
 				B28E8C1E24BEBFED0053E237 /* AwardCollectionCell.swift in Sources */,
 				B267DF75211F41FC0086D521 /* Admin Menu.swift in Sources */,
 				B2C051041EDF194C009DE37F /* Multipeer Class.swift in Sources */,
@@ -1906,6 +1956,7 @@
 				B2B1802821196166008D3BAA /* Contract_Whist_Scorecard.xcdatamodeld in Sources */,
 				B2C0966B24616E4900C19447 /* Player Managed Object.swift in Sources */,
 				B23970D324AF511900E3C2A9 /* DataTableTileHighScoreDataSource.swift in Sources */,
+				B204A763250DF1FA00248915 /* GameDetailPanelViewController.swift in Sources */,
 				B2DD5D7C1ED1A87600725B55 /* Graph View Class.swift in Sources */,
 				B211E137224164FB00B48D64 /* SelectPlayersViewController.swift in Sources */,
 				B2693CCD22C88B6900596D85 /* History Viewer.swift in Sources */,
@@ -1942,6 +1993,7 @@
 				B2A3D9A1248E2804008556B8 /* Location.swift in Sources */,
 				B29FFF31223BA302002C01FE /* Banners.swift in Sources */,
 				B23D9C6F24AE5132002C721B /* BubbleView.swift in Sources */,
+				B235D78E2510829C002F5BB6 /* DealView.swift in Sources */,
 				B2EA98E31E285F19000B7E54 /* WalkthroughViewController.swift in Sources */,
 				B2C054781FB8B55700846F6E /* ConfirmCountViewController.swift in Sources */,
 				B2519457230C4284006240DE /* Custom Transitions.swift in Sources */,

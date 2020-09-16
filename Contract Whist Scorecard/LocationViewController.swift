@@ -10,7 +10,7 @@ import UIKit
 import CoreLocation
 import MapKit
 
-class LocationViewController: ScorecardViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, CLLocationManagerDelegate {
+class LocationViewController: ScorecardViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, CLLocationManagerDelegate, BannerDelegate {
     
     // MARK: - Class Properties ======================================================================== -
 
@@ -34,21 +34,22 @@ class LocationViewController: ScorecardViewController, UITableViewDataSource, UI
     private var searchTextField: UITextField!
     
     // MARK: - IB Outlets ============================================================================== -
-    @IBOutlet weak private var locationMapView: MKMapView!
-    @IBOutlet private weak var bannerPaddingView: InsetPaddingView!
-    @IBOutlet private weak var navigationBar: NavigationBar!
-    @IBOutlet weak private var searchBar: UISearchBar!
+    
+    @IBOutlet private weak var banner: Banner!
+    @IBOutlet private weak var bannerHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var locationMapView: MKMapView!
+    @IBOutlet private weak var searchBar: UISearchBar!
     @IBOutlet private weak var searchBarBackgroundView: UIView!
     @IBOutlet private weak var bannerContinuationView: BannerContinuation!
-    @IBOutlet weak private var locationTableView: UITableView!
-    @IBOutlet weak private var continueButton: UIButton!
-    @IBOutlet weak private var activityIndicator: UIActivityIndicatorView!
-    @IBOutlet weak private var locationTableViewHeight: NSLayoutConstraint!
-    @IBOutlet private weak var cancelButton: UIButton!
+    @IBOutlet private weak var locationTableView: UITableView!
+    @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet private weak var locationTableViewHeight: NSLayoutConstraint!
+    @IBOutlet private weak var bottomSectionHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var continueButton: ShadowButton!
     
     // MARK: - IB Actions ============================================================================== -
  
-    @IBAction func finishPressed(_ sender: UIButton) {
+    internal func finishPressed() {
         if let delegate = self.controllerDelegate {
             delegate.didCancel()
         } else {
@@ -57,6 +58,10 @@ class LocationViewController: ScorecardViewController, UITableViewDataSource, UI
     }
     
     @IBAction func continuePressed(_ sender: UIButton) {
+        self.continuePressed()
+    }
+    
+    internal func continuePressed() {
         if let delegate = self.controllerDelegate {
             self.newLocation.copy(to: Scorecard.game.location)
             delegate.didProceed()
@@ -72,6 +77,7 @@ class LocationViewController: ScorecardViewController, UITableViewDataSource, UI
         
         // Setup default colors (previously done in StoryBoard)
         self.defaultViewColors()
+        self.setupButtons()
 
         if let testModeValue = ProcessInfo.processInfo.environment["TEST_MODE"] {
             if testModeValue.lowercased() == "true" {
@@ -127,28 +133,26 @@ class LocationViewController: ScorecardViewController, UITableViewDataSource, UI
     
     override internal func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        
+        Scorecard.shared.reCenterPopup(self)
         self.view.setNeedsLayout()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        Scorecard.shared.reCenterPopup(self)
         
         // Set colors of banner
         if let bannerColor = self.bannerColor {
-            self.bannerPaddingView.bannerColor = bannerColor
-            self.navigationBar.bannerColor = bannerColor
-            self.bannerContinuationView.bannerColor = bannerColor
-            self.bannerContinuationView.borderColor = bannerColor
+            self.banner.set(backgroundColor: bannerColor, titleColor: Palette.tableTop.text)
+            self.bannerContinuationView.backgroundColor = bannerColor
             self.searchBarBackgroundView.backgroundColor = bannerColor
             self.locationTableView.backgroundColor = bannerColor
         }
         
-        
         if self.locationTableViewHeight.constant != 0.0 {
             self.showLocationList()
         }
+        
+        self.bottomSectionHeightConstraint.constant = ((self.menuController?.isVisible() ?? false) ? 75 : 58) + (self.view.safeAreaInsets.bottom == 0 ? 8.0 : 0.0)
     }
     
     override func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
@@ -325,6 +329,21 @@ class LocationViewController: ScorecardViewController, UITableViewDataSource, UI
     
     // MARK: - Form Presentation / Handling Routines =================================================== -
     
+    private func setupButtons() {
+        
+        // Add banner continue button
+        self.banner.set(rightButtons: [
+        BannerButton(title: "Continue", image: UIImage(named: "forward"), width: 100, action: self.continuePressed, menuHide: true, id: "continue")])
+        
+        // Set continue button and title
+        self.continueButton.toCircle()
+        
+        // Set banner height
+        self.bannerHeightConstraint.constant = self.defaultBannerHeight
+        
+        self.hideFinishButtons()
+    }
+    
     private func showLocationList() {
         let availableHeight = locationMapView.frame.maxY - searchBar.frame.maxY
         self.locationTableViewHeight.constant = CGFloat(Int(availableHeight / 2.0 / rowHeight)) * rowHeight
@@ -334,6 +353,7 @@ class LocationViewController: ScorecardViewController, UITableViewDataSource, UI
     private func hideFinishButtons() {
         if !testMode {
             self.continueButton.isHidden = true
+            self.banner.setButton("continue", isHidden: true)
         }
     }
     
@@ -342,7 +362,9 @@ class LocationViewController: ScorecardViewController, UITableViewDataSource, UI
     }
     
     private func showFinishButtons(autoSelect: Bool = false) {
-        self.continueButton.isHidden = false
+        let bannerContinue = (ScorecardUI.landscapePhone() || ScorecardUI.smallPhoneSize())
+        self.banner.setButton("continue", isHidden: !bannerContinue)
+        self.continueButton.isHidden = bannerContinue
         if self.testMode && autoSelect {
             // In test mode automatically select continue
             self.continuePressed(self.continueButton)
@@ -541,7 +563,7 @@ class LocationViewController: ScorecardViewController, UITableViewDataSource, UI
         locationViewController.bannerColor = bannerColor
         locationViewController.completion = completion
         
-        viewController.present(locationViewController, appController: appController, animated: true, completion: nil)
+        viewController.present(locationViewController, appController: appController, animated: true, container: .mainRight, completion: nil)
         
         return locationViewController
     }
@@ -569,17 +591,14 @@ extension LocationViewController {
     private func defaultViewColors() {
 
         self.activityIndicator.color = Palette.normal.text
-        self.bannerContinuationView.bannerColor = Palette.tableTop.background
-        self.bannerContinuationView.borderColor = Palette.tableTop.background
-        self.bannerPaddingView.bannerColor = Palette.tableTop.background
-        self.cancelButton.setTitleColor(Palette.banner.text, for: .normal)
-        self.continueButton.setTitleColor(Palette.banner.text, for: .normal)
+        self.banner.set(backgroundColor: Palette.tableTop.background, titleColor: Palette.tableTop.text)
+        self.bannerContinuationView.backgroundColor = Palette.tableTop.background
         self.locationTableView.backgroundColor = Palette.tableTop.background
         self.locationTableView.separatorColor = Palette.normal.background
-        self.navigationBar.textColor = Palette.banner.text
-        self.navigationBar.bannerColor = Palette.tableTop.background
         self.searchBarBackgroundView.backgroundColor = Palette.tableTop.background
         self.view.backgroundColor = Palette.normal.background
+        self.continueButton.setBackgroundColor(Palette.continueButton.background)
+        self.continueButton.setTitleColor(Palette.continueButton.text, for: .normal)
     }
 
     private func defaultCellColors(cell: LocationTableCell) {

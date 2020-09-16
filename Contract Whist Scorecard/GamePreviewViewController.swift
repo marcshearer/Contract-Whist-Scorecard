@@ -25,7 +25,7 @@ import CoreData
     
 }
 
-class GamePreviewViewController: ScorecardViewController, ButtonDelegate, SelectedPlayersViewDelegate {
+class GamePreviewViewController: ScorecardViewController, ButtonDelegate, SelectedPlayersViewDelegate, BannerDelegate {
     
     // MARK: - Class Properties ================================================================ -
     
@@ -38,7 +38,7 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
     private var readOnly = false
     private var formTitle = "Preview"
     private var smallFormTitle = "Preview"
-    private var backText = ""
+    private var backText: String?
     
     // Local class variables
     private var buttonMode = "Triangle"
@@ -65,14 +65,11 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
     
     // MARK: - IB Outlets ================================================================ -
     
-    @IBOutlet private weak var titleView: UIView!
-    @IBOutlet private weak var titleLabel: UILabel!
+    @IBOutlet private weak var banner: Banner!
+    @IBOutlet private weak var bannerHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var topSectionView: UIView!
-    @IBOutlet private weak var bannerPaddingView: InsetPaddingView!
-    @IBOutlet private weak var bannerContinueButton: UIButton!
     @IBOutlet private weak var messageLabel: UILabel!
     @IBOutlet private weak var continueButton: ShadowButton!
-    @IBOutlet private weak var cancelButton: ClearButton!
     @IBOutlet public weak var selectedPlayersView: SelectedPlayersView!
     @IBOutlet private weak var overrideSettingsButton: ShadowButton!
     @IBOutlet private weak var lowerMiddleSectionView: UIView!
@@ -83,27 +80,41 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
     @IBOutlet private weak var cutForDealerButton: ImageButton!
     @IBOutlet private weak var nextDealerButton: ImageButton!
     @IBOutlet private var actionButtons: [ImageButton]!
-
+    @IBOutlet private var sideBySideConstraints: [NSLayoutConstraint]!
+    @IBOutlet private var aboveAndBelowConstraints: [NSLayoutConstraint]!
+    @IBOutlet private var sideBySideTabletConstraints: [NSLayoutConstraint]!
+    @IBOutlet private var notSideBySideTabletConstraints: [NSLayoutConstraint]!
+    
     // MARK: - IB Actions ============================================================================== -
     
-    @IBAction func finishGamePressed(_ sender: Any) {
+    internal func finishPressed() {
+        self.finish(false)
+    }
+    
+    internal func returnHomePressed() {
+        self.finish(true)
+    }
+    
+    internal func finish(_ returnHome: Bool) {
         // Link back to selection
         self.willDismiss()
-        self.controllerDelegate?.didCancel()
+        self.controllerDelegate?.didCancel(context: ["home" : returnHome])
     }
     
-    @IBAction func continuePressed(_ sender: Any) {
-        if observer != nil {
-            self.willDismiss()
-        }
+    @IBAction func continuePressed(_ sender: UIButton) {
+        self.continuePressed()
+    }
+    
+    internal func continuePressed() {
+        self.willDismiss()
         self.controllerDelegate?.didProceed()
     }
-    
-    @IBAction func overrideSettingsButtonPressed(_ sender: Any) {
+        
+    internal func overrideSettingsPressed() {
         self.controllerDelegate?.didInvoke(.overrideSettings)
     }
     
-   internal func buttonPressed(_ sender: UIView) {
+    internal func buttonPressed(_ sender: UIView) {
         switch sender.tag {
         case 1:
             // Cut for dealer
@@ -190,6 +201,10 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
             self.firstTime = false
             
             self.setupScreenSize()
+            
+            if firstTime || rotated {
+                self.setupConstraints()
+            }
             
             if !self.alreadyDrawing {
                 self.selectedPlayersView.layoutIfNeeded()
@@ -309,6 +324,22 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
         
     }
     
+    private func setupConstraints() {
+        var sideBySide = false
+        var sideBySideTablet = false
+        if ScorecardUI.landscapePhone() {
+            sideBySide = true
+        } else if self.container == .mainRight && self.view.frame.width > 700 {
+            sideBySide = true
+            sideBySideTablet = true
+        }
+        Constraint.setActive(self.sideBySideConstraints, to: sideBySide)
+        Constraint.setActive(self.aboveAndBelowConstraints, to: !sideBySide)
+        Constraint.setActive(self.sideBySideTabletConstraints, to: sideBySideTablet)
+        Constraint.setActive(self.notSideBySideTabletConstraints, to: !sideBySideTablet)
+    }
+    
+    
     private func drawRoom() {
         let wasAlreadyDrawing = self.alreadyDrawing
         self.alreadyDrawing = true
@@ -331,15 +362,15 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
     
     private func updateButtons() {
         if self.readOnly {
-            self.overrideSettingsButton.isHidden = true
+            self.banner.setButton("override", isHidden: true)
             self.leftViewLeadingConstraint.constant = actionButtonView.frame.width * 0.25
                         
         } else if !cutting {
             // Hide / show buttons dependent on format
-            self.bannerContinueButton.isHidden = !ScorecardUI.landscapePhone() && !ScorecardUI.smallPhoneSize()
+            self.banner.setButton("continue", isHidden: !ScorecardUI.landscapePhone() && !ScorecardUI.smallPhoneSize())
             self.continueButton.isHidden = ScorecardUI.landscapePhone() || ScorecardUI.smallPhoneSize()
-            self.bottomSectionHeightConstraint.constant = (ScorecardUI.landscapePhone() || ScorecardUI.smallPhoneSize() ? 0.0 : 50 + (self.view.safeAreaInsets.bottom == 0 ? 8.0 : 0.0))
-            self.overrideSettingsButton.isHidden = false
+            self.bottomSectionHeightConstraint.constant = (ScorecardUI.landscapePhone() || ScorecardUI.smallPhoneSize() ? 0.0 : ((self.menuController?.isVisible() ?? false) ? 75 : 58) + (self.view.safeAreaInsets.bottom == 0 ? 8.0 : 0.0))
+            self.banner.setButton("override", isHidden: false)
             
             self.leftViewLeadingConstraint.constant = 0.0
             
@@ -356,12 +387,12 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
                     
                     if Config.autoStartHost && !autoStarting {
                         autoStarting = true
-                        self.continuePressed(self)
+                        self.continuePressed()
                     }
                     
                 } else  {
                     // Not ready
-                    self.bannerContinueButton.isHidden = true
+                    self.banner.setButton("continue", isHidden: true)
                     self.continueButton.isEnabled = false
                     self.messageLabel.isHidden = false
                     self.actionButtons.forEach{(button) in button.isHidden = true}
@@ -369,7 +400,8 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
                 }
             }
         }
-        self.titleLabel.text = (self.smallScreen && !ScorecardUI.landscapePhone() ? smallFormTitle : self.formTitle)
+        self.bannerHeightConstraint.constant = self.defaultBannerHeight
+        self.banner.set(title: (self.smallScreen && !ScorecardUI.landscapePhone() ? smallFormTitle : self.formTitle))
     }
     
     private func setupScreenSize() {
@@ -379,8 +411,10 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
 
     
     private func setupButtons() {
+        var rightButtons: [BannerButton] = []
+        var nonBannerButtonsAfter: [BannerButton] = []
+                
         if self.readOnly {
-            self.bannerContinueButton.isHidden = true
             self.continueButton.isHidden = true
             self.cutForDealerButton.isEnabled = false
             self.cutForDealerButton.set(title: "")
@@ -393,8 +427,28 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
             if (self.delegate?.gamePreviewHosting ?? false) {
                 self.selectedPlayersView.setEnabled(slot: 0, enabled: false)
             }
+            rightButtons.append(contentsOf: [BannerButton(title: "Continue", image: UIImage(named: "forward"), width: 100, action: self.continuePressed, menuHide: true, menuText: "Start Game", id: "continue")])
         }
-        self.cancelButton.setTitle(self.backText, for: .normal)
+        
+        let leftButtons = [
+            BannerButton(image: UIImage(named: "back"), width: 30, action: self.finishPressed, menuHide: true, menuText: self.backText ?? "Abandon Game", menuSpaceBefore: (self.backText == nil ? 20.0 : 0.0), id: "cancel")]
+        
+        let nonBannerButtonsBefore = [
+            BannerButton(control: self.overrideSettingsButton, action: self.overrideSettingsPressed, menuHide: true, menuText: "Override settings", id: "override"),
+        ]
+        
+        if self.backText != nil {
+            // Add a home menu item as well
+            nonBannerButtonsAfter.append(
+                BannerButton(control: nil, action: self.returnHomePressed, menuHide: true, menuText: "Abandon Game", menuSpaceBefore: 20.0, id: "home"))
+        }
+        
+        self.banner.set(
+            leftButtons: leftButtons,
+            rightButtons: rightButtons,
+            nonBannerButtonsBefore: nonBannerButtonsBefore,
+            nonBannerButtonsAfter: nonBannerButtonsAfter)
+        
         self.continueButton.toCircle()
         self.updateButtons()
     }
@@ -709,7 +763,7 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
     
     // MARK: - Function to present and dismiss this view ==============================================================
     
-    class func show(from viewController: ScorecardViewController, appController: ScorecardAppController? = nil, selectedPlayers: [PlayerMO], formTitle: String = "Preview", smallFormTitle: String? = nil, backText: String = "", readOnly: Bool = true, faceTimeAddress: [String] = [], animated: Bool = true, delegate: GamePreviewDelegate? = nil) -> GamePreviewViewController {
+    class func show(from viewController: ScorecardViewController, appController: ScorecardAppController? = nil, selectedPlayers: [PlayerMO], formTitle: String = "Preview", smallFormTitle: String? = nil, backText: String? = nil, readOnly: Bool = true, faceTimeAddress: [String] = [], animated: Bool = true, delegate: GamePreviewDelegate? = nil) -> GamePreviewViewController {
         let storyboard = UIStoryboard(name: "GamePreviewViewController", bundle: nil)
         let gamePreviewViewController = storyboard.instantiateViewController(withIdentifier: "GamePreviewViewController") as! GamePreviewViewController
         
@@ -724,7 +778,7 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
                 
         gamePreviewViewController.firstTime =  true
         
-        viewController.present(gamePreviewViewController, appController: appController, animated: animated)
+        viewController.present(gamePreviewViewController, appController: appController, animated: animated, container: .mainRight)
         return gamePreviewViewController
     }
 }
@@ -735,8 +789,7 @@ extension GamePreviewViewController {
 
     private func defaultViewColors() {
 
-        self.bannerPaddingView.bannerColor = Palette.banner.background
-        self.topSectionView.backgroundColor = Palette.banner.background
+        self.topSectionView.backgroundColor = ((self.menuController?.isVisible() ?? false) ? Palette.normal.background : Palette.banner.background)
         self.selectedPlayersView.backgroundColor = Palette.tableTop.background
         self.messageLabel.textColor = Palette.normal.text
         self.continueButton.setTitleColor(Palette.continueButton.text, for: .normal)
@@ -744,8 +797,6 @@ extension GamePreviewViewController {
         self.continueButton.setTitleColor(Palette.continueButton.text, for: .normal)
         self.actionButtons.forEach{(button) in button.set(faceColor: Palette.buttonFace.background)}
         self.actionButtons.forEach{(button) in button.set(titleColor: Palette.buttonFace.text)}
-        self.titleView.backgroundColor = Palette.banner.background
-        self.titleLabel.textColor = Palette.banner.text
         self.overrideSettingsButton.setBackgroundColor(Palette.buttonFace.background)
         self.overrideSettingsButton.setTitleColor(Palette.buttonFace.text, for: .normal)
         self.view.backgroundColor = Palette.normal.background

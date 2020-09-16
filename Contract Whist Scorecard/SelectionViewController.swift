@@ -66,9 +66,15 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
     @IBOutlet private weak var continueButton: ShadowButton!
     @IBOutlet private var sideBySideConstraints: [NSLayoutConstraint]!
     @IBOutlet private var aboveAndBelowConstraints: [NSLayoutConstraint]!
+    @IBOutlet private var sideBySideTabletConstraints: [NSLayoutConstraint]!
+    @IBOutlet private var notSideBySideTabletConstraints: [NSLayoutConstraint]!
 
     
     // MARK: - IB Actions ============================================================================== -
+    
+    @IBAction func continuePressed(_ sender: UIButton) {
+        self.continuePressed()
+    }
     
     internal func continuePressed() {
         continueAction()
@@ -302,7 +308,7 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
         
         let hidden = (selectedList.count < 3 && !testMode)
 
-        if self.smallScreen || self.menuController.isVisible() {
+        if self.smallScreen {
             // Banner continuation button used on small or landscape phone
             self.continueButton.isHidden = true
             self.banner.setButton("continue", isHidden: hidden)
@@ -312,7 +318,7 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
             self.continueButton.isHidden = false
             self.continueButton.isEnabled = !hidden
             self.banner.setButton("continue", isHidden: true)
-            self.bottomSectionHeightConstraint.constant = 58 + (self.view.safeAreaInsets.bottom == 0 ? 8.0 : 0.0)
+            self.bottomSectionHeightConstraint.constant = ((self.menuController?.isVisible() ?? false) ? 75 : 58) + (self.view.safeAreaInsets.bottom == 0 ? 8.0 : 0.0)
         }
         clearAllButton.isHidden = true // Left this in case we reinstate (selectedList.count > (self.selectionMode == .invitees ? 1 : 0))
         
@@ -409,7 +415,7 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
     private func setupButtons() {
         
         self.banner.set(rightButtons: [
-            BannerButton(title: "Continue", image: UIImage(named: "forward"), width: 60, action: self.continuePressed, containerHide: true, containerMenuText: (self.selectionMode == .invitees ? "Invite Players" : "Preview Game"), id: "continue")])
+            BannerButton(title: "Continue", image: UIImage(named: "forward"), width: 100, action: self.continuePressed, menuHide: true, id: "continue")])
         self.bannerHeightConstraint.constant = self.defaultBannerHeight
         
         // Set cancel button and title
@@ -486,19 +492,17 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
     
     private func setupConstraints() {
         var sideBySide = false
+        var sideBySideTablet = false
         if ScorecardUI.landscapePhone() {
             sideBySide = true
         } else if self.container == .mainRight && self.view.frame.width > 700 {
             sideBySide = true
+            sideBySideTablet = true
         }
-        self.sideBySideConstraints.forEach { (constraint) in
-            constraint.isActive = sideBySide
-            constraint.priority = (sideBySide ? .required : UILayoutPriority(1.0))
-        }
-        self.aboveAndBelowConstraints.forEach { (constraint) in
-            constraint.isActive = !sideBySide
-            constraint.priority = (!sideBySide ? .required : UILayoutPriority(1.0))
-        }
+        Constraint.setActive(self.sideBySideConstraints, to: sideBySide)
+        Constraint.setActive(self.aboveAndBelowConstraints, to: !sideBySide)
+        Constraint.setActive(self.sideBySideTabletConstraints, to: sideBySideTablet)
+        Constraint.setActive(self.notSideBySideTabletConstraints, to: !sideBySideTablet)
     }
     
    // MARK: - Add / remove player from selection ============================================================== -
@@ -871,8 +875,8 @@ extension SelectionViewController {
 
     private func defaultViewColors() {
 
-        self.topSectionView.backgroundColor = (menuController.isVisible() ? Palette.normal.background : Palette.banner.background)
-        self.bottomSection.backgroundColor = Palette.normal.background
+        self.view.backgroundColor = Palette.normal.background
+        self.topSectionView.backgroundColor = ((self.menuController?.isVisible() ?? false) ? Palette.normal.background : Palette.banner.background)
         self.clearAllButton.setBackgroundColor(Palette.buttonFace.background)
         self.clearAllButton.setTitleColor(Palette.buttonFace.text, for: .normal)
         self.continueButton.setBackgroundColor(Palette.continueButton.background)

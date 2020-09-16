@@ -26,7 +26,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EnR-G7-FJs" userLabel="Top Section">
                                 <rect key="frame" x="0.0" y="0.0" width="826" height="440"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QYt-gU-aU5" userLabel="Banner">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QYt-gU-aU5" userLabel="Heading">
                                         <rect key="frame" x="0.0" y="0.0" width="826" height="150"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="W H I S T" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Baf-nV-Cu1">
@@ -59,15 +59,16 @@
                                             <constraint firstAttribute="bottom" secondItem="Baf-nV-Cu1" secondAttribute="bottom" id="e7Z-Zj-2yq"/>
                                         </constraints>
                                     </view>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YLe-cz-ZL1" userLabel="Banner Continuation" customClass="BannerContinuation" customModule="Whist_2" customModuleProvider="target">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YLe-cz-ZL1" userLabel="This Player Container">
                                         <rect key="frame" x="0.0" y="150" width="826" height="290"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DVD-5S-PtT" customClass="ThumbnailView" customModule="Whist_2" customModuleProvider="target">
-                                                <rect key="frame" x="337" y="49.5" width="152" height="203"/>
+                                                <rect key="frame" x="373" y="97.5" width="80" height="107"/>
                                                 <color key="backgroundColor" name="Clear"/>
                                                 <gestureRecognizers/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="DVD-5S-PtT" secondAttribute="height" multiplier="75:100" id="8cf-JN-dG0"/>
+                                                    <constraint firstAttribute="width" constant="80" id="ZoA-z1-TS2"/>
                                                 </constraints>
                                                 <connections>
                                                     <outletCollection property="gestureRecognizers" destination="tr2-GY-KO5" appends="YES" id="dla-ma-Ccp"/>
@@ -78,17 +79,8 @@
                                         <gestureRecognizers/>
                                         <constraints>
                                             <constraint firstItem="DVD-5S-PtT" firstAttribute="centerX" secondItem="YLe-cz-ZL1" secondAttribute="centerX" id="ACE-Uz-Zud"/>
-                                            <constraint firstItem="DVD-5S-PtT" firstAttribute="height" secondItem="YLe-cz-ZL1" secondAttribute="height" multiplier="0.7" id="M1t-Ln-6hn"/>
                                             <constraint firstItem="DVD-5S-PtT" firstAttribute="centerY" secondItem="YLe-cz-ZL1" secondAttribute="centerY" constant="6" id="Qp4-yF-ZGw"/>
                                         </constraints>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="color" keyPath="bannerColor">
-                                                <color key="value" name="Clear"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                                <color key="value" name="Clear"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
                                     </view>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hJD-RF-VuY" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
                                         <rect key="frame" x="20" y="402" width="28" height="28"/>
@@ -150,6 +142,7 @@
                                                 <color key="backgroundColor" name="Clear"/>
                                                 <connections>
                                                     <outlet property="titleLabel" destination="njw-JR-F2N" id="4B4-om-TLC"/>
+                                                    <outlet property="titleLabelTopConstraint" destination="sKr-rI-b2H" id="SQW-EM-hkq"/>
                                                 </connections>
                                             </tableViewCell>
                                         </prototypes>
@@ -203,6 +196,7 @@
                                                 <color key="backgroundColor" name="Clear"/>
                                                 <connections>
                                                     <outlet property="titleLabel" destination="HpQ-kL-YL6" id="FIr-fd-cu4"/>
+                                                    <outlet property="titleLabelTopConstraint" destination="J6L-jn-x1f" id="OuO-0Q-GDP"/>
                                                 </connections>
                                             </tableViewCell>
                                         </prototypes>
@@ -302,6 +296,7 @@
                         <outlet property="optionsTableView" destination="tn1-Ts-i5q" id="nnb-yi-Egn"/>
                         <outlet property="rightBorderView" destination="blO-xq-TVH" id="kQK-dO-W43"/>
                         <outlet property="settingsTableView" destination="Grr-qY-kIs" id="v2e-Ux-VWM"/>
+                        <outlet property="thisPlayerContainer" destination="YLe-cz-ZL1" id="41T-Vw-WlF"/>
                         <outlet property="thisPlayerThumbnail" destination="DVD-5S-PtT" id="x0q-ul-xFT"/>
                         <outlet property="titleLabel" destination="Baf-nV-Cu1" id="AlO-vB-G4d"/>
                     </connections>

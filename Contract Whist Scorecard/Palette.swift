@@ -52,8 +52,9 @@ class Palette {
     @BackgroundColor(.carouselUnselected) static var carouselUnselected
     @BackgroundColor(.alwaysTheme) static var alwaysTheme
     @BackgroundColor(.watermark) static var watermark
-    @BackgroundColor(.splitSidePanel) static var splitSidePanel
-    @BackgroundColor(.splitSideBorder) static var splitSideBorder
+    @BackgroundColor(.leftSidePanel) static var leftSidePanel
+    @BackgroundColor(.leftSidePanelBorder) static var leftSidePanelBorder
+    @BackgroundColor(.rightGameDetailPanel) static var rightGameDetailPanel
 
     // Specific colors
     @SpecificColor(.suitDiamondsHearts) static var suitDiamondsHearts

@@ -45,20 +45,14 @@ extension ClientViewController : PanelContainer {
         self.bottomSection.isHidden = menuVisible
         
         // Set all menu-dependent constraints to inactive
-        self.noMenuHeightConstraints.forEach{ (constraint) in constraint.isActive = false ; constraint.priority = UILayoutPriority(rawValue: 1)}
-        self.menuHeightConstraints.forEach{ (constraint) in constraint.isActive = false ; constraint.priority = UILayoutPriority(rawValue: 1) }
+        Constraint.setActive(self.menuHeightConstraints, to: false)
+        Constraint.setActive(self.noMenuHeightConstraints, to: false)
         
         // Now activate dependent on manu visisble
         if menuVisible {
-            self.menuHeightConstraints.forEach{ (constraint) in
-                constraint.isActive = true
-                constraint.priority = .required
-            }
+            Constraint.setActive(self.menuHeightConstraints, to: true)
         } else {
-            self.noMenuHeightConstraints.forEach{ (constraint) in
-                constraint.isActive = true
-                constraint.priority = .required
-            }
+            Constraint.setActive(self.noMenuHeightConstraints, to: !ScorecardUI.landscapePhone())
         }
         
         // Set variable constraints
@@ -95,25 +89,38 @@ extension ClientViewController : PanelContainer {
     }
     
     internal func allocateContainerSizes() {
+        // Idea is to have all 3 containers available, but sometimes offscreen if on an iPad
         repeat {
             self.containers = true
             if !ScorecardUI.phoneSize() && self.leftPanelWidthConstraint != nil && self.rightPanelWidthConstraint != nil {
                 if self.view.frame.width >= 1000 {
                     // Room for all 3
-                    self.leftPanelWidthConstraint.constant = self.view.frame.width * 0.29
-                    self.rightPanelWidthConstraint.constant =  self.view.frame.width * 0.32
+                    let leftWidth = self.view.frame.width * 0.29
+                    let rightWidth = self.view.frame.width * 0.32
+                    self.leftPanelTrailingConstraint.constant = leftWidth
+                    self.leftPanelWidthConstraint.constant = leftWidth
+                    self.rightPanelLeadingConstraint.constant = -rightWidth
+                    self.rightPanelWidthConstraint.constant =  rightWidth
                     break
                 }
                 if self.view.frame.width >= 750 {
                     // Room for 2
-                    self.leftPanelWidthConstraint.constant =  self.view.frame.width * 0.4
-                    self.rightPanelWidthConstraint.constant = 0
+                    let leftWidth = self.view.frame.width * 0.4
+                    let rightWidth = UIScreen.main.bounds.width * 0.32
+                    self.leftPanelTrailingConstraint.constant = leftWidth
+                    self.leftPanelWidthConstraint.constant = leftWidth
+                    self.rightPanelLeadingConstraint.constant = 0
+                    self.rightPanelWidthConstraint.constant =  rightWidth
                     break
                 }
             }
             // Just 1
-            self.leftPanelWidthConstraint?.constant = 0
-            self.rightPanelWidthConstraint?.constant = 0
+            let leftWidth = self.view.frame.width * 1
+            let rightWidth = self.view.frame.width * 1
+            self.leftPanelTrailingConstraint.constant = 0
+            self.leftPanelWidthConstraint.constant = leftWidth
+            self.rightPanelLeadingConstraint.constant = 0
+            self.rightPanelWidthConstraint.constant =  rightWidth
             if min(UIScreen.main.bounds.width, UIScreen.main.bounds.height) < 750 {
                 // Looks like we're on a phone
                 self.containers = false
@@ -124,10 +131,11 @@ extension ClientViewController : PanelContainer {
         
         self.leftContainer?.setNeedsLayout()
         self.rightContainer?.setNeedsLayout()
+        self.rightInsetContainer?.setNeedsLayout()
     }
     
     internal func rightPanelDefaultScreenColors() {
-        self.rightPanel.backgroundColor = Palette.banner.background
+        self.rightContainer.backgroundColor = Palette.banner.background
         self.rightPanelTitleLabel.textColor = Palette.banner.text
         self.rightPanelCaptionLabel.textColor = Palette.banner.text
     }
@@ -172,6 +180,8 @@ extension ClientViewController : PanelContainer {
                     containerView = self.leftContainer
                 case .right:
                     containerView = self.rightContainer
+                case .rightInset:
+                    containerView = self.rightInsetContainer
                 case .mainRight:
                     containerView = self.mainRightContainer
                 default:
@@ -188,7 +198,7 @@ extension ClientViewController : PanelContainer {
                     // Add layout constraints
                     view.translatesAutoresizingMaskIntoConstraints = false
                     Constraint.anchor(view: rootView, control: containerView, to: view)
-                    if container == .right {
+                    if container == .rightInset {
                         view.roundCorners(cornerRadius: 12.0)
                     }
                     if animated {
@@ -203,7 +213,7 @@ extension ClientViewController : PanelContainer {
             }
             if animated {
                 // Need to animate - just dissolve for now
-                Utility.animate(duration: 0.5,
+                Utility.animate(duration: 0.25,
                     completion: {
                         self.presentInContainersCompletion(completion: completion)
                     },

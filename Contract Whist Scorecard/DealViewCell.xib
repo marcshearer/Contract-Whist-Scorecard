@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="Table Cell" id="xio-dt-OBv" customClass="DealViewCell" customModule="Whist_2" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="xio-dt-OBv" id="Pik-EF-pjh">
+                <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QPc-hV-6Rd" userLabel="Suit label">
+                        <rect key="frame" x="0.0" y="0.0" width="0.0" height="44"/>
+                        <constraints>
+                            <constraint firstAttribute="width" id="JcC-PN-PhF"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y9q-uN-2VB">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="bottom" secondItem="QPc-hV-6Rd" secondAttribute="bottom" id="8YE-SU-9dt"/>
+                    <constraint firstAttribute="trailing" secondItem="y9q-uN-2VB" secondAttribute="trailing" id="g9d-Zu-VgC"/>
+                    <constraint firstItem="QPc-hV-6Rd" firstAttribute="leading" secondItem="Pik-EF-pjh" secondAttribute="leading" id="hph-jf-NSg"/>
+                    <constraint firstItem="y9q-uN-2VB" firstAttribute="leading" secondItem="QPc-hV-6Rd" secondAttribute="trailing" id="mQc-3G-9hy"/>
+                    <constraint firstItem="QPc-hV-6Rd" firstAttribute="top" secondItem="Pik-EF-pjh" secondAttribute="top" id="n5t-6J-JGp"/>
+                    <constraint firstAttribute="bottom" secondItem="y9q-uN-2VB" secondAttribute="bottom" id="wZy-HL-tui"/>
+                    <constraint firstItem="y9q-uN-2VB" firstAttribute="top" secondItem="Pik-EF-pjh" secondAttribute="top" id="xgC-iC-7RJ"/>
+                </constraints>
+            </tableViewCellContentView>
+            <color key="backgroundColor" name="Clear"/>
+            <connections>
+                <outlet property="label" destination="y9q-uN-2VB" id="ejz-jB-jm8"/>
+                <outlet property="suitLabel" destination="QPc-hV-6Rd" id="kcz-Mc-uPl"/>
+                <outlet property="suitWidthConstraint" destination="JcC-PN-PhF" id="9mh-yU-jOw"/>
+            </connections>
+            <point key="canvasLocation" x="135" y="173"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <namedColor name="Clear">
+            <color red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+    </resources>
+</document>

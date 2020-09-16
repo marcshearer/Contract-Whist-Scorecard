@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
@@ -12,7 +12,7 @@
         <scene sceneID="qJp-yc-8it">
             <objects>
                 <viewController storyboardIdentifier="GameSummaryViewController" title="Game Summary" useStoryboardIdentifierAsRestorationIdentifier="YES" id="2Ye-nN-zMs" userLabel="Game" customClass="GameSummaryViewController" customModule="Whist_2" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="dDC-WM-Jrb" userLabel="Game Summary View">
+                    <view key="view" clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="dDC-WM-Jrb" userLabel="Game Summary View">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -512,7 +512,7 @@
     </scenes>
     <resources>
         <image name="back" width="22" height="22"/>
-        <image name="crown" width="100" height="51"/>
+        <image name="crown" width="100" height="100"/>
         <image name="play again" width="50" height="64"/>
         <image name="stop playing" width="50" height="64"/>
         <namedColor name="Clear">

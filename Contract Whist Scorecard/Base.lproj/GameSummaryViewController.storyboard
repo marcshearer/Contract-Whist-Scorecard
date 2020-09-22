@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -16,14 +17,32 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Xa4-Db-K5U" customClass="Banner" customModule="Whist_2" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="88"/>
+                                <viewLayoutGuide key="safeArea" id="8VQ-7G-DPO"/>
+                                <color key="backgroundColor" name="Clear"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="menuHide" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="image" keyPath="finishImage" value="back"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="menuText" value="View Scorecard"/>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="menuSpaceBefore">
+                                        <real key="value" value="0.0"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <outlet property="bannerHeightConstraint" destination="yAN-49-KcC" id="fmF-5w-7a5"/>
+                                    <outlet property="delegate" destination="2Ye-nN-zMs" id="a67-lD-bNh"/>
+                                    <outlet property="parentViewController" destination="2Ye-nN-zMs" id="f8U-3a-tzv"/>
+                                </connections>
+                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SkU-nQ-PwD" userLabel="Top and Middle Areas">
-                                <rect key="frame" x="0.0" y="73" width="414" height="492"/>
+                                <rect key="frame" x="0.0" y="88" width="414" height="477"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="H46-u6-heu" userLabel="Top Area">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="313"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="303.5"/>
                                         <subviews>
                                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="1" contentMode="scaleAspectFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="pO6-Hc-ZdE" userLabel="Winners Collection View">
-                                                <rect key="frame" x="112" y="53" width="190" height="250"/>
+                                                <rect key="frame" x="112" y="43.5" width="190" height="250"/>
                                                 <color key="backgroundColor" name="Clear"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="190" id="que-Gj-8aZ"/>
@@ -56,7 +75,7 @@
                                                                         <constraint firstAttribute="height" constant="135" id="GLu-1v-Sn6"/>
                                                                     </constraints>
                                                                 </view>
-                                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wfp-ti-7kF" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
+                                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wfp-ti-7kF" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
                                                                     <rect key="frame" x="0.0" y="185" width="120" height="30"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="height" constant="30" id="iDO-wf-a0p"/>
@@ -101,10 +120,10 @@
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kar-Qx-XWq" userLabel="Middle Area">
-                                        <rect key="frame" x="0.0" y="313" width="414" height="179"/>
+                                        <rect key="frame" x="0.0" y="303.5" width="414" height="173.5"/>
                                         <subviews>
                                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="2" contentMode="scaleAspectFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="2h7-Jf-CHY" userLabel="Others Collection View">
-                                                <rect key="frame" x="67" y="29.5" width="280" height="120"/>
+                                                <rect key="frame" x="67" y="26.5" width="280" height="120"/>
                                                 <color key="backgroundColor" name="Clear"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="280" id="8L9-vx-Fqr"/>
@@ -131,7 +150,7 @@
                                                                         <constraint firstAttribute="height" constant="65" id="Aha-zC-MQp"/>
                                                                     </constraints>
                                                                 </view>
-                                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aDW-MF-nlZ" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
+                                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aDW-MF-nlZ" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
                                                                     <rect key="frame" x="0.0" y="105" width="60" height="15"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="height" constant="15" id="Ngt-4D-3aG"/>
@@ -166,7 +185,7 @@
                                                 </connections>
                                             </collectionView>
                                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="k0v-pi-t17">
-                                                <rect key="frame" x="188.5" y="122" width="37" height="37"/>
+                                                <rect key="frame" x="188.5" y="116.5" width="37" height="37"/>
                                                 <color key="color" name="Dark Highlight Text"/>
                                             </activityIndicatorView>
                                         </subviews>
@@ -373,6 +392,7 @@
                                         </userDefinedRuntimeAttributes>
                                     </view>
                                 </subviews>
+                                <viewLayoutGuide key="safeArea" id="B1K-Vb-Qz6"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="4Xn-Vn-q9j" secondAttribute="height" multiplier="10:8" id="4Ie-UE-kph"/>
@@ -383,58 +403,36 @@
                                     <constraint firstItem="bw4-mC-p9W" firstAttribute="top" secondItem="Tii-a3-9rM" secondAttribute="bottom" constant="20" id="u9n-ca-Bf0"/>
                                     <constraint firstItem="Tii-a3-9rM" firstAttribute="trailing" secondItem="OFe-jn-Bt6" secondAttribute="trailing" id="xYc-7d-xfX"/>
                                 </constraints>
-                                <viewLayoutGuide key="safeArea" id="B1K-Vb-Qz6"/>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="9uo-b0-008">
-                                <rect key="frame" x="40" y="52" width="334" height="21"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="21" id="xbe-TO-Br1"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" name="Dark Highlight Text"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bhv-M4-Rmr" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
-                                <rect key="frame" x="20" y="52" width="120" height="22"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="120" id="K7S-UN-Gbj"/>
-                                    <constraint firstAttribute="height" constant="22" id="t5W-pI-1zq"/>
-                                </constraints>
-                                <state key="normal" image="back"/>
-                                <connections>
-                                    <action selector="scorecardPressed:" destination="2Ye-nN-zMs" eventType="touchUpInside" id="v1a-5q-Fhc"/>
-                                </connections>
-                            </button>
                             <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2Ej-Ac-6hy" userLabel="Confetti View" customClass="ConfettiView" customModule="Whist_2" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                                 <color key="backgroundColor" name="Clear"/>
                             </view>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="QwS-ao-9CA"/>
                         <color key="backgroundColor" name="Room Interior"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstItem="QwS-ao-9CA" firstAttribute="trailing" secondItem="9uo-b0-008" secondAttribute="trailing" constant="40" id="0bP-5S-Rj9"/>
                             <constraint firstItem="4Xn-Vn-q9j" firstAttribute="leading" secondItem="QwS-ao-9CA" secondAttribute="leading" id="2o6-r9-LNp"/>
                             <constraint firstItem="SkU-nQ-PwD" firstAttribute="width" secondItem="QwS-ao-9CA" secondAttribute="width" multiplier="1:2" id="5ZJ-XI-gRL"/>
                             <constraint firstItem="QwS-ao-9CA" firstAttribute="trailing" secondItem="SkU-nQ-PwD" secondAttribute="trailing" id="800-MR-Xx9"/>
                             <constraint firstItem="SkU-nQ-PwD" firstAttribute="leading" secondItem="QwS-ao-9CA" secondAttribute="leading" id="AGu-g9-dSr"/>
                             <constraint firstItem="SkU-nQ-PwD" firstAttribute="bottom" secondItem="4Xn-Vn-q9j" secondAttribute="top" id="AKd-fb-weg"/>
-                            <constraint firstItem="9uo-b0-008" firstAttribute="leading" secondItem="QwS-ao-9CA" secondAttribute="leading" constant="40" id="Dsi-t2-kFq"/>
                             <constraint firstItem="2Ej-Ac-6hy" firstAttribute="leading" secondItem="dDC-WM-Jrb" secondAttribute="leading" id="EpD-u3-Lim"/>
+                            <constraint firstItem="Xa4-Db-K5U" firstAttribute="leading" secondItem="dDC-WM-Jrb" secondAttribute="leading" id="EwY-Qg-F1m"/>
+                            <constraint firstItem="Xa4-Db-K5U" firstAttribute="top" secondItem="dDC-WM-Jrb" secondAttribute="top" id="F3L-0W-ozV"/>
                             <constraint firstAttribute="bottom" secondItem="2Ej-Ac-6hy" secondAttribute="bottom" id="F8j-v2-oWR"/>
                             <constraint firstAttribute="trailing" secondItem="2Ej-Ac-6hy" secondAttribute="trailing" id="JpZ-gm-QFg"/>
                             <constraint firstItem="4Xn-Vn-q9j" firstAttribute="leading" secondItem="SkU-nQ-PwD" secondAttribute="trailing" id="Msv-lX-5j7"/>
-                            <constraint firstItem="Bhv-M4-Rmr" firstAttribute="top" secondItem="QwS-ao-9CA" secondAttribute="top" constant="8" id="QnB-pI-Ala"/>
                             <constraint firstItem="4Xn-Vn-q9j" firstAttribute="centerY" secondItem="dDC-WM-Jrb" secondAttribute="centerY" id="bE9-da-aSe"/>
-                            <constraint firstItem="SkU-nQ-PwD" firstAttribute="top" secondItem="9uo-b0-008" secondAttribute="bottom" id="cp8-2N-nCJ"/>
-                            <constraint firstItem="Bhv-M4-Rmr" firstAttribute="leading" secondItem="QwS-ao-9CA" secondAttribute="leading" constant="20" id="gTp-lQ-qaW"/>
+                            <constraint firstItem="SkU-nQ-PwD" firstAttribute="top" secondItem="Xa4-Db-K5U" secondAttribute="bottom" id="e44-ga-8Ar"/>
                             <constraint firstItem="QwS-ao-9CA" firstAttribute="trailing" secondItem="4Xn-Vn-q9j" secondAttribute="trailing" id="kUf-nN-4Vn"/>
                             <constraint firstItem="QwS-ao-9CA" firstAttribute="bottom" secondItem="SkU-nQ-PwD" secondAttribute="bottom" id="mBy-TJ-c0C"/>
-                            <constraint firstItem="9uo-b0-008" firstAttribute="top" secondItem="QwS-ao-9CA" secondAttribute="top" constant="8" id="mSG-xF-7MW"/>
                             <constraint firstAttribute="bottom" secondItem="4Xn-Vn-q9j" secondAttribute="bottom" id="ofV-W1-aQ4"/>
                             <constraint firstItem="2Ej-Ac-6hy" firstAttribute="top" secondItem="dDC-WM-Jrb" secondAttribute="top" id="pNM-74-vo2"/>
+                            <constraint firstItem="Xa4-Db-K5U" firstAttribute="bottom" secondItem="QwS-ao-9CA" secondAttribute="top" constant="44" id="yAN-49-KcC"/>
+                            <constraint firstAttribute="trailing" secondItem="Xa4-Db-K5U" secondAttribute="trailing" id="yn9-5e-jAK"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="QwS-ao-9CA"/>
                         <variation key="default">
                             <mask key="constraints">
                                 <exclude reference="800-MR-Xx9"/>
@@ -476,6 +474,7 @@
                         <outlet property="awardsCollectionViewHeight" destination="PhM-4m-5ks" id="bKj-Kq-1RD"/>
                         <outlet property="awardsTitleBar" destination="Tii-a3-9rM" id="hQe-62-s4j"/>
                         <outlet property="awardsTitleBarHeight" destination="ecR-AA-Iow" id="O6b-Aw-fWg"/>
+                        <outlet property="banner" destination="Xa4-Db-K5U" id="gbr-nW-L8k"/>
                         <outlet property="bottomArea" destination="4Xn-Vn-q9j" id="RMR-FT-8TY"/>
                         <outlet property="confettiView" destination="2Ej-Ac-6hy" id="1RM-2i-E3S"/>
                         <outlet property="middleArea" destination="kar-Qx-XWq" id="lxW-hL-6wJ"/>
@@ -484,8 +483,6 @@
                         <outlet property="otherCollectionViewWidth" destination="8L9-vx-Fqr" id="7K4-I3-OpP"/>
                         <outlet property="playAgainButton" destination="OFe-jn-Bt6" id="Ulk-Wk-GNW"/>
                         <outlet property="rightSwipeGesture" destination="eQO-xa-QSi" id="W0m-9i-foC"/>
-                        <outlet property="scorecardButton" destination="Bhv-M4-Rmr" id="jo9-dX-Ffo"/>
-                        <outlet property="syncMessage" destination="9uo-b0-008" id="6JR-EO-y74"/>
                         <outlet property="tapGesture" destination="RaZ-ty-O6E" id="LQ9-1i-eB5"/>
                         <outlet property="topArea" destination="H46-u6-heu" id="b8q-j3-p48"/>
                         <outlet property="winnerCollectionView" destination="pO6-Hc-ZdE" id="TEB-Zp-RKZ"/>

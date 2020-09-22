@@ -123,7 +123,7 @@ extension ScorepadViewController {
 extension HostController {
     
     func autoDeal() {
-        if (Scorecard.shared.autoPlayHands > 0 && (Scorecard.shared.autoPlayHands > 1 || Scorecard.game.handState.round <= Scorecard.shared.autoPlayGames)) && Scorecard.game.isHosting {
+        if (Scorecard.shared.autoPlayGames > 0 && (Scorecard.shared.autoPlayGames > 1 || Scorecard.game.handState.round <= Scorecard.shared.autoPlayHands)) && Scorecard.game.isHosting {
             // Automatically start the hand
             Utility.executeAfter(delay: 10 * Config.autoPlayTimeUnit, completion: {
                 self.present(nextView: .hand)
@@ -145,7 +145,7 @@ extension HandViewController {
     
     public func startAutoPlay() {
         // Automatically play the game
-        Scorecard.shared.getAutoPlayCount(completion: {
+        Scorecard.shared.getAutoPlayCount(from: self, completion: {
             if self.bidMode {
                 self.autoBid()
             } else {
@@ -155,7 +155,7 @@ extension HandViewController {
     }
     
     func autoBid() {
-        if Scorecard.shared.autoPlayHands > 0 && (Scorecard.shared.autoPlayHands > 1 || round <= Scorecard.shared.autoPlayGames) {
+        if Scorecard.shared.autoPlayGames > 0 && (Scorecard.shared.autoPlayGames > 1 || round <= Scorecard.shared.autoPlayHands) {
             let handsMade = Scorecard.game.scores.bidsMade(round: self.round)
             if Scorecard.game.roundPlayerNumber(enteredPlayerNumber: self.enteredPlayerNumber, round: self.round) == handsMade + 1 {
                 let cards = Scorecard.game.roundCards(round)
@@ -181,13 +181,13 @@ extension HandViewController {
                 }
             }
         } else {
-            Scorecard.shared.autoPlayHands = 0
             Scorecard.shared.autoPlayGames = 0
+            Scorecard.shared.autoPlayHands = 0
         }
     }
     
     func autoPlay() {
-        if Scorecard.shared.autoPlayHands > 0 && (Scorecard.shared.autoPlayHands > 1 || self.round <= Scorecard.shared.autoPlayGames) {
+        if Scorecard.shared.autoPlayGames > 0 && (Scorecard.shared.autoPlayGames > 1 || self.round <= Scorecard.shared.autoPlayHands) {
             if Scorecard.game?.handState.toPlay == Scorecard.game?.handState.enteredPlayerNumber {
                 for suitNumber in 1...Scorecard.game!.handState.hand.handSuits.count {
                     if self.suitEnabled[suitNumber-1] {
@@ -203,8 +203,8 @@ extension HandViewController {
                 }
             }
         } else {
-            Scorecard.shared.autoPlayHands = 0
             Scorecard.shared.autoPlayGames = 0
+            Scorecard.shared.autoPlayHands = 0
         }
     }
     
@@ -253,15 +253,15 @@ extension ClientController {
         switch descriptor {
         case "autoPlay":
             let dictionary = data as! [String : Int]
-            let hands = Scorecard.shared.autoPlayHands
-            let games = Scorecard.shared.autoPlayGames
-            if let autoPlayHands = dictionary["hands"] {
-                Scorecard.shared.autoPlayHands = autoPlayHands
-                if let autoPlayRounds = dictionary["games"] {
-                    Scorecard.shared.autoPlayGames = autoPlayRounds
+            let hands = Scorecard.shared.autoPlayGames
+            let games = Scorecard.shared.autoPlayHands
+            if let autoPlayGames = dictionary["games"] {
+                Scorecard.shared.autoPlayGames = autoPlayGames
+                if let autoPlayRounds = dictionary["hands"] {
+                    Scorecard.shared.autoPlayHands = autoPlayRounds
                 }
             }
-            if hands != Scorecard.shared.autoPlayHands || games != Scorecard.shared.autoPlayGames {
+            if hands != Scorecard.shared.autoPlayGames || games != Scorecard.shared.autoPlayHands {
                 // Changed - need to play if can
                 if self.activeView == .hand {
                     if let handViewController = self.activeViewController as? HandViewController,
@@ -306,9 +306,9 @@ extension GameSummaryViewController {
     internal func autoNewGame() {
         
         if Scorecard.game.isHosting {
-            Scorecard.shared.autoPlayHands = max(0, Scorecard.shared.autoPlayHands - 1)
+            Scorecard.shared.autoPlayGames = max(0, Scorecard.shared.autoPlayGames - 1)
             Scorecard.shared.sendAutoPlay()
-            if Scorecard.shared.autoPlayHands != 0 {
+            if Scorecard.shared.autoPlayGames != 0 {
                 // Play another one
                 Utility.executeAfter(delay: 20 * Config.autoPlayTimeUnit, completion: {
                     self.finishGame(returnMode: .newGame, advanceDealer: true, resetOverrides: false, confirm: false)
@@ -321,14 +321,13 @@ extension GameSummaryViewController {
 
 extension Scorecard {
     
-    public func getAutoPlayCount(completion: (()->())? = nil) {
-        ConfirmCountViewController.show(title: "Auto-play", message: "Enter the number of games you want to simulate", minimumValue: 1, handler: { (value) in
-            self.autoPlayHands = value
-            let round = (self.autoPlayHands == 1 ? Scorecard.game.maxEnteredRound : 1)
-            let rounds = (Scorecard.game.rounds - round + 1)
-            let defaultValue = (self.autoPlayHands == 1 ? round : rounds)
-            ConfirmCountViewController.show(title: "Auto-play", message: "Enter the number of hands you want to complete in the \(self.autoPlayHands > 1 ? "final " : "")game", defaultValue: defaultValue, minimumValue: round, maximumValue: rounds, handler: { (value) in
-                self.autoPlayGames = value
+    public func getAutoPlayCount(from viewController: ScorecardViewController, completion: (()->())? = nil) {
+        ConfirmCountViewController.show(from: viewController, title: "Auto-play", message: "Enter the number of games you want to simulate", minimumValue: 1, handler: { (value) in
+            self.autoPlayGames = value
+            let round = (self.autoPlayGames == 1 ? Scorecard.game.maxEnteredRound : 1)
+            let defaultValue = (self.autoPlayGames == 1 ? round : Scorecard.game.rounds)
+            ConfirmCountViewController.show(from: viewController, title: "Auto-play", message: "Enter the number of hands you want to complete in the \(self.autoPlayGames > 1 ? "final " : "")game", defaultValue: defaultValue, minimumValue: round, maximumValue: Scorecard.game.rounds, handler: { (value) in
+                self.autoPlayHands = value
                     self.sendAutoPlay()
                     completion?()
             })
@@ -336,8 +335,8 @@ extension Scorecard {
     }
     
     public func autoPlayData() -> [String : Any] {
-        return ["hands"  : self.autoPlayHands,
-                "games" : self.autoPlayGames]
+        return ["games"  : self.autoPlayGames,
+                "hands" : self.autoPlayHands]
     }
     
     public func sendAutoPlay(to peer: CommsPeer? = nil) {

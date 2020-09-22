@@ -13,7 +13,8 @@ import CloudKit
 public class Reachability {
     
     let monitor = NWPathMonitor()
-    var connected: Bool!
+    private var _connected: Bool?
+    public var connected: Bool? { _connected }
     
     init() {
         self.monitor.pathUpdateHandler = self.pathUpdateHandler
@@ -22,23 +23,23 @@ public class Reachability {
     
     private func pathUpdateHandler(path: NWPath) {
         var newConnected: Bool
-        if self.connected != nil && Utility.isSimulator {
+        if self._connected != nil && Utility.isSimulator {
             // Doesn't update status in simulator - just invert it
-            newConnected = !self.connected
+            newConnected = !self._connected!
         } else {
             newConnected = (path.status == .satisfied)
         }
-        if newConnected != self.connected {
-            self.connected = newConnected
-            Scorecard.shared.isNetworkAvailable = self.connected
-            if self.connected {
+        if newConnected != self._connected {
+            self._connected = newConnected
+            Scorecard.shared.isNetworkAvailable = self._connected!
+            if self._connected! {
                 // Now check icloud asynchronously
                 CKContainer.init(identifier: Config.iCloudIdentifier).accountStatus(completionHandler: { (accountStatus, errorMessage) -> Void in
                     let newValue = (accountStatus == .available)
                     if newValue != Scorecard.shared.isLoggedIn {
                         // Changed - update it and reawaken listeners
                         Scorecard.shared.isLoggedIn = newValue
-                        NotificationCenter.default.post(name: .connectivityChanged, object: self, userInfo: ["available" : self.connected!])
+                        NotificationCenter.default.post(name: .connectivityChanged, object: self, userInfo: ["available" : self._connected!])
                     }
                 })
             }
@@ -53,6 +54,18 @@ public class Reachability {
             action(available ?? false)
         }
         return observer
+    }
+    
+    public func waitForStatus() {
+        self.wait(count: 50)
+    }
+    
+    private func wait(count: Int) {
+        if count <= 50 && Scorecard.reachability.connected == nil {
+            Utility.executeAfter(delay: 0.01) {
+                self.wait(count: count + 1)
+            }
+        }
     }
 }
 

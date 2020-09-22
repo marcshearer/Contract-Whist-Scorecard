@@ -56,7 +56,6 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
     // MARK: - IB Outlets ============================================================================== -
     
     @IBOutlet private weak var banner: Banner!
-    @IBOutlet private weak var bannerHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var unselectedCollectionView: UICollectionView!
     @IBOutlet private weak var topSectionView: UIView!
     @IBOutlet private weak var selectedPlayersView: SelectedPlayersView!
@@ -318,7 +317,7 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
             self.continueButton.isHidden = false
             self.continueButton.isEnabled = !hidden
             self.banner.setButton("continue", isHidden: true)
-            self.bottomSectionHeightConstraint.constant = ((self.menuController?.isVisible() ?? false) ? 75 : 58) + (self.view.safeAreaInsets.bottom == 0 ? 8.0 : 0.0)
+            self.bottomSectionHeightConstraint.constant = ((self.menuController?.isVisible ?? false) ? 75 : 58) + (self.view.safeAreaInsets.bottom == 0 ? 8.0 : 0.0)
         }
         clearAllButton.isHidden = true // Left this in case we reinstate (selectedList.count > (self.selectionMode == .invitees ? 1 : 0))
         
@@ -415,8 +414,7 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
     private func setupButtons() {
         
         self.banner.set(rightButtons: [
-            BannerButton(title: "Continue", image: UIImage(named: "forward"), width: 100, action: self.continuePressed, menuHide: true, id: "continue")])
-        self.bannerHeightConstraint.constant = self.defaultBannerHeight
+                BannerButton(title: "Continue", image: UIImage(named: "forward"), width: 100, action: self.continuePressed, menuHide: true, id: "continue")])
         
         // Set cancel button and title
         self.continueButton.toCircle()
@@ -876,7 +874,7 @@ extension SelectionViewController {
     private func defaultViewColors() {
 
         self.view.backgroundColor = Palette.normal.background
-        self.topSectionView.backgroundColor = ((self.menuController?.isVisible() ?? false) ? Palette.normal.background : Palette.banner.background)
+        self.topSectionView.backgroundColor = ((self.menuController?.isVisible ?? false) ? Palette.normal.background : Palette.banner.background)
         self.clearAllButton.setBackgroundColor(Palette.buttonFace.background)
         self.clearAllButton.setTitleColor(Palette.buttonFace.text, for: .normal)
         self.continueButton.setBackgroundColor(Palette.continueButton.background)

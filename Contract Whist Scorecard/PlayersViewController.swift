@@ -46,7 +46,6 @@ class PlayersViewController: ScorecardViewController, PlayersViewDelegate, UICol
 
     // MARK: - IB Outlets ============================================================================== -
     @IBOutlet private weak var banner: Banner!
-    @IBOutlet private weak var bannerHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var collectionView: UICollectionView!
     
     // MARK: - IB Actions ============================================================================== -
@@ -279,11 +278,13 @@ class PlayersViewController: ScorecardViewController, PlayersViewDelegate, UICol
     
     private func setupButtons() {
         let font = UIFont.systemFont(ofSize: 16)
-        self.banner.set(lowerButtons: [
-            BannerButton(title: "Add", width: 140, action: self.addPlayerPressed, type: .shadow, menuHide: true, menuText: "Add Players", font: font, id: "add"),
-            BannerButton(title: "Remove", width: 140, action: self.removePlayerPressed, type: .shadow, menuHide: true, menuText: "Remove Players", font: font, id: "remove"),
-            BannerButton(title: "Cancel", width: 140, action: self.removePlayerCancelPressed, type: .shadow, menuHide: true, menuText: "End Removing Players", font: font, id: "cancel")], menuOption: .profiles)
-        self.bannerHeightConstraint.constant = (self.container == .none ? 120 : self.defaultBannerHeight)
+        self.banner.set(
+            lowerButtons: [
+                BannerButton(title: "Add", width: 140, action: self.addPlayerPressed, type: .shadow, menuHide: true, menuText: "Add Players", font: font, id: "add"),
+                BannerButton(title: "Remove", width: 140, action: self.removePlayerPressed, type: .shadow, menuHide: true, menuText: "Remove Players", font: font, id: "remove"),
+                BannerButton(title: "Cancel", width: 140, action: self.removePlayerCancelPressed, type: .shadow, menuHide: true, menuText: "End Removing Players", font: font, id: "cancel")],
+            menuOption: .profiles,
+            normalOverrideHeight: 120)
     }
     
     private func enableButtons() {
@@ -345,7 +346,7 @@ class PlayersViewController: ScorecardViewController, PlayersViewDelegate, UICol
         
         let playersViewController = PlayersViewController.create(completion: completion)
         
-        viewController.present(playersViewController, animated: true, completion: nil)
+        viewController.present(playersViewController, animated: true, container: .mainRight, completion: nil)
         
         return playersViewController
     }

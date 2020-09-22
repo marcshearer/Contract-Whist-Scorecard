@@ -20,7 +20,7 @@ enum ScorepadMode {
 class ScorepadViewController: ScorecardViewController,
                               UITableViewDataSource, UITableViewDelegate,
                               UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout,
-                              ScorecardAlertDelegate {
+                              ScorecardAlertDelegate, BannerDelegate {
  
     
     // MARK: - Class Properties ======================================================================== -
@@ -68,11 +68,14 @@ class ScorepadViewController: ScorecardViewController,
     private var observer: NSObjectProtocol?
     private var paddingGradientLayer: [CAGradientLayer] = []
     private var scoresSubscription: AnyCancellable?
+    private let finishButton = Banner.finishButton
+    private let scoreEntryButton = 1
 
     // UI component pointers
     private var imageCollectionView: UICollectionView!
     
     // MARK: - IB Outlets ============================================================================== -
+    @IBOutlet private weak var banner: Banner!
     @IBOutlet private weak var bannerContinuationHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var bannerContinuation: UIView!
     @IBOutlet private weak var bannerLogoView: BannerLogoView!
@@ -82,42 +85,24 @@ class ScorepadViewController: ScorecardViewController,
     @IBOutlet private weak var bodyTableView: UITableView!
     @IBOutlet private weak var footerTableView: UITableView!
     @IBOutlet public weak var scorepadView: UIView!
-    @IBOutlet private weak var scoreEntryButton: ShadowButton!
-    @IBOutlet private weak var finishButton: UIButton!
-    @IBOutlet private weak var titleView: UIView!
-    @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var tapGestureRecognizer: UITapGestureRecognizer!
     @IBOutlet private var paddingViewLines: [UIView]!
-    @IBOutlet private weak var bannerPaddingView: InsetPaddingView!
     @IBOutlet private weak var leftPaddingView: InsetPaddingView!
     @IBOutlet private weak var rightPaddingView: InsetPaddingView!
     @IBOutlet private var paddingViewLineWidth: [NSLayoutConstraint]!
 
     // MARK: - IB Actions ============================================================================== -
     
-    @IBAction internal func scorePressed(_ sender: Any) {
+    internal func scorePressed() {
         self.willDismiss()
         Scorecard.game.selectedRound = Scorecard.game.maxEnteredRound
         self.controllerDelegate?.didProceed()
     }
     
-    @IBAction private func finishGamePressed(_ sender: Any) {
-        if scorepadMode == .hosting || scorepadMode == .scoring {
-            self.alertDecision("Warning: This will clear the existing score card and start a new game.\n\n Are you sure you want to do this?", title: "Finish Game", okButtonText: "Confirm", okHandler: {
-            
-                Scorecard.shared.exitScorecard(advanceDealer: false, resetOverrides: true) {
-                    Utility.mainThread {
-                        self.willDismiss()
-                        self.controllerDelegate?.didCancel()
-                    }
-                }
-            })
-        } else  {
-            self.alertDecision(if: scorepadMode == .joining, "Warning: This will mean you exit from the game.\n\nAre you sure you want to do this?", okButtonText: "Confirm",
-                okHandler: {
-                    self.willDismiss()
-                    self.controllerDelegate?.didCancel()
-                })
+    internal func finishPressed() {
+        Scorecard.shared.warnExitGame(from: self, mode: scorepadMode) {
+            self.willDismiss()
+            self.controllerDelegate?.didCancel()
         }
     }
     
@@ -127,8 +112,10 @@ class ScorepadViewController: ScorecardViewController,
     
     @IBAction private func rightSwipe(recognizer:UISwipeGestureRecognizer) {
         if scorepadMode == .scoring {
-            if recognizer.state == .ended && !finishButton.isHidden && finishButton.isEnabled {
-                finishGamePressed(self.finishButton!)
+            let isHidden = banner.getButtonIsHidden(scoreEntryButton)
+            let isEnabled = banner.getButtonIsEnabled(scoreEntryButton)
+            if recognizer.state == .ended && !isHidden && isEnabled {
+                finishPressed()
             }
         }
     }
@@ -136,7 +123,7 @@ class ScorepadViewController: ScorecardViewController,
     @IBAction private func leftSwipe(recognizer:UISwipeGestureRecognizer) {
         if scorepadMode == .scoring {
             if recognizer.state == .ended {
-                self.scorePressed(scoreEntryButton!)
+                self.scorePressed()
             }
         }
     }
@@ -157,6 +144,9 @@ class ScorepadViewController: ScorecardViewController,
         
         // Subscribe to score changes
         self.setupScoresSubscription()
+        
+        // Setup banner
+        self.setupBanner()
     }
     
     override internal func viewDidAppear(_ animated: Bool) {
@@ -184,7 +174,7 @@ class ScorepadViewController: ScorecardViewController,
     
     override internal func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        if lastNavBarHeight != titleView.frame.height || lastViewHeight != scorepadView.frame.height {
+        if lastNavBarHeight != banner.height || lastViewHeight != scorepadView.frame.height {
             setupSize(to: scorepadView.safeAreaLayoutGuide.layoutFrame.size)
             self.headerTableView.layoutIfNeeded()
             self.paddingViewLineWidth.forEach { $0.constant = (ScorecardUI.landscapePhone() ? 3 : 0)}
@@ -192,7 +182,7 @@ class ScorepadViewController: ScorecardViewController,
             self.headerTableView.reloadData()
             self.bodyTableView.reloadData()
             self.footerTableView.reloadData()
-            lastNavBarHeight = titleView.frame.height
+            lastNavBarHeight = banner.frame.height
             lastViewHeight = scorepadView.frame.height
             self.setupBorders()
         }
@@ -303,7 +293,7 @@ class ScorepadViewController: ScorecardViewController,
     // MARK: - Alert delegate handlers =================================================== -
     
     internal func alertUser(reminder: Bool) {
-        self.scoreEntryButton.alertFlash(duration: 0.3, repeatCount: 3)
+        self.banner.alertFlash(scoreEntryButton, duration: 0.3, repeatCount: 3)
     }
     
     // MARK: - Image download handlers =================================================== -
@@ -385,7 +375,7 @@ class ScorepadViewController: ScorecardViewController,
         // Note headerHeight does not include the player name row since we haven't
         // worked this out yet
         
-        var floatCellHeight: CGFloat = (size.height - imageRowHeight - titleView.frame.height) / CGFloat(Scorecard.game.rounds + 2) // Adding 2 for name row in header and total row
+        var floatCellHeight: CGFloat = (size.height - imageRowHeight - banner.height) / CGFloat(Scorecard.game.rounds + 2) // Adding 2 for name row in header and total row
         floatCellHeight.round()
         
         cellHeight = CGFloat(Int(floatCellHeight))
@@ -395,14 +385,18 @@ class ScorepadViewController: ScorecardViewController,
             headerHeight += CGFloat(cellHeight)
             bannerContinuationHeight = 0.0
         } else {
-            headerHeight = size.height - (CGFloat(Scorecard.game.rounds+1) * cellHeight) - titleView.frame.height
+            headerHeight = size.height - (CGFloat(Scorecard.game.rounds + 1) * cellHeight) - banner.height
             imageRowHeight = min(headerHeight - minCellHeight, 50.0)
             bannerContinuationHeight = headerHeight - imageRowHeight - minCellHeight
         }
         
-        bannerContinuationHeightConstraint.constant = bannerContinuationHeight
+        var containerAdjustment: CGFloat = 0
+        if self.containerBanner {
+            containerAdjustment = Banner.containerHeight - headerHeight - Banner.normalHeight
+        }
+        bannerContinuationHeightConstraint.constant = bannerContinuationHeight + containerAdjustment
         headerViewHeightConstraint.constant = headerHeight - bannerContinuationHeight
-        footerViewHeightConstraint.constant = CGFloat(cellHeight) + self.view.safeAreaInsets.bottom
+        footerViewHeightConstraint.constant = CGFloat(cellHeight) + self.view.safeAreaInsets.bottom - containerAdjustment
 
         scoresHeight = min(ScorecardUI.screenHeight, CGFloat(Scorecard.game.rounds) * cellHeight, 600)
     }
@@ -481,25 +475,26 @@ class ScorepadViewController: ScorecardViewController,
         self.bodyTableView.reloadData()
         self.footerTableView.reloadData()
     }
+    
+    private func setupBanner() {
+        let scoreEntryButtonTitle = (Scorecard.game.gameComplete() ? "Scores" :
+                                    (scorepadMode == .hosting  || scorepadMode == .joining ? "Play" :
+                                     "Score"))
+        let scoreEntryButtonWidth = max(scoreEntryButtonTitle.labelWidth(font: BannerButton.defaultFont) + 16, 80)
+        let menuText = (Scorecard.game.gameComplete() ? "Return to Game Summary" :
+                       (scorepadMode == .hosting  || scorepadMode == .joining ? "Play Hand" :
+                        "Enter Score"))
+        self.banner.set(
+            menuTitle: "Scorepad",
+            rightButtons: [
+                BannerButton(title: scoreEntryButtonTitle, width: scoreEntryButtonWidth, action: self.scorePressed, type: .shadow, menuHide: true, menuText: menuText, id: scoreEntryButton)],
+            backgroundColor: Palette.banner,
+            containerOverrideHeight: Banner.normalHeight)
+    }
 
     private func formatButtons() {
-        
-        if Scorecard.game.gameComplete() {
-            // Game complete - allow return to game summary
-            scoreEntryButton.setTitle("Scores", for: .normal)
-            
-        } else if scorepadMode == .scoring {
-            // Scoring mode - enter score
-            scoreEntryButton.setTitle("Score", for: .normal)
-            
-        } else if scorepadMode == .hosting  || scorepadMode == .joining {
-            // Hosting a shared game
-            scoreEntryButton.setTitle("Play", for: .normal)
-            
-        }
-        
-        scoreEntryButton.isHidden = !(self.controllerDelegate?.canProceed ?? true)
-        finishButton.isHidden = !(self.controllerDelegate?.canCancel ?? true)
+        self.banner.setButton(scoreEntryButton, isHidden: !(self.controllerDelegate?.canProceed ?? true))
+        self.banner.setButton(finishButton, isHidden: !(self.controllerDelegate?.canCancel ?? true))
     }
     
     // MARK: - Utility methods to find or update specific cells ========================================== -
@@ -899,7 +894,7 @@ class ScorepadViewController: ScorecardViewController,
         } else {
             if collectionView.tag < 1000000 {
                 let round = collectionView.tag + 1
-                if (scorepadMode == .hosting || scorepadMode == .joining) && Scorecard.game!.dealHistory[round] != nil && (round < Scorecard.game!.handState.round || (round == Scorecard.game!.handState.round && Scorecard.game!.handState.finished)) {
+                if (scorepadMode == .hosting || scorepadMode == .joining) && Scorecard.game!.dealHistory[round] != nil && (round < Scorecard.game!.handState.round || (round == Scorecard.game!.handState.round && Scorecard.game!.gameComplete())) {
                     return true
                 } else if scorepadMode == .scoring {
                     return true
@@ -927,7 +922,11 @@ class ScorepadViewController: ScorecardViewController,
                     Scorecard.game.selectedRound = round
                 }
             } else if scorepadMode == .hosting || scorepadMode == .joining {
-                self.controllerDelegate?.didInvoke(.review, context: ["round" : round])
+                if self.gameDetailDelegate?.isVisible ?? false {
+                    self.gameDetailDelegate?.refresh(activeView: .scorepad, round: round)
+                } else {
+                    self.controllerDelegate?.didInvoke(.review, context: ["round" : round])
+                }
             }
         }
         if self.scorepadMode == .scoring {
@@ -998,17 +997,12 @@ extension ScorepadViewController {
         self.bannerLogoView.fillColor = Palette.bannerShadow.background
         self.bannerLogoView.strokeColor = Palette.banner.text
         self.bannerContinuation.backgroundColor = Palette.banner.background
-        self.bannerPaddingView.bannerColor = Palette.banner.background
         self.footerTableView.backgroundColor = Palette.total.background
         self.leftPaddingView.bannerColor = Palette.banner.background
-        self.titleLabel.textColor = Palette.banner.contrastText
-        self.titleView.backgroundColor = Palette.banner.background
         self.paddingViewLines.forEach { $0.backgroundColor = Palette.banner.background }
         self.paddingViewLines.forEach { $0.backgroundColor = Palette.banner.background }
         self.rightPaddingView.bannerColor = Palette.banner.background
         self.scorepadView.backgroundColor = Palette.normal.background
-        self.scoreEntryButton.setBackgroundColor(Palette.bannerShadow.background)
-        self.scoreEntryButton.setTitleColor(Palette.banner.text, for: .normal)
     }
 
     private func defaultCellColors(cell: ScorepadCollectionViewCell) {

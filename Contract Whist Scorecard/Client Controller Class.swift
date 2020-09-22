@@ -97,7 +97,6 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
         case .hand:
             if let handViewController = self.activeViewController as? HandViewController {
                 handViewController.refreshAll()
-                handViewController.stateController()
             }
             
         default:
@@ -115,6 +114,9 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
             
         case .hand:
             viewController = self.playHand()
+            
+        case .nextHand:
+            viewController = self.showNextHand(round: context?["round"] as? Int)
             
         case .scorepad:
             viewController = self.showScorepad(scorepadMode: (self.purpose == .playing ? .joining : .viewing))
@@ -215,23 +217,15 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
     
     override internal func didCancel(context: [String: Any]?) {
         switch self.activeView {
-        case .gamePreview:
+        case .gamePreview, .hand, .scorepad:
             // Exit
             Scorecard.game.resetValues()
             self.gamePreviewViewController = nil
             self.present(nextView: .exit)
             
-        case .hand:
-            // Link to scorepad
-            self.present(nextView: .scorepad)
-            
         case .roundSummary:
             // Go back to scorepad
             self.present(nextView: .scorepad)
-            
-        case .scorepad:
-            // Exit - game left
-            self.present(nextView: .exit)
             
         case .gameSummary:
             // Go back to scorepad
@@ -246,7 +240,11 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
         switch self.activeView {
         case .hand:
             // Link to scorecard or game summary
-            self.handComplete()
+            self.handComplete(round: context?["round"] as? Int)
+            
+        case .nextHand:
+            // Link back to (next) hand
+            self.present(nextView: .hand)
             
         case .scorepad:
             // Link to hand unless game is complete
@@ -441,7 +439,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
                     }
                     
                 case "played":
-                    _ = Scorecard.shared.processCardPlayed(data: data! as Any as! [String : Any], from: self)
+                    Scorecard.shared.processCardPlayed(data: data! as Any as! [String : Any], from: self)
                     
                 case "handState":
                     // Updated state to re-sync after a disconnect
@@ -695,12 +693,16 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
         return handViewController
     }
     
-    private func handComplete() {
+    private func handComplete(round: Int? = nil) {
         if Scorecard.game!.handState.finished && Scorecard.game.gameComplete() {
             _ = Scorecard.game.save()
             self.present(nextView: .gameSummary)
         } else {
-            self.present(nextView: .scorepad)
+            if self.gameDetailDelegate?.isVisible ?? false {
+                self.present(nextView: .nextHand, context: ["round" : round])
+            } else {
+                self.present(nextView: .scorepad)
+            }
         }
     }
     

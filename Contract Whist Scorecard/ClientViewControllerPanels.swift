@@ -40,7 +40,7 @@ extension PanelContainer {
 extension ClientViewController : PanelContainer {
     
     internal func panelLayoutSubviews() {
-        let menuVisible = self.menuController?.isVisible() ?? false
+        let menuVisible = self.menuController?.isVisible ?? false
         self.topSection.isHidden = menuVisible
         self.bottomSection.isHidden = menuVisible
         
@@ -61,7 +61,7 @@ extension ClientViewController : PanelContainer {
         self.peerTitleBarTopConstraint.constant = (menuVisible ? 20 : 8)
         
         // Set colors
-        self.banner.set(backgroundColor: (menuVisible ? Palette.dark.background : self.defaultBannerColor))
+        self.banner.set(backgroundColor: (menuVisible ? Palette.dark : self.defaultBannerColor))
         self.hostCollectionView.backgroundColor = (menuVisible ? UIColor.clear : Palette.buttonFace.background)
         
         // Set shadows and flow layouts
@@ -115,14 +115,19 @@ extension ClientViewController : PanelContainer {
                 }
             }
             // Just 1
+            if self.menuController?.isVisible ?? false {
+                // Losing menu - close it cleanly
+                self.menuController?.didDisappear()
+            }
+            
             let leftWidth = self.view.frame.width * 1
             let rightWidth = self.view.frame.width * 1
             self.leftPanelTrailingConstraint.constant = 0
             self.leftPanelWidthConstraint.constant = leftWidth
             self.rightPanelLeadingConstraint.constant = 0
             self.rightPanelWidthConstraint.constant =  rightWidth
-            if min(UIScreen.main.bounds.width, UIScreen.main.bounds.height) < 750 {
-                // Looks like we're on a phone
+            if ScorecardUI.phoneSize() {
+                // Looks like we're on a phone - no containers
                 self.containers = false
             }
         } while false

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ActionSheetViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UIPopoverPresentationControllerDelegate {
+class ActionSheetViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UIPopoverPresentationControllerDelegate, UIGestureRecognizerDelegate {
     
     private let titleHeight: CGFloat = 60
     private let messageHeight: CGFloat = 30
@@ -23,13 +23,21 @@ class ActionSheetViewController: UIViewController, UITableViewDataSource, UITabl
     @IBOutlet private weak var tableView: UITableView!
     @IBOutlet private weak var tableViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var tableViewBottomConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var tapGesture: UITapGestureRecognizer!
     
     // MARK: - View Overrides ========================================================================== -
 
+    @IBAction private func tapGesture(recognizer: UITapGestureRecognizer) {
+        self.dismiss(completion: self.cancelActions.last?.action)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.view.backgroundColor = UIColor.black.withAlphaComponent(0.3)
+        self.tableView.separatorColor = Palette.separator.background
+        
+        self.tapGesture.delegate = self
     }
     
     override func viewDidLayoutSubviews() {
@@ -49,6 +57,14 @@ class ActionSheetViewController: UIViewController, UITableViewDataSource, UITabl
         Utility.animate {
             self.tableViewBottomConstraint.constant = 0
         }
+    }
+    
+    internal func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        if touch.view == self.view {
+            return true
+         } else {
+            return false
+         }
     }
     
     // MARK: - TableView Overrides ===================================================================== -
@@ -145,17 +161,7 @@ class ActionSheetViewController: UIViewController, UITableViewDataSource, UITabl
         viewController.actions = actions
         viewController.cancelActions = cancelActions
 
-        let width = ScorecardUI.phoneSize() ? ScorecardUI.screenWidth : min(ScorecardUI.screenWidth, 400)
-        let height = viewController.tableViewHeight()
-        let popoverSize = CGSize(width: width, height: height)
-        
-        viewController.modalPresentationStyle = .overCurrentContext /*.popover
-        viewController.popoverPresentationController?.permittedArrowDirections = direction
-        viewController.preferredContentSize = popoverSize
-        viewController.popoverPresentationController?.sourceView = sourceView
-        viewController.popoverPresentationController?.sourceRect = sourceRect
-        viewController.popoverPresentationController?.delegate = viewController
-        viewController.isModalInPopover = true */
+        viewController.modalPresentationStyle = .overCurrentContext
         
         parentViewController.present(viewController, animated: false)
     }

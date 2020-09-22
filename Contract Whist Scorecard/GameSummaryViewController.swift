@@ -15,7 +15,7 @@ enum GameSummaryReturnMode {
     case newGame
 }
 
-class GameSummaryViewController: ScorecardViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, SyncDelegate, UIPopoverControllerDelegate, ButtonDelegate {
+class GameSummaryViewController: ScorecardViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, SyncDelegate, UIPopoverControllerDelegate, ButtonDelegate, BannerDelegate {
 
     // Main state properties
     private let sync = Sync()
@@ -60,6 +60,8 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
     private let awards = Awards()
     private var awardList: [Award] = []
     private var startConfetti = true
+    private var playAgain = 1
+    private var stopPlaying = 2
     
     // Completion state
     private var completionMode: GameSummaryReturnMode = .resume
@@ -72,13 +74,13 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
 
     // MARK: - IB Outlets ============================================================================== -
     
+    @IBOutlet private weak var banner: Banner!
     @IBOutlet private weak var confettiView: ConfettiView!
     @IBOutlet private weak var topArea: UIView!
     @IBOutlet private weak var middleArea: UIView!
     @IBOutlet private weak var bottomArea: UIView!
     @IBOutlet private weak var actionButtonView: UIView!
     @IBOutlet private var actionButtonViewHeight: NSLayoutConstraint!
-    @IBOutlet private weak var syncMessage: UILabel!
     @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet private weak var winnerCollectionView: UICollectionView!
     @IBOutlet private weak var winnerCollectionViewWidth: NSLayoutConstraint!
@@ -92,25 +94,24 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
     @IBOutlet private weak var awardsCollectionViewHeight: NSLayoutConstraint!
     @IBOutlet private weak var playAgainButton: ImageButton!
     @IBOutlet private var actionButtons: [ImageButton]!
-    @IBOutlet private weak var scorecardButton: UIButton!
     @IBOutlet private weak var rightSwipeGesture: UISwipeGestureRecognizer!
     @IBOutlet private weak var tapGesture: UITapGestureRecognizer!
     
     // MARK: - IB Actions ============================================================================== -
     
-    @IBAction func scorecardPressed(_ sender: Any) {
+    @IBAction func finishPressed() {
         // Unwind to scorepad with current game intact
         self.confettiView.stop(immediate: true)
         self.controllerDelegate?.didCancel()
     }
     
     @IBAction func rightSwipe(recognizer:UISwipeGestureRecognizer) {
-        self.scorecardPressed(self)
+        self.finishPressed()
     }
     
     @IBAction func tapGestureReceived(recognizer:UITapGestureRecognizer) {
         if gameSummaryMode == .viewing {
-            self.scorecardPressed(self)
+            self.finishPressed()
         } else {
             // Stop confetti if it is falling and disable this tap gesture
             self.confettiView.stop()
@@ -132,12 +133,16 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
         self.excludeHistory = !Scorecard.activeSettings.saveHistory
         self.excludeStats = self.excludeHistory || !Scorecard.activeSettings.saveStats
         
+        // Setup banner
+        self.setupBanner()
+        
         // Setup buttons / swipes
         if gameSummaryMode != .scoring && gameSummaryMode != .hosting {
             self.playAgainButton.isEnabled = false
             self.playAgainButton.alpha = 0.3
+            self.banner.setButton(playAgain, isHidden: true)
         }
-        
+                
         // Work out who's won
         calculateWinner()
     }
@@ -365,6 +370,20 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
     
    // MARK: - Utility Routines ======================================================================== -
 
+    private func setupBanner() {
+        
+        self.banner.set(
+            menuTitle: "Game Summary",
+            nonBannerButtonsAfter: [
+                BannerButton(action: playAgainPressed, menuText: "Play Again", menuSpaceBefore: 20, id: playAgain),
+                BannerButton(action: stopPlayingPressed, menuText: "Stop Playing", id: stopPlaying)],
+            backgroundColor: Palette.roomInterior,
+            titleFont: UIFont.systemFont(ofSize: 18),
+            titleAlignment: .center,
+            containerOverrideHeight: Banner.normalHeight)
+        
+    }
+    
     private func setupSize() {
         
         let totalWidth = self.topArea.frame.width
@@ -636,7 +655,7 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
             view.isUserInteractionEnabled = false
             activityIndicator.startAnimating()
             self.sync.delegate = self
-            self.scorecardButton.isHidden = true
+            self.banner.setButton(Banner.finishButton, isHidden: true)
             _ = self.sync.synchronise(waitFinish: true, okToSyncWithTemporaryPlayerUUIDs: true)
         } else {
             syncCompletion(0)
@@ -647,7 +666,7 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
         Utility.mainThread {
             if let nextStage = SyncStage(rawValue: stage.rawValue + 1) {
                 let message = Sync.stageActionDescription(stage: nextStage)
-                self.syncMessage.text = "Syncing: \(message)"
+                self.banner.set(title: "Sync: \(message)", updateMenuTitle: false)
             }
         }
     }
@@ -710,7 +729,6 @@ extension GameSummaryViewController {
         self.awardsTitleBar.set(textColor: Palette.buttonFace.text)
         self.actionButtons.forEach{(button) in button.set(titleColor: Palette.buttonFace.text)}
         self.actionButtons.forEach{(button) in button.set(faceColor: Palette.buttonFace.background)}
-        self.syncMessage.textColor = Palette.darkHighlight.text
         self.view.backgroundColor = Palette.roomInterior.background
     }
 

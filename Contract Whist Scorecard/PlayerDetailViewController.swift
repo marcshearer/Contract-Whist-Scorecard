@@ -633,7 +633,7 @@ class PlayerDetailViewController: ScorecardViewController, PlayerDetailViewDeleg
     }
     
     private func setOtherPanes(isEnabled: Bool) {
-        self.rootViewController?.menuController?.setAll(isEnabled: isEnabled)
+        self.menuController?.setAll(isEnabled: isEnabled)
         self.playersViewDelegate?.set(isEnabled: isEnabled)
     }
     

@@ -45,7 +45,6 @@ class SelectPlayersViewController: ScorecardViewController, SyncDelegate, Button
     @IBOutlet private weak var contentView: UIView!
     @IBOutlet private weak var contentViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var banner: Banner!
-    @IBOutlet private weak var bannerHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var bottomSection: UIView!
     @IBOutlet private weak var inputClippingContainerView: UIView!
     @IBOutlet private weak var inputClippingContainerTopConstraint: NSLayoutConstraint!
@@ -99,10 +98,9 @@ class SelectPlayersViewController: ScorecardViewController, SyncDelegate, Button
         super.viewDidLayoutSubviews()
 
         if self.firstTime || self.rotated {
-            self.bannerHeightConstraint.constant = self.defaultBannerHeight
             self.contentViewHeightConstraint.constant =
                 (ScorecardUI.landscapePhone() ? ScorecardUI.screenWidth
-                    : self.view.frame.height - self.view.safeAreaInsets.top - self.view.safeAreaInsets.bottom - self.bannerHeightConstraint.constant)
+                    : self.view.frame.height - self.view.safeAreaInsets.top - self.view.safeAreaInsets.bottom - self.banner.height)
             self.contentView.layoutIfNeeded()
             self.setupSizes()
             self.setupControls()
@@ -323,7 +321,7 @@ class SelectPlayersViewController: ScorecardViewController, SyncDelegate, Button
     // MARK: - View defaults ============================================================================ -
     
     private func setupDefaultColors() {
-        self.view.backgroundColor = self.defaultBannerColor
+        self.view.backgroundColor = self.defaultBannerColor.background
         
         self.downloadPlayersTitleBar.set(faceColor: Palette.buttonFace.background)
         self.downloadPlayersTitleBar.set(textColor: Palette.buttonFace.text)

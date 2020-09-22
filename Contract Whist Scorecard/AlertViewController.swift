@@ -137,7 +137,7 @@ class AlertViewController: UIViewController, UIPopoverPresentationControllerDele
         viewController.otherHandler = otherHandler
         
         let (width, _) = viewController.setupWidths()
-        let height = AlertViewController.textHeight(width: width - 16, font: UIFont.systemFont(ofSize: 14.0), text: message ) + 107
+        let height = message.labelHeight(width: width - 16, font: UIFont.systemFont(ofSize: 14.0)) + 107
         
         let sourceView = parentViewController.view
         let sourceRect = CGRect(origin: CGPoint(x: sourceView!.frame.width / 2, y: sourceView!.frame.height / 2), size: CGSize())
@@ -154,14 +154,4 @@ class AlertViewController: UIViewController, UIPopoverPresentationControllerDele
         
         parentViewController.present(viewController, animated: false)
     }
-    
-    private static func textHeight(width: CGFloat, font: UIFont, text: String) -> CGFloat {
-        let label = UILabel(frame: CGRect(x: 0, y: 0, width: width, height: CGFloat.greatestFiniteMagnitude))
-        label.numberOfLines = 0
-        label.font = font
-        label.text = text
-        label.sizeToFit()
-        return label.frame.height
-    }
-    
 }

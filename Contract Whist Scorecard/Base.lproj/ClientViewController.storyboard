@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="landscape" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -19,7 +21,7 @@
                         <subviews>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zmp-Pb-RbJ" userLabel="Left Container">
                                 <rect key="frame" x="-300" y="0.0" width="300" height="414"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <accessibility key="accessibilityConfiguration" identifier="LeftContainer"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="300" id="rFr-J4-RNI"/>
@@ -54,7 +56,7 @@ Played</string>
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <accessibility key="accessibilityConfiguration" identifier="RightPanel"/>
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="Liw-Kx-YGP" secondAttribute="trailing" constant="30" id="2mB-ik-fz0"/>
@@ -83,12 +85,13 @@ Played</string>
                                             <userDefinedRuntimeAttribute type="string" keyPath="title" value="W H I S T"/>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
+                                            <outlet property="bannerHeightConstraint" destination="WJj-L2-o8a" id="BNU-7c-Eke"/>
                                             <outlet property="parentViewController" destination="iu4-6y-nl5" id="Df6-sQ-sMT"/>
                                         </connections>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YSU-nf-o4R" customClass="InsetPaddingView" customModule="Whist_2" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="44" height="414"/>
-                                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="baT-Lm-DyX" userLabel="Top Section">
                                         <rect key="frame" x="44" y="44" width="202" height="370"/>
@@ -121,7 +124,7 @@ Played</string>
                                                 <color key="backgroundColor" name="Clear"/>
                                                 <accessibility key="accessibilityConfiguration" identifier="thisPlayerOverlap"/>
                                             </view>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rhg-YK-v6u" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rhg-YK-v6u" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
                                                 <rect key="frame" x="87" y="321" width="28" height="28"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="28" id="M3g-Di-BnU"/>
@@ -186,12 +189,12 @@ Played</string>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0OQ-Wp-Xtp" customClass="PlayerSelectionView" customModule="Whist_2" customModuleProvider="target">
                                         <rect key="frame" x="246" y="0.0" width="0.0" height="393"/>
+                                        <viewLayoutGuide key="safeArea" id="hea-F5-QBf"/>
                                         <color key="backgroundColor" name="Background"/>
                                         <constraints>
                                             <constraint firstAttribute="width" id="9iF-tu-zqC"/>
                                             <constraint firstAttribute="height" id="zrf-Q7-qL5"/>
                                         </constraints>
-                                        <viewLayoutGuide key="safeArea" id="hea-F5-QBf"/>
                                         <variation key="default">
                                             <mask key="constraints">
                                                 <exclude reference="9iF-tu-zqC"/>
@@ -241,7 +244,7 @@ Played</string>
                                                                             <subviews>
                                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aoT-Gb-8kN" customClass="ImageButton" customModule="Whist_2" customModuleProvider="target">
                                                                                     <rect key="frame" x="6" y="0.0" width="120" height="128"/>
-                                                                                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                                                                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                                                     <userDefinedRuntimeAttributes>
                                                                                         <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
                                                                                             <real key="value" value="8"/>
@@ -484,7 +487,7 @@ Played</string>
                                                                 </connections>
                                                             </collectionView>
                                                         </subviews>
-                                                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                         <accessibility key="accessibilityConfiguration" identifier="peerCollectionContnent"/>
                                                         <constraints>
                                                             <constraint firstAttribute="bottom" secondItem="Lq4-Ij-9pl" secondAttribute="bottom" id="0YD-js-b10"/>
@@ -612,7 +615,7 @@ Played</string>
                                                     <outlet property="delegate" destination="iu4-6y-nl5" id="2zC-17-FhJ"/>
                                                 </connections>
                                             </view>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KF8-nE-69M" userLabel="Settings Badge" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KF8-nE-69M" userLabel="Settings Badge" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
                                                 <rect key="frame" x="177" y="275" width="20" height="20"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="20" id="70S-62-QpK"/>
@@ -714,6 +717,7 @@ Played</string>
                                         </variation>
                                     </view>
                                 </subviews>
+                                <viewLayoutGuide key="safeArea" id="N76-hf-VXY"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <accessibility key="accessibilityConfiguration" identifier="MainContainer"/>
                                 <gestureRecognizers/>
@@ -768,7 +772,6 @@ Played</string>
                                     <constraint firstItem="X53-w8-J5S" firstAttribute="top" secondItem="e3D-oK-CzW" secondAttribute="bottom" id="xhR-bu-qfe"/>
                                     <constraint firstItem="YSU-nf-o4R" firstAttribute="top" secondItem="hFM-Q5-ViO" secondAttribute="top" id="yGf-ho-TOo"/>
                                 </constraints>
-                                <viewLayoutGuide key="safeArea" id="N76-hf-VXY"/>
                                 <variation key="default">
                                     <mask key="constraints">
                                         <exclude reference="M1T-vp-Xk5"/>
@@ -859,6 +862,7 @@ Played</string>
                                 </variation>
                             </view>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="55m-ha-v4u"/>
                         <color key="backgroundColor" name="Clear"/>
                         <constraints>
                             <constraint firstItem="4k6-G2-xLf" firstAttribute="leading" secondItem="hFM-Q5-ViO" secondAttribute="leading" id="2Dq-Z9-raE"/>
@@ -876,14 +880,12 @@ Played</string>
                             <constraint firstAttribute="bottom" secondItem="hbD-Y0-uhD" secondAttribute="bottom" id="tZY-ya-1RD"/>
                             <constraint firstItem="hbD-Y0-uhD" firstAttribute="top" secondItem="Ibw-xE-9yM" secondAttribute="top" id="vXM-4K-MNi"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="55m-ha-v4u"/>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="T3J-B5-Pwe" appends="YES" id="JTR-lD-y0f"/>
                         </connections>
                     </view>
                     <connections>
                         <outlet property="banner" destination="Clx-ll-10L" id="TH8-kA-9wb"/>
-                        <outlet property="bannerHeightConstraint" destination="WJj-L2-o8a" id="dlX-qb-zP2"/>
                         <outlet property="bottomSection" destination="7pG-RR-uCS" id="gnf-zo-ShE"/>
                         <outlet property="bottomSectionBottomConstraint" destination="inc-aR-TRM" id="ggs-wg-usb"/>
                         <outlet property="bottomSectionTrailingConstraint" destination="Ibo-5M-oqI" id="Yin-EP-iJX"/>
@@ -972,5 +974,8 @@ Played</string>
         <namedColor name="Clear">
             <color red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
     </resources>
 </document>

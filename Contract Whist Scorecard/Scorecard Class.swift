@@ -77,8 +77,8 @@ class Scorecard {
     public var logService: CommsClientServiceDelegate!
     
     // Variables for test extensions
-    public var autoPlayHands: Int = 0
     public var autoPlayGames: Int = 0
+    public var autoPlayHands: Int = 0
     
     // Class to pass state to watch
     public var watchManager: WatchManager!
@@ -348,6 +348,24 @@ class Scorecard {
         }
     }
     
+    public func warnExitGame(from viewController: ScorecardViewController, mode: ScorepadMode, completion: @escaping ()->()) {
+        if  mode == .hosting || mode == .scoring {
+            viewController.alertDecision("Warning: This will clear the existing score card and start a new game.\n\n Are you sure you want to do this?", title: "Finish Game", okButtonText: "Confirm", okHandler: {
+            
+                Scorecard.shared.exitScorecard(advanceDealer: false, resetOverrides: true) {
+                    Utility.mainThread {
+                        completion()
+                    }
+                }
+            })
+        } else  {
+            viewController.alertDecision(if: mode == .joining, "Warning: This will mean you exit from the game.\n\nAre you sure you want to do this?", okButtonText: "Confirm",
+                okHandler: {
+                    completion()
+                })
+        }
+    }
+    
     public func checkNetworkConnection(action: (()->())? = nil) {
         // First check network
         Utility.mainThread {
@@ -409,12 +427,8 @@ class Scorecard {
         }
     }
     
-    func reCenterPopup(_ viewController: UIViewController, ignoreScorepad: Bool = false) {
-        // Either recenters in parent or if top provided makes that the vertical top
-        
-        let verticalCenter = UIScreen.main.bounds.midY
-        
-        viewController.popoverPresentationController?.sourceRect = CGRect(origin: CGPoint(x: UIScreen.main.bounds.midX, y: verticalCenter), size: CGSize())
+    func reCenterPopup(_ viewController: UIViewController) {
+        viewController.popoverPresentationController?.sourceRect = CGRect(origin: CGPoint(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY), size: CGSize())
     }
     
     func showSummaryImage(_ summaryButton: UIButton) {

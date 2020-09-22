@@ -17,7 +17,7 @@ class LocationViewController: ScorecardViewController, UITableViewDataSource, UI
     // Properties to pass state
     private var useCurrentLocation = true
     private var mustChange = false
-    private var bannerColor: UIColor?
+    private var bannerColor: PaletteColor?
     private var completion: ((GameLocation?)->())?
 
     // Local class variables
@@ -36,7 +36,6 @@ class LocationViewController: ScorecardViewController, UITableViewDataSource, UI
     // MARK: - IB Outlets ============================================================================== -
     
     @IBOutlet private weak var banner: Banner!
-    @IBOutlet private weak var bannerHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var locationMapView: MKMapView!
     @IBOutlet private weak var searchBar: UISearchBar!
     @IBOutlet private weak var searchBarBackgroundView: UIView!
@@ -143,16 +142,16 @@ class LocationViewController: ScorecardViewController, UITableViewDataSource, UI
         // Set colors of banner
         if let bannerColor = self.bannerColor {
             self.banner.set(backgroundColor: bannerColor, titleColor: Palette.tableTop.text)
-            self.bannerContinuationView.backgroundColor = bannerColor
-            self.searchBarBackgroundView.backgroundColor = bannerColor
-            self.locationTableView.backgroundColor = bannerColor
+            self.bannerContinuationView.backgroundColor = bannerColor.background
+            self.searchBarBackgroundView.backgroundColor = bannerColor.background
+            self.locationTableView.backgroundColor = bannerColor.background
         }
         
         if self.locationTableViewHeight.constant != 0.0 {
             self.showLocationList()
         }
         
-        self.bottomSectionHeightConstraint.constant = ((self.menuController?.isVisible() ?? false) ? 75 : 58) + (self.view.safeAreaInsets.bottom == 0 ? 8.0 : 0.0)
+        self.bottomSectionHeightConstraint.constant = ((self.menuController?.isVisible ?? false) ? 75 : 58) + (self.view.safeAreaInsets.bottom == 0 ? 8.0 : 0.0)
     }
     
     override func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
@@ -332,14 +331,12 @@ class LocationViewController: ScorecardViewController, UITableViewDataSource, UI
     private func setupButtons() {
         
         // Add banner continue button
-        self.banner.set(rightButtons: [
-        BannerButton(title: "Continue", image: UIImage(named: "forward"), width: 100, action: self.continuePressed, menuHide: true, id: "continue")])
+        self.banner.set(
+            rightButtons: [
+                BannerButton(title: "Continue", image: UIImage(named: "forward"), width: 100, action: self.continuePressed, menuHide: true, id: "continue")])
         
         // Set continue button and title
         self.continueButton.toCircle()
-        
-        // Set banner height
-        self.bannerHeightConstraint.constant = self.defaultBannerHeight
         
         self.hideFinishButtons()
     }
@@ -548,7 +545,7 @@ class LocationViewController: ScorecardViewController, UITableViewDataSource, UI
     
     // MARK: - Function to present and dismiss this view ==============================================================
     
-    class public func show(from viewController: ScorecardViewController, appController: ScorecardAppController? = nil, gameLocation: GameLocation, useCurrentLocation: Bool = true, mustChange: Bool = false, bannerColor: UIColor? = nil, completion: ((GameLocation?)->())? = nil) -> LocationViewController {
+    class public func show(from viewController: ScorecardViewController, appController: ScorecardAppController? = nil, gameLocation: GameLocation, useCurrentLocation: Bool = true, mustChange: Bool = false, bannerColor: PaletteColor? = nil, completion: ((GameLocation?)->())? = nil) -> LocationViewController {
         
         if appController != nil && completion != nil {
             fatalError("Completion not used in app controller")
@@ -591,7 +588,7 @@ extension LocationViewController {
     private func defaultViewColors() {
 
         self.activityIndicator.color = Palette.normal.text
-        self.banner.set(backgroundColor: Palette.tableTop.background, titleColor: Palette.tableTop.text)
+        self.banner.set(backgroundColor: Palette.tableTop)
         self.bannerContinuationView.backgroundColor = Palette.tableTop.background
         self.locationTableView.backgroundColor = Palette.tableTop.background
         self.locationTableView.separatorColor = Palette.normal.background

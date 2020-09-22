@@ -21,17 +21,25 @@ enum MenuOption {
     case cancelChangePlayer
 }
 
-struct Option {
-    let title: String
-    let menuOption: MenuOption?
-    let action: (()->())?
-    let spaceBefore: CGFloat
+class Option {
+    fileprivate let title: String
+    fileprivate let releaseTitle: String?
+    fileprivate let titleColor: UIColor?
+    fileprivate let menuOption: MenuOption?
+    fileprivate let action: (()->())?
+    fileprivate let releaseAction: (()->())?
+    fileprivate let spaceBefore: CGFloat
+    fileprivate var pressed: Bool
     
-    init(title: String, menuOption: MenuOption? = nil, spaceBefore:CGFloat = 0.0, action: (()->())? = nil) {
+    init(title: String, releaseTitle: String? = nil, titleColor: UIColor? = nil, menuOption: MenuOption? = nil, spaceBefore:CGFloat = 0.0, action: (()->())? = nil, releaseAction: (()->())? = nil) {
         self.title = title
+        self.releaseTitle = releaseTitle
+        self.titleColor = titleColor
         self.menuOption = menuOption
         self.spaceBefore = spaceBefore
         self.action = action
+        self.releaseAction = releaseAction
+        self.pressed = false
     }
 }
 
@@ -39,7 +47,9 @@ protocol MenuController {
     
     var currentOption: MenuOption {get}
     
-    func isVisible() -> Bool
+    var isVisible: Bool {get}
+    
+    func didDisappear()
     
     func add(suboptions: [Option], to option: MenuOption, on container: Container, highlight: Int?, disableOptions: Bool)
     
@@ -149,8 +159,17 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
     
     // MARK: - Menu Delegates ===================================================================== -
     
-    internal func isVisible() -> Bool {
-        return self.view.frame.width > 0
+    internal var isVisible: Bool {
+        return self.view.frame.maxX > 0
+    }
+    
+    internal func didDisappear() {
+        // Release any pressed press and hold buttons
+        for option in self.suboptions {
+            if option.pressed {
+                option.releaseAction?()
+            }
+        }
     }
     
     internal func setAll(isEnabled: Bool) {
@@ -288,8 +307,8 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
             }
         } else {
             let disabled = self.disableAll
-            cell.titleLabel.text = "      \(option.title)"
-            cell.titleLabel.textColor = (self.suboptionHighlight == index ? Palette.leftSidePanel.themeText : (disabled ? Palette.normal.faintText : Palette.leftSidePanel.text))
+            cell.titleLabel.text = "      \((option.pressed ? option.releaseTitle! : option.title))"
+            cell.titleLabel.textColor = option.titleColor ?? (self.suboptionHighlight == index ? Palette.leftSidePanel.themeText : (disabled ? Palette.normal.faintText : Palette.leftSidePanel.text))
             cell.titleLabel.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
             cell.isUserInteractionEnabled = !disabled
         }
@@ -305,10 +324,19 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
         let (option, mainOption, index) = self.getOption(tag: tableView.tag, row: indexPath.row)
         
         var changed = false
+        var action = option.action
         if mainOption {
             changed = (option.menuOption != self.currentOption)
         } else {
-            changed = (self.suboptionHighlight == nil || self.suboptionHighlight != index)
+            if let releaseAction = option.releaseAction, let _ = option.releaseTitle {
+                if option.pressed {
+                    action = releaseAction
+                }
+                option.pressed.toggle()
+                changed = true
+            } else {
+                changed = (self.suboptionHighlight == nil || self.suboptionHighlight != index)
+            }
         }
         
         if changed {
@@ -322,8 +350,8 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
             self.reloadData()
             
             // Execute option/action
-            if let action = option.action {
-                action()
+            if action != nil {
+                action?()
             } else if let menuOption = option.menuOption {
                 self.dismissAndSelectOption(option: menuOption, changeOption: mainOption)
             }

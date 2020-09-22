@@ -182,14 +182,7 @@ class HiddenTextField : UITextField {
     }
 }
 
-extension NSMutableAttributedString {
-    
-    static func + (left: NSMutableAttributedString, right: NSMutableAttributedString) -> NSMutableAttributedString {
-        let result = NSMutableAttributedString()
-        result.append(left)
-        result.append(right)
-        return result
-    }
+extension NSAttributedString {
     
     convenience init(_ string: String, color: UIColor? = nil, font: UIFont? = nil) {
         var attributes: [NSAttributedString.Key : Any] = [:]
@@ -202,6 +195,52 @@ extension NSMutableAttributedString {
         }
         
         self.init(string: string, attributes: attributes)
+    }
+    
+    static func + (left: NSAttributedString, right: NSAttributedString) -> NSAttributedString {
+        let result = NSMutableAttributedString()
+        result.append(left)
+        result.append(right)
+        return result
+    }
+    
+    static func + (left: NSAttributedString, right: String) -> NSAttributedString {
+        let result = NSMutableAttributedString()
+        result.append(left)
+        result.append(NSAttributedString(right))
+        return result
+    }
+    
+    func labelHeight(width: CGFloat? = nil, font: UIFont? = nil) -> CGFloat {
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude))
+        label.numberOfLines = (width == nil ? 1 : 0)
+        if let font = font {
+            label.font = font
+        }
+        label.attributedText = self
+        label.sizeToFit()
+        return label.frame.height
+    }
+
+    func labelWidth(height: CGFloat? = nil, font: UIFont? = nil) -> CGFloat {
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: CGFloat.greatestFiniteMagnitude, height: height ?? 30))
+        label.numberOfLines = (height == nil ? 1 : 0)
+        if let font = font {
+            label.font = font
+        }
+        label.attributedText = self
+        label.sizeToFit()
+        return label.frame.width
+    }
+}
+
+extension NSMutableAttributedString {
+    
+    static func + (left: NSMutableAttributedString, right: NSMutableAttributedString) -> NSMutableAttributedString {
+        let result = NSMutableAttributedString()
+        result.append(left)
+        result.append(right)
+        return result
     }
 }
 

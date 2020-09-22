@@ -103,7 +103,7 @@ class ViewGroup: UIView {
             self.contentView.removeConstraint(constraint)
         }
         self.constraintList = []
-        if layout {
+        if false && layout { // Not sure we can do this
             self.contentView.setNeedsLayout()
             self.contentView.layoutIfNeeded()
         }

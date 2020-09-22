@@ -10,12 +10,20 @@ import UIKit
 import Combine
 
 protocol GameDetailDelegate {
-    func refresh(activeView: ScorecardView?)
+    
+    var isVisible: Bool {get}
+    
+    func refresh(activeView: ScorecardView?, round: Int?)
 }
 
 extension GameDetailDelegate {
+    
     func refresh() {
-        refresh(activeView: nil)
+        refresh(activeView: nil, round: nil)
+    }
+    
+    func refresh(activeView: ScorecardView?) {
+        refresh(activeView: activeView, round: nil)
     }
 }
 
@@ -53,15 +61,24 @@ class GameDetailPanelViewController: ScorecardViewController, UITableViewDataSou
         self.cancelScoresSubscription()
     }
     
-    internal func refresh(activeView: ScorecardView?) {
+    // MARK: - Menu Delegates ===================================================================== -
+    
+    internal var isVisible: Bool {
+        return self.view.frame.minX < self.rootViewController.view.frame.width
+    }
+    
+    // MARK: - Refresh routines =================================================================== -
+    
+    internal func refresh(activeView: ScorecardView?, round: Int? = nil) {
         let scorepadView = ((activeView ?? self.appController?.activeView) == .scorepad)
-        self.scoresView.isHidden = scorepadView
-        self.dealView.isHidden = !scorepadView
-        if scorepadView {
+        let dealView = scorepadView && self.appController?.controllerType != .scoring
+        self.scoresView.isHidden = dealView
+        self.dealView.isHidden = !dealView
+        if dealView {
+            self.refreshHand(specificRound: round)
+        } else {
             self.refreshTitle()
             self.refreshScores()
-        } else {
-            self.refreshHand()
         }
     }
     
@@ -73,10 +90,14 @@ class GameDetailPanelViewController: ScorecardViewController, UITableViewDataSou
             self.overUnderLabel.text = ""
         } else {
             self.roundLabelWidthConstraint.constant = 100
-            let totalRemaining = Scorecard.game.remaining(playerNumber: 0, round: Scorecard.game.maxEnteredRound, mode: Mode.bid)
-            let overUnder = NSMutableAttributedString("     \(abs(Int64(totalRemaining))) \(totalRemaining >= 0 ? "under" : "over")", color: (totalRemaining == 0 ? Palette.contractEqual : (totalRemaining > 0 ? Palette.contractUnder : Palette.contractOver)))
             self.roundLabel.attributedText = Scorecard.game.roundTitle(Scorecard.game.maxEnteredRound)
-            self.overUnderLabel.attributedText = overUnder
+            if !Scorecard.game.roundStarted(Scorecard.game.maxEnteredRound) {
+                self.overUnderLabel.text = ""
+            } else {
+                let totalRemaining = Scorecard.game.remaining(playerNumber: 0, round: Scorecard.game.maxEnteredRound, mode: Mode.bid)
+                let overUnder = NSMutableAttributedString("     \(abs(Int64(totalRemaining))) \(totalRemaining >= 0 ? "under" : "over")", color: (totalRemaining == 0 ? Palette.contractEqual : (totalRemaining > 0 ? Palette.contractUnder : Palette.contractOver)))
+                self.overUnderLabel.attributedText = overUnder
+            }
         }
     }
     
@@ -86,30 +107,31 @@ class GameDetailPanelViewController: ScorecardViewController, UITableViewDataSou
     }
     
     private func refreshHand(specificRound: Int? = nil) {
-        var round: Int
-        if specificRound != nil {
-            round = specificRound!
-        } else {
-            // Use latest round
-            round = Scorecard.game.maxEnteredRound
-            if !Scorecard.game.roundComplete(round) {
-                round -= 1
-            }
+        
+        var latestRound = Scorecard.game.maxEnteredRound
+        if !Scorecard.game.roundComplete(latestRound) {
+            latestRound -= 1
         }
-            
+
+        let round = specificRound ?? latestRound
+
         if round < 1 || thisPlayer == nil || Scorecard.game?.dealHistory[round] == nil {
             self.lastHandLabel.text = ""
             self.lastHandView.isHidden = true
         } else {
-            if specificRound == nil {
-                self.lastHandLabel.text = "Last Hand"
+            var label: NSAttributedString
+            if specificRound == nil || specificRound == latestRound {
+                label = NSAttributedString("Last Hand", color: Palette.rightGameDetailPanel.text)
             } else {
-                self.lastHandLabel.attributedText = NSMutableAttributedString("Round \(Scorecard.game.maxEnteredRound - 1) - ") + Scorecard.game.roundTitle(Scorecard.game.maxEnteredRound - 1)
+               label = NSMutableAttributedString("Hand \(round)", color: Palette.rightGameDetailPanel.text)
             }
+            self.lastHandLabel.attributedText = label + "    " + Scorecard.game.roundTitle(round) + "    " + Scorecard.game.overUnder(round: round)
             self.lastHandView.isHidden = false
             self.lastHandView.show(round: round, thisPlayer: self.thisPlayer!, color: Palette.rightGameDetailPanel)
         }
     }
+    
+    // MARK: - Utility Routines ======================================================================== -
     
     private func setDefaultColors() {
         self.view.backgroundColor = Palette.rightGameDetailPanel.background

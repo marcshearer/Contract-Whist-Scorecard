@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina5_9" orientation="landscape" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -18,8 +19,8 @@
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IaK-Ab-3Lb" userLabel="Banner" customClass="Banner" customModule="Whist_2" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="812" height="44"/>
-                                <color key="backgroundColor" name="Clear"/>
                                 <viewLayoutGuide key="safeArea" id="7c5-cq-aKT"/>
+                                <color key="backgroundColor" name="Clear"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="string" keyPath="title" value="Preview Game"/>
                                     <userDefinedRuntimeAttribute type="image" keyPath="finishImage" value="back"/>
@@ -27,6 +28,7 @@
                                     <userDefinedRuntimeAttribute type="string" keyPath="menuText" value="Choose players"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
+                                    <outlet property="bannerHeightConstraint" destination="Jg6-aV-vNI" id="Fve-eF-nBa"/>
                                     <outlet property="delegate" destination="M5N-Yi-C04" id="yPc-gy-0Z0"/>
                                     <outlet property="parentViewController" destination="M5N-Yi-C04" id="K06-hZ-PYJ"/>
                                 </connections>
@@ -58,7 +60,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OvE-wK-XoH" userLabel="Upper Middle Section">
                                 <rect key="frame" x="44" y="193" width="724" height="38"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eVj-U8-RFG" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eVj-U8-RFG" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
                                         <rect key="frame" x="312" y="8" width="100" height="30"/>
                                         <gestureRecognizers/>
                                         <constraints>
@@ -82,16 +84,16 @@
                             <view contentMode="scaleToFill" verticalHuggingPriority="1" verticalCompressionResistancePriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="iDT-Xi-tM5" userLabel="Lower Middle Section">
                                 <rect key="frame" x="44" y="231" width="724" height="73"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" verticalCompressionResistancePriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="x89-xH-iQy" userLabel="Left View">
+                                    <view contentMode="scaleToFill" verticalCompressionResistancePriority="1" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="x89-xH-iQy" userLabel="Left View">
                                         <rect key="frame" x="0.0" y="0.0" width="391" height="73"/>
                                         <subviews>
-                                            <view tag="1" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FyF-vn-V6o" userLabel="Cut for Dealer Button" customClass="ImageButton" customModule="Whist_2" customModuleProvider="target">
+                                            <view tag="1" contentMode="scaleToFill" ambiguous="YES" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FyF-vn-V6o" userLabel="Cut for Dealer Button" customClass="ImageButton" customModule="Whist_2" customModuleProvider="target">
                                                 <rect key="frame" x="39" y="-120" width="313" height="313"/>
+                                                <viewLayoutGuide key="safeArea" id="Epv-wr-w77"/>
                                                 <color key="backgroundColor" name="Clear"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="FyF-vn-V6o" secondAttribute="height" multiplier="1:1" id="Bas-9R-8IF"/>
                                                 </constraints>
-                                                <viewLayoutGuide key="safeArea" id="Epv-wr-w77"/>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="image" keyPath="image" value="cut pack"/>
                                                     <userDefinedRuntimeAttribute type="string" keyPath="title" value="Cut for Dealer"/>
@@ -135,13 +137,13 @@
                                     <view contentMode="scaleToFill" verticalCompressionResistancePriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="Bs3-BT-kuE" userLabel="Right View">
                                         <rect key="frame" x="333" y="0.0" width="391" height="73"/>
                                         <subviews>
-                                            <view tag="2" contentMode="scaleToFill" verticalHuggingPriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="xXV-k4-gfB" userLabel="Next Dealer Button" customClass="ImageButton" customModule="Whist_2" customModuleProvider="target">
+                                            <view tag="2" contentMode="scaleToFill" verticalHuggingPriority="1" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xXV-k4-gfB" userLabel="Next Dealer Button" customClass="ImageButton" customModule="Whist_2" customModuleProvider="target">
                                                 <rect key="frame" x="39" y="-120" width="313" height="313"/>
+                                                <viewLayoutGuide key="safeArea" id="oxI-0X-Fyz"/>
                                                 <color key="backgroundColor" name="Clear"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="xXV-k4-gfB" secondAttribute="height" multiplier="1:1" id="dJB-et-5Yx"/>
                                                 </constraints>
-                                                <viewLayoutGuide key="safeArea" id="oxI-0X-Fyz"/>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="image" keyPath="image" value="next dealer"/>
                                                     <userDefinedRuntimeAttribute type="string" keyPath="title" value="Next Dealer"/>
@@ -211,7 +213,7 @@
                             <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d8e-Bu-nij" userLabel="Bottom Section">
                                 <rect key="frame" x="44" y="304" width="724" height="50"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Jbr-Nz-gFc" userLabel="Continue Button" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Jbr-Nz-gFc" userLabel="Continue Button" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
                                         <rect key="frame" x="237" y="8" width="250" height="50"/>
                                         <color key="backgroundColor" name="Clear"/>
                                         <constraints>
@@ -227,6 +229,7 @@
                                         </connections>
                                     </button>
                                 </subviews>
+                                <viewLayoutGuide key="safeArea" id="sWK-gq-fW2"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <accessibility key="accessibilityConfiguration" identifier="bottomSection"/>
                                 <constraints>
@@ -235,9 +238,9 @@
                                     <constraint firstAttribute="height" constant="50" id="pcs-AF-kKl"/>
                                     <constraint firstItem="Jbr-Nz-gFc" firstAttribute="width" secondItem="d8e-Bu-nij" secondAttribute="width" multiplier="0.6" priority="750" id="zhh-FN-CVA"/>
                                 </constraints>
-                                <viewLayoutGuide key="safeArea" id="sWK-gq-fW2"/>
                             </view>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="wSn-mE-2UN"/>
                         <color key="backgroundColor" name="Table Top"/>
                         <gestureRecognizers/>
                         <constraints>
@@ -270,7 +273,6 @@
                             <constraint firstItem="wSn-mE-2UN" firstAttribute="bottom" secondItem="d8e-Bu-nij" secondAttribute="bottom" id="w4F-yQ-SEh"/>
                             <constraint firstItem="iDT-Xi-tM5" firstAttribute="leading" secondItem="kP9-VZ-fcb" secondAttribute="trailing" priority="1" id="xs9-hc-6ab"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="wSn-mE-2UN"/>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="bOf-Ep-qSS" appends="YES" id="CeK-Fw-ThR"/>
                         </connections>
@@ -279,7 +281,6 @@
                     <connections>
                         <outlet property="actionButtonView" destination="iDT-Xi-tM5" id="vV1-yz-Reg"/>
                         <outlet property="banner" destination="IaK-Ab-3Lb" id="slQ-K1-nLq"/>
-                        <outlet property="bannerHeightConstraint" destination="Jg6-aV-vNI" id="nnS-UW-Jwu"/>
                         <outlet property="bottomSectionHeightConstraint" destination="pcs-AF-kKl" id="ifD-DU-dcF"/>
                         <outlet property="continueButton" destination="Jbr-Nz-gFc" id="Ka8-Lr-cHN"/>
                         <outlet property="cutForDealerButton" destination="FyF-vn-V6o" id="dAr-ab-YCl"/>

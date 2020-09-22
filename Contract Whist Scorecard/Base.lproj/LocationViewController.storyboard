@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="ipad11_0rounded" orientation="landscape" layout="fullscreen" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -26,6 +27,7 @@
                                     <userDefinedRuntimeAttribute type="string" keyPath="menuText" value="Abandon Game"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
+                                    <outlet property="bannerHeightConstraint" destination="zhO-DQ-rXK" id="w5l-ce-Y9S"/>
                                     <outlet property="delegate" destination="IhQ-um-kHy" id="FTr-af-WLq"/>
                                     <outlet property="parentViewController" destination="IhQ-um-kHy" id="auJ-L2-Qag"/>
                                 </connections>
@@ -123,7 +125,7 @@
                             <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Oue-Bc-ckN" userLabel="Bottom Section">
                                 <rect key="frame" x="0.0" y="731" width="1194" height="83"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YjF-f2-IdH" userLabel="Continue Button" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YjF-f2-IdH" userLabel="Continue Button" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
                                         <rect key="frame" x="472" y="8" width="250" height="50"/>
                                         <color key="backgroundColor" name="Clear"/>
                                         <constraints>
@@ -147,6 +149,7 @@
                                         </connections>
                                     </button>
                                 </subviews>
+                                <viewLayoutGuide key="safeArea" id="pi7-bZ-HT2"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <accessibility key="accessibilityConfiguration" identifier="bottomSection"/>
                                 <constraints>
@@ -155,9 +158,9 @@
                                     <constraint firstItem="YjF-f2-IdH" firstAttribute="width" secondItem="Oue-Bc-ckN" secondAttribute="width" multiplier="0.6" priority="750" id="bSO-7N-huL"/>
                                     <constraint firstItem="YjF-f2-IdH" firstAttribute="top" secondItem="Oue-Bc-ckN" secondAttribute="top" constant="8" id="jPM-0Z-F6Z"/>
                                 </constraints>
-                                <viewLayoutGuide key="safeArea" id="pi7-bZ-HT2"/>
                             </view>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="H8a-EA-jDv"/>
                         <color key="backgroundColor" name="Background"/>
                         <gestureRecognizers/>
                         <constraints>
@@ -188,13 +191,11 @@
                             <constraint firstItem="H8a-EA-jDv" firstAttribute="bottom" secondItem="Oue-Bc-ckN" secondAttribute="bottom" id="x82-rm-eJ6"/>
                             <constraint firstItem="syy-j8-mMN" firstAttribute="bottom" secondItem="H8a-EA-jDv" secondAttribute="top" constant="44" id="zhO-DQ-rXK"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="H8a-EA-jDv"/>
                     </view>
                     <connections>
                         <outlet property="activityIndicator" destination="X7E-aZ-m9h" id="hwZ-Q7-Jtm"/>
                         <outlet property="banner" destination="syy-j8-mMN" id="Ny0-NY-jJX"/>
                         <outlet property="bannerContinuationView" destination="8qh-o6-LGR" id="vu4-bh-WkT"/>
-                        <outlet property="bannerHeightConstraint" destination="zhO-DQ-rXK" id="kIq-FK-l3R"/>
                         <outlet property="bottomSectionHeightConstraint" destination="SsS-Kw-dD1" id="3Sh-x7-mXN"/>
                         <outlet property="continueButton" destination="YjF-f2-IdH" id="gNA-yx-RtD"/>
                         <outlet property="locationMapView" destination="KRq-QD-SP0" id="FCf-Od-HV5"/>

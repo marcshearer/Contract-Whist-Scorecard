@@ -17,6 +17,7 @@ enum ScorecardView {
     case gameSummary
     case location
     case hand
+    case nextHand
 
     // Sub views which are invoked from main views
     case confirmPlayed
@@ -224,7 +225,17 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
                     activeViewController.controllerDelegate = nil
                     self.activeViewController = nil
                     Scorecard.shared.viewPresenting = .processing
-                    self.nextView(view: nextView, context: context)
+                    
+                    if nextView == .exit && self.gameDetailPanelViewController != nil {
+                        // Remove game detail as exiting
+                        self.gameDetailPanelViewController.dismiss(animated: animated) {
+                            self.gameDetailPanelViewController = nil
+                            self.gameDetailDelegate = nil
+                            self.nextView(view: nextView, context: context)
+                        }
+                    } else {
+                        self.nextView(view: nextView, context: context)
+                    }
                 }
             } else {
                 self.nextView(view: nextView, context: context)
@@ -360,7 +371,7 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
         var locationViewController: LocationViewController?
         
         if let parentViewController = self.fromViewController() {
-            locationViewController = LocationViewController.show(from: parentViewController, appController: self, gameLocation: Scorecard.game.location, useCurrentLocation: true, mustChange: false, bannerColor: Palette.banner.background)
+            locationViewController = LocationViewController.show(from: parentViewController, appController: self, gameLocation: Scorecard.game.location, useCurrentLocation: true, mustChange: false, bannerColor: Palette.banner)
         }
         return locationViewController
     }
@@ -407,6 +418,10 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
                 })
         }
         return selectPlayerViewController
+    }
+    
+    internal func showNextHand(round: Int?) -> NextHandViewController {
+        return NextHandViewController.show(from: parentViewController, appController: self, round: round)
     }
     
     internal func showConfirmPlayed(context: [String:Any?]?, completion: (([String:Any?]?)->())?) -> ConfirmPlayedViewController? {
@@ -472,6 +487,7 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
     internal func showGameDetailPanel() {
         if self.gameDetailPanelViewController == nil {
             self.gameDetailPanelViewController = GameDetailPanelViewController.create()
+            self.gameDetailPanelViewController.appController = self
             self.parentViewController?.rootViewController.presentInContainers([PanelContainerItem(viewController: gameDetailPanelViewController, container: .right)], animated: true, completion: nil)
             self.gameDetailDelegate = self.gameDetailPanelViewController
         }
@@ -604,7 +620,7 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
     
     internal var uniqueID: String!
     internal weak var bannerClass: Banner!
-    internal var gameDetailDelegate: GameDetailDelegate? { return self.rootViewController?.gameDetailDelegate }
+    internal var gameDetailDelegate: GameDetailDelegate? { return self.appController?.gameDetailDelegate }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -632,7 +648,7 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        self.bannerClass?.layoutIfNeeded()
+        self.bannerClass?.layoutSubviews()
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -853,7 +869,7 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
                 
             } else if self.dismissView == .scorepad || presented is RoundSummaryViewController || presented is GameSummaryViewController {
                 animation = .fromRight
-                                
+                                                
             } else if (presented is SelectionViewController && self.dismissView == .gamePreview) ||
                 (presented is GamePreviewViewController && self.dismissView == .selection) {
                 duration = 0.5
@@ -938,32 +954,36 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
         self.setRightPanel(title: title, caption: caption)
     }
     
-    public var defaultBannerColor: UIColor {
-        if self.menuController?.isVisible() ?? false && (self.container == .main || self.container == .mainRight)  {
-            return Palette.normal.background
+    public var containerBanner: Bool {
+        return self.menuController?.isVisible ?? false && (self.container == .main || self.container == .mainRight)
+    }
+    
+    public var defaultBannerColor: PaletteColor {
+        if self.containerBanner  {
+            return Palette.normal
         } else {
-            return Palette.banner.background
+            return Palette.banner
         }
     }
     
-    public var defaultBannerTextColor: UIColor {
-        if self.menuController?.isVisible() ?? false && (self.container == .main || self.container == .mainRight) {
-            return Palette.normal.themeText
+    public func defaultBannerTextColor(_ textType: ThemeTextType? = nil) -> UIColor {
+        if self.containerBanner {
+            return Palette.normal.textColor(textType ?? .theme)
         } else {
-            return Palette.banner.text
+            return Palette.banner.textColor(textType ?? .normal)
         }
     }
     
     public var defaultBannerHeight: CGFloat {
-        if self.menuController?.isVisible() ?? false && (self.container == .main || self.container == .mainRight) {
-            return 150
+        if self.containerBanner {
+            return Banner.containerHeight
         } else {
-            return 44
+            return Banner.normalHeight
         }
     }
     
     public var defaultBannerAlignment: NSTextAlignment {
-        if self.menuController?.isVisible() ?? false && (self.container == .main || self.container == .mainRight) {
+        if self.containerBanner {
             return .left
         } else {
             return .center

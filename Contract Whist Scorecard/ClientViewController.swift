@@ -125,7 +125,6 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     @IBOutlet internal weak var topSectionTopConstraint: NSLayoutConstraint!
     @IBOutlet internal weak var banner: Banner!
     @IBOutlet private weak var leftPaddingView: InsetPaddingView!
-    @IBOutlet private weak var bannerHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var thisPlayerContainerView: UIView!
     @IBOutlet private weak var thisPlayerOverlap: UIView!
     @IBOutlet private weak var thisPlayerThumbnail: ThumbnailView!
@@ -331,13 +330,15 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
             self.mainContainer?.layoutIfNeeded()
             self.allocateContainerSizes()
             
-            self.panelLayoutSubviews()
-            self.setupBanner()
-            
-            // Update sizes to layout constraints immediately to aid calculations
-            self.view.layoutIfNeeded()
-            
-            self.showThisPlayer()
+            if self.firstTime || self.rotated {
+                self.panelLayoutSubviews()
+                self.setupBanner()
+                
+                // Update sizes to layout constraints immediately to aid calculations
+                self.view.layoutIfNeeded()
+                
+                self.showThisPlayer()
+            }
             
             if self.rotated && (self.playerSelectionViewHeightConstraint.constant != 0 ||
                 self.playerSelectionViewWidthConstraint.constant != 0) {
@@ -1190,15 +1191,16 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     }
     
     private func setupBanner() {
-        self.banner.set(rightButtons: [
-            BannerButton(image: UIImage(systemName: "line.horizontal.3"), width: 30, action: self.adminButtonPressed, menuHide: false, id: "admin")])
+        self.banner.set(
+            rightButtons: [
+                BannerButton(image: UIImage(systemName: "line.horizontal.3"), width: 30, action: self.adminButtonPressed, menuHide: false, id: "admin")],
+            normalOverrideHeight: 75)
         self.banner.setButton("admin", isHidden: true)
-        if (self.menuController?.isVisible() ?? false) && self.container == .main {
-            self.banner.set(title: self.containerTitle, titleFont: Banner.panelFont, titleColor: self.defaultBannerTextColor)
+        if (self.menuController?.isVisible ?? false) && self.container == .main {
+            self.banner.set(title: self.containerTitle, titleFont: Banner.panelFont, titleColor: self.defaultBannerTextColor())
         } else {
             self.banner.set(title: "W H I S T", titleFont: Banner.heavyFont, titleColor: Palette.banner.themeText)
         }
-        self.bannerHeightConstraint.constant = (self.containers ? self.defaultBannerHeight : 75)
     }
     
     // MARK: - Client controller delegates ======================================================================== -
@@ -1420,7 +1422,7 @@ extension ClientViewController {
             self.hostCollectionContentView.removeRoundCorners()
         }
         self.hostCollectionContentView.layoutIfNeeded()
-        self.peerCollectionContentView.roundCorners(cornerRadius: 8.0, topRounded: self.menuController?.isVisible() ?? false, bottomRounded: true)
+        self.peerCollectionContentView.roundCorners(cornerRadius: 8.0, topRounded: self.menuController?.isVisible ?? false, bottomRounded: true)
         self.peerCollectionContainerView.addShadow(shadowSize: CGSize(width: 4.0, height: 4.0), shadowOpacity: 0.1, shadowRadius: 2.0)
         self.peerScrollCollectionView.isHidden = (self.availablePeers.count <= 1)
         if self.firstTime {

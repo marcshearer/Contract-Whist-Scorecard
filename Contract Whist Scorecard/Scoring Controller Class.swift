@@ -200,7 +200,11 @@ class ScoringController: ScorecardAppController, ScorecardAppPlayerDelegate, Gam
             
         case .entry:
             // Link to scorepad
-            self.present(nextView: .scorepad)
+            if context?["home"] as? Bool == true {
+                self.present(nextView: .exit)
+            } else {
+                self.present(nextView: .scorepad)
+            }
             
         case .roundSummary:
             // Link to scorepad
@@ -365,7 +369,9 @@ class ScoringController: ScorecardAppController, ScorecardAppPlayerDelegate, Gam
                 self.nextHand()
                 self.present(nextView: .scorepad)
             } else {
-                self.present(nextView: .roundSummary)
+                if !(self.gameDetailDelegate?.isVisible ?? false) {
+                    self.present(nextView: .roundSummary)
+                }
             }
         }
     }

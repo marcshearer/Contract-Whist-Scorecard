@@ -66,7 +66,6 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
     // MARK: - IB Outlets ================================================================ -
     
     @IBOutlet private weak var banner: Banner!
-    @IBOutlet private weak var bannerHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var topSectionView: UIView!
     @IBOutlet private weak var messageLabel: UILabel!
     @IBOutlet private weak var continueButton: ShadowButton!
@@ -369,7 +368,7 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
             // Hide / show buttons dependent on format
             self.banner.setButton("continue", isHidden: !ScorecardUI.landscapePhone() && !ScorecardUI.smallPhoneSize())
             self.continueButton.isHidden = ScorecardUI.landscapePhone() || ScorecardUI.smallPhoneSize()
-            self.bottomSectionHeightConstraint.constant = (ScorecardUI.landscapePhone() || ScorecardUI.smallPhoneSize() ? 0.0 : ((self.menuController?.isVisible() ?? false) ? 75 : 58) + (self.view.safeAreaInsets.bottom == 0 ? 8.0 : 0.0))
+            self.bottomSectionHeightConstraint.constant = (ScorecardUI.landscapePhone() || ScorecardUI.smallPhoneSize() ? 0.0 : ((self.menuController?.isVisible ?? false) ? 75 : 58) + (self.view.safeAreaInsets.bottom == 0 ? 8.0 : 0.0))
             self.banner.setButton("override", isHidden: false)
             
             self.leftViewLeadingConstraint.constant = 0.0
@@ -400,7 +399,6 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
                 }
             }
         }
-        self.bannerHeightConstraint.constant = self.defaultBannerHeight
         self.banner.set(title: (self.smallScreen && !ScorecardUI.landscapePhone() ? smallFormTitle : self.formTitle))
     }
     
@@ -440,7 +438,7 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
         if self.backText != nil {
             // Add a home menu item as well
             nonBannerButtonsAfter.append(
-                BannerButton(control: nil, action: self.returnHomePressed, menuHide: true, menuText: "Abandon Game", menuSpaceBefore: 20.0, id: "home"))
+                BannerButton(action: self.returnHomePressed, menuHide: true, menuText: "Abandon Game", menuSpaceBefore: 20.0, id: "home"))
         }
         
         self.banner.set(
@@ -789,7 +787,7 @@ extension GamePreviewViewController {
 
     private func defaultViewColors() {
 
-        self.topSectionView.backgroundColor = ((self.menuController?.isVisible() ?? false) ? Palette.normal.background : Palette.banner.background)
+        self.topSectionView.backgroundColor = ((self.menuController?.isVisible ?? false) ? Palette.normal.background : Palette.banner.background)
         self.selectedPlayersView.backgroundColor = Palette.tableTop.background
         self.messageLabel.textColor = Palette.normal.text
         self.continueButton.setTitleColor(Palette.continueButton.text, for: .normal)

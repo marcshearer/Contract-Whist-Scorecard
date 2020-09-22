@@ -8,9 +8,10 @@
 
 import UIKit
 
-class RoundSummaryViewController: ScorecardViewController {
+class RoundSummaryViewController: ScorecardViewController, BannerDelegate {
         
     // MARK: - IB Outlets ============================================================================== -
+    @IBOutlet private weak var banner: Banner!
     @IBOutlet private weak var roundSummaryView: UIView!
     @IBOutlet private weak var trumpSuit: UILabel!
     @IBOutlet private weak var overUnder: UILabel!
@@ -18,13 +19,8 @@ class RoundSummaryViewController: ScorecardViewController {
     @IBOutlet private weak var player2Bid: UILabel!
     @IBOutlet private weak var player3Bid: UILabel!
     @IBOutlet private weak var player4Bid: UILabel!
-    @IBOutlet private weak var finishButton: ClearButton!
     
     // MARK: - IB Actions ============================================================================== -
-
-    @IBAction func finishPressed(_ sender: UIButton) {
-        self.finishPressed()
-    }
     
     @IBAction func rightSwipe(recognizer: UISwipeGestureRecognizer) {
         self.finishPressed()
@@ -124,7 +120,7 @@ extension RoundSummaryViewController {
 
     private func defaultViewColors() {
 
-        self.finishButton.setTitleColor(Palette.total.text, for: .normal)
+        self.banner.set(backgroundColor: PaletteColor(.total))
         self.player1Bid.textColor = Palette.total.text
         self.player2Bid.textColor = Palette.total.text
         self.player3Bid.textColor = Palette.total.text

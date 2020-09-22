@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -64,14 +65,14 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Action" id="9cW-cw-gCC" customClass="ActionSheetCell" customModule="Whist_2" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="105.5" width="382" height="54.5"/>
+                                        <rect key="frame" x="0.0" y="105.5" width="382" height="54"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="9cW-cw-gCC" id="i4P-hf-llU">
-                                            <rect key="frame" x="0.0" y="0.0" width="382" height="54.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="382" height="54"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Action" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tSh-pT-ha5">
-                                                    <rect key="frame" x="20" y="11" width="342" height="32.5"/>
+                                                    <rect key="frame" x="20" y="11" width="342" height="32"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="26"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -96,24 +97,34 @@
                                 </connections>
                             </tableView>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="9LV-7g-yjW"/>
                         <color key="backgroundColor" name="Clear"/>
                         <accessibility key="accessibilityConfiguration" identifier="actionSheetView"/>
+                        <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="5gQ-O0-K3g" firstAttribute="bottom" secondItem="9LV-7g-yjW" secondAttribute="bottom" id="Gdh-Jh-AC4"/>
                             <constraint firstItem="5gQ-O0-K3g" firstAttribute="centerX" secondItem="PRu-Gi-dsT" secondAttribute="centerX" id="VPP-YH-e76"/>
                             <constraint firstAttribute="trailing" secondItem="5gQ-O0-K3g" secondAttribute="trailing" priority="750" constant="16" id="pfI-UM-HEB"/>
                             <constraint firstItem="5gQ-O0-K3g" firstAttribute="leading" secondItem="PRu-Gi-dsT" secondAttribute="leading" priority="750" constant="16" id="rsw-ug-rFI"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="9LV-7g-yjW"/>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="Msl-rc-VGJ" appends="YES" id="pcw-C8-XBT"/>
+                        </connections>
                     </view>
                     <size key="freeformSize" width="414" height="400"/>
                     <connections>
                         <outlet property="tableView" destination="5gQ-O0-K3g" id="4Bp-ia-I4X"/>
                         <outlet property="tableViewBottomConstraint" destination="Gdh-Jh-AC4" id="Yv7-cH-PXs"/>
                         <outlet property="tableViewHeightConstraint" destination="8D5-Rp-k8Q" id="GWp-Ff-Jvt"/>
+                        <outlet property="tapGesture" destination="Msl-rc-VGJ" id="KOe-dw-tte"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9rs-vp-eoK" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="Msl-rc-VGJ">
+                    <connections>
+                        <action selector="tapGestureWithRecognizer:" destination="E2j-ML-Twc" id="Cpl-p4-1dq"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="30" y="145"/>
         </scene>

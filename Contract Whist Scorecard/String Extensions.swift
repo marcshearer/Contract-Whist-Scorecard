@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 extension String {
     
@@ -73,4 +74,27 @@ extension String {
         let leadingWhitespace = self.range(of: "^\\s*", options: .regularExpression)
         return self.replacingCharacters(in: leadingWhitespace!, with: "")
     }
+    
+    func labelHeight(width: CGFloat? = nil, font: UIFont? = nil) -> CGFloat {
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: width ?? CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude))
+        label.numberOfLines = (width == nil ? 1 : 0)
+        if let font = font {
+            label.font = font
+        }
+        label.text = self
+        label.sizeToFit()
+        return label.frame.height
+    }
+
+    func labelWidth(height: CGFloat? = nil, font: UIFont? = nil) -> CGFloat {
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: CGFloat.greatestFiniteMagnitude, height: height ?? 30))
+        label.numberOfLines = (height == nil ? 1 : 0)
+        if let font = font {
+            label.font = font
+        }
+        label.text = self
+        label.sizeToFit()
+        return label.frame.width
+    }
+
 }

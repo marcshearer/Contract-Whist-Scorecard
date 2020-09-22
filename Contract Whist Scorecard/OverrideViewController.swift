@@ -32,7 +32,6 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
     
     // MARK: - IB Outlets ============================================================================== -
     @IBOutlet private weak var banner: Banner!
-    @IBOutlet private weak var bannerHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var instructionView: UIView!
     @IBOutlet private weak var instructionLabel: UILabel!
     @IBOutlet private weak var bottomSectionHeightConstraint: NSLayoutConstraint!
@@ -94,7 +93,7 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
     override func viewWillLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        self.bottomSectionHeightConstraint.constant = (ScorecardUI.smallPhoneSize() || ScorecardUI.landscapePhone() ? 0 : ((self.menuController?.isVisible() ?? false) ? 75 : 58) + (self.view.safeAreaInsets.bottom == 0 ? 8.0 : 0.0))
+        self.bottomSectionHeightConstraint.constant = (ScorecardUI.smallPhoneSize() || ScorecardUI.landscapePhone() ? 0 : ((self.menuController?.isVisible ?? false) ? 75 : 58) + (self.view.safeAreaInsets.bottom == 0 ? 8.0 : 0.0))
 
     }
     
@@ -243,15 +242,13 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
     private func setupButtons() {
         
         // Add banner confirm button
-        self.banner.set(rightButtons: [
-        BannerButton(title: "Confirm", image: UIImage(named: "forward"), width: 100, action: self.confirmPressed, menuHide: true, id: "confirm")])
+        self.banner.set(
+            rightButtons: [
+                BannerButton(title: "Confirm", image: UIImage(named: "forward"), width: 100, action: self.confirmPressed, menuHide: true, id: "confirm")])
         
         // Set confirm button and title
         self.confirmButton.toCircle()
-        
-        // Set banner height
-        self.bannerHeightConstraint.constant = self.defaultBannerHeight
-        
+               
         self.enableButtons()
     }
     

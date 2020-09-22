@@ -104,7 +104,7 @@ enum InviteStatus {
             self.resetResumedPlayers()
             for (index, playerMO) in self.selectedPlayers.enumerated() {
                 if index == 0 || self.startMode != .loopback {
-                    _ = self.addPlayer(name: playerMO.name!, playerUUID: playerMO.playerUUID!, playerMO: playerMO, peer: nil, host: index == 0)
+                    self.addPlayer(name: playerMO.name!, playerUUID: playerMO.playerUUID!, playerMO: playerMO, peer: nil, host: index == 0)
                 }
             }
             
@@ -120,7 +120,7 @@ enum InviteStatus {
             
             // Use passed in player
             let playerMO = Scorecard.shared.findPlayerByPlayerUUID(playerUUID!)
-            _ = self.addPlayer(name: playerMO!.name!, playerUUID: playerMO!.playerUUID!, playerMO: playerMO, peer: nil, host: true)
+            self.addPlayer(name: playerMO!.name!, playerUUID: playerMO!.playerUUID!, playerMO: playerMO, peer: nil, host: true)
             
             // Got to selection or game preview
             if self.startMode == .online {
@@ -157,7 +157,7 @@ enum InviteStatus {
     // MARK: - App Controller Overrides =========================================================== -
      
     override internal func refreshView(view: ScorecardView) {
-        
+       
     }
     
     override internal func presentView(view: ScorecardView, context: [String:Any?]?, completion: (([String:Any?]?)->())?) -> ScorecardViewController? {
@@ -175,7 +175,10 @@ enum InviteStatus {
             viewController = self.showLocation()
             
         case .hand:
-            viewController = self.playHand()
+            viewController = self.playHand(sendAfter: context?["sendAfter"] as? TimeInterval ?? 0.0)
+            
+        case .nextHand:
+            viewController = self.showNextHand(round: context?["round"] as? Int)
             
         case .scorepad:
             viewController = self.showScorepad(scorepadMode: .hosting)
@@ -219,7 +222,7 @@ enum InviteStatus {
             self.gamePreviewViewController.controllerDelegate = nil
             self.gamePreviewViewController.delegate = nil
             self.gamePreviewViewController = nil
-           
+            
         default:
             break
         }            
@@ -278,7 +281,8 @@ enum InviteStatus {
      
     override internal func didCancel(context: [String: Any]?) {
         switch self.activeView {
-        case .selection:
+        case .selection, .location, .hand, .scorepad:
+            // Exit - game abandoned
             self.present(nextView: .exit)
             
         case .gamePreview:
@@ -292,18 +296,6 @@ enum InviteStatus {
                     self.present(nextView: .exit)
                 }
             }
-            
-        case .location:
-            // Link back to game preview
-            self.present(nextView: .exit)
-            
-        case .hand:
-            // Link to scorepad
-            self.present(nextView: .scorepad)
-            
-        case .scorepad:
-            // Exit - game abandoned
-            self.present(nextView: .exit)
             
         case .gameSummary:
             // Go back to scorepad
@@ -333,8 +325,12 @@ enum InviteStatus {
             self.present(nextView: .hand)
             
         case .hand:
-            // Link to scorecard or game summary
-            self.handComplete()
+            // Link to scorecard, next hand or game summary
+            self.handComplete(round: context?["round"] as? Int)
+            
+        case .nextHand:
+            // Link back to (next) hand
+            self.present(nextView: .hand, context: context)
             
         case .gameSummary:
             // Game complete
@@ -409,9 +405,9 @@ enum InviteStatus {
                 
                 switch descriptor {
                 case "scores":
-                    _ = Scorecard.shared.processScores(descriptor: descriptor, data: data!)
+                    Scorecard.shared.processScores(descriptor: descriptor, data: data!)
                 case "played":
-                    _ = Scorecard.shared.processCardPlayed(data: data! as Any as! [String : Any], from: self)
+                    Scorecard.shared.processCardPlayed(data: data! as Any as! [String : Any], from: self)
                     self.removeCardPlayed(data: data! as Any as! [String : Any])
                 case "refreshRequest":
                     // Remote device wants a refresh of the current state
@@ -748,12 +744,14 @@ enum InviteStatus {
         
     }
     
-    private func playHand() -> ScorecardViewController? {
+    private func playHand(sendAfter: TimeInterval = 0) -> ScorecardViewController? {
         var handViewController: HandViewController?
-           
+        
         Scorecard.game.setGameInProgress(true)
 
-        Scorecard.shared.sendPlayHand()
+        Utility.executeAfter(delay: sendAfter) {
+            Scorecard.shared.sendPlayHand()
+        }
         
         if let parentViewController = self.parentViewController {
             handViewController = Scorecard.shared.playHand(from: parentViewController, appController: self, animated: true)
@@ -762,20 +760,24 @@ enum InviteStatus {
         return handViewController
     }
     
-    private func handComplete() {
+    private func handComplete(round: Int?) {
         if Scorecard.game!.handState.finished {
             if Scorecard.game.gameComplete() {
                 // Game complete
                 _ = Scorecard.game.save()
                 self.present(nextView: .gameSummary)
             } else {
-                // Not complete - move to next round and go to scorepad
+                // Not complete - move to next round and go to scorepad (unless on iPad)
                 if Scorecard.game.handState.round != Scorecard.game.rounds {
                     // Reset state and prepare for next round
                     self.nextHand()
                     Scorecard.shared.sendHandState()
                 }
-                self.present(nextView: .scorepad)
+                if self.gameDetailDelegate?.isVisible ?? false {
+                    self.present(nextView: .nextHand, context: ["round" : round])
+                } else {
+                    self.present(nextView: .scorepad)
+                }
             }
         } else {
             // Still in progress just go to scorepad

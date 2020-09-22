@@ -149,8 +149,18 @@ class Scores {
                 let made = roundScore.playerScore.map({$0.value.made})
                 let twos = roundScore.playerScore.map({$0.value.made})
                 
+                // Using 1000 as an impossible value here as can no longer use nil in XCode 12
+                
+                func sum(_ left: Int?, _ right: Int?) -> Int? {
+                    if left == nil || right == nil {
+                        return nil
+                    } else {
+                        return left! + right!
+                    }
+                }
+                
                 if bid.count == Scorecard.game?.currentPlayers {
-                    if let bidTotal = bid.reduce(0,{$0==nil || $1==nil ? nil : $0!+$1!}) {
+                    if let bidTotal = bid.reduce(0,{sum($0, $1)}) {
                         if bidTotal == tricks {
                             result = true
                         }
@@ -158,7 +168,7 @@ class Scores {
                 }
                 
                 if made.count == Scorecard.game?.currentPlayers {
-                    if let madeTotal = made.reduce(0,{$0==nil || $1==nil ? nil : $0!+$1!}) {
+                    if let madeTotal = made.reduce(0,{sum($0, $1)}) {
                         if madeTotal != tricks {
                             result = true
                         }
@@ -166,7 +176,7 @@ class Scores {
                 }
                 
                 if twos.count == Scorecard.game?.currentPlayers {
-                    if let twosTotal = twos.reduce(0,{$0==nil || $1==nil ? nil : $0!+$1!}) {
+                    if let twosTotal = twos.reduce(0,{sum($0, $1)}) {
                         if twosTotal > tricks {
                             result = true
                         }

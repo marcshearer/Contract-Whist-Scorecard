@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -27,6 +29,7 @@
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="disableOptions" value="YES"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
+                                    <outlet property="bannerHeightConstraint" destination="cob-0S-d2y" id="An8-Zt-DdF"/>
                                     <outlet property="delegate" destination="FdF-BR-2d1" id="mhk-24-Yzr"/>
                                     <outlet property="parentViewController" destination="FdF-BR-2d1" id="nv8-gz-s7F"/>
                                 </connections>
@@ -97,7 +100,7 @@
                                                                                         <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="emailAddress"/>
                                                                                     </textField>
                                                                                 </subviews>
-                                                                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                                                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                                                 <accessibility key="accessibilityConfiguration" identifier="downloadIdentifier"/>
                                                                                 <constraints>
                                                                                     <constraint firstItem="h2T-Xr-Sk7" firstAttribute="top" secondItem="fkE-As-Xe8" secondAttribute="top" id="Bxp-h0-pWb"/>
@@ -107,7 +110,7 @@
                                                                                     <constraint firstItem="h2T-Xr-Sk7" firstAttribute="leading" secondItem="fkE-As-Xe8" secondAttribute="leading" constant="8" id="wSz-PG-ctR"/>
                                                                                 </constraints>
                                                                             </view>
-                                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="le8-8z-48n" userLabel="Download Players From Cloud" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
+                                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="le8-8z-48n" userLabel="Download Players From Cloud" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
                                                                                 <rect key="frame" x="264" y="23" width="80" height="34"/>
                                                                                 <constraints>
                                                                                     <constraint firstAttribute="height" constant="34" id="8KU-ML-psG"/>
@@ -124,7 +127,7 @@
                                                                                 <subviews>
                                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tBK-On-lKv" userLabel="Separator Line">
                                                                                         <rect key="frame" x="0.0" y="8" width="334" height="0.5"/>
-                                                                                        <color key="backgroundColor" systemColor="separatorColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.28999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                                        <color key="backgroundColor" systemColor="separatorColor"/>
                                                                                         <constraints>
                                                                                             <constraint firstAttribute="height" constant="0.5" id="k1r-Nb-m5U"/>
                                                                                         </constraints>
@@ -256,6 +259,7 @@ players on this device</string>
                                                                 </constraints>
                                                             </view>
                                                         </subviews>
+                                                        <viewLayoutGuide key="safeArea" id="zrb-e1-YLK"/>
                                                         <color key="backgroundColor" name="Clear"/>
                                                         <accessibility key="accessibilityConfiguration" identifier="inputClippingContainer"/>
                                                         <constraints>
@@ -270,9 +274,9 @@ players on this device</string>
                                                             <constraint firstItem="D6b-P4-tOh" firstAttribute="bottom" secondItem="qH5-CD-lIa" secondAttribute="top" constant="-20" id="gbu-kp-Uv3"/>
                                                             <constraint firstItem="qH5-CD-lIa" firstAttribute="leading" secondItem="zrb-e1-YLK" secondAttribute="leading" constant="20" id="pzI-C5-ioM"/>
                                                         </constraints>
-                                                        <viewLayoutGuide key="safeArea" id="zrb-e1-YLK"/>
                                                     </view>
                                                 </subviews>
+                                                <viewLayoutGuide key="safeArea" id="HQL-3a-rkF"/>
                                                 <color key="backgroundColor" name="Clear"/>
                                                 <accessibility key="accessibilityConfiguration" identifier="bottomSection"/>
                                                 <constraints>
@@ -283,9 +287,9 @@ players on this device</string>
                                                     <constraint firstItem="kpY-xq-luu" firstAttribute="top" secondItem="ejQ-cw-pgS" secondAttribute="bottom" constant="-25" id="drS-oR-v9D"/>
                                                     <constraint firstAttribute="trailing" secondItem="kpY-xq-luu" secondAttribute="trailing" id="pBO-8S-51b"/>
                                                 </constraints>
-                                                <viewLayoutGuide key="safeArea" id="HQL-3a-rkF"/>
                                             </view>
                                         </subviews>
+                                        <viewLayoutGuide key="safeArea" id="uHK-2P-yIh"/>
                                         <color key="backgroundColor" name="Clear"/>
                                         <accessibility key="accessibilityConfiguration" identifier="contentView"/>
                                         <constraints>
@@ -295,9 +299,9 @@ players on this device</string>
                                             <constraint firstAttribute="trailing" secondItem="gn8-wt-d0L" secondAttribute="trailing" id="eRb-8U-e98"/>
                                             <constraint firstAttribute="height" constant="667" id="weX-IH-zfi"/>
                                         </constraints>
-                                        <viewLayoutGuide key="safeArea" id="uHK-2P-yIh"/>
                                     </view>
                                 </subviews>
+                                <viewLayoutGuide key="safeArea" id="eER-Fk-U6y"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <constraints>
                                     <constraint firstItem="KNR-5A-2y8" firstAttribute="leading" secondItem="4U6-f6-vUw" secondAttribute="leading" id="7Qf-ep-cff"/>
@@ -310,11 +314,11 @@ players on this device</string>
                                     <constraint firstItem="KNR-5A-2y8" firstAttribute="height" secondItem="4U6-f6-vUw" secondAttribute="height" priority="250" id="jTF-Wu-bsz"/>
                                     <constraint firstItem="KNR-5A-2y8" firstAttribute="top" secondItem="KWX-gQ-Xl4" secondAttribute="top" id="thu-pr-dn7"/>
                                 </constraints>
-                                <viewLayoutGuide key="safeArea" id="eER-Fk-U6y"/>
                                 <viewLayoutGuide key="contentLayoutGuide" id="KWX-gQ-Xl4"/>
                                 <viewLayoutGuide key="frameLayoutGuide" id="g1T-Eo-0ZE"/>
                             </scrollView>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="QDd-v3-3U4"/>
                         <color key="backgroundColor" name="Background"/>
                         <constraints>
                             <constraint firstAttribute="bottom" secondItem="4U6-f6-vUw" secondAttribute="bottom" id="6Pd-Ek-98s"/>
@@ -326,11 +330,9 @@ players on this device</string>
                             <constraint firstItem="QDd-v3-3U4" firstAttribute="trailing" secondItem="4U6-f6-vUw" secondAttribute="trailing" id="nHq-FE-xL9"/>
                             <constraint firstItem="kDy-p2-Y7X" firstAttribute="top" secondItem="8Be-gQ-047" secondAttribute="top" id="twe-UV-yF5"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="QDd-v3-3U4"/>
                     </view>
                     <connections>
                         <outlet property="banner" destination="kDy-p2-Y7X" id="0Sp-Uo-A3b"/>
-                        <outlet property="bannerHeightConstraint" destination="cob-0S-d2y" id="Juy-An-5sW"/>
                         <outlet property="bottomSection" destination="gn8-wt-d0L" id="S2c-Uk-79h"/>
                         <outlet property="contentView" destination="KNR-5A-2y8" id="ygY-Rm-0YZ"/>
                         <outlet property="contentViewHeightConstraint" destination="weX-IH-zfi" id="XNm-9J-HwG"/>
@@ -372,5 +374,11 @@ players on this device</string>
         <namedColor name="Clear">
             <color red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
+        <systemColor name="separatorColor">
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.28999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
     </resources>
 </document>

@@ -16,6 +16,7 @@ class ConfirmCountViewController : ScorecardViewController, UIPopoverPresentatio
     var minimumValue: Int?
     var maximumValue: Int?
     var confirmHandler: ((Int)->())!
+    var sourceView: UIView?
     
     @IBOutlet private weak var labelTitle: UILabel!
     @IBOutlet private weak var labelMessage: UILabel!
@@ -62,7 +63,12 @@ class ConfirmCountViewController : ScorecardViewController, UIPopoverPresentatio
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        Scorecard.shared.reCenterPopup(self, ignoreScorepad: true)
+        self.view.setNeedsLayout()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        self.reCenterPopup()
     }
     
     func adaptivePresentationStyle(for controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {
@@ -70,7 +76,14 @@ class ConfirmCountViewController : ScorecardViewController, UIPopoverPresentatio
         return UIModalPresentationStyle.none
     }
     
-    static func show(title: String, message: String, defaultValue: Int = 1, minimumValue: Int? = nil, maximumValue: Int? = nil, height: Int = 260, handler: @escaping ((Int)->())) {
+    func reCenterPopup() {
+        if let sourceView = self.sourceView {
+            self.popoverPresentationController?.sourceView = sourceView
+            self.popoverPresentationController?.sourceRect = CGRect(origin: sourceView.bounds.center, size: CGSize())
+        }
+    }
+    
+    static func show(from parentViewController: ScorecardViewController, title: String, message: String, defaultValue: Int = 1, minimumValue: Int? = nil, maximumValue: Int? = nil, height: Int = 260, handler: @escaping ((Int)->())) {
         
         let storyboard = UIStoryboard(name: "ConfirmCountViewController", bundle: nil)
         let viewController = storyboard.instantiateViewController(withIdentifier: "ConfirmCountViewController") as! ConfirmCountViewController
@@ -82,19 +95,13 @@ class ConfirmCountViewController : ScorecardViewController, UIPopoverPresentatio
         viewController.value = defaultValue
         viewController.confirmHandler = handler
         
-        let parentViewController = Utility.getActiveViewController()!
-        let sourceView = parentViewController.popoverPresentationController?.sourceView ?? parentViewController.view
-        let sourceRect = CGRect(x: UIScreen.main.bounds.size.width/2, y: UIScreen.main.bounds.size.height/2, width: 0 ,height: 0)
+        let sourceView = parentViewController.view
+        let sourceRect = CGRect(x: sourceView!.center.x, y: sourceView!.center.y, width: 0 ,height: 0)
         let popoverSize = CGSize(width: 280, height: height)
         
-        viewController.modalPresentationStyle = UIModalPresentationStyle.popover
-        viewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-        viewController.preferredContentSize = popoverSize
-        viewController.popoverPresentationController?.sourceView = sourceView
-        viewController.popoverPresentationController?.sourceRect = sourceRect
-        viewController.popoverPresentationController?.delegate = viewController
+        viewController.sourceView = sourceView
 
-        parentViewController.present(viewController, animated: true, completion: nil)
+        parentViewController.present(viewController, popoverSize: popoverSize, sourceView: sourceView, sourceRect: sourceRect, popoverDelegate: viewController, animated: true)
     }
        
     private func dismiss(completion: (()->())? = nil) {
@@ -102,7 +109,6 @@ class ConfirmCountViewController : ScorecardViewController, UIPopoverPresentatio
             completion?()
         })
     }
-    
 }
 
 extension ConfirmCountViewController {

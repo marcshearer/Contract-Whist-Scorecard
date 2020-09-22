@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina5_9" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -16,72 +18,22 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="otp-xs-7Jm" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Whist_2" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="otp-xs-7Jm" customClass="Banner" customModule="Whist_2" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="124"/>
                                 <accessibility key="accessibilityConfiguration" identifier="BannerPaddingView"/>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="bannerColor">
-                                        <color key="value" name="Table Top"/>
+                                    <userDefinedRuntimeAttribute type="image" keyPath="finishImage" value="back"/>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="menuHide" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="menuText" value="Show Scorepad"/>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="menuSpaceBefore">
+                                        <real key="value" value="20"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="30M-sz-Fdm" userLabel="Title View">
-                                <rect key="frame" x="0.0" y="44" width="375" height="80"/>
-                                <subviews>
-                                    <button autoresizesSubviews="NO" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="detailDisclosure" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pge-ad-xW7" userLabel="Errors Button" customClass="ErrorRoundedButton" customModule="Whist_2" customModuleProvider="target">
-                                        <rect key="frame" x="12" y="6" width="30" height="30"/>
-                                        <color key="backgroundColor" name="Error"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="30" id="PHL-Xz-e8E"/>
-                                            <constraint firstAttribute="height" constant="30" id="b3Z-e7-JP3"/>
-                                        </constraints>
-                                        <edgeInsets key="layoutMargins" top="0.0" left="0.0" bottom="0.0" right="0.0"/>
-                                        <connections>
-                                            <action selector="saveScorePressed:" destination="mEi-hH-CUE" eventType="touchUpInside" id="Gh7-tc-ESu"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VGH-oE-ROK" userLabel="Finish Button" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
-                                        <rect key="frame" x="20" y="6" width="30" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="30" id="Awa-De-Kxt"/>
-                                            <constraint firstAttribute="height" constant="30" id="DpJ-Pm-48d"/>
-                                        </constraints>
-                                        <state key="normal" image="back"/>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                <real key="value" value="0.0"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                        <connections>
-                                            <action selector="saveScorePressed:" destination="mEi-hH-CUE" eventType="touchUpInside" id="NnD-sA-4cp"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="right" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zzd-PE-N0d" userLabel="Summary Button" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
-                                        <rect key="frame" x="325" y="6" width="30" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="30" id="18m-Dg-KFD"/>
-                                            <constraint firstAttribute="height" constant="30" id="XQx-LN-z5x"/>
-                                        </constraints>
-                                        <state key="normal" image="forward"/>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="accessibilityIdentifier" value="summary"/>
-                                        </userDefinedRuntimeAttributes>
-                                        <connections>
-                                            <action selector="summaryClicked:" destination="mEi-hH-CUE" eventType="touchUpInside" id="OMz-Gj-DNS"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                                <accessibility key="accessibilityConfiguration" identifier="TitleView"/>
-                                <constraints>
-                                    <constraint firstItem="VGH-oE-ROK" firstAttribute="top" secondItem="30M-sz-Fdm" secondAttribute="top" constant="6" id="3Z1-ce-qjp"/>
-                                    <constraint firstItem="zzd-PE-N0d" firstAttribute="top" secondItem="30M-sz-Fdm" secondAttribute="top" constant="6" id="Eoq-tL-lsC"/>
-                                    <constraint firstItem="pge-ad-xW7" firstAttribute="leading" secondItem="30M-sz-Fdm" secondAttribute="leading" constant="12" id="Xzv-lQ-tu2"/>
-                                    <constraint firstItem="pge-ad-xW7" firstAttribute="top" secondItem="30M-sz-Fdm" secondAttribute="top" constant="6" id="ctL-iT-nzK"/>
-                                    <constraint firstItem="VGH-oE-ROK" firstAttribute="leading" secondItem="30M-sz-Fdm" secondAttribute="leading" constant="20" id="dsn-7b-vYw"/>
-                                    <constraint firstAttribute="height" constant="80" id="pNI-F5-Mq4"/>
-                                    <constraint firstAttribute="trailing" secondItem="zzd-PE-N0d" secondAttribute="trailing" constant="20" id="qHB-F0-0bs"/>
-                                </constraints>
+                                <connections>
+                                    <outlet property="bannerHeightConstraint" destination="xwt-XZ-b09" id="RtZ-VY-i9u"/>
+                                    <outlet property="delegate" destination="mEi-hH-CUE" id="Xk4-Le-anp"/>
+                                    <outlet property="parentViewController" destination="mEi-hH-CUE" id="g5Y-4H-Kc3"/>
+                                </connections>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Weo-LM-Q3A" customClass="BannerLogoView" customModule="Whist_2" customModuleProvider="target">
                                 <rect key="frame" x="112.66666666666667" y="0.0" width="149.66666666666663" height="88"/>
@@ -230,7 +182,8 @@
                                         </constraints>
                                     </view>
                                 </subviews>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <viewLayoutGuide key="safeArea" id="oiF-5s-tTG"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <accessibility key="accessibilityConfiguration" identifier="InstructionContainer"/>
                                 <constraints>
                                     <constraint firstItem="9KR-ym-zGw" firstAttribute="leading" secondItem="oiF-5s-tTG" secondAttribute="leading" id="0CV-G2-DB2"/>
@@ -239,11 +192,10 @@
                                     <constraint firstItem="9KR-ym-zGw" firstAttribute="top" secondItem="oiF-5s-tTG" secondAttribute="top" id="LtT-EC-HWf"/>
                                     <constraint firstItem="9KR-ym-zGw" firstAttribute="trailing" secondItem="oiF-5s-tTG" secondAttribute="trailing" id="YRh-9x-uKI"/>
                                 </constraints>
-                                <viewLayoutGuide key="safeArea" id="oiF-5s-tTG"/>
                             </view>
                             <view hidden="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="r5E-a9-sN5" userLabel="Separator">
                                 <rect key="frame" x="370" y="146" width="0.33333333333331439" height="1"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <accessibility key="accessibilityConfiguration" identifier="Separator"/>
                                 <constraints>
                                     <constraint firstAttribute="width" id="Psj-09-f9S">
@@ -279,7 +231,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pld-hq-Uro" customClass="BidButton" customModule="Whist_2" customModuleProvider="target">
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pld-hq-Uro" customClass="BidButton" customModule="Whist_2" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                                     <color key="backgroundColor" name="Bid Button"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="24"/>
@@ -375,7 +327,8 @@
                                         </constraints>
                                     </view>
                                 </subviews>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <viewLayoutGuide key="safeArea" id="MPT-Qn-B2G"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <accessibility key="accessibilityConfiguration" identifier="Toolbar"/>
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="fNh-i9-9lH" secondAttribute="trailing" constant="12" id="1Q9-bl-XMy"/>
@@ -387,30 +340,27 @@
                                     <constraint firstItem="8rw-oz-v5h" firstAttribute="leading" secondItem="rSw-DA-1Lg" secondAttribute="leading" constant="12" id="kq0-1N-DwH"/>
                                     <constraint firstItem="IVB-I0-IfC" firstAttribute="leading" secondItem="MPT-Qn-B2G" secondAttribute="leading" constant="12" id="wKN-lR-fiO"/>
                                 </constraints>
-                                <viewLayoutGuide key="safeArea" id="MPT-Qn-B2G"/>
                             </view>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="etq-le-R2n"/>
                         <color key="backgroundColor" name="Background"/>
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstAttribute="top" secondItem="Weo-LM-Q3A" secondAttribute="top" id="2Ss-G3-OwK"/>
                             <constraint firstAttribute="trailing" secondItem="jGM-gE-2rv" secondAttribute="trailing" id="2eM-PN-oJy"/>
-                            <constraint firstItem="8hd-6b-lTp" firstAttribute="top" secondItem="30M-sz-Fdm" secondAttribute="bottom" id="3KV-wo-7fc"/>
                             <constraint firstItem="8hd-6b-lTp" firstAttribute="leading" secondItem="etq-le-R2n" secondAttribute="leading" constant="8" id="7Q1-vq-9rN">
                                 <variation key="heightClass=compact" constant="0.0"/>
                             </constraint>
                             <constraint firstItem="otp-xs-7Jm" firstAttribute="leading" secondItem="pS0-jq-6eE" secondAttribute="leading" id="7gF-JI-qcW"/>
                             <constraint firstItem="r5E-a9-sN5" firstAttribute="top" secondItem="8hd-6b-lTp" secondAttribute="bottom" constant="16" id="9GJ-fm-OW1"/>
                             <constraint firstItem="rSw-DA-1Lg" firstAttribute="leading" secondItem="pS0-jq-6eE" secondAttribute="leading" id="BSU-Zm-ua6"/>
-                            <constraint firstItem="8hd-6b-lTp" firstAttribute="leading" secondItem="30M-sz-Fdm" secondAttribute="trailing" id="Ceq-Ku-i7N"/>
-                            <constraint firstItem="Weo-LM-Q3A" firstAttribute="bottom" secondItem="otp-xs-7Jm" secondAttribute="bottom" constant="44" id="DI5-tv-1fA"/>
+                            <constraint firstItem="jGM-gE-2rv" firstAttribute="top" secondItem="otp-xs-7Jm" secondAttribute="bottom" id="DGh-Qz-EJW"/>
+                            <constraint firstItem="Weo-LM-Q3A" firstAttribute="bottom" secondItem="etq-le-R2n" secondAttribute="top" constant="44" id="DI5-tv-1fA"/>
                             <constraint firstAttribute="trailing" secondItem="8hd-6b-lTp" secondAttribute="trailing" constant="8" id="HnB-ln-6NQ">
                                 <variation key="heightClass=compact" constant="0.0"/>
                             </constraint>
                             <constraint firstItem="AtG-Oq-mM4" firstAttribute="top" secondItem="8hd-6b-lTp" secondAttribute="bottom" constant="8" id="IPa-G8-khp"/>
                             <constraint firstItem="8hd-6b-lTp" firstAttribute="top" secondItem="jGM-gE-2rv" secondAttribute="bottom" constant="8" id="Lb2-js-Ia6"/>
-                            <constraint firstItem="30M-sz-Fdm" firstAttribute="leading" secondItem="etq-le-R2n" secondAttribute="leading" id="M8i-Xy-wct"/>
-                            <constraint firstItem="etq-le-R2n" firstAttribute="trailing" secondItem="30M-sz-Fdm" secondAttribute="trailing" id="MgK-WQ-JRD"/>
                             <constraint firstItem="r5E-a9-sN5" firstAttribute="leading" secondItem="jGM-gE-2rv" secondAttribute="trailing" constant="8" id="MwL-Uc-5Cl"/>
                             <constraint firstItem="Weo-LM-Q3A" firstAttribute="centerX" secondItem="pS0-jq-6eE" secondAttribute="centerX" id="NG1-8M-Yaf"/>
                             <constraint firstItem="8hd-6b-lTp" firstAttribute="leading" secondItem="jGM-gE-2rv" secondAttribute="trailing" id="O1j-LI-Iei"/>
@@ -420,26 +370,20 @@
                             <constraint firstAttribute="bottom" secondItem="rSw-DA-1Lg" secondAttribute="bottom" id="d0g-Xj-l1a"/>
                             <constraint firstItem="otp-xs-7Jm" firstAttribute="trailing" secondItem="pS0-jq-6eE" secondAttribute="trailing" id="dcY-gr-ECE"/>
                             <constraint firstItem="rSw-DA-1Lg" firstAttribute="top" secondItem="AtG-Oq-mM4" secondAttribute="bottom" id="dcw-2J-UVK"/>
-                            <constraint firstItem="jGM-gE-2rv" firstAttribute="top" secondItem="30M-sz-Fdm" secondAttribute="bottom" id="gTM-N0-Kzp"/>
                             <constraint firstItem="jGM-gE-2rv" firstAttribute="width" secondItem="etq-le-R2n" secondAttribute="width" multiplier="0.5" id="n8b-50-rFW"/>
                             <constraint firstItem="otp-xs-7Jm" firstAttribute="top" secondItem="pS0-jq-6eE" secondAttribute="top" id="qxz-Gl-hJp"/>
                             <constraint firstItem="etq-le-R2n" firstAttribute="bottom" secondItem="rSw-DA-1Lg" secondAttribute="top" constant="44" id="r5d-1a-obf"/>
                             <constraint firstItem="rSw-DA-1Lg" firstAttribute="top" secondItem="jGM-gE-2rv" secondAttribute="bottom" id="uIC-n6-z62"/>
-                            <constraint firstItem="30M-sz-Fdm" firstAttribute="top" secondItem="etq-le-R2n" secondAttribute="top" id="v5D-eG-RaU"/>
                             <constraint firstItem="etq-le-R2n" firstAttribute="trailing" secondItem="AtG-Oq-mM4" secondAttribute="trailing" constant="10" id="vRL-LR-hDQ"/>
-                            <constraint firstItem="etq-le-R2n" firstAttribute="top" secondItem="otp-xs-7Jm" secondAttribute="bottom" id="xwt-XZ-b09"/>
+                            <constraint firstItem="otp-xs-7Jm" firstAttribute="bottom" secondItem="etq-le-R2n" secondAttribute="top" constant="80" id="xwt-XZ-b09"/>
                             <constraint firstItem="jGM-gE-2rv" firstAttribute="leading" secondItem="pS0-jq-6eE" secondAttribute="leading" id="y0p-uO-hR1"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="etq-le-R2n"/>
                         <variation key="default">
                             <mask key="constraints">
-                                <exclude reference="MgK-WQ-JRD"/>
                                 <exclude reference="DI5-tv-1fA"/>
                                 <exclude reference="2eM-PN-oJy"/>
                                 <exclude reference="n8b-50-rFW"/>
-                                <exclude reference="3KV-wo-7fc"/>
                                 <exclude reference="7Q1-vq-9rN"/>
-                                <exclude reference="Ceq-Ku-i7N"/>
                                 <exclude reference="Lb2-js-Ia6"/>
                                 <exclude reference="O1j-LI-Iei"/>
                                 <exclude reference="OVb-Qf-NUK"/>
@@ -452,8 +396,6 @@
                         <variation key="heightClass=compact">
                             <mask key="constraints">
                                 <include reference="n8b-50-rFW"/>
-                                <include reference="3KV-wo-7fc"/>
-                                <include reference="Ceq-Ku-i7N"/>
                                 <include reference="O1j-LI-Iei"/>
                                 <include reference="Vhh-W5-xfv"/>
                                 <include reference="9GJ-fm-OW1"/>
@@ -463,7 +405,6 @@
                         </variation>
                         <variation key="heightClass=regular">
                             <mask key="constraints">
-                                <include reference="MgK-WQ-JRD"/>
                                 <include reference="DI5-tv-1fA"/>
                                 <include reference="2eM-PN-oJy"/>
                                 <include reference="7Q1-vq-9rN"/>
@@ -478,11 +419,9 @@
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <toolbarItems/>
                     <connections>
+                        <outlet property="banner" destination="otp-xs-7Jm" id="uil-9o-cqq"/>
                         <outlet property="bannerLogoView" destination="Weo-LM-Q3A" id="SLv-kX-n2T"/>
-                        <outlet property="bannerPaddingView" destination="otp-xs-7Jm" id="msq-OK-HSO"/>
                         <outlet property="entryView" destination="pS0-jq-6eE" id="n4n-SH-4Cj"/>
-                        <outlet property="errorsButton" destination="pge-ad-xW7" id="hDi-pr-EZn"/>
-                        <outlet property="finishButton" destination="VGH-oE-ROK" id="ADc-G3-l2R"/>
                         <outlet property="footerRoundTitle" destination="mYF-x3-kAl" id="JwJ-QN-46h"/>
                         <outlet property="instructionContainerView" destination="8hd-6b-lTp" id="BDV-Uc-cQj"/>
                         <outlet property="instructionContainerViewHeightConstraint" destination="H4R-ZC-h79" id="2rv-nw-nNg"/>
@@ -491,16 +430,12 @@
                         <outlet property="playerTableViewHeightConstraint" destination="KVz-Wl-81w" id="bAj-Or-85p"/>
                         <outlet property="scoreButtonCollectionView" destination="AtG-Oq-mM4" id="4Rk-Uu-Ucf"/>
                         <outlet property="separatorView" destination="r5E-a9-sN5" id="USn-xq-Sky"/>
-                        <outlet property="summaryButton" destination="Qsz-Bp-ie1" id="cb5-p1-NcX"/>
-                        <outlet property="titleView" destination="30M-sz-Fdm" id="WbS-Z9-j8g"/>
-                        <outlet property="titleViewHeightConstraint" destination="pNI-F5-Mq4" id="5Iu-rw-58I"/>
                         <outlet property="toolbarButtonViewGroup" destination="fNh-i9-9lH" id="qZz-9y-2Gx"/>
                         <outlet property="toolbarErrorsButton" destination="IVB-I0-IfC" id="ueq-V1-9kL"/>
                         <outlet property="toolbarFinishButton" destination="8rw-oz-v5h" id="z6o-ap-TgV"/>
                         <outlet property="toolbarSummaryButton" destination="Qsz-Bp-ie1" id="NeN-Xq-H1o"/>
                         <outlet property="toolbarView" destination="rSw-DA-1Lg" id="Djg-re-Jt1"/>
                         <outlet property="undoButton" destination="Yq9-4F-fQq" id="Dns-Ua-n9a"/>
-                        <outletCollection property="errorsButtons" destination="pge-ad-xW7" collectionClass="NSMutableArray" id="v1T-Cp-g6m"/>
                         <outletCollection property="errorsButtons" destination="IVB-I0-IfC" collectionClass="NSMutableArray" id="Ll8-WX-4Kj"/>
                     </connections>
                 </viewController>
@@ -539,8 +474,8 @@
         <namedColor name="Separator">
             <color red="0.49411764705882355" green="0.49411764705882355" blue="0.49411764705882355" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
-        <namedColor name="Table Top">
-            <color red="0.53725490196078429" green="0.80392156862745101" blue="0.56470588235294117" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
     </resources>
 </document>

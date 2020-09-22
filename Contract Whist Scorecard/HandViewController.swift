@@ -9,7 +9,7 @@
 import UIKit
 import Combine
 
-class HandViewController: ScorecardViewController, UITableViewDataSource, UITableViewDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, ScorecardAlertDelegate {
+class HandViewController: ScorecardViewController, UITableViewDataSource, UITableViewDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, ScorecardAlertDelegate, BannerDelegate {
     
     // MARK: - Class Properties ======================================================================== -
     
@@ -37,7 +37,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
     private var handViewWidth: CGFloat!
     private var tabletopViewHeight: CGFloat!
     private var bidViewHeight: CGFloat!
-    private var bidViewWidth: CGFloat!
+    private var bidCollectionViewWidth: CGFloat!
     private var handCardHeight: CGFloat!
     private var handCardWidth: CGFloat!
     private var handCardsPerRow: Int!
@@ -45,12 +45,13 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
     private var tabletopCardWidth: CGFloat!
     private var tabletopCellWidth: CGFloat!
     private var bidButtonSize: CGFloat = 50.0
-    private let instructionHeight: CGFloat = 50.0
     private let separatorHeight: CGFloat = 0.0
-    private let playedCardCollectionHorizontalMargins: CGFloat = 16.0
     private let playedCardCollectionVerticalMargins: CGFloat = 24.0
     private let playedCardStats: CGFloat = (3 * 21.0) + 4.0
     private let playedCardSpacing: CGFloat = 4.0
+    private let bidButtonSpacing: CGFloat = 10.0
+    private var horizontalMargins: CGFloat = 8.0
+    private var handTableViewVerticalMargins: CGFloat = 8.0
     private var maxBidButton: Int!
     private var buttonsAcross: Int!
     private var buttonsDown: Int!
@@ -61,17 +62,24 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
     private var tableTopLabelFontSize: CGFloat!
     private var bidCollectionTag: Int!
     private var playedCardCollectionTag: Int!
+    private var lastTitle: String?
+    
+    private let finishButton = 0
+    private let homeButton = 1
+    private let lastHandButton = 2
+    private let roundSummaryButton = 3
+    private let overUnderButton = 4
     
     // UI component pointers
     private var bidButtonEnabled = [Bool](repeating: false, count: 15)
     
     // MARK: - IB Outlets -
     
+    @IBOutlet private weak var banner: Banner!
     @IBOutlet private weak var handView: UIView!
     @IBOutlet private weak var separator: UIView!
     @IBOutlet private weak var handTableView: UITableView!
     @IBOutlet private weak var handHeightConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var handTableViewTrailingConstraint: NSLayoutConstraint!
     @IBOutlet private weak var handSourceView: UIView!
     @IBOutlet private weak var tabletopView: UIView!
     @IBOutlet private weak var statusWidthConstraint: NSLayoutConstraint!
@@ -79,54 +87,61 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
     @IBOutlet private weak var bidCollectionView: UICollectionView!
     @IBOutlet private weak var bidSeparator: UIView!
     @IBOutlet private weak var bidTitleSeparator: UIView!
-    @IBOutlet private weak var instructionView: UIView!
-    @IBOutlet private weak var instructionViewLeadingConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var instructionViewTrailingConstraint: NSLayoutConstraint!
     @IBOutlet private weak var separatorHeightConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var instructionLabel: UILabel!
     @IBOutlet private weak var statusRoundLabel: UILabel!
     @IBOutlet private weak var statusOverUnderLabel: UILabel!
+    @IBOutlet private weak var statusTitleHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var statusPlayer1BidLabel: UILabel!
     @IBOutlet private weak var statusPlayer2BidLabel: UILabel!
     @IBOutlet private weak var statusPlayer3BidLabel: UILabel!
     @IBOutlet private weak var statusPlayer4BidLabel: UILabel!
     @IBOutlet private weak var playedCardCollectionView: UICollectionView!
-    @IBOutlet private weak var bannerPaddingView: UIView!
     @IBOutlet private weak var footerPaddingView: UIView!
     @IBOutlet private weak var leftFooterPaddingView: UIView!
     @IBOutlet private weak var leftPaddingView: UIView!
-    @IBOutlet private weak var finishButton: UIButton!
-    @IBOutlet private weak var lastHandButton: UIButton!
-    @IBOutlet private weak var overUnderButton: UIButton!
-    @IBOutlet private weak var roundSummaryButton: UIButton!
     @IBOutlet private weak var titleBarLongPress: UILongPressGestureRecognizer!
     @IBOutlet private weak var tableTopLongPress: UILongPressGestureRecognizer!
+    @IBOutlet private var viewInsets: [NSLayoutConstraint]!
     
     // MARK: - IB Actions ============================================================================== -
     
-    @IBAction private func finishPressed(_ sender: UIButton) {
+    internal func finishPressed() {
         self.proceed()
     }
     
-    @IBAction private func roundSummaryPressed(_ sender: UIButton) {
+    internal func homePressed() {
+        self.cancel()
+    }
+    
+    internal func showScorepadPressed() {
         self.proceed()
     }
     
-    @IBAction func lastHandPressed(_ sender: Any) {
-        self.lastHand = true
-        self.playedCardCollectionView.reloadData()
+    internal func lastHandPressed() {
+        if !self.lastHand {
+            self.lastHand = true
+            self.playedCardCollectionView.reloadData()
+            self.setBanner(title: "Last Trick", updateLast: false)
+            if self.menuController?.isVisible ?? false {
+                self.handTableView.isUserInteractionEnabled = false
+            }
+        }
     }
     
-    @IBAction func lastHandReleased(_ sender: Any) {
-        self.lastHand = false
-        self.playedCardCollectionView.reloadData()
+    internal func lastHandReleased() {
+        if self.lastHand {
+            self.lastHand = false
+            self.playedCardCollectionView.reloadData()
+            self.setBanner(title: self.lastTitle!)
+            self.handTableView.isUserInteractionEnabled = true
+        }
     }
     
     @IBAction func longPresssGesture(_ sender: UILongPressGestureRecognizer) {
         if sender.state == .began {
-            self.lastHandPressed(sender)
+            self.lastHandPressed()
         } else if sender.state == .ended && self.lastHand {
-            self.lastHandReleased(sender)
+            self.lastHandReleased()
         }
     }
     
@@ -137,13 +152,16 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
         
         // Setup default colors (previously done in StoryBoard) and whisper
         self.defaultViewColors()
-
+        
         // Setup initial state and local references for global state
         self.enteredPlayerNumber = Scorecard.game.handState.enteredPlayerNumber
         self.round = Scorecard.game.handState.round
         Scorecard.game.selectedRound = self.round
         Scorecard.game.maxEnteredRound = self.round
         self.updatedMirroredTrickCards()
+        
+        // Setup banner and buttons
+        self.setupBanner()
         
         // Setup grid tags
         bidCollectionTag = bidCollectionView.tag
@@ -152,12 +170,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
         self.updateMirroredHand()
         self.currentCards = Scorecard.game.roundCards(round)
         
-        // Put suit on summary button
-        self.roundSummaryButton.setTitle(Scorecard.game.roundSuit(self.round).toString(), for: .normal)
-        self.roundSummaryButton.titleLabel?.adjustsFontSizeToFitWidth = true
-        
         // Setup over under
-        self.overUnderButton.titleLabel?.adjustsFontSizeToFitWidth = true
         setupOverUnder()
         
         // Subscribe to score changes
@@ -165,9 +178,6 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        
-        viewHeight = view.safeAreaLayoutGuide.layoutFrame.height
-        viewWidth = view.safeAreaLayoutGuide.layoutFrame.width
         
         // Take responsibility for alerts
         Scorecard.shared.alertDelegate = self
@@ -182,17 +192,22 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
         super.viewWillTransition(to: size, with: coordinator)
         Scorecard.shared.reCenterPopup(self)
         resizing = true
+        // Release last trick if pressed
+        self.menuController?.didDisappear()
         view.setNeedsLayout()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        self.horizontalMargins = (self.containerBanner ? 20 : 8)
         viewHeight = view.safeAreaLayoutGuide.layoutFrame.height
         viewWidth = view.safeAreaLayoutGuide.layoutFrame.width
-        self.instructionViewLeadingConstraint.constant = self.view.safeAreaInsets.left
-        self.instructionViewTrailingConstraint.constant = self.view.safeAreaInsets.right
+        self.viewInsets.forEach{ (constraint) in constraint.constant = horizontalMargins}
         self.separatorHeightConstraint.constant = self.separatorHeight
+        self.statusTitleHeightConstraint.constant = (self.containerBanner ? 0 : 50)
         self.setButtonFormat()
+        self.setupSizes()
+        self.handTableView.reloadData()
         if self.resizing {
             self.bidMode = nil
             self.firstBidRefresh = true
@@ -217,7 +232,6 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
     }
     
     override internal func willDismiss() {
-        self.handTableViewTrailingConstraint = nil
         self.cancelBidSubscriptions()
     }
     
@@ -241,6 +255,8 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
 
         cell.setCollectionViewDataSourceDelegate(self, forRow: indexPath.row)
         self.suitEnable(suitCollectionView: cell.cardCollection, enable: suitEnabled[indexPath.row], suitNumber: indexPath.row + 1)
+        let cardsInRow = min(self.mirroredHand.handSuits[indexPath.row].cards.count, self.handCardsPerRow)
+        cell.cardCollectionWidthConstraint.constant = (CGFloat(cardsInRow) * self.handCardWidth) + 1.0
         
         self.checkTestWait()
         
@@ -435,12 +451,11 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
                 // About to exit bid mode - delay 1 second
                 setupOverUnder()
                 self.setInstructionsHighlight(to: false)
-                self.instructionLabel.text = "Bidding Complete"
-                self.instructionLabel.adjustsFontForContentSizeCategory = true
-                self.finishButton.isHidden = true
+                self.setBanner(title: "Bidding Complete")
+                self.banner.setButton(finishButton, isHidden: true)
                 self.controllerDelegate?.lock(true)
                 self.executeAfter(delay: 1.0) {
-                    self.finishButton.isHidden = false
+                    self.banner.setButton(self.finishButton, isHidden: false)
                     self.controllerDelegate?.lock(false)
                     NotificationCenter.default.post(name: .checkAutoPlayInput, object: self, userInfo: nil)
                     self.bidMode(newBidMode)
@@ -458,19 +473,19 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
             if Scorecard.game.roundPlayerNumber(enteredPlayerNumber: self.enteredPlayerNumber, round: self.round) == bidsMade + 1 {
                 // Your bid
                 bidsEnable(true, blockRemaining: bidsMade == Scorecard.game.currentPlayers - 1)
-                self.instructionLabel.text = "You to bid"
+                self.setBanner(title: "You to bid")
                 self.setInstructionsHighlight(to: true)
                 Scorecard.shared.alertUser(remindAfter: 10.0)
                 self.autoBid()
             } else {
                 bidsEnable(false)
-                self.instructionLabel.text = "\(Scorecard.game.player(entryPlayerNumber: bidsMade + 1).playerMO!.name!) to bid"
+                self.setBanner(title: "\(Scorecard.game.player(entryPlayerNumber: bidsMade + 1).playerMO!.name!) to bid")
                 self.setInstructionsHighlight(to: false)
                 // Get computer player to bid
                 self.controllerDelegate?.robotAction(playerNumber: Scorecard.game.player(entryPlayerNumber: bidsMade + 1).playerNumber, action: .bid)
             }
             setupOverUnder()
-            lastHandButton.isHidden = true
+            self.banner.setButton(lastHandButton, isHidden: true)
             tableTopLongPress.isEnabled = false
             titleBarLongPress.isEnabled = false
         } else {
@@ -487,7 +502,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
                 playerMadeLabel?.textColor = Palette.tableTop.text
                 
                 // Disable lookback
-                lastHandButton.isHidden = true
+                self.banner.setButton(lastHandButton, isHidden: true)
                 tableTopLongPress.isEnabled = false
                 titleBarLongPress.isEnabled = false
 
@@ -497,46 +512,55 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
                     if Scorecard.game.handState.toPlay != self.enteredPlayerNumber {
                         // Don't refresh (or exit) for at least 1 second
                         self.controllerDelegate?.lock(true)
-                        self.finishButton.isHidden = true
+                        self.banner.setButton(finishButton, isHidden: true)
                         self.executeAfter(delay: 1.0) {
-                            self.finishButton.isHidden = false
+                            self.banner.setButton(self.finishButton, isHidden: false)
                             self.controllerDelegate?.lock(false)
                             NotificationCenter.default.post(name: .checkAutoPlayInput, object: self, userInfo: nil)
                         }
                     }	
                 } else {
                     // Hand finished
-                    self.finishButton.isHidden = true
+                    self.banner.setButton(finishButton, isHidden: true)
                     self.controllerDelegate?.lock(true)
-                    self.executeAfter(delay: 2.0) {
+                    self.setBanner(title: "Hand Complete")
+                    let round = Scorecard.game.handState.round
+                    Utility.executeAfter(delay: 1.0) {
                         // Proceed after 2 seconds
                         self.controllerDelegate?.lock(false)
-                        self.proceed()
+                        self.proceed(round: round + 1)
                     }
                 }
             } else {
                 // Work out who should play
                 let hasPlayed = (self.enteredPlayerNumber + (Scorecard.game.handState.toLead! > self.enteredPlayerNumber ? Scorecard.game.currentPlayers : 0)) >= (Scorecard.game.handState.toLead! + Scorecard.game.handState.trickCards.count)
-                lastHandButton.isHidden = (Scorecard.game.handState.lastCards.count == 0 || !hasPlayed || Scorecard.game.handState.lastToLead == nil)
-                tableTopLongPress.isEnabled = !lastHandButton.isHidden
-                titleBarLongPress.isEnabled = !lastHandButton.isHidden
+                let lastHandButtonHidden = (Scorecard.game.handState.lastCards.count == 0 || !hasPlayed || Scorecard.game.handState.lastToLead == nil)
+                self.banner.setButton(lastHandButton, isHidden: lastHandButtonHidden)
+                tableTopLongPress.isEnabled = !lastHandButtonHidden
+                titleBarLongPress.isEnabled = !lastHandButtonHidden
 
                 self.nextCard()
             }
         }
     }
     
-    private func proceed() {
-        self.willDismiss()
-        self.controllerDelegate?.didProceed()
+    private func proceed(round: Int? = nil) {
+        self.controllerDelegate?.didProceed(context: (round == nil ? nil : ["round" : round!]))
     }
     
+    private func cancel() {
+        Scorecard.shared.warnExitGame(from: self, mode: (Scorecard.shared.commsDelegate?.connectionType == .server ? .hosting : .joining)) {
+            self.willDismiss()
+            self.controllerDelegate?.didCancel()
+        }
+    }
+        
     private func executeAfter(delay: TimeInterval, closure: @escaping ()->()) {
         if self.firstTime {
             // Not finished layout - do it immediately
             closure()
         } else {
-            Utility.executeAfter(delay: (Scorecard.shared.autoPlayHands != 0 ? 0.1 : delay), completion: closure)
+            Utility.executeAfter(delay: (Scorecard.shared.autoPlayGames != 0 ? 0.1 : delay), completion: closure)
         }
     }
     
@@ -557,13 +581,13 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
                     self.cardsEnable(true, suit: cardLed.suit)
                 }
             }
-            self.instructionLabel.text = "You to play"
+            self.setBanner(title: "You to play")
             self.setInstructionsHighlight(to: true)
             Scorecard.shared.alertUser(remindAfter: 10.0)
             self.autoPlay()
         } else {
             self.cardsEnable(false)
-            self.instructionLabel.text = "\(Scorecard.game.player(enteredPlayerNumber: Scorecard.game.handState.toPlay).playerMO!.name!) to play"
+            self.setBanner(title: "\(Scorecard.game.player(enteredPlayerNumber: Scorecard.game.handState.toPlay).playerMO!.name!) to play")
             self.setInstructionsHighlight(to: false)
             // Get computer player to play
             self.controllerDelegate?.robotAction(playerNumber: Scorecard.game.handState.toPlay, action: .play)
@@ -608,11 +632,30 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
     
     // MARK: - Form Presentation / Handling Routines =================================================== -
     
+    public func setupBanner() {
+        let roundSuit = Scorecard.game.roundSuit(self.round).toAttributedString()
+        let roundWidth = roundSuit.labelWidth(font: Banner.defaultFont)
+        self.banner.set(title: "Play Hand",
+                        leftButtons: [
+                            BannerButton(image: UIImage(named: "back"), action: self.finishPressed, menuHide: true, menuText: "Show Scorepad", id: finishButton),
+                            BannerButton(image: UIImage(named: "two"), action: self.lastHandPressed, releaseAction: self.lastHandReleased, menuHide: true, menuText: "Show last trick", releaseMenuText: "Hide last trick", id: lastHandButton)],
+                        rightButtons: [
+                            BannerButton(width: 60, action: self.showScorepadPressed, gameDetailHide: true, font: Banner.defaultFont, id: overUnderButton),
+                            BannerButton(attributedTitle: roundSuit, width: roundWidth, action: self.showScorepadPressed, gameDetailHide: true, font: Banner.defaultFont, id: roundSummaryButton)],
+                        nonBannerButtonsAfter: [
+                            BannerButton(action: self.homePressed, menuText: "Abandon Game", menuSpaceBefore: 20.0, id: homeButton)],
+                        menuOption: .playGame,
+                        normalOverrideHeight: 50)
+    }
+    
     public func refreshAll() {
+        self.round = Scorecard.game.handState.round
+        self.bidMode = nil
         self.updateMirroredHand()
         self.handTableView.reloadData()
         self.bidCollectionView.reloadData()
         self.playedCardCollectionView.reloadData()
+        self.stateController()
     }
     
     func setButtonFormat() {
@@ -632,23 +675,24 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
         } else {
             // Assume using about 1/2 the width and 30% of the height - bid title is above the bid summary in this mode
             bidWidthProportion = 0.5
-            bidHeightProportion = 0.30
+            bidHeightProportion = 0.25
             extraRow=0
         }
+        
         
         // Work out the number of buttons that will fit across
         let bidWidthMax = ((viewHeight * bidWidthProportion) - 6.0)
         buttonsAcross = max(2, min(3, Int(bidWidthMax / startButtonSize)))
         
         // Work out the number of buttons that will fit down
-        let bidHeightMax = (viewHeight * bidHeightProportion) - instructionHeight
+        let bidHeightMax = (viewHeight - self.banner.height) * bidHeightProportion
         buttonsDown = max(3, min(4, Int(bidHeightMax / startButtonSize) - extraRow))
         
         // Calculate optimum button size
-        bidButtonSize = max(minButtonSize, min(maxButtonSize, (bidHeightMax / CGFloat(buttonsDown + extraRow)) - 10.0))
+        bidButtonSize = max(minButtonSize, min(maxButtonSize, ((bidHeightMax + bidButtonSpacing) / CGFloat(buttonsDown + extraRow)) - bidButtonSpacing))
         
-        // Calculate width from button size and bumber of buttons
-        bidViewWidth = ((bidButtonSize + 10.0) * CGFloat(buttonsAcross)) + 6.0
+        // Calculate width from button size and number of buttons
+        bidCollectionViewWidth = ((bidButtonSize + self.bidButtonSpacing) * CGFloat(buttonsAcross)) - self.bidButtonSpacing
         
         if ScorecardUI.landscapePhone() {
             // Still need to use all the height
@@ -658,8 +702,9 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
             bidViewHeight = ((bidButtonSize + 10.0) * CGFloat(buttonsDown)) + 12.0
         }
         
-        // Hide vertical separator if there are3 rows of buttons across
-        bidSeparator.isHidden = (buttonsAcross > 2)
+        // Hide vertical separator if there are3 rows of buttons across and hid both separators in container mode
+        bidSeparator.isHidden = (buttonsAcross > 2) || self.containerBanner
+        bidTitleSeparator.isHidden = self.containerBanner
         
         // Calculate total buttons and max bid coped with
         let buttons = (buttonsAcross * buttonsDown)
@@ -671,19 +716,26 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
             maxBidButton = buttons - 2
         }
     }
+    
+    private func setupSizes() {
+        self.handView.layoutIfNeeded()
+        self.handViewWidth = self.handView.frame.width
+        let bannerHeight = self.banner.height
+        if ScorecardUI.landscapePhone() {
+            self.handViewHeight = self.viewHeight - bannerHeight
+            self.tabletopViewHeight = handViewHeight
+        } else {
+            self.handViewHeight = self.viewHeight - bidViewHeight - bannerHeight - separatorHeight
+            self.tabletopViewHeight = bidViewHeight
+        }
+        self.setupBidSize()
+        self.setupTabletopSize()
+        self.setupHandSize()
+    }
 
     func bidMode(_ mode: Bool!) {
         
         self.bidMode = mode
-
-        handViewWidth = (self.viewWidth / (ScorecardUI.landscapePhone() ? 2 : 1))
-        if ScorecardUI.landscapePhone() {
-            handViewHeight = self.viewHeight - instructionHeight
-            tabletopViewHeight = handViewHeight
-        } else {
-            handViewHeight = self.viewHeight - bidViewHeight - instructionHeight - separatorHeight
-            tabletopViewHeight = bidViewHeight
-        }
         
         if bidMode {
             tabletopView.isHidden = true
@@ -713,7 +765,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
                 firstHandRefresh = false
             }
         }
-        self.overUnderButton.isHidden = bidMode
+        self.banner.setButton(overUnderButton, isHidden: bidMode)
     }
     
     func bidsEnable(_ enable: Bool, blockRemaining: Bool = false) {
@@ -777,8 +829,8 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
         // configure the hand section
         
         var maxSuitCards = 0
-        let handTableViewHeight = handViewHeight - 16
-        let handTableViewWidth = handViewWidth! - 16
+        let handTableViewHeight = handViewHeight - (2 * self.handTableViewVerticalMargins)
+        let handTableViewWidth = handViewWidth! - (2 * self.horizontalMargins)
         handCardsPerRow = (handTableViewWidth >= 350 ? 6 : 5)
         // Set hand height
         self.handHeightConstraint.constant = handViewHeight
@@ -790,7 +842,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
         var loop = 1
         while loop <= 2 {
             loop+=1
-        
+            
             var handRows = 0
             for suit in Scorecard.game.handState.hand.handSuits {
                 handRows += Int((suit.cards.count - 1) / handCardsPerRow) + 1
@@ -799,9 +851,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
             
             self.handCardHeight = CGFloat(Int(handTableViewHeight / CGFloat(handRows))+1)
             self.handCardWidth = min(self.handCardHeight * CGFloat(2.0/3.0), handTableViewWidth / CGFloat(handCardsPerRow))
-            
-            handTableViewTrailingConstraint.constant = handTableViewWidth - (CGFloat(min(handCardsPerRow, maxSuitCards)) * handCardWidth) + 4 
-            
+                        
             // Possibly see if more cards would fit on line
             if maxSuitCards <= handCardsPerRow || (CGFloat(handCardsPerRow) * handCardWidth) > handTableViewWidth {
                 break
@@ -813,8 +863,8 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
     }
     
     func setupBidSize() {
- 
-        let statusWidth = (viewWidth / (ScorecardUI.landscapePhone() ? 2 : 1)) - bidViewWidth - 16.0
+        let bidViewWidth = (viewWidth / (ScorecardUI.landscapePhone() ? 2 : 1))
+        let statusWidth =  bidViewWidth - (2 * horizontalMargins) - bidCollectionViewWidth - 8.0
         
         if moreMode {
             statusWidthConstraint.constant = 0
@@ -830,8 +880,8 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
     }
     
     func setupTabletopSize() {
-        // Set tabletop height
-        let tableTopViewWidth: CGFloat = (self.viewWidth / (ScorecardUI.landscapePhone() ? 2 : 1)) - playedCardCollectionHorizontalMargins - (CGFloat(Scorecard.game.currentPlayers-1) * playedCardSpacing)
+        // Set tabletop sizes
+        let tableTopViewWidth: CGFloat = ((self.viewWidth - (2 * self.horizontalMargins)) / (ScorecardUI.landscapePhone() ? 2 : 1)) - (CGFloat(Scorecard.game.currentPlayers-1) * playedCardSpacing)
         tabletopCellWidth = tableTopViewWidth / CGFloat(Scorecard.game.currentPlayers)
         let maxTabletopCardHeight: CGFloat = tabletopViewHeight - playedCardCollectionVerticalMargins - playedCardStats
         let maxTabletopCardWidth = tabletopCellWidth - 8
@@ -983,8 +1033,8 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
     func setupOverUnder() {
         let totalRemaining = Scorecard.game.remaining(playerNumber: 0, round: Scorecard.game.selectedRound, mode: Mode.bid)
 
-        overUnderButton.setTitle("\(totalRemaining >= 0 ? "-" : "+")\(abs(Int64(totalRemaining)))", for: .normal)
-        overUnderButton.setTitleColor((totalRemaining >= 0 ? Palette.contractUnder : Palette.contractOver), for: .normal)
+        let overUnder = NSAttributedString("\(totalRemaining >= 0 ? "-" : "+")\(abs(Int64(totalRemaining)))", color: (totalRemaining >= 0 ? Palette.contractUnder : Palette.contractOver))
+        self.banner.setButton(overUnderButton, attributedTitle: overUnder)
 
         if !Scorecard.game.roundStarted(Scorecard.game.selectedRound) {
             statusOverUnderLabel.text = ""
@@ -992,7 +1042,6 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
             statusOverUnderLabel.textColor = (totalRemaining == 0 ? Palette.contractEqual : (totalRemaining > 0 ? Palette.contractUnderLight : Palette.contractOver))
             statusOverUnderLabel.text = " \(abs(Int64(totalRemaining))) \(totalRemaining >= 0 ? "under" : "over")"
         }
-        statusRoundLabel.textColor = UIColor.white
         statusRoundLabel.attributedText = Scorecard.game.roundTitle(round)
     }
     
@@ -1015,12 +1064,11 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
     }
     
     internal func alertUser(reminder: Bool) {
-        if Utility.isSimulator && Scorecard.shared.autoPlayHands == 0 {
+        if Utility.isSimulator && Scorecard.shared.autoPlayGames == 0 {
             self.whisper.show("Buzz", from: self.view, hideAfter: 2.0)
         }
         if reminder {
-            self.instructionView.alertFlash(duration: 0.3, repeatCount: 3, backgroundColor: Palette.tableTop.background)
-            self.bannerPaddingView.alertFlash(duration: 0.3, repeatCount: 3, backgroundColor: Palette.tableTop.background)
+            self.banner.alertFlash(duration: 0.3, repeatCount: 3, backgroundColor: Palette.tableTop.background)
         }
     }
     
@@ -1039,14 +1087,17 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
         }
     }
     
-    func setInstructionsHighlight(to highlight: Bool) {
-        let nonHighlightBackgroundColor = (highlight ? Palette.hand.background : Palette.tableTop.background)
-        let nonHighlightTextColor = (highlight ? Palette.hand.text : Palette.tableTop.text)
-        self.instructionView.backgroundColor = nonHighlightBackgroundColor
-        self.instructionLabel.textColor = nonHighlightTextColor
-        self.bannerPaddingView.backgroundColor = nonHighlightBackgroundColor
-        self.finishButton.imageView!.image = UIImage(named: (highlight || !self.bidMode ? "cross white" : "cross white"))
-        self.roundSummaryButton.setTitleColor(nonHighlightTextColor, for: .normal)
+    private func setInstructionsHighlight(to highlight: Bool) {
+        let textType = (highlight ? ThemeTextType.normal : ThemeTextType.strong)
+        let backgroundColor = (bidMode ? Palette.normal : Palette.tableTop)
+        self.banner.set(backgroundColor: backgroundColor, titleColor: backgroundColor.textColor(textType))
+    }
+    
+    private func setBanner(title: String, updateLast: Bool = true) {
+        if updateLast {
+            self.lastTitle = title
+        }
+        self.banner.set(title: title, updateMenuTitle: false)
     }
     
     // MARK: - Helper routines to access cells and contents ================================================================= -
@@ -1100,7 +1151,8 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
 
 class SuitTableCell: UITableViewCell {
     
-    @IBOutlet weak var cardCollection: UICollectionView!
+    @IBOutlet fileprivate weak var cardCollection: UICollectionView!
+    @IBOutlet fileprivate weak var cardCollectionWidthConstraint: NSLayoutConstraint!
     
     
     func setCollectionViewDataSourceDelegate
@@ -1224,10 +1276,8 @@ extension HandViewController {
         self.bidView.backgroundColor = Palette.normal.background
         self.footerPaddingView.backgroundColor = Palette.hand.background
         self.handView.backgroundColor = Palette.hand.background
-        self.instructionLabel.textColor = Palette.hand.text
         self.leftFooterPaddingView.backgroundColor = Palette.hand.background
         self.leftPaddingView.backgroundColor = Palette.hand.background
-        self.roundSummaryButton.setTitleColor(Palette.darkHighlight.text, for: .normal)
         self.separator.backgroundColor = Palette.hand.background
         self.statusPlayer1BidLabel.textColor = Palette.normal.text
         self.statusPlayer2BidLabel.textColor = Palette.normal.text

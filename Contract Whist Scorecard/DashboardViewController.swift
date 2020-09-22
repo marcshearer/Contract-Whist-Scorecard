@@ -72,7 +72,6 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     private var observer: NSObjectProtocol?
 
     @IBOutlet private weak var banner: Banner!
-    @IBOutlet private weak var bannerHeightConstraint: NSLayoutConstraint!
     @IBOutlet private var topSectionProportionalHeightConstraint: [NSLayoutConstraint]!
     @IBOutlet private var topSectionHeightConstraint: [NSLayoutConstraint]!
     @IBOutlet private weak var carouselCollectionView: UICollectionView!
@@ -432,9 +431,9 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
                 self.subtitleLabel.text = subTitle
                 self.subtitleViewHeightConstraint.constant = 30
                 self.subtitleLabelWidthConstraint.constant = self.banner.titleWidth
-                self.subtitleView.backgroundColor = self.defaultBannerColor
+                self.subtitleView.backgroundColor = self.defaultBannerColor.background
                 self.subtitleLabel.textAlignment = self.defaultBannerAlignment
-                self.subtitleLabel.textColor = self.defaultBannerTextColor
+                self.subtitleLabel.textColor = self.defaultBannerTextColor()
             } else {
                 self.banner.set(title: subTitle)
             }
@@ -470,9 +469,9 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
             type = .shadow
         }
         
-        self.banner.set(rightButtons: [
-            BannerButton(title: title, image: image, width: 60, action: self.syncPressed, type: type, menuHide: false, font: UIFont.systemFont(ofSize: 14), id: "sync")])
-        self.bannerHeightConstraint.constant = self.defaultBannerHeight
+        self.banner.set(
+            rightButtons: [
+                BannerButton(title: title, image: image, width: 60, action: self.syncPressed, type: type, menuHide: false, font: UIFont.systemFont(ofSize: 14), id: "sync")])
     }
 
     // MARK: - Functions to present other views ========================================================== -

@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -13,24 +16,28 @@
             <objects>
                 <viewController storyboardIdentifier="PlayersViewController" id="U2q-d6-KUx" customClass="PlayersViewController" customModule="Whist_2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Dgm-Gz-P9f">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oeG-CJ-rcg" customClass="Banner" customModule="Whist_2" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="120"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="164"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="string" keyPath="title" value="Profiles"/>
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="menuHide" value="YES"/>
                                     <userDefinedRuntimeAttribute type="image" keyPath="finishImage" value="back"/>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="lowerViewHeight">
+                                        <real key="value" value="50"/>
+                                    </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
+                                    <outlet property="bannerHeightConstraint" destination="5kh-d7-GQW" id="fPO-su-KMW"/>
                                     <outlet property="delegate" destination="U2q-d6-KUx" id="5ua-re-5TT"/>
                                     <outlet property="parentViewController" destination="U2q-d6-KUx" id="dA7-7D-q0P"/>
                                 </connections>
                             </view>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" prefetchingEnabled="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4L5-Yq-y5K">
-                                <rect key="frame" x="0.0" y="120" width="600" height="480"/>
+                                <rect key="frame" x="0.0" y="164" width="414" height="732"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="0iP-gI-cFt">
                                     <size key="itemSize" width="128" height="128"/>
@@ -88,7 +95,8 @@
                                 </connections>
                             </collectionView>
                         </subviews>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <viewLayoutGuide key="safeArea" id="elD-t0-vy2"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <accessibility key="accessibilityConfiguration" identifier="Players"/>
                         <constraints>
                             <constraint firstItem="oeG-CJ-rcg" firstAttribute="bottom" secondItem="elD-t0-vy2" secondAttribute="top" constant="120" id="5kh-d7-GQW"/>
@@ -100,14 +108,12 @@
                             <constraint firstItem="elD-t0-vy2" firstAttribute="trailing" secondItem="4L5-Yq-y5K" secondAttribute="trailing" id="eSY-Zs-w8r"/>
                             <constraint firstItem="4L5-Yq-y5K" firstAttribute="top" secondItem="oeG-CJ-rcg" secondAttribute="bottom" id="k4E-Hh-7ZE"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="elD-t0-vy2"/>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="Tva-fJ-Lfw" appends="YES" id="cwf-8B-6or"/>
                         </connections>
                     </view>
                     <connections>
                         <outlet property="banner" destination="oeG-CJ-rcg" id="OPB-Qo-9de"/>
-                        <outlet property="bannerHeightConstraint" destination="5kh-d7-GQW" id="aoh-R3-1jF"/>
                         <outlet property="collectionView" destination="4L5-Yq-y5K" id="sVz-PO-P8D"/>
                     </connections>
                 </viewController>
@@ -126,5 +132,8 @@
         <namedColor name="Clear">
             <color red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
     </resources>
 </document>

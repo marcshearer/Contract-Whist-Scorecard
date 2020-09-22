@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -112,7 +113,7 @@
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="H6T-vo-ms1" userLabel="Info Button Container">
                                                         <rect key="frame" x="26" y="104.5" width="28" height="30"/>
                                                         <subviews>
-                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Min-RN-IWk" customClass="RoundedButton" customModule="Whist_2" customModuleProvider="target">
+                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Min-RN-IWk" customClass="RoundedButton" customModule="Whist_2" customModuleProvider="target">
                                                                 <rect key="frame" x="0.0" y="0.0" width="28" height="30"/>
                                                                 <state key="normal" title="i"/>
                                                             </button>
@@ -219,7 +220,7 @@
                                                                                     <outlet property="delegate" destination="1IM-Ht-gqg" id="xzE-9p-qxS"/>
                                                                                 </connections>
                                                                             </textField>
-                                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="r7j-ct-C03" userLabel="Download Players From Cloud" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
+                                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="r7j-ct-C03" userLabel="Download Players From Cloud" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
                                                                                 <rect key="frame" x="50.5" y="93" width="234.5" height="40"/>
                                                                                 <constraints>
                                                                                     <constraint firstAttribute="height" constant="40" id="W3C-er-vJR"/>
@@ -268,7 +269,7 @@
                                                                                 <color key="tintColor" name="Emphasis"/>
                                                                                 <color key="onTintColor" name="Emphasis"/>
                                                                             </switch>
-                                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hWL-vp-NMG" userLabel="Home Button" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
+                                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hWL-vp-NMG" userLabel="Home Button" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
                                                                                 <rect key="frame" x="30" y="135" width="275" height="50"/>
                                                                                 <constraints>
                                                                                     <constraint firstAttribute="height" constant="50" id="tFi-FF-5XO"/>
@@ -423,7 +424,7 @@
                                                                                         <color key="tintColor" name="Emphasis"/>
                                                                                         <color key="onTintColor" name="Emphasis"/>
                                                                                     </switch>
-                                                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NRM-Ik-bSI" userLabel="Home Button" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
+                                                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NRM-Ik-bSI" userLabel="Home Button" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
                                                                                         <rect key="frame" x="30" y="70" width="275" height="50"/>
                                                                                         <constraints>
                                                                                             <constraint firstAttribute="height" constant="50" id="glc-nS-wpp"/>
@@ -466,6 +467,7 @@
                                                                         </constraints>
                                                                     </view>
                                                                 </subviews>
+                                                                <viewLayoutGuide key="safeArea" id="qnq-Ha-dWp"/>
                                                                 <color key="backgroundColor" name="Clear"/>
                                                                 <constraints>
                                                                     <constraint firstItem="k6K-JD-dqz" firstAttribute="top" secondItem="FVx-vr-YSF" secondAttribute="bottom" id="23g-L6-3dT"/>
@@ -476,9 +478,9 @@
                                                                     <constraint firstItem="FVx-vr-YSF" firstAttribute="top" secondItem="8J8-Vm-nCo" secondAttribute="top" id="ncl-Od-Ebf"/>
                                                                     <constraint firstItem="qnq-Ha-dWp" firstAttribute="trailing" secondItem="k6K-JD-dqz" secondAttribute="trailing" constant="20" id="tYJ-Pi-r9E"/>
                                                                 </constraints>
-                                                                <viewLayoutGuide key="safeArea" id="qnq-Ha-dWp"/>
                                                             </view>
                                                         </subviews>
+                                                        <viewLayoutGuide key="safeArea" id="ZES-Ck-4an"/>
                                                         <color key="backgroundColor" name="Clear"/>
                                                         <constraints>
                                                             <constraint firstItem="GKG-0U-Qdr" firstAttribute="leading" secondItem="ZES-Ck-4an" secondAttribute="leading" constant="20" id="1iE-PY-uA5"/>
@@ -492,9 +494,9 @@
                                                             <constraint firstItem="f7X-tF-vWj" firstAttribute="bottom" secondItem="GKG-0U-Qdr" secondAttribute="top" constant="-20" id="iuq-WR-GH2"/>
                                                             <constraint firstItem="8J8-Vm-nCo" firstAttribute="top" secondItem="GKG-0U-Qdr" secondAttribute="bottom" constant="20" id="wUm-Jf-VE4"/>
                                                         </constraints>
-                                                        <viewLayoutGuide key="safeArea" id="ZES-Ck-4an"/>
                                                     </view>
                                                 </subviews>
+                                                <viewLayoutGuide key="safeArea" id="Fjv-7h-VPE"/>
                                                 <color key="backgroundColor" name="Clear"/>
                                                 <constraints>
                                                     <constraint firstItem="zUI-T7-Tua" firstAttribute="leading" secondItem="pC7-CE-6dr" secondAttribute="leading" id="K5d-3i-Ju3"/>
@@ -503,12 +505,11 @@
                                                     <constraint firstItem="F7d-oP-X1Z" firstAttribute="leading" secondItem="Fjv-7h-VPE" secondAttribute="leading" constant="20" id="wd2-zW-FyX"/>
                                                     <constraint firstItem="zUI-T7-Tua" firstAttribute="top" secondItem="F7d-oP-X1Z" secondAttribute="bottom" id="zqD-Vf-Zdw"/>
                                                 </constraints>
-                                                <viewLayoutGuide key="safeArea" id="Fjv-7h-VPE"/>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LKq-GJ-a3A" userLabel="Change Button Container">
                                                 <rect key="frame" x="147.5" y="137" width="80" height="25"/>
                                                 <subviews>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pr2-db-kc2" customClass="RoundedButton" customModule="Whist_2" customModuleProvider="target">
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pr2-db-kc2" customClass="RoundedButton" customModule="Whist_2" customModuleProvider="target">
                                                         <rect key="frame" x="0.0" y="0.0" width="80" height="25"/>
                                                         <state key="normal" title="Change"/>
                                                         <connections>
@@ -527,6 +528,7 @@
                                                 </constraints>
                                             </view>
                                         </subviews>
+                                        <viewLayoutGuide key="safeArea" id="6Tz-bh-qCZ"/>
                                         <color key="backgroundColor" name="Clear"/>
                                         <constraints>
                                             <constraint firstItem="66g-bK-cfb" firstAttribute="height" secondItem="mkc-cU-TeA" secondAttribute="height" multiplier="10.5:38" id="0d7-40-5Du"/>
@@ -544,9 +546,9 @@
                                             <constraint firstItem="66g-bK-cfb" firstAttribute="leading" secondItem="mkc-cU-TeA" secondAttribute="leading" id="hsH-Kn-R5M"/>
                                             <constraint firstItem="pC7-CE-6dr" firstAttribute="top" secondItem="QFU-gO-Ca1" secondAttribute="bottom" constant="-35" id="nTR-SE-ti7"/>
                                         </constraints>
-                                        <viewLayoutGuide key="safeArea" id="6Tz-bh-qCZ"/>
                                     </view>
                                 </subviews>
+                                <viewLayoutGuide key="safeArea" id="RdO-dT-fn1"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="mkc-cU-TeA" secondAttribute="trailing" id="Np0-2N-zxq"/>
@@ -559,11 +561,11 @@
                                     <constraint firstItem="mkc-cU-TeA" firstAttribute="top" secondItem="6JW-ot-MQU" secondAttribute="top" id="rtD-8e-NQl"/>
                                     <constraint firstItem="mkc-cU-TeA" firstAttribute="leading" secondItem="69S-Yb-MMP" secondAttribute="leading" id="yk5-Gb-68G"/>
                                 </constraints>
-                                <viewLayoutGuide key="safeArea" id="RdO-dT-fn1"/>
                                 <viewLayoutGuide key="contentLayoutGuide" id="6JW-ot-MQU"/>
                                 <viewLayoutGuide key="frameLayoutGuide" id="VEt-uj-Rvm"/>
                             </scrollView>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="qaw-Cq-HSJ"/>
                         <color key="backgroundColor" name="Background"/>
                         <constraints>
                             <constraint firstAttribute="bottom" secondItem="69S-Yb-MMP" secondAttribute="bottom" id="04A-Mc-jsT"/>
@@ -575,7 +577,6 @@
                             <constraint firstAttribute="trailing" secondItem="x1u-ya-Uop" secondAttribute="trailing" id="pTA-pU-t3g"/>
                             <constraint firstAttribute="top" secondItem="x1u-ya-Uop" secondAttribute="top" id="zeV-NT-rv8"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="qaw-Cq-HSJ"/>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
                     <toolbarItems/>

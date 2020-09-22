@@ -1,5 +1,5 @@
 //
-//  LaunchScreenViewController.swift
+//  LaunchScreenView.swift
 //  Contract Whist Scorecard
 //
 //  Created by Marc Shearer on 28/05/2020.
@@ -108,6 +108,9 @@ class LaunchScreenView: UIView, SyncDelegate, ReconcileDelegate {
         
         self.message.text = "Loading..."
         Scorecard.shared.getVersion() {
+            // Wait for network status (up to 5 seconds)
+            Scorecard.reachability.waitForStatus()
+            
             // Don't call this until any upgrade has taken place
             self.getCloudVersion()
         }

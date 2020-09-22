@@ -91,6 +91,8 @@
 		B23970D324AF511900E3C2A9 /* DataTableTileHighScoreDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23970D224AF511900E3C2A9 /* DataTableTileHighScoreDataSource.swift */; };
 		B23970DB24AF77DE00E3C2A9 /* HighScoresDashboardLandscapeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B23970D824AF77DE00E3C2A9 /* HighScoresDashboardLandscapeView.xib */; };
 		B23970DC24AF77DE00E3C2A9 /* HighScoresDashboardPortraitView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B23970D924AF77DE00E3C2A9 /* HighScoresDashboardPortraitView.xib */; };
+		B23D46F62514AACF0018E954 /* NextHandViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B23D46F52514AACF0018E954 /* NextHandViewController.storyboard */; };
+		B23D46FC2514AB130018E954 /* NextHandViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23D46FB2514AB130018E954 /* NextHandViewController.swift */; };
 		B23D9C6F24AE5132002C721B /* BubbleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23D9C6E24AE5132002C721B /* BubbleView.swift */; };
 		B2430CC722EABD1D00C4FC77 /* SlideOutButtonView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2430CC622EABD1D00C4FC77 /* SlideOutButtonView.xib */; };
 		B2430CC922EABD3100C4FC77 /* SlideOutButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2430CC822EABD3100C4FC77 /* SlideOutButtonView.swift */; };
@@ -376,6 +378,8 @@
 		B23970D224AF511900E3C2A9 /* DataTableTileHighScoreDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTableTileHighScoreDataSource.swift; sourceTree = "<group>"; };
 		B23970D824AF77DE00E3C2A9 /* HighScoresDashboardLandscapeView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HighScoresDashboardLandscapeView.xib; sourceTree = "<group>"; };
 		B23970D924AF77DE00E3C2A9 /* HighScoresDashboardPortraitView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HighScoresDashboardPortraitView.xib; sourceTree = "<group>"; };
+		B23D46F52514AACF0018E954 /* NextHandViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = NextHandViewController.storyboard; sourceTree = "<group>"; };
+		B23D46FB2514AB130018E954 /* NextHandViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextHandViewController.swift; sourceTree = "<group>"; };
 		B23D9C6E24AE5132002C721B /* BubbleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BubbleView.swift; sourceTree = "<group>"; };
 		B2430CC622EABD1D00C4FC77 /* SlideOutButtonView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SlideOutButtonView.xib; sourceTree = "<group>"; };
 		B2430CC822EABD3100C4FC77 /* SlideOutButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideOutButtonView.swift; sourceTree = "<group>"; };
@@ -977,6 +981,15 @@
 			name = "Container Panels";
 			sourceTree = "<group>";
 		};
+		B23D46F42514AABD0018E954 /* Next Hand */ = {
+			isa = PBXGroup;
+			children = (
+				B23D46F52514AACF0018E954 /* NextHandViewController.storyboard */,
+				B23D46FB2514AB130018E954 /* NextHandViewController.swift */,
+			);
+			name = "Next Hand";
+			sourceTree = "<group>";
+		};
 		B2430CCA22EABD4800C4FC77 /* Slide Out Button */ = {
 			isa = PBXGroup;
 			children = (
@@ -1142,6 +1155,7 @@
 			children = (
 				B221EEE7210B1AB700F7FBA0 /* Client */,
 				B221EEE5210B1AA900F7FBA0 /* Hand */,
+				B23D46F42514AABD0018E954 /* Next Hand */,
 				B2361A3822D5B975007D88BB /* Confirm Played */,
 				B2B18016211862FF008D3BAA /* Review */,
 				B2E065C224AB02A00055C376 /* Related Players */,
@@ -1725,6 +1739,7 @@
 				B228E3C224A10F36006D91CE /* EveryoneDashboardPortraitView.xib in Resources */,
 				B203ECCB24F8EBE6001E2CED /* Banner.xib in Resources */,
 				B2594E862251FEB2004398FB /* MyDevices.sh in Resources */,
+				B23D46F62514AACF0018E954 /* NextHandViewController.storyboard in Resources */,
 				B228E3C024A10ECC006D91CE /* AwardsDashboardPortraitView.xib in Resources */,
 				B2E065CD24AB0EE30055C376 /* RelatedPlayersTableViewCell.xib in Resources */,
 				B228E3BC24A10274006D91CE /* PersonalDashboardPortraitView.xib in Resources */,
@@ -1882,6 +1897,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B2693CCB22C78C0B00596D85 /* Statistics Viewer.swift in Sources */,
+				B23D46FC2514AB130018E954 /* NextHandViewController.swift in Sources */,
 				B2144C5124653BF900CF56B7 /* Game Location.swift in Sources */,
 				B202551F22B13A560074310A /* Constraint.swift in Sources */,
 				B2B755051E58A2D900B1313B /* HistoryDetailViewController.swift in Sources */,

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class EntryViewController: ScorecardViewController, UITableViewDataSource, UITableViewDelegate {
+class EntryViewController: ScorecardViewController, UITableViewDataSource, UITableViewDelegate, BannerDelegate {
     
     // MARK: - Class Properties ======================================================================== -
     
@@ -35,6 +35,10 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
     private var lastViewHeight: CGFloat = 0.0
     private var roundSummaryViewController: RoundSummaryViewController!
     private var smallScreen = false
+    private var saveButton = 0
+    private var errorsButton = 1
+    private var roundSummaryButton = 2
+    private var homeButton = 3
     
     // Cell sizes
     private let scoreWidth: CGFloat = 50.0
@@ -53,9 +57,7 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
     // MARK: - IB Outlets ============================================================================== -
 
     @IBOutlet private weak var bannerLogoView: BannerLogoView!
-    @IBOutlet private weak var titleView: UIView!
-    @IBOutlet private weak var titleViewHeightConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var bannerPaddingView: InsetPaddingView!
+    @IBOutlet private weak var banner: Banner!
     @IBOutlet private weak var toolbarView: UIView!
     @IBOutlet private weak var toolbarButtonViewGroup: ViewGroup!
     @IBOutlet private weak var entryView: UIView!
@@ -68,9 +70,6 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
     @IBOutlet private weak var scoreButtonCollectionView: UICollectionView!
     @IBOutlet private weak var footerRoundTitle: UILabel!
     @IBOutlet private weak var undoButton: RoundedButton!
-    @IBOutlet private weak var finishButton: RoundedButton!
-    @IBOutlet private weak var errorsButton: RoundedButton!
-    @IBOutlet private weak var summaryButton: RoundedButton!
     @IBOutlet private weak var toolbarFinishButton: RoundedButton!
     @IBOutlet private weak var toolbarErrorsButton: RoundedButton!
     @IBOutlet private weak var toolbarSummaryButton: RoundedButton!
@@ -86,9 +85,17 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
         setForm(true)
     }
     
+    internal func summaryClicked() {
+        self.summaryClicked(self)
+    }
+    
     @IBAction func summaryClicked(_ sender: Any) {
         // Round in toolbar - show summary
         self.controllerDelegate?.didProceed()
+    }
+    
+    internal func finishPressed() {
+        self.saveScorePressed(self)
     }
     
     @IBAction func saveScorePressed(_ sender: Any) {
@@ -97,8 +104,15 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
         }
     }
     
+    internal func homePressed() {
+        Scorecard.shared.warnExitGame(from: self, mode: .scoring) {
+            self.willDismiss()
+            self.controllerDelegate?.didCancel(context: ["home" : true])
+        }
+    }
+    
     @IBAction func rightSwipe(recognizer:UISwipeGestureRecognizer) {
-        self.saveScorePressed(finishButton!)
+        self.finishPressed()
     }
         
 // MARK: - View Overrides ========================================================================== -
@@ -108,6 +122,9 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
         
         // Setup default colors (previously done in StoryBoard
         self.defaultViewColors()
+        
+        // Setup banner
+        self.setupBanner()
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -187,9 +204,9 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
         
         availableHeight -= self.instructionContainerViewHeightConstraint.constant // Subtract out (reduced) instruction
         if smallScreen {
-            self.titleViewHeightConstraint.constant = 0.0
+            self.banner.set(normalOverrideHeight: 0)
         } else {
-            self.titleViewHeightConstraint.constant = min(80, max(minTitleViewHeight, availableHeight))
+            self.banner.set(normalOverrideHeight: min(80, max(minTitleViewHeight, availableHeight)), containerOverrideHeight: self.defaultBannerHeight - self.rowHeight + 8)
         }
     }
     
@@ -236,6 +253,28 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
     }
         
     // MARK: - Form Presentation / Handling Routines =================================================== -
+    
+    private func setupBanner() {
+         
+        let leftButtons = [
+            BannerButton(image: UIImage(named: "back"), action: self.finishPressed, menuHide: true, menuText: "Show Scorepad", id: saveButton),
+            BannerButton(title: "i", action: self.finishPressed, type: .rounded, menuHide: true, menuText: "Fix Errors to Enable Exit!", menuTextColor: Palette.errorCondition, backgroundColor: .error, id: errorsButton)]
+        
+        let rightButtons = [
+            BannerButton(image: UIImage(named: "forward"), action: self.summaryClicked, menuHide: true, id: roundSummaryButton)]
+        
+        let nonBannerButtonsAfter = [
+            BannerButton(action: self.homePressed, menuText: "Abandon Game", menuSpaceBefore: 20, id: homeButton)]
+        
+        self.banner.set(
+            menuTitle: "Score Entry",
+            leftButtons: leftButtons,
+            rightButtons: rightButtons,
+            nonBannerButtonsAfter: nonBannerButtonsAfter,
+            backgroundColor: Palette.banner)
+        
+    }
+    
     func setupFlow() {
         // Set up flow of cursor round screen
         self.flow = Flow()
@@ -266,7 +305,7 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
         let title = Scorecard.game.roundTitle(Scorecard.game.selectedRound, rankColor: Palette.total.text)
         footerRoundTitle.attributedText = title
         if ScorecardUI.screenHeight < 667.0 {
-            // Smaller than an iPhone 7 portrait or on a tablet
+            // Smaller than an iPhone 7
             self.smallScreen = true
         } else {
             self.smallScreen = false
@@ -302,7 +341,7 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
     
     func enableMovementButtons() {
         self.toolbarButtonViewGroup.isHidden(view: self.undoButton, (self.undo.first == nil))
-        self.summaryButton.isHidden = smallScreen || bidOnlyMode
+        self.banner.setButton(roundSummaryButton, isHidden: smallScreen || bidOnlyMode)
         self.toolbarButtonViewGroup.isHidden(view: self.toolbarSummaryButton, (!smallScreen || bidOnlyMode))
     }
     
@@ -324,8 +363,8 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
     }
     
     private func hideFinishButtons(errors: Bool) {
-        self.finishButton.isHidden = (smallScreen || errors)
-        self.errorsButton.isHidden = (smallScreen || !errors)
+        self.banner.setButton(saveButton, isHidden: smallScreen || errors)
+        self.banner.setButton(errorsButton, isHidden: smallScreen || !errors)
         self.toolbarFinishButton.isHidden = (!smallScreen || errors)
         self.toolbarErrorsButton.isHidden = (!smallScreen || !errors)
     }
@@ -1000,10 +1039,8 @@ extension EntryViewController {
 
         self.bannerLogoView.fillColor = Palette.bannerShadow.background
         self.bannerLogoView.strokeColor = Palette.banner.text
-        self.bannerPaddingView.bannerColor = Palette.banner.background
         self.entryView.backgroundColor = Palette.normal.background
         self.errorsButtons.forEach { $0.backgroundColor = Palette.error.background }
-        self.titleView.backgroundColor = Palette.banner.background
         self.toolbarView.backgroundColor = Palette.total.background
         self.instructionContainerView.backgroundColor = Palette.banner.background
         self.instructionLabel.textColor = Palette.banner.text

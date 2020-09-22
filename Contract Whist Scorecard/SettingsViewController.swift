@@ -102,7 +102,6 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     
     // MARK: - IB Outlets ============================================================================== -
     @IBOutlet private weak var banner: Banner!
-    @IBOutlet private weak var bannerHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var settingsTableView: UITableView!
     @IBOutlet private weak var thisPlayerContainerView: UIView!
     @IBOutlet private weak var thisPlayerThumbnailView: ThumbnailView!
@@ -739,7 +738,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     
     internal func scrollViewDidScroll(_ tableView: UIScrollView) {
         // Configure collapsible header
-        if self.menuController == nil { // Change player will be in menu panel otherwise
+        if !(self.menuController?.isVisible ?? false) { // Change player will be in menu panel otherwise
             if tableView == self.settingsTableView {
                 if tableView.contentOffset.y > 10.0 && !self.availableSpaceHeightConstraint.isActive {
                     Utility.animate(view: self.view, duration: 0.3) {
@@ -1561,9 +1560,8 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     }
     
     private func setupPanelModeBannerSize() {
-        if self.menuController != nil {
+        if self.menuController?.isVisible ?? false {
             // Change player will be in menu panel
-            self.bannerHeightConstraint.constant = self.defaultBannerHeight
             self.topSectionHeightConstraint.isActive = true
             self.availableSpaceHeightConstraint.isActive = false
             self.topSectionProportionalHeightConstraint.isActive = false

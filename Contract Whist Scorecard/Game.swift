@@ -432,7 +432,16 @@ class Game {
         
         return remaining
     }
-
+    
+    /// overUnder
+    /// - Parameter round: round number
+    /// - Returns: number over/under for round
+    public func overUnder(round: Int) -> NSAttributedString {
+        let totalRemaining = self.remaining(playerNumber: 0, round: round, mode: Mode.bid)
+        let overUnder = NSAttributedString("\(abs(Int64(totalRemaining))) \(totalRemaining >= 0 ? "under" : "over")", color: (totalRemaining == 0 ? Palette.contractEqual : (totalRemaining > 0 ? Palette.contractUnder : Palette.contractOver)))
+        return overUnder
+    }
+    
         /**
      Returns the entered player number given the position this player appears in the scorepad (first dealer first)
      - Parameter scorepadPlayerNumber: 1-4 in order players appear in scorecard

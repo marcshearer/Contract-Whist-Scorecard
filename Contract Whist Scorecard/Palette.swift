@@ -67,7 +67,7 @@ class Palette {
     @SpecificColor(.history) static var history
     @SpecificColor(.stats) static var stats
     @SpecificColor(.highScores) static var highScores
-    @SpecificColor(.error) static var errorCondition
+    @SpecificColor(.errorCondition) static var errorCondition
     @SpecificColor(.confetti) static var confetti
     
     public static func ignoringGameBanners(actions: ()->()) {

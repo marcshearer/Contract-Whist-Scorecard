@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -13,12 +16,12 @@
             <objects>
                 <viewController storyboardIdentifier="DashboardViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="D0r-VL-UQ4" customClass="DashboardViewController" customModule="Whist_2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" clipsSubviews="YES" contentMode="scaleToFill" id="qLc-Of-9eu" userLabel="Dashboard View">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kGC-DC-mvn" customClass="Banner" customModule="Whist_2" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="88"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="string" keyPath="title" value="Results"/>
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="menuHide" value="YES"/>
@@ -26,15 +29,16 @@
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="disableOptions" value="NO"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
+                                    <outlet property="bannerHeightConstraint" destination="I2U-3v-5TF" id="FGS-or-dNF"/>
                                     <outlet property="delegate" destination="D0r-VL-UQ4" id="bZu-2e-rqy"/>
                                     <outlet property="parentViewController" destination="D0r-VL-UQ4" id="8Ia-LF-RoS"/>
                                 </connections>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EsP-5F-m7w" userLabel="Subtitle View">
-                                <rect key="frame" x="0.0" y="44" width="600" height="0.0"/>
+                                <rect key="frame" x="0.0" y="88" width="414" height="0.0"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1jG-Wm-nUW">
-                                        <rect key="frame" x="200" y="0.0" width="200" height="0.0"/>
+                                        <rect key="frame" x="107" y="0.0" width="200" height="0.0"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="200" id="fxp-9b-Pp3"/>
                                         </constraints>
@@ -43,7 +47,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" id="7Z2-77-dTs"/>
                                     <constraint firstAttribute="bottom" secondItem="1jG-Wm-nUW" secondAttribute="bottom" id="JOH-nF-yIZ"/>
@@ -52,10 +56,10 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TXF-Mu-K4x" userLabel="Top Section">
-                                <rect key="frame" x="0.0" y="44" width="600" height="0.0"/>
+                                <rect key="frame" x="0.0" y="88" width="414" height="180"/>
                                 <subviews>
                                     <collectionView multipleTouchEnabled="YES" tag="1" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="gyh-A2-DhL">
-                                        <rect key="frame" x="0.0" y="-15" width="600" height="0.0"/>
+                                        <rect key="frame" x="0.0" y="45" width="414" height="120"/>
                                         <color key="backgroundColor" name="Clear"/>
                                         <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Rmq-nY-NHs" customClass="CustomCollectionViewLayout" customModule="Whist_2" customModuleProvider="target">
                                             <size key="itemSize" width="128" height="128"/>
@@ -74,8 +78,10 @@
                                         </collectionViewFlowLayout>
                                         <cells>
                                             <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Carousel Cell" id="kJB-SH-uin" customClass="DashboardCarouselCell" customModule="Whist_2" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="-4" width="128" height="128"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <collectionViewCellContentView key="contentView" opaque="NO" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="DLW-0u-9PU">
+                                                    <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BB5-sF-0KC">
@@ -94,7 +100,7 @@
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                             </subviews>
-                                                            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                             <constraints>
                                                                 <constraint firstItem="qUi-Gy-ike" firstAttribute="height" secondItem="BB5-sF-0KC" secondAttribute="height" multiplier="2:3" id="5Fg-wr-bFh"/>
                                                                 <constraint firstItem="qUi-Gy-ike" firstAttribute="centerY" secondItem="BB5-sF-0KC" secondAttribute="centerY" id="UaC-QK-pTg"/>
@@ -128,7 +134,7 @@
                                         </connections>
                                     </collectionView>
                                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="2" contentMode="scaleToFill" alwaysBounceHorizontal="YES" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="skN-et-kCR">
-                                        <rect key="frame" x="280" y="-10" width="40" height="10"/>
+                                        <rect key="frame" x="187" y="170" width="40" height="10"/>
                                         <color key="backgroundColor" name="Clear"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="40" id="Why-cZ-zfu"/>
@@ -185,7 +191,7 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hiY-hK-Vax" userLabel="Dashboard">
-                                <rect key="frame" x="0.0" y="44" width="600" height="522"/>
+                                <rect key="frame" x="0.0" y="268" width="414" height="594"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <accessibility key="accessibilityConfiguration" identifier="Dashboard"/>
                                 <gestureRecognizers/>
@@ -195,7 +201,8 @@
                                 </connections>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <viewLayoutGuide key="safeArea" id="c6O-8s-uBR"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstAttribute="bottom" secondItem="hiY-hK-Vax" secondAttribute="bottom" constant="34" id="1KP-tb-Eog"/>
                             <constraint firstItem="TXF-Mu-K4x" firstAttribute="trailing" secondItem="qLc-Of-9eu" secondAttribute="trailing" id="8lO-Jc-ddV"/>
@@ -214,7 +221,6 @@
                             <constraint firstItem="EsP-5F-m7w" firstAttribute="top" secondItem="kGC-DC-mvn" secondAttribute="bottom" id="vmD-IT-RVN"/>
                             <constraint firstItem="kGC-DC-mvn" firstAttribute="top" secondItem="qLc-Of-9eu" secondAttribute="top" id="zZq-US-QbZ"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="c6O-8s-uBR"/>
                         <variation key="default">
                             <mask key="constraints">
                                 <exclude reference="CKf-Oj-LQS"/>
@@ -237,7 +243,6 @@
                     </view>
                     <connections>
                         <outlet property="banner" destination="kGC-DC-mvn" id="GLf-kn-Qra"/>
-                        <outlet property="bannerHeightConstraint" destination="I2U-3v-5TF" id="Xc2-bl-mtw"/>
                         <outlet property="carouselCollectionView" destination="gyh-A2-DhL" id="POh-Xv-bHe"/>
                         <outlet property="carouselCollectionViewFlowLayout" destination="Rmq-nY-NHs" id="oHt-bJ-Qjm"/>
                         <outlet property="dashboardContainerBottomConstraint" destination="1KP-tb-Eog" id="515-46-Efn"/>
@@ -277,5 +282,8 @@
         <namedColor name="Clear">
             <color red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
     </resources>
 </document>

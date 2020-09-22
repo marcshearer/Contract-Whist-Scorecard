@@ -740,19 +740,17 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
         // Configure collapsible header
         if !(self.menuController?.isVisible ?? false) { // Change player will be in menu panel otherwise
             if tableView == self.settingsTableView {
-                if tableView.contentOffset.y > 10.0 && !self.availableSpaceHeightConstraint.isActive {
+                if tableView.contentOffset.y > 10.0 && self.availableSpaceHeightConstraint.constant != 0.0 {
                     Utility.animate(view: self.view, duration: 0.3) {
-                        if ScorecardUI.landscapePhone() {
-                            self.topSectionLandscapePhoneProportionalHeightConstraint.isActive = false
-                        } else {
-                            self.topSectionProportionalHeightConstraint.isActive = false
-                        }
-                        self.availableSpaceHeightConstraint.isActive = true
+                        self.topSectionLandscapePhoneProportionalHeightConstraint.isActive = false
+                        self.topSectionProportionalHeightConstraint.isActive = false
                         self.availableSpaceHeightConstraint.constant = 0.0
-                    }
-                } else if tableView.contentOffset.y < 10.0 && self.availableSpaceHeightConstraint.isActive {
+                        self.topSectionHeightConstraint.isActive = true
+                     }
+                } else if tableView.contentOffset.y < 10.0 && self.availableSpaceHeightConstraint.constant == 0.0 {
                     Utility.animate(view: self.view, duration: 0.3) {
-                        self.availableSpaceHeightConstraint.isActive = false
+                        self.topSectionHeightConstraint.isActive = false
+                        self.availableSpaceHeightConstraint.constant = 140
                         if ScorecardUI.landscapePhone() {
                             self.topSectionLandscapePhoneProportionalHeightConstraint.isActive = true
                         } else {

@@ -193,10 +193,6 @@ class ScorepadViewController: ScorecardViewController,
         Scorecard.shared.alertDelegate = nil
     }
     
-    override func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
-        Scorecard.shared.motionBegan(motion, with: event)
-    }
-    
     override internal func willDismiss() {
         // Tidy up before exiting
         self.cancelScoresSubscription()

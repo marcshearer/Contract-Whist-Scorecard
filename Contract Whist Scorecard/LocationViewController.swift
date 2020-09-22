@@ -154,10 +154,6 @@ class LocationViewController: ScorecardViewController, UITableViewDataSource, UI
         self.bottomSectionHeightConstraint.constant = ((self.menuController?.isVisible ?? false) ? 75 : 58) + (self.view.safeAreaInsets.bottom == 0 ? 8.0 : 0.0)
     }
     
-    override func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
-        Scorecard.shared.motionBegan(motion, with: event)
-    }
-    
     // MARK: - TableView Overrides ===================================================================== -
     
     internal func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

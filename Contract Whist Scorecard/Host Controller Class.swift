@@ -222,6 +222,7 @@ enum InviteStatus {
             self.gamePreviewViewController.controllerDelegate = nil
             self.gamePreviewViewController.delegate = nil
             self.gamePreviewViewController = nil
+            Scorecard.shared.shakeDelegate = nil
             
         default:
             break

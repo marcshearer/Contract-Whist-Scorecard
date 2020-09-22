@@ -26,6 +26,10 @@ public enum GetPlayerMode {
     case getSyncInProgress
 }
 
+protocol ShakeDelegate : class {
+    func shakeGestureHandler() -> Bool
+}
+
 class Scorecard {
     
     // MARK: - Properties ============================================================== -
@@ -110,6 +114,7 @@ class Scorecard {
     internal var appController: ScorecardAppController?
     internal var lastRefresh: Date?
     internal var lastPeerRefresh: [String : Date] = [:]
+    public weak var shakeDelegate: ShakeDelegate?
 
     // Admin mode
     static var adminMode = false

@@ -221,7 +221,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         self.hideNavigationBar()
 
         // Setup colours (previously in storyboard) and setup whisper
-        self.DefaultScreenColors()
+        self.defaultScreenColors()
         self.whisper = Whisper()
 
         // Check network
@@ -362,11 +362,15 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     }
     
     override func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
+
+        // Check if in a connection
         
-        // Play sound
-        self.alertSound()
-        
-        self.restart()
+        if !Scorecard.shared.motionBegan(motion, with: event) {
+            if motion == .motionShake {
+                self.alertSound()
+                self.restart()
+            }
+        }
     }
 
     // MARK: - Show other views ======================================================================= -
@@ -401,7 +405,8 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
             self.setupThisPlayer()
             self.showThisPlayer()
         }
-        self.DefaultScreenColors()
+        self.defaultScreenColors()
+        self.panelLayoutSubviews()
         hostCollectionView.reloadData()
         peerCollectionView.reloadData()
         self.menuController?.refresh()
@@ -1390,7 +1395,7 @@ extension ClientViewController {
 
     /** _Note that this code was generated as part of the move to themed colors_ */
 
-    private func DefaultScreenColors() {
+    private func defaultScreenColors() {
         Palette.ignoringGameBanners {
             self.view.backgroundColor = Palette.dark.background
             self.topSection.backgroundColor = Palette.banner.background

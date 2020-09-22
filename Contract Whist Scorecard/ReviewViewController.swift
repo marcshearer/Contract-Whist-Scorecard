@@ -46,10 +46,6 @@ class ReviewViewController: ScorecardViewController, ScorecardAlertDelegate, Ban
         Scorecard.shared.alertDelegate = nil
     }
     
-    override func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
-        Scorecard.shared.motionBegan(motion, with: event)
-    }
-    
     // MARK: - Alert delegate handlers =================================================== -
     
     internal func alertUser(reminder: Bool) {

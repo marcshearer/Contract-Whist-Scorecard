@@ -92,7 +92,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
             switch descriptor {
             case "refreshRequest":
                 // Remote device wants a refresh of the current state
-                Scorecard.shared.sendScoringState(from: self.commsPlayerDelegate, to: commsPeer)
+                self.sendScoringState(from: self.commsPlayerDelegate, to: commsPeer)
             case "requestThumbnail":
                 self.sendPlayerThumbnail(playerUUID: data!["playerUUID"] as! String, to: commsPeer)
             case "testConnection":
@@ -146,17 +146,23 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
     
     // MARK: - Utility routines =============================================================== -
     
-    public func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
+    @discardableResult public func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) -> Bool {
+        var handled = false
         if motion == .motionShake {
-            
-            // Play sound
-            self.appController?.fromViewController()?.alertSound()
-            self.resetConnection()
-            if Scorecard.game.hasJoined {
-                self.appController?.showWhisper("Resetting connection...")
+            if let shakeDelegate = self.shakeDelegate {
+                handled = shakeDelegate.shakeGestureHandler()
             }
-            
+            if !handled && self.commsDelegate != nil {
+                // Play sound
+                self.appController?.fromViewController()?.alertSound()
+                self.resetConnection()
+                if Scorecard.game.hasJoined {
+                    self.appController?.showWhisper("Resetting connection...")
+                }
+                handled = true
+            }
         }
+        return handled
     }
     
     public func resetConnection() {
@@ -330,7 +336,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
     public func sendHostState(from playerDelegate: ScorecardAppPlayerDelegate?, to commsPeer: CommsPeer! = nil) {
         var state: [String : Any] = [:]
         
-        state["settings"] = Scorecard.shared.settingsData()
+        state["settings"] = self.settingsData()
         let (descriptor, data) = self.playersData(from: playerDelegate)
         state[descriptor] = data
         state["dealer"] = self.dealerData()
@@ -348,7 +354,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
     public func sendScoringState(from playerDelegate: ScorecardAppPlayerDelegate?, to commsPeer: CommsPeer! = nil) {
         var state: [String : Any] = [:]
         
-        state["settings"] = Scorecard.shared.settingsData()
+        state["settings"] = self.settingsData()
         if playerDelegate != nil || Scorecard.game.inProgress {
             let (descriptor, data) = self.playersData(from: playerDelegate)
             state[descriptor] = data
@@ -506,7 +512,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
                         }
                         _ = Scorecard.game.scores.set(round: roundNumber, playerNumber: playerNumber, bid: bid)
                         if bid != nil && descriptor == "scores" {
-                            Scorecard.shared.bidSubscription.send((roundNumber, playerNumber, bid))
+                            self.bidSubscription.send((roundNumber, playerNumber, bid))
                         }
                         processedOwnBid = (processedOwnBid || (playerNumber == Scorecard.game.handState?.enteredPlayerNumber && descriptor != "allscores"))
                     }

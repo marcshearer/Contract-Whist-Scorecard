@@ -175,6 +175,8 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
         
         // Subscribe to score changes
         self.setupBidSubscriptions()
+        
+        self.view.becomeFirstResponder()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -225,10 +227,6 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
         
         // Give up responsibility for alerts
         Scorecard.shared.alertDelegate = nil
-    }
-    
-    override func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
-        Scorecard.shared.motionBegan(motion, with: event)
     }
     
     override internal func willDismiss() {

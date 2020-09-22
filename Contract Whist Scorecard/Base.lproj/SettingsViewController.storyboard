@@ -36,14 +36,14 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5lP-yz-lpQ" userLabel="Top Section">
                                 <rect key="frame" x="0.0" y="44" width="375" height="140.5"/>
                                 <subviews>
-                                    <view clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tGe-nq-HO6" userLabel="Available Space">
-                                        <rect key="frame" x="0.0" y="44" width="375" height="140.5"/>
+                                    <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tGe-nq-HO6" userLabel="Available Space">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="140.5"/>
                                         <subviews>
-                                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="l36-M1-jat" userLabel="This Player Container View">
-                                                <rect key="frame" x="0.0" y="18.5" width="375" height="103.5"/>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="l36-M1-jat" userLabel="This Player Container View">
+                                                <rect key="frame" x="0.0" y="18" width="375" height="104"/>
                                                 <subviews>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fAb-rE-ICJ" customClass="ThumbnailView" customModule="Whist_2" customModuleProvider="target">
-                                                        <rect key="frame" x="161" y="0.0" width="53" height="70.5"/>
+                                                        <rect key="frame" x="161" y="0.0" width="53" height="71"/>
                                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                         <gestureRecognizers/>
                                                         <constraints>
@@ -55,7 +55,7 @@
                                                         </connections>
                                                     </view>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZcH-Ml-180" userLabel="Change Button Container">
-                                                        <rect key="frame" x="147.5" y="78.5" width="80" height="25"/>
+                                                        <rect key="frame" x="147.5" y="79" width="80" height="25"/>
                                                         <subviews>
                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jyt-Sb-wJn" customClass="RoundedButton" customModule="Whist_2" customModuleProvider="target">
                                                                 <rect key="frame" x="0.0" y="0.0" width="80" height="25"/>
@@ -100,11 +100,6 @@
                                             <constraint firstAttribute="trailing" secondItem="l36-M1-jat" secondAttribute="trailing" id="a0o-Ya-Xub"/>
                                             <constraint firstItem="l36-M1-jat" firstAttribute="leading" secondItem="tGe-nq-HO6" secondAttribute="leading" id="u2q-Sb-rXT"/>
                                         </constraints>
-                                        <variation key="default">
-                                            <mask key="constraints">
-                                                <exclude reference="MOv-tW-QMz"/>
-                                            </mask>
-                                        </variation>
                                     </view>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -357,7 +352,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Start:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="fli-ri-oXD">
-                                                    <rect key="frame" x="35" y="60" width="40" height="20.5"/>
+                                                    <rect key="frame" x="36" y="60" width="40" height="20.5"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="40" id="Bmy-Ia-fuW"/>
                                                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="40" id="ahy-cz-G0e"/>
@@ -367,7 +362,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <textField opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="13" textAlignment="center" clearsOnBeginEditing="YES" minimumFontSize="6" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="ESr-WG-SZf">
-                                                    <rect key="frame" x="79" y="60.5" width="50" height="19"/>
+                                                    <rect key="frame" x="80" y="60.5" width="50" height="19"/>
                                                     <color key="backgroundColor" name="Clear"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="50" id="KFS-Qb-m6i"/>
@@ -377,7 +372,7 @@
                                                     <textInputTraits key="textInputTraits" returnKeyType="go"/>
                                                 </textField>
                                                 <slider opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="7" minValue="1" maxValue="13" translatesAutoresizingMaskIntoConstraints="NO" id="10J-XL-MN3">
-                                                    <rect key="frame" x="131" y="55" width="183" height="31"/>
+                                                    <rect key="frame" x="132" y="55" width="181" height="31"/>
                                                     <color key="minimumTrackTintColor" name="Segmented Controls"/>
                                                     <color key="thumbTintColor" name="Segmented Controls"/>
                                                     <userDefinedRuntimeAttributes>
@@ -410,7 +405,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dzx-Zp-1Kk" userLabel="Edit Label">
-                                                    <rect key="frame" x="35" y="62" width="257" height="28"/>
+                                                    <rect key="frame" x="36" y="62" width="255" height="28"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="28" id="NvI-E8-BEj"/>
                                                     </constraints>
@@ -419,7 +414,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="A1f-6Q-Ha6" userLabel="Edit Button" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
-                                                    <rect key="frame" x="304" y="66" width="50" height="20"/>
+                                                    <rect key="frame" x="303" y="66" width="50" height="20"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="50" id="1xX-wC-i5Y"/>
                                                         <constraint firstAttribute="height" constant="20" id="yBL-7n-CBK"/>
@@ -428,17 +423,6 @@
                                                     <state key="normal" title="Edit">
                                                         <color key="titleColor" name="Text Emphasised"/>
                                                     </state>
-                                                    <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="color" keyPath="fillColor">
-                                                            <color key="value" name="Background"/>
-                                                        </userDefinedRuntimeAttribute>
-                                                        <userDefinedRuntimeAttribute type="color" keyPath="strokeColor">
-                                                            <color key="value" name="Emphasis"/>
-                                                        </userDefinedRuntimeAttribute>
-                                                        <userDefinedRuntimeAttribute type="number" keyPath="lineWidth">
-                                                            <real key="value" value="1"/>
-                                                        </userDefinedRuntimeAttribute>
-                                                    </userDefinedRuntimeAttributes>
                                                 </button>
                                             </subviews>
                                             <constraints>
@@ -921,11 +905,17 @@
                         <variation key="default">
                             <mask key="constraints">
                                 <exclude reference="mml-QT-eUj"/>
+                                <exclude reference="uaR-4F-9LY"/>
                             </mask>
                         </variation>
-                        <variation key="heightClass=regular-widthClass=compact">
+                        <variation key="heightClass=compact">
                             <mask key="constraints">
                                 <include reference="mml-QT-eUj"/>
+                            </mask>
+                        </variation>
+                        <variation key="heightClass=regular">
+                            <mask key="constraints">
+                                <include reference="uaR-4F-9LY"/>
                             </mask>
                         </variation>
                     </view>

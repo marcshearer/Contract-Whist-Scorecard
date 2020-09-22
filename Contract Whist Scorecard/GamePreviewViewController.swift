@@ -25,7 +25,7 @@ import CoreData
     
 }
 
-class GamePreviewViewController: ScorecardViewController, ButtonDelegate, SelectedPlayersViewDelegate, BannerDelegate {
+class GamePreviewViewController: ScorecardViewController, ButtonDelegate, SelectedPlayersViewDelegate, BannerDelegate, ShakeDelegate {
     
     // MARK: - Class Properties ================================================================ -
     
@@ -234,11 +234,17 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
         }
     }
     
-    override internal func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        Scorecard.shared.shakeDelegate = self
+    }
+    
+    internal func shakeGestureHandler() -> Bool {
         if let shakeGestureHandler = self.delegate?.gamePreviewShakeGestureHandler {
             shakeGestureHandler()
+            return true
         } else {
-            Scorecard.shared.motionBegan(motion, with: event)
+            return false
         }
     }
     

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -16,36 +17,18 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hEU-UB-5K2" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Whist_2" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="0.0"/>
-                            </view>
-                            <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Y6r-2O-8jb" customClass="NavigationBar" customModule="Whist_2" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hEU-UB-5K2" customClass="Banner" customModule="Whist_2" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
-                                <textAttributes key="titleTextAttributes">
-                                    <color key="textColor" name="Banner Text"/>
-                                </textAttributes>
-                                <items>
-                                    <navigationItem title="History Detail" largeTitleDisplayMode="always" id="Seg-LW-F6o">
-                                        <barButtonItem key="leftBarButtonItem" title="Item" id="8bf-Ea-ezt">
-                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="C99-Bz-aQ9" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
-                                                <rect key="frame" x="16" y="11" width="30" height="22"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <state key="normal" image="back">
-                                                    <color key="titleColor" name="Banner Text"/>
-                                                </state>
-                                                <connections>
-                                                    <action selector="finishPressed:" destination="2Wg-gN-UgP" eventType="touchUpInside" id="Rmd-uA-ICT"/>
-                                                </connections>
-                                            </button>
-                                        </barButtonItem>
-                                        <barButtonItem key="rightBarButtonItem" systemItem="action" id="qm5-ma-qEr">
-                                            <connections>
-                                                <action selector="actionPressed:" destination="2Wg-gN-UgP" id="Wbz-8f-rQg"/>
-                                            </connections>
-                                        </barButtonItem>
-                                    </navigationItem>
-                                </items>
-                            </navigationBar>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="image" keyPath="finishImage" value="back"/>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="menuHide" value="YES"/>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <outlet property="bannerHeightConstraint" destination="o9z-72-CJY" id="5pd-N9-LY9"/>
+                                    <outlet property="delegate" destination="2Wg-gN-UgP" id="SZb-N8-pfd"/>
+                                    <outlet property="parentViewController" destination="2Wg-gN-UgP" id="uyQ-PN-RXx"/>
+                                </connections>
+                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jfH-ib-leT" userLabel="Body View">
                                 <rect key="frame" x="0.0" y="44" width="375" height="623"/>
                                 <subviews>
@@ -59,7 +42,7 @@
                                                 <color key="textColor" name="Dark Highlight Text"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="250" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xcz-H4-UE0" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
+                                            <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="250" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xcz-H4-UE0" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
                                                 <rect key="frame" x="287" y="7" width="80" height="26"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" relation="lessThanOrEqual" constant="80" id="4Qd-AT-98q"/>
@@ -129,13 +112,13 @@
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="adH-9J-E1r">
-                                                            <rect key="frame" x="16" y="0.0" width="160" height="44"/>
+                                                            <rect key="frame" x="16" y="0.0" width="159" height="44"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                                             <color key="textColor" name="Text"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Score" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="Gc4-eb-UX4">
-                                                            <rect key="frame" x="180" y="11" width="60" height="22"/>
+                                                            <rect key="frame" x="179" y="11" width="60" height="22"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="60" id="8nZ-AP-Qqg"/>
                                                             </constraints>
@@ -144,7 +127,7 @@
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Made" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="h3I-Th-017">
-                                                            <rect key="frame" x="244" y="11" width="60" height="22"/>
+                                                            <rect key="frame" x="243" y="11" width="60" height="22"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="60" id="57R-0A-HUg"/>
                                                             </constraints>
@@ -153,7 +136,7 @@
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Twos" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="zj4-QV-zjc">
-                                                            <rect key="frame" x="308" y="11" width="60" height="22"/>
+                                                            <rect key="frame" x="307" y="11" width="60" height="22"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="60" id="F7R-2q-5xR"/>
                                                             </constraints>
@@ -216,40 +199,34 @@
                                 </constraints>
                             </view>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="SSv-xj-RMn"/>
                         <color key="backgroundColor" name="Background"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstItem="Y6r-2O-8jb" firstAttribute="top" secondItem="SSv-xj-RMn" secondAttribute="top" id="0J4-Yh-io7"/>
                             <constraint firstItem="jfH-ib-leT" firstAttribute="leading" secondItem="BER-xO-Vlg" secondAttribute="leading" id="3D1-sv-TZq"/>
-                            <constraint firstItem="Y6r-2O-8jb" firstAttribute="leading" secondItem="BER-xO-Vlg" secondAttribute="leading" id="IDe-dl-JcX"/>
+                            <constraint firstItem="jfH-ib-leT" firstAttribute="top" secondItem="hEU-UB-5K2" secondAttribute="bottom" id="M0p-G5-jbl"/>
                             <constraint firstItem="hEU-UB-5K2" firstAttribute="leading" secondItem="BER-xO-Vlg" secondAttribute="leading" id="MY1-eh-O2p"/>
-                            <constraint firstAttribute="trailing" secondItem="Y6r-2O-8jb" secondAttribute="trailing" id="TZ7-ak-gjI"/>
                             <constraint firstAttribute="bottom" secondItem="jfH-ib-leT" secondAttribute="bottom" id="ceb-Hx-oz8"/>
                             <constraint firstAttribute="trailing" secondItem="jfH-ib-leT" secondAttribute="trailing" id="csu-zq-xhB"/>
-                            <constraint firstItem="jfH-ib-leT" firstAttribute="top" secondItem="Y6r-2O-8jb" secondAttribute="bottom" id="ecK-a3-Vbn"/>
-                            <constraint firstItem="SSv-xj-RMn" firstAttribute="top" secondItem="hEU-UB-5K2" secondAttribute="bottom" id="o9z-72-CJY"/>
+                            <constraint firstItem="hEU-UB-5K2" firstAttribute="bottom" secondItem="SSv-xj-RMn" secondAttribute="top" constant="44" id="o9z-72-CJY"/>
                             <constraint firstItem="hEU-UB-5K2" firstAttribute="trailing" secondItem="BER-xO-Vlg" secondAttribute="trailing" id="xiJ-4e-ATq"/>
                             <constraint firstItem="hEU-UB-5K2" firstAttribute="top" secondItem="BER-xO-Vlg" secondAttribute="top" id="yTJ-70-Pst"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="SSv-xj-RMn"/>
                     </view>
                     <connections>
-                        <outlet property="actionButton" destination="qm5-ma-qEr" id="lHk-7q-OhZ"/>
+                        <outlet property="banner" destination="hEU-UB-5K2" id="sAc-Yr-gs2"/>
                         <outlet property="bodyView" destination="jfH-ib-leT" id="201-BD-i3u"/>
                         <outlet property="excludeStatsHeightConstraint" destination="mbh-wp-yi2" id="Fiq-su-GHG"/>
                         <outlet property="excludeStatsLabel" destination="bH6-fp-Kga" id="rrD-ZE-Iil"/>
                         <outlet property="excludeStatsView" destination="PPI-r2-8QP" id="gVH-uG-O6C"/>
-                        <outlet property="finishButton" destination="C99-Bz-aQ9" id="NA8-zW-6a5"/>
                         <outlet property="locationBackground" destination="nDe-x0-Zfu" id="cTQ-uU-jKk"/>
                         <outlet property="locationBackgroundHeightConstraint" destination="rej-tX-Fpk" id="INR-iY-IA2"/>
                         <outlet property="locationBackgroundLeadingConstraint" destination="pif-S3-Bjn" id="rc8-mq-Xws"/>
                         <outlet property="locationBackgroundTrailingConstraint" destination="2sw-Zh-vCa" id="Kif-FC-b3f"/>
                         <outlet property="locationText" destination="OnX-jC-bPu" id="qFA-Od-Ohm"/>
                         <outlet property="mapView" destination="e7x-Iq-giA" id="bfl-gf-Id1"/>
-                        <outlet property="navigationBar" destination="Y6r-2O-8jb" id="0BC-Eh-Xei"/>
                         <outlet property="participantTableView" destination="f3E-iU-lrl" id="W2x-Y7-mP5"/>
                         <outlet property="participantTableViewHeightConstraint" destination="IZK-Am-B2Y" id="xMv-xC-kdK"/>
-                        <outlet property="titleNavigationItem" destination="Seg-LW-F6o" id="S7u-oE-gbp"/>
                         <outlet property="updateButton" destination="Xcz-H4-UE0" id="fHf-kv-QyZ"/>
                     </connections>
                 </viewController>
@@ -272,9 +249,6 @@
         <image name="back" width="22" height="22"/>
         <namedColor name="Background">
             <color red="0.94117647058823528" green="0.93725490196078431" blue="0.92941176470588238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="Banner Text">
-            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Bold">
             <color red="0.0" green="0.0" blue="0.70196078431372544" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

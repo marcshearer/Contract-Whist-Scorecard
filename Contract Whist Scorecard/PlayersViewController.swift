@@ -34,9 +34,11 @@ class PlayersViewController: ScorecardViewController, PlayersViewDelegate, UICol
     private var isEnabled: Bool = true
     
     // UI properties
-    private let minAcross: CGFloat = 3.0
-    private let minDown: CGFloat = 2.0
-    private let spacing: CGFloat = 16.0
+    private var horizontalInset: CGFloat = 16.0
+    private let verticalInset: CGFloat = 16.0
+    private var minAcross = 3
+    private let idealWidth: CGFloat = 210.0
+    private var spacing: CGFloat = 16.0
     private let thumbnailInset: CGFloat = 16.0
     private let aspectRatio: CGFloat = 4.0/3.0
     private var cellWidth: CGFloat = 0.0
@@ -92,25 +94,26 @@ class PlayersViewController: ScorecardViewController, PlayersViewDelegate, UICol
         // Set up player list
         self.playerDetailList = Scorecard.shared.playerDetailList()
         
-        self.collectionView.contentInset = UIEdgeInsets(top: self.spacing, left: self.spacing, bottom: self.spacing, right: self.spacing)
-        
         // Update from cloud
         self.updatePlayersFromCloud()
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
+        Scorecard.shared.reCenterPopup(self)
         view.setNeedsLayout()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        Scorecard.shared.reCenterPopup(self)
-        
-        self.setupSize()
         
         self.collectionView.setNeedsLayout()
         self.collectionView.layoutIfNeeded()
+        
+        self.setupSize()
+        let collectionViewLayout = self.collectionView.collectionViewLayout as? UICollectionViewFlowLayout
+        collectionViewLayout!.invalidateLayout()
+        self.collectionView.reloadData()
         
         self.setupButtons()
         self.enableButtons()
@@ -137,12 +140,14 @@ class PlayersViewController: ScorecardViewController, PlayersViewDelegate, UICol
     // MARK: - CollectionView Overrides ================================================================ -
     
     private func setupSize() {
-        let availableWidth = self.collectionView.frame.width - spacing
-        let availableHeight = self.collectionView.frame.height - spacing
-        var cellSpacedWidth = min(140, availableWidth / minAcross)
-        let cellSpacedHeight = min(210, availableHeight / minDown)
-        cellSpacedWidth = min(cellSpacedWidth, cellSpacedHeight / aspectRatio)
-        self.cellWidth = cellSpacedWidth - spacing
+        self.minAcross = (ScorecardUI.landscapePhone() ? 5 : 3)
+        self.horizontalInset = ((self.menuController?.isVisible ?? false) ? 20 : 16)
+        self.spacing = self.collectionView.frame.width / 25
+        self.collectionView.contentInset = UIEdgeInsets(top: self.verticalInset, left: self.horizontalInset, bottom: self.verticalInset, right: self.horizontalInset)
+        let availableWidth = self.collectionView.frame.width + self.spacing - (2 * self.horizontalInset)
+        let idealAcross = max(self.minAcross, Int(availableWidth / idealWidth))
+        let cellSpacedWidth = availableWidth / CGFloat(idealAcross)
+        self.cellWidth = cellSpacedWidth - self.spacing
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -151,6 +156,14 @@ class PlayersViewController: ScorecardViewController, PlayersViewDelegate, UICol
     
    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: self.cellWidth, height: self.cellWidth * self.aspectRatio)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return self.spacing
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return self.spacing
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

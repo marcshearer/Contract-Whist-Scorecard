@@ -31,9 +31,8 @@ import CoreData
     @objc optional var separatorHeight: CGFloat { get }
     @objc optional var backImage: String { get }
     @objc optional var backText: String { get }
-    @objc optional var customButton: Bool { get }
-    
-    @objc optional func setup(customButton: UIButton)
+
+    @objc optional func setupCustomButton(id: AnyHashable?) -> BannerButton?
     
     @objc optional func didSelect(record: DataTableViewerDataSource, field: String)
         
@@ -63,6 +62,9 @@ class DataTableViewController: ScorecardViewController, UITableViewDataSource, U
     private let graphView = GraphView()
     private var padColumn = -1
     private var observer: NSObjectProtocol?
+    private var finishButton = Banner.finishButton
+    private var syncButton = 1
+    private var customButton = 2
     
     // Cell sizes
     let paddingWidth: CGFloat = 6.0
@@ -75,35 +77,28 @@ class DataTableViewController: ScorecardViewController, UITableViewDataSource, U
     private var headerCollectionView: UICollectionView!
  
     // MARK: - IB Outlets ============================================================================== -
+    @IBOutlet private weak var banner: Banner!
     @IBOutlet private weak var headerView: UITableView!
     @IBOutlet private weak var bodyView: UITableView!
     @IBOutlet private weak var leftPaddingView: UIView!
     @IBOutlet private weak var rightPaddingView: UIView!
-    @IBOutlet private weak var titleBarView: UIView!
-    @IBOutlet private weak var titleLabel: UILabel!
-    @IBOutlet private weak var syncButton: ShadowButton!
-    @IBOutlet private weak var smallSyncButton: ClearButton!
-    @IBOutlet private weak var finishButton: UIButton!
-    @IBOutlet private weak var customButton: UIButton!
-    @IBOutlet private weak var customButtonLeadingConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var customButtonWidthConstraint: NSLayoutConstraint!
     @IBOutlet private weak var headerHeightConstraint: NSLayoutConstraint!
     @IBOutlet public weak var customHeaderView: UIView!
     @IBOutlet public weak var customHeaderViewHeightConstraint: NSLayoutConstraint!
     
     // MARK: - IB Actions ============================================================================== -
 
-    @IBAction func finishPressed(_ sender: UIButton) {
+    internal func finishPressed() {
         self.dismiss()
     }
     
-    @IBAction func syncPressed(_ sender: UIButton) {
-        self.showSync(sender)
+    internal func syncPressed() {
+        self.showSync(self)
     }
     
     @IBAction func rightSwipe(recognizer:UISwipeGestureRecognizer) {
         if recognizer.state == .ended {
-            finishPressed(finishButton)
+            finishPressed()
         }
     }
     
@@ -119,31 +114,43 @@ class DataTableViewController: ScorecardViewController, UITableViewDataSource, U
         self.networkEnableSyncButton()
         
         // Format finish button
-        finishButton.setImage(UIImage(named: self.delegate?.backImage ?? "home"), for: .normal)
-        finishButton.setTitle(self.delegate?.backText ?? "", for: .normal)
+        self.setupBanner()
         
         // Set initial sort (if any)
         self.lastSortField = self.delegate?.initialSortField ?? ""
         self.lastSortDescending = self.delegate?.initialSortDescending ?? false
-        
-        // Set title
-        self.titleLabel.text = self.delegate?.viewTitle ?? ""
-        
+                
         // Set header / padding heights
         self.headerHeightConstraint.constant = self.delegate?.headerRowHeight ?? 44.0
+    }
+    
+    private func setupBanner() {
+        let finishImage = UIImage(named: self.delegate?.backImage ?? "home")
+        let finishTitle = self.delegate?.backText ?? ""
+        let finishTextWidth = finishTitle.labelWidth(font: BannerButton.defaultFont)
+        let finishWidth = finishTextWidth + (finishImage != nil ? 30 : 0) + 8
         
-        if firstTime {
-            if self.delegate?.setup != nil {
-                self.customButton.isHidden = false
-                self.customButtonLeadingConstraint.constant = 8
-                self.customButtonWidthConstraint.constant = 22
-                self.delegate?.setup?(customButton: customButton)
-            } else {
-                self.customButton.isHidden = true
-            }
+        let leftBannerButtons = [
+            BannerButton(title: finishTitle, image: finishImage, width: finishWidth, action: self.finishPressed, menuHide: true, id: finishButton)]
+        
+        let syncType: BannerButtonType = (ScorecardUI.smallPhoneSize() ? .clear : .shadow)
+        let syncTitle = (ScorecardUI.smallPhoneSize() ? nil : "Sync")
+        let syncImage = (ScorecardUI.smallPhoneSize() ? UIImage(named: "cloud") : nil)
+        let syncWidth = (ScorecardUI.smallPhoneSize() ? 40 : max(syncTitle!.labelWidth(font: BannerButton.defaultFont) + 16, 80))
+        
+        var rightBannerButtons = [
+            BannerButton(title: syncTitle, image: syncImage, width: syncWidth, action: self.syncPressed, type: syncType, id: syncButton)]
+        
+        if let customBannerButton = self.delegate?.setupCustomButton?(id: customButton) {
+            rightBannerButtons.append(customBannerButton)
         }
         
-    }
+        self.banner.set(
+            title: (self.delegate?.viewTitle ?? ""),
+            leftButtons: leftBannerButtons,
+            rightButtons: rightBannerButtons)
+        
+     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         self.clearSortArrows()
@@ -190,15 +197,7 @@ class DataTableViewController: ScorecardViewController, UITableViewDataSource, U
             
     private func syncButtons(enabled: Bool) {
         let allowSync = self.delegate?.allowSync ?? true
-        if ScorecardUI.smallPhoneSize() {
-            self.syncButton.isHidden = true
-            self.smallSyncButton.isHidden = !allowSync
-            self.smallSyncButton.isEnabled = enabled
-        } else {
-            self.smallSyncButton.isHidden = true
-            self.syncButton.isHidden = !allowSync
-            self.syncButton.isEnabled = enabled
-        }
+        self.banner.setButton(syncButton, isHidden: !allowSync || (ScorecardUI.smallPhoneSize() && !enabled), isEnabled: enabled)
         self.delegate?.syncButtons?(enabled: enabled)
     }
     
@@ -262,7 +261,7 @@ class DataTableViewController: ScorecardViewController, UITableViewDataSource, U
 
     // MARK: - Show other views =========================================================== -
     
-    @objc public func showSync(_ sender: Any?) {
+    @objc public func showSync(_ sender: Any) {
         SyncViewController.show(from: self, completion: {
             // Refresh screen
             if let recordList = self.delegate?.refreshData?(recordList: self.recordList) {
@@ -352,6 +351,7 @@ extension DataTableViewController: UICollectionViewDelegate, UICollectionViewDat
             cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Data Table Header Cell", for: indexPath) as! DataTableCollectionCell
             self.defaultCellColors(cell: cell)
             cell.tag = indexPath.row
+            cell.layoutIfNeeded()
 
             Palette.sectionHeadingStyle(cell.textLabel)
             cell.topSpacingView.backgroundColor = Palette.sectionHeading.background
@@ -362,7 +362,7 @@ extension DataTableViewController: UICollectionViewDelegate, UICollectionViewDat
             
             // Sort arrow
             cell.setupArrows()
-            if column.field == lastSortField {
+            if column.field == lastSortField && column.combineHeading == "" {
                 lastSortColumn = indexPath.row
                 self.showSortArrow(cell)
             }
@@ -659,15 +659,8 @@ extension DataTableViewController {
     private func defaultViewColors() {
 
         self.customHeaderView.backgroundColor = Palette.banner.background
-        self.finishButton.setTitleColor(Palette.banner.text, for: .normal)
         self.leftPaddingView.backgroundColor = Palette.banner.background
-        self.titleBarView.backgroundColor = Palette.banner.background
-        self.titleLabel.textColor = Palette.banner.text
         self.rightPaddingView.backgroundColor = Palette.banner.background
-        self.syncButton.setBackgroundColor(Palette.alwaysTheme.background)
-        self.syncButton.setTitleColor(Palette.alwaysTheme.text, for: .normal)
-        self.smallSyncButton.tintColor = Palette.alwaysTheme.text
-        self.customButton.tintColor = Palette.alwaysTheme.text
         self.view.backgroundColor = Palette.normal.background
     }
 

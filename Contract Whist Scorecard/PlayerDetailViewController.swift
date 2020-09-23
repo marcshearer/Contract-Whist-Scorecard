@@ -21,7 +21,7 @@ protocol PlayerDetailViewDelegate {
     func refresh(playerDetail: PlayerDetail, mode: DetailMode)
 }
 
-class PlayerDetailViewController: ScorecardViewController, PlayerDetailViewDelegate, UITableViewDataSource, UITableViewDelegate, SyncDelegate, PlayerViewImagePickerDelegate {
+class PlayerDetailViewController: ScorecardViewController, PlayerDetailViewDelegate, UITableViewDataSource, UITableViewDelegate, SyncDelegate, PlayerViewImagePickerDelegate, BannerDelegate {
     
     // MARK: - Class Properties ======================================================================== -
     
@@ -104,21 +104,18 @@ class PlayerDetailViewController: ScorecardViewController, PlayerDetailViewDeleg
     internal var playersViewDelegate: PlayersViewDelegate?
 
     // MARK: - IB Outlets ============================================================================== -
-    @IBOutlet private weak var titleView: UIView!
-    @IBOutlet private weak var titleLabel: UILabel!
-    @IBOutlet private weak var finishButton: UIButton!
+    @IBOutlet private weak var banner: Banner!
     @IBOutlet private weak var tableView: UITableView!
-    @IBOutlet private weak var titleBarHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var tableViewLeadingConstraint: NSLayoutConstraint!
     @IBOutlet private weak var tableViewTrailingConstraint: NSLayoutConstraint!
     // MARK: - IB Actions ============================================================================== -
         
-    @IBAction func backButtonPressed(_ sender: Any) {
+    internal func finishPressed() {
         self.dismiss(animated: true)
     }
 
     @IBAction func allSwipe(recognizer:UISwipeGestureRecognizer) {
-        backButtonPressed(finishButton!)
+        finishPressed()
     }
     
     // MARK: - View Overrides ========================================================================== -
@@ -145,7 +142,7 @@ class PlayerDetailViewController: ScorecardViewController, PlayerDetailViewDeleg
         
         // Hide banner if in a right-hand container
         if self.container == .rightInset {
-            self.titleBarHeightConstraint.constant = 0
+            self.banner.set(normalOverrideHeight: 0)
             self.tableViewLeadingConstraint.constant = 10
             self.tableViewTrailingConstraint.constant = 10
             self.labelFontSize = 10
@@ -683,7 +680,7 @@ class PlayerDetailViewController: ScorecardViewController, PlayerDetailViewDeleg
             }
         }
          
-        finishButton.isHidden = (self.mode == .amending)
+        self.banner.setButton(Banner.finishButton, isHidden: (self.mode == .amending))
         
         if let view = tableView.headerView(forSection: nameSection) as? PlayerDetailHeaderFooterView {
             if let cell = view.cell {
@@ -715,7 +712,7 @@ class PlayerDetailViewController: ScorecardViewController, PlayerDetailViewDeleg
     }
     
     func setupHeaderFields() {
-        self.titleLabel.text = playerDetail.name
+        self.banner.set(title: playerDetail.name)
     }
     
     func setupImagePickerPlayerView(cell: PlayerDetailCell) {
@@ -875,9 +872,6 @@ extension PlayerDetailViewController {
     private func defaultViewColors() {
 
         self.view.backgroundColor = Palette.normal.background
-        self.finishButton.setTitleColor(Palette.banner.text, for: .normal)
-        self.titleView.backgroundColor = Palette.banner.background
-        self.titleLabel.textColor = Palette.banner.text
         self.tableView.backgroundColor = Palette.normal.background
     }
 

@@ -76,7 +76,8 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     private var peerScrollCollection: Int! = 3
     internal var invite: Invite!
     internal var recoveryMode = false
-    internal var firstTime = true
+    internal var firstLayout = true
+    internal var firstAppear = true
     private var launchScreen = true
     private var rotated = false
     private var isNetworkAvailable: Bool?
@@ -293,7 +294,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
             
             self.checkPlayingGame()
             
-            if self.firstTime {
+            if self.firstAppear {
                 
                 // Create a client controller to manage connections
                 self.createClientController()
@@ -301,8 +302,8 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
                 self.peerReloadData()
             }
         }
-        if self.firstTime {
-            firstTime = false
+        if self.firstAppear {
+            self.firstAppear = false
             // Link to host if recovering a server or scoring if recovering a game
             if self.recoveryMode {
                 if !Scorecard.recovery.onlineRecovery {
@@ -325,13 +326,20 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
+        let firstLayout = self.firstLayout
+        let rotated = self.rotated
+        self.firstLayout = false
+        self.rotated = false
+        
         Palette.ignoringGameBanners {
             
             self.mainContainer?.layoutIfNeeded()
             self.allocateContainerSizes()
+            self.panelLayoutSubviews()
             
-            if self.firstTime || self.rotated {
-                self.panelLayoutSubviews()
+            if firstLayout || rotated {
+            
+                // Layout banner
                 self.setupBanner()
                 
                 // Update sizes to layout constraints immediately to aid calculations
@@ -340,7 +348,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
                 self.showThisPlayer()
             }
             
-            if self.rotated && (self.playerSelectionViewHeightConstraint.constant != 0 ||
+            if rotated && (self.playerSelectionViewHeightConstraint.constant != 0 ||
                 self.playerSelectionViewWidthConstraint.constant != 0) {
                 // Resize player selection
                 self.showPlayerSelection()
@@ -352,12 +360,11 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
                 self.lastWidth = self.view.frame.width
             }
             
-            if self.firstTime || self.rotated {
-                self.rotated = false
+            if firstLayout || rotated {
                 self.peerReloadData()
             }
             
-            self.layoutControls()
+            self.layoutControls(firstTime: firstLayout)
         }
     }
     
@@ -685,7 +692,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         case hostCollection:
             items = hostingOptions
         case peerCollection, peerScrollCollection:
-            items = (self.firstTime ? 0 : max(1, self.availablePeers.count))
+            items = (self.firstLayout ? 0 : max(1, self.availablePeers.count))
          default:
             break
         }
@@ -751,7 +758,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
                 hostCell.button.set(title: "Score")
                 hostCell.button.set(message: "Score a game played\n with physical cards")
             case robotItem:
-                hostCell.button.set(image: UIImage(systemName: "desktopcomputer"))
+                hostCell.button.set(image: UIImage(named: "robot"))
                 hostCell.button.set(title: "Robot")
                 hostCell.button.set(message: "Play a game\nagainst robot players")
             default:
@@ -1419,7 +1426,7 @@ extension ClientViewController {
         }
     }
     
-    private func layoutControls() {
+    private func layoutControls(firstTime: Bool) {
         self.infoButton.toCircle()
         if self.hostRoundedContainer {
             self.hostCollectionContentView.roundCorners(cornerRadius: 8.0, topRounded: false, bottomRounded: true)
@@ -1430,7 +1437,7 @@ extension ClientViewController {
         self.peerCollectionContentView.roundCorners(cornerRadius: 8.0, topRounded: self.menuController?.isVisible ?? false, bottomRounded: true)
         self.peerCollectionContainerView.addShadow(shadowSize: CGSize(width: 4.0, height: 4.0), shadowOpacity: 0.1, shadowRadius: 2.0)
         self.peerScrollCollectionView.isHidden = (self.availablePeers.count <= 1)
-        if self.firstTime {
+        if firstTime {
             self.bottomSectionBottomConstraint?.constant = (self.view.safeAreaInsets.bottom == 0.0 ? 10.0 : 0.0)
             self.bottomSectionTrailingConstraint?.constant = (self.view.safeAreaInsets.right == 0.0 ? 10.0 : 0.0)
         }

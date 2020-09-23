@@ -31,7 +31,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         // Load scorecard and set color theme
         let _ = Scorecard.shared
-        self.window?.overrideUserInterfaceStyle = Scorecard.settings.appearance.userInterfaceStyle
         Themes.selectTheme(Scorecard.settings.colorTheme)
 
         UINavigationBar.appearance().barTintColor = Palette.emphasis.background
@@ -51,6 +50,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // Setup initial view controller
         self.window = UIWindow(frame: UIScreen.main.bounds)
+        self.window?.overrideUserInterfaceStyle = Scorecard.settings.appearance.userInterfaceStyle
         let storyboard = UIStoryboard(name: "ClientViewController", bundle: nil)
         let initialViewController = storyboard.instantiateViewController(withIdentifier: "ClientViewController") as! ClientViewController
         initialViewController.rootViewController = initialViewController

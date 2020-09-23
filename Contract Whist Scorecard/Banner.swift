@@ -15,7 +15,7 @@ public enum BannerButtonType {
     case nonBanner
 }
 
-public class BannerButton {
+public class BannerButton: NSObject {
     fileprivate var banner: Banner?
     fileprivate var title: String?
     fileprivate var attributedTitle: NSAttributedString?
@@ -188,6 +188,10 @@ class Banner : UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
 
+        // Resize lower container
+        self.lowerViewGroupHeightConstraint.constant = (self.lowerViewGroup.visibleCount == 0 ? 0 : self.lowerViewHeight)
+        self.lowerViewGroup.layoutIfNeeded()
+        
         // Adjust height
         if !self.parentViewController.containerBanner {
             self.bannerHeightConstraint?.constant = self.normalOverrideHeight ?? self.parentViewController!.defaultBannerHeight
@@ -311,7 +315,6 @@ class Banner : UIView {
             self.titleLabel.attributedText = attributedTitle
         }
         self.titleLabel.font = self.titleFont
-        self.lowerViewGroupHeightConstraint.constant = self.lowerViewHeight
         
         self.buttonIds = [:]
         self.createBannerButtons(buttons: &self.leftButtons, viewGroup: self.leftViewGroup, defaultAlignment: .left)
@@ -319,7 +322,6 @@ class Banner : UIView {
         self.createBannerButtons(buttons: &self.lowerButtons, viewGroup: self.lowerViewGroup, defaultAlignment: .center)
         self.createNonBannerButtons(buttons: &self.nonBannerButtonsBefore)
         self.createNonBannerButtons(buttons: &self.nonBannerButtonsAfter)
-        self.lowerViewGroupHeightConstraint.constant = (self.lowerViewGroup.count == 0 ? 0 : self.lowerViewHeight)
         self.setupMenuEntries()
         self.layoutSubviews()
     }

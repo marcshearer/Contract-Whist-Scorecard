@@ -65,6 +65,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     private var overrideTitle: String?
     internal var awardDetail: AwardDetail?
     private var bottomInset: CGFloat?
+    private var menuFinishText: String?
     
     private var firstTime = true
     private var rotated = false
@@ -469,9 +470,17 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
             type = .shadow
         }
         
+        var leftButtons: [BannerButton]?
+        if let menuFinishText = self.menuFinishText {
+            leftButtons = [
+                BannerButton(title: self.backText, image: UIImage(named: self.backImage ?? "back"), action: finishPressed, menuHide: true, menuText: menuFinishText)]
+        }
+        
         self.banner.set(
+            leftButtons: leftButtons,
             rightButtons: [
-                BannerButton(title: title, image: image, width: 60, action: self.syncPressed, type: type, menuHide: false, font: UIFont.systemFont(ofSize: 14), id: "sync")])
+                BannerButton(title: title, image: image, width: 60, action: self.syncPressed, type: type, menuHide: false, font: UIFont.systemFont(ofSize: 14), id: "sync")],
+            disableOptions: (leftButtons != nil))
     }
 
     // MARK: - Functions to present other views ========================================================== -
@@ -485,16 +494,16 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     
     // MARK: - Function to present and dismiss this view ================================================= -
     
-    @discardableResult class public func show(from viewController: ScorecardViewController, title: String? = nil, dashboardNames: [(title: String, fileName: String, imageName: String?)], allowSync: Bool = true, backImage: String = "home", backText: String = "", backgroundColor: PaletteColor = Palette.dark, container: Container = .main, bottomInset: CGFloat? = nil, completion: (()->())? = nil) -> ScorecardViewController {
+    @discardableResult class public func show(from viewController: ScorecardViewController, title: String? = nil, dashboardNames: [(title: String, fileName: String, imageName: String?)], allowSync: Bool = true, backImage: String = "home", backText: String = "", backgroundColor: PaletteColor = Palette.dark, container: Container = .main, bottomInset: CGFloat? = nil, menuFinishText: String? = nil, completion: (()->())? = nil) -> ScorecardViewController {
         
-        let dashboardViewController = DashboardViewController.create(title: title, dashboardNames: dashboardNames, allowSync: allowSync, backImage: backImage, backText: backText, backgroundColor: backgroundColor, bottomInset: bottomInset, completion: completion)
+        let dashboardViewController = DashboardViewController.create(title: title, dashboardNames: dashboardNames, allowSync: allowSync, backImage: backImage, backText: backText, backgroundColor: backgroundColor, bottomInset: bottomInset, menuFinishText: menuFinishText, completion: completion)
         
         viewController.present(dashboardViewController, animated: true, container: container, completion: nil)
         
         return dashboardViewController
     }
     
-    class public func create(title: String? = nil, dashboardNames: [(title: String, fileName: String, imageName: String?)], allowSync: Bool = true, backImage: String = "home", backText: String = "", backgroundColor: PaletteColor = Palette.dark, bottomInset: CGFloat? = nil, completion: (()->())? = nil) -> DashboardViewController {
+    class public func create(title: String? = nil, dashboardNames: [(title: String, fileName: String, imageName: String?)], allowSync: Bool = true, backImage: String = "home", backText: String = "", backgroundColor: PaletteColor = Palette.dark, bottomInset: CGFloat? = nil, menuFinishText: String? = nil, completion: (()->())? = nil) -> DashboardViewController {
         
         let storyboard = UIStoryboard(name: "DashboardViewController", bundle: nil)
         let dashboardViewController: DashboardViewController = storyboard.instantiateViewController(withIdentifier: "DashboardViewController") as! DashboardViewController
@@ -507,6 +516,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
         dashboardViewController.backgroundColor = backgroundColor
         dashboardViewController.completion = completion
         dashboardViewController.bottomInset = bottomInset
+        dashboardViewController.menuFinishText = menuFinishText
         
         return dashboardViewController
     }

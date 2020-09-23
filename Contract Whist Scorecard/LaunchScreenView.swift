@@ -108,11 +108,10 @@ class LaunchScreenView: UIView, SyncDelegate, ReconcileDelegate {
         
         self.message.text = "Loading..."
         Scorecard.shared.getVersion() {
-            // Wait for network status (up to 5 seconds)
-            Scorecard.reachability.waitForStatus()
-            
-            // Don't call this until any upgrade has taken place
-            self.getCloudVersion()
+            Scorecard.reachability.waitForStatus() { (_) in
+                // Don't call this until any upgrade has taken place and network status detected
+                self.getCloudVersion()
+            }
         }
 
         // Note flow continues in continueStartup

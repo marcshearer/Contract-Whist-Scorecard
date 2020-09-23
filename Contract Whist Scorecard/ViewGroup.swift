@@ -22,7 +22,18 @@ class ViewGroup: UIView {
     
     private var itemList: [Item] = []
     private var constraintList: [NSLayoutConstraint] = []
-    public var count: Int { get { self.itemList.count } }
+    public var count: Int { self.itemList.count }
+    public var visibleCount: Int {
+        get {
+            var count = 0
+            self.itemList.forEach{ (item) in
+                if !item.view.isHidden {
+                    count += 1
+                }
+            }
+            return count
+        }
+    }
     
     @IBOutlet private weak var contentView: UIView!
     

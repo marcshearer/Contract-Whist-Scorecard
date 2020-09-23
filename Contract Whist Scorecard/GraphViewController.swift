@@ -8,7 +8,7 @@
 
 import UIKit
 
-class GraphViewController: ScorecardViewController, GraphDetailDelegate {
+class GraphViewController: ScorecardViewController, GraphDetailDelegate, BannerDelegate {
 
     // MARK: - Class Properties ======================================================================== -
     
@@ -16,11 +16,13 @@ class GraphViewController: ScorecardViewController, GraphDetailDelegate {
     private var playerDetail: PlayerDetail!
     
     // UI component pointers
-    @IBOutlet weak var graphView: GraphView!
+    @IBOutlet private weak var banner: Banner!
+    @IBOutlet private weak var graphView: GraphView!
+    @IBOutlet private weak var graphViewLeadingConstraint: NSLayoutConstraint!
     
     // MARK: - IB Actions ============================================================================== -
     
-    @IBAction func finishPressed(_ sender: Any) {
+    internal func finishPressed() {
         self.dismiss()
     }
     
@@ -56,11 +58,31 @@ class GraphViewController: ScorecardViewController, GraphDetailDelegate {
         view.setNeedsLayout()
     }
     
-    override func viewWillLayoutSubviews() {
-        drawGraph(frame: graphView.frame)
-        graphView.setNeedsDisplay()
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        self.drawGraph(frame: graphView.frame)
+        self.setTitle()
+        self.graphView.setNeedsDisplay()
     }
     
+    func setTitle() {
+        // Set title - start at 28.0 point and work down until it fits
+        var attributedTitle: NSAttributedString
+        var size: CGFloat = 22.0
+        self.banner.layoutIfNeeded()
+        repeat {
+            attributedTitle =
+                NSAttributedString("Game Score History for ", font: UIFont.systemFont(ofSize: size, weight: .light)) +
+                NSAttributedString(self.playerDetail.name, font: UIFont.systemFont(ofSize: size, weight: .bold))
+            if attributedTitle.labelWidth() <= self.banner.titleWidth {
+                break
+            }
+            size -= 2.0
+        } while size > 10.0
+        
+        self.banner.set(attributedTitle: attributedTitle)
+    }
+        
     func drawGraph(frame: CGRect = UIScreen.main.bounds) {
         var values: [CGFloat] = []
         var drillRef: [String] = []
@@ -123,6 +145,9 @@ class GraphViewController: ScorecardViewController, GraphDetailDelegate {
             graphView.addYaxisLabel(text: "\(Int(average))", value: average, position: .right, color: Palette.normal.strongText)
             if !portraitPhoneSize {
                 graphView.addYaxisLabel(text: "Average", value: average, position: .left, color: Palette.normal.strongText)
+                self.graphViewLeadingConstraint.constant = 0
+            } else {
+                self.graphViewLeadingConstraint.constant = -15
             }
             
             // Add 100 line
@@ -136,17 +161,6 @@ class GraphViewController: ScorecardViewController, GraphDetailDelegate {
             // Add main dataset - score per game
             graphView.addDataset(values: values, weight: 3.0, color: Palette.emphasis.background, gradient: false, pointSize: 12.0, tag: 1, drillRef: drillRef)
             graphView.detailDelegate = self
-            
-            // Set title
-            let attributedTitle = NSMutableAttributedString()
-            var attributes: [NSAttributedString.Key : Any] = [:]
-            attributes[NSAttributedString.Key.foregroundColor] = Palette.normal.strongText
-            attributes[NSAttributedString.Key.font] = UIFont.systemFont(ofSize: 28.0, weight: .light)
-            attributedTitle.append(NSAttributedString(string: "Game Score History for ", attributes: attributes))
-            attributes[NSAttributedString.Key.font] = UIFont.systemFont(ofSize: 28.0, weight: .bold)
-            attributedTitle.append(NSAttributedString(string: self.playerDetail.name, attributes: attributes))
-            
-            graphView.add(attributedTitle: attributedTitle)
         }
     }
     
@@ -167,6 +181,7 @@ extension GraphViewController {
 
         self.graphView.backgroundColor = Palette.normal.background
         self.view.backgroundColor = Palette.normal.background
+        self.banner.set(backgroundColor: Palette.normal)
     }
 
 }

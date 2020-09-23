@@ -56,14 +56,16 @@ public class Reachability {
         return observer
     }
     
-    public func waitForStatus() {
-        self.wait(count: 50)
+    public func waitForStatus(completion: @escaping (Bool)->()) {
+        self.wait(count: 50, completion: completion)
     }
     
-    private func wait(count: Int) {
-        if count <= 50 && Scorecard.reachability.connected == nil {
+    private func wait(count: Int, completion: @escaping (Bool)->()) {
+        if count >= 50 || Scorecard.reachability.connected != nil {
+            completion(Scorecard.reachability.connected ?? false)
+        } else {
             Utility.executeAfter(delay: 0.01) {
-                self.wait(count: count + 1)
+                self.wait(count: count + 1, completion: completion)
             }
         }
     }

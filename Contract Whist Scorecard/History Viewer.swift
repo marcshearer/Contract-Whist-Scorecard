@@ -43,7 +43,6 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
     private var filterSelectionView: PlayerSelectionView!
     private var filterSelectionHeightConstraint: NSLayoutConstraint!
     private var filterSelectionViewHeight: CGFloat!
-    private var filterThumbnail: ThumbnailView!
     private var filterPlayerMO: PlayerMO!
     private var bannerFilterButton: UIButton!
     private var syncButton: ShadowButton!
@@ -103,18 +102,12 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
         }
     }
        
-    internal func setup(customButton: UIButton) {
+    internal func setupCustomButton(id: AnyHashable?) -> BannerButton? {
+        var result: BannerButton?
         if self.winStreakPlayer == nil && ScorecardUI.smallPhoneSize() {
-            self.bannerFilterButton = customButton
-            self.bannerFilterButton.setImage(UIImage(named: "filter"), for: .normal)
-            self.bannerFilterButton.contentHorizontalAlignment = .center
-            self.bannerFilterButton.addTarget(self, action: #selector(HistoryViewer.filterButtonPressed(_:)), for: .touchUpInside)
-            self.filterThumbnail = ThumbnailView(frame: self.bannerFilterButton.imageView!.frame)
-            self.bannerFilterButton.addSubview(self.filterThumbnail)
-            Constraint.anchor(view: self.bannerFilterButton, control: self.filterThumbnail, attributes: .leading, .trailing, .top, .bottom)
-            self.filterThumbnail.isHidden = true
-            self.filterThumbnail.isUserInteractionEnabled = false
+            result = BannerButton(image: UIImage(named: "filter"), action: self.filterButtonPressed, id: id)
         }
+        return result
     }
     
     internal func didSelect(playerMO: PlayerMO) {
@@ -230,7 +223,12 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
     
     // MARK: - Filter button logic ======================================================================== -
     
+    
     @objc private func filterButtonPressed(_ sender: UIButton) {
+        self.filterButtonPressed()
+    }
+    
+    private func filterButtonPressed() {
         switch self.filterState {
             case .notFiltered:
                 self.filterState = .selecting
@@ -273,7 +271,6 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
                 self.filterButton.setTitle("Cancel", for: .normal)
                 self.filterClearView?.isHidden = true
             }
-            self.filterThumbnail?.isHidden = true
 
         case .notFiltered:
             self.getHistory()
@@ -287,7 +284,6 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
                 self.filterButton.setTitle("Filter", for: .normal)
                 self.filterClearView?.isHidden = true
             }
-            self.filterThumbnail?.isHidden = true
 
         case .filtered:
             self.getPlayerHistory()
@@ -303,8 +299,6 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
                 self.filterButton.setTitle(self.filterPlayerMO.name!, for: .normal)
                 self.filterClearView?.isHidden = false
             }
-            self.filterThumbnail?.set(playerMO: self.filterPlayerMO, nameHeight: 0.0)
-            self.filterThumbnail?.isHidden = false
         }
         
         if self.customHeightConstraint.constant != viewHeight ||
@@ -396,14 +390,6 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
             Constraint.anchor(view: self.filterInstructionView, control: syncButton, attributes: .centerY)
             Constraint.anchor(view: self.filterInstructionView, control: syncButton, constant: ((buttonWidth / 2.0) + 5.0), attributes: .centerX)
             self.syncButton.addTarget(self.dataTableViewController, action: #selector(DataTableViewController.showSync(_:)), for: .touchUpInside)
-            
-            // Create the player thumbnail
-            self.filterThumbnail = ThumbnailView(frame: CGRect(x: 0, y: 0, width: thumbnailHeight, height: thumbnailHeight))
-            Constraint.setWidth(control: self.filterThumbnail, width: thumbnailHeight)
-            Constraint.setHeight(control: self.filterThumbnail, height: thumbnailHeight)
-            self.filterInstructionView.addSubview(self.filterThumbnail)
-            Constraint.anchor(view: self.filterInstructionView, control: self.filterThumbnail, attributes: .centerX, .centerY)
-            self.filterThumbnail.setShadow()
         }
     }
     

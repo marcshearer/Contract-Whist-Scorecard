@@ -25,7 +25,7 @@ class Option {
     fileprivate let title: String
     fileprivate let releaseTitle: String?
     fileprivate let titleColor: UIColor?
-    fileprivate let menuOption: MenuOption?
+    fileprivate var menuOption: MenuOption?
     fileprivate let action: (()->())?
     fileprivate let releaseAction: (()->())?
     fileprivate let spaceBefore: CGFloat
@@ -83,6 +83,7 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
     private var suboptionMenuOption: MenuOption!
     private var suboptionContainer: Container!
     private var suboptionHighlight: Int? = nil
+    private var resultsHighlight: Int? = nil
     private var optionMap: [OptionMap] = []
     internal var currentOption: MenuOption = .playGame
     private var screenshotImageView = UIImageView()
@@ -184,6 +185,9 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
             self.suboptionContainer = nil
             self.suboptionHighlight = nil
             self.disableOptions = false
+            if self.currentOption != .playGame {
+                self.addSuboptions(option: self.currentOption, highlight: self.resultsHighlight)
+            }
             self.setupOptionMap()
             self.reloadData()
         }
@@ -192,6 +196,7 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
     func add(suboptions: [Option], to option: MenuOption, on container: Container, highlight: Int?, disableOptions: Bool = false) {
         if !suboptions.isEmpty || option != self.suboptionMenuOption {
             self.suboptions = suboptions
+            self.suboptions.forEach{(suboption) in suboption.menuOption = option}
             self.suboptionHighlight = highlight
         }
         self.suboptionMenuOption = option
@@ -346,6 +351,9 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
                 self.setupOptionMap()
             } else if self.suboptionHighlight != nil {
                 self.suboptionHighlight = index
+                if option.menuOption == .personalResults {
+                    self.resultsHighlight = index
+                }
             }
             self.reloadData()
             
@@ -403,14 +411,14 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
         self.infoButton.isEnabled = isEnabled
     }
     
-    private func addSuboptions(option: MenuOption?) {
+    private func addSuboptions(option: MenuOption?, highlight: Int? = nil) {
         if let option = option {
             switch option {
-            case .personalResults:
+            case .personalResults, .everyoneResults:
                 self.add(suboptions: [
                     Option(title: "Personal", action: { self.dismissAndSelectOption(option: .personalResults, changeOption: false)}),
                     Option(title: "Everyone", action: { self.dismissAndSelectOption(option: .everyoneResults, changeOption: false)})],
-                         to: option, on: self.container!, highlight: 0)
+                         to: option, on: self.container!, highlight: highlight ?? 0)
             default:
                 self.suboptions = []
             }

@@ -34,12 +34,12 @@ class CenteredCollectionViewLayout: UICollectionViewFlowLayout {
             let verticalSpacing = delegate.collectionView!(collectionView, layout: self, minimumInteritemSpacingForSectionAt: 0)
             self.collectionViewWidth = collectionView.bounds.width
             self.collectionViewHeight = collectionView.bounds.height
-            let cellsPerRow = Int(self.collectionViewWidth / self.cellWidth)
+            let cellsPerRow = max(1,Int(self.collectionViewWidth / self.cellWidth))
             let cellsInLastRow = cells % cellsPerRow
             let rows = Int((cells + cellsPerRow - 1) / cellsPerRow)
             let lastRowIndent = (cellsInLastRow == 0 ? 0 : ((CGFloat(cellsPerRow - cellsInLastRow) * (self.cellWidth + horizontalSpacing)) - horizontalSpacing) / 2.0)
 
-            var column = cellsPerRow - 1
+            var column = cellsPerRow - 1    
             var row = -1
             for item in 0..<cells {
                 column += 1

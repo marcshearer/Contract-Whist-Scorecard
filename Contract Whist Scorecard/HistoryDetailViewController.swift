@@ -11,7 +11,7 @@ import MapKit
 import CoreLocation
 import CloudKit
 
-class HistoryDetailViewController: ScorecardViewController, UITableViewDataSource, UITableViewDelegate {
+class HistoryDetailViewController: ScorecardViewController, UITableViewDataSource, UITableViewDelegate, BannerDelegate {
 
     // MARK: - Class Properties ======================================================================== -
     
@@ -23,8 +23,10 @@ class HistoryDetailViewController: ScorecardViewController, UITableViewDataSourc
     let tableRowHeight:CGFloat = 44.0
     var players = 0
     var updated = false
+    private var shareButton = 1
     
     // MARK: - IB Outlets ============================================================================== -
+    @IBOutlet private weak var banner: Banner!
     @IBOutlet private weak var participantTableView: UITableView!
     @IBOutlet private weak var locationText: UILabel!
     @IBOutlet private weak var locationBackground: UIView!
@@ -33,11 +35,7 @@ class HistoryDetailViewController: ScorecardViewController, UITableViewDataSourc
     @IBOutlet private weak var locationBackgroundTrailingConstraint: NSLayoutConstraint!
     @IBOutlet private weak var mapView: MKMapView!
     @IBOutlet private weak var participantTableViewHeightConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var navigationBar: NavigationBar!
-    @IBOutlet private weak var titleNavigationItem: UINavigationItem!
     @IBOutlet private weak var updateButton: ShadowButton!
-    @IBOutlet private weak var finishButton: RoundedButton!
-    @IBOutlet private weak var actionButton: UIBarButtonItem!
     @IBOutlet private weak var bodyView: UIView!
     @IBOutlet private weak var excludeStatsView: UIView!
     @IBOutlet private weak var excludeStatsLabel: UILabel!
@@ -45,7 +43,7 @@ class HistoryDetailViewController: ScorecardViewController, UITableViewDataSourc
     
     // MARK: - IB Actions ============================================================================== -
 
-    @IBAction func finishPressed(_ sender: UIButton) {
+    internal func finishPressed() {
         self.dismiss()
     }
     
@@ -53,12 +51,12 @@ class HistoryDetailViewController: ScorecardViewController, UITableViewDataSourc
         self.showLocation()
     }
     
-    @IBAction func actionPressed(_ sender: UIBarButtonItem) {
+    internal func actionPressed() {
         shareGame()
     }
     
     @IBAction func allSwipe(recognizer:UISwipeGestureRecognizer) {
-        finishPressed(finishButton)
+        finishPressed()
     }
     
     // MARK: - View Overrides ========================================================================== -
@@ -68,6 +66,9 @@ class HistoryDetailViewController: ScorecardViewController, UITableViewDataSourc
         
         // Setup default colors (previously done in StoryBoard)
         self.defaultViewColors()
+        
+        // Setup banner
+        self.setupBanner()
 
         if !Scorecard.activeSettings.saveLocation {
             locationBackgroundHeightConstraint.constant = 0
@@ -84,7 +85,7 @@ class HistoryDetailViewController: ScorecardViewController, UITableViewDataSourc
         
         let dateString = DateFormatter.localizedString(from: gameDetail.datePlayed, dateStyle: .medium, timeStyle: .none)
         let timeString = Utility.dateString(gameDetail.datePlayed, format: "HH:mm")
-        titleNavigationItem.title = "\(dateString) - \(timeString)"
+        self.banner.set(title: "\(dateString) - \(timeString)")
         players = gameDetail.participant.count
         participantTableViewHeightConstraint.constant = CGFloat(players + 1) * tableRowHeight
         if Scorecard.activeSettings.saveLocation {
@@ -189,6 +190,13 @@ class HistoryDetailViewController: ScorecardViewController, UITableViewDataSourc
     
     // MARK: - Utility Routines ======================================================================== -
    
+    private func setupBanner() {
+        let shareImage = UIImage(systemName: "square.and.arrow.up", withConfiguration: UIImage.SymbolConfiguration(pointSize: Banner.defaultFont.fontDescriptor.pointSize, weight: .semibold))
+        self.banner.set(
+            rightButtons: [
+                BannerButton(image: shareImage, action: self.actionPressed, id: shareButton)])
+    }
+    
     func dropPin() {
         // Create map annotation
         let annotation = MKPointAnnotation()
@@ -428,10 +436,8 @@ extension HistoryDetailViewController {
     private func defaultViewColors() {
 
         self.excludeStatsLabel.textColor = Palette.banner.contrastText
-        self.finishButton.setTitleColor(Palette.banner.text, for: .normal)
         self.locationBackground.backgroundColor = Palette.darkHighlight.background
         self.locationText.textColor = Palette.darkHighlight.text
-        self.navigationBar.textColor = Palette.banner.text
         self.participantTableView.separatorColor = Palette.separator.background
         self.updateButton.setTitleColor(Palette.buttonFace.text, for: .normal)
         self.updateButton.setBackgroundColor(Palette.buttonFace.background)

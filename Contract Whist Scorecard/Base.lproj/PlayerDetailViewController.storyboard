@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait" appearance="light"/>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -16,48 +18,21 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="400"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oEM-x6-cmp" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Whist_2" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="0.0"/>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EjK-X6-73n" userLabel="TItle Bar">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="40"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Yo-7G-yK7">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="44" id="2vg-Nd-Yon"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="28"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2WO-9f-fdL" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
-                                        <rect key="frame" x="20" y="11" width="30" height="22"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="30" id="YSw-tK-AOF"/>
-                                        </constraints>
-                                        <state key="normal" image="back">
-                                            <color key="titleColor" name="Banner Text"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="backButtonPressed:" destination="bWc-Jl-GWH" eventType="touchUpInside" id="dC7-R4-sVo"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                                <constraints>
-                                    <constraint firstItem="2WO-9f-fdL" firstAttribute="centerY" secondItem="5Yo-7G-yK7" secondAttribute="centerY" id="Asl-nT-U9q"/>
-                                    <constraint firstItem="2WO-9f-fdL" firstAttribute="leading" secondItem="gK9-hU-jIb" secondAttribute="leading" constant="20" id="WG8-Xm-7vr"/>
-                                    <constraint firstItem="5Yo-7G-yK7" firstAttribute="top" secondItem="EjK-X6-73n" secondAttribute="top" id="aNw-uw-HxK"/>
-                                    <constraint firstAttribute="trailing" secondItem="5Yo-7G-yK7" secondAttribute="trailing" id="cwN-a5-fL6"/>
-                                    <constraint firstItem="5Yo-7G-yK7" firstAttribute="leading" secondItem="EjK-X6-73n" secondAttribute="leading" id="k0T-n7-uGv"/>
-                                    <constraint firstAttribute="height" constant="40" id="sxL-1e-rVl"/>
-                                </constraints>
-                                <viewLayoutGuide key="safeArea" id="gK9-hU-jIb"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oEM-x6-cmp" customClass="Banner" customModule="Whist_2" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="88"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="image" keyPath="finishImage" value="back"/>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="menuHide" value="YES"/>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <outlet property="bannerHeightConstraint" destination="Ihu-aU-clz" id="hIB-ZC-JhA"/>
+                                    <outlet property="delegate" destination="bWc-Jl-GWH" id="7cv-T4-FGL"/>
+                                    <outlet property="parentViewController" destination="bWc-Jl-GWH" id="91I-T4-wic"/>
+                                </connections>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" canCancelContentTouches="NO" bouncesZoom="NO" keyboardDismissMode="interactive" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="100" sectionHeaderHeight="1" sectionFooterHeight="1" translatesAutoresizingMaskIntoConstraints="NO" id="3Pf-sG-Che">
-                                <rect key="frame" x="20" y="40" width="280" height="360"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <rect key="frame" x="20" y="88" width="280" height="312"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell tag="1" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Input Field" id="VqQ-AO-cnP" customClass="PlayerDetailCell" customModule="Whist_2" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="55.5" width="280" height="100"/>
@@ -104,7 +79,7 @@
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="aQB-fz-x1d">
-                                                    <rect key="frame" x="108" y="19" width="149" height="62"/>
+                                                    <rect key="frame" x="108" y="19" width="148" height="62"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -141,7 +116,7 @@
                                                         <constraint firstAttribute="height" constant="1" id="rub-ok-qxN"/>
                                                     </constraints>
                                                 </view>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gys-Wx-NCn" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gys-Wx-NCn" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
                                                     <rect key="frame" x="80" y="38" width="120" height="24"/>
                                                     <color key="backgroundColor" name="Clear"/>
                                                     <constraints>
@@ -153,7 +128,7 @@
                                                         <color key="titleColor" name="Text"/>
                                                     </state>
                                                 </button>
-                                                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1BY-OX-iTL" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
+                                                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1BY-OX-iTL" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
                                                     <rect key="frame" x="35" y="38" width="100" height="24"/>
                                                     <color key="backgroundColor" name="Clear"/>
                                                     <constraints>
@@ -164,7 +139,7 @@
                                                         <color key="titleColor" name="Text"/>
                                                     </state>
                                                 </button>
-                                                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="myt-ua-1yr" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
+                                                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="myt-ua-1yr" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
                                                     <rect key="frame" x="145" y="38" width="100" height="24"/>
                                                     <color key="backgroundColor" name="Clear"/>
                                                     <constraints>
@@ -384,22 +359,19 @@
                                 </connections>
                             </tableView>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="o3W-OF-Z0q"/>
                         <color key="backgroundColor" name="Background"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="EjK-X6-73n" secondAttribute="trailing" id="9Lf-nR-oCF"/>
-                            <constraint firstItem="3Pf-sG-Che" firstAttribute="top" secondItem="EjK-X6-73n" secondAttribute="bottom" id="AF9-QL-nFx"/>
-                            <constraint firstItem="EjK-X6-73n" firstAttribute="top" secondItem="o3W-OF-Z0q" secondAttribute="top" id="BXX-8x-uts"/>
-                            <constraint firstItem="o3W-OF-Z0q" firstAttribute="top" secondItem="oEM-x6-cmp" secondAttribute="bottom" id="Ihu-aU-clz"/>
+                            <constraint firstItem="3Pf-sG-Che" firstAttribute="top" secondItem="oEM-x6-cmp" secondAttribute="bottom" id="0JB-3H-W9Z"/>
+                            <constraint firstItem="oEM-x6-cmp" firstAttribute="bottom" secondItem="o3W-OF-Z0q" secondAttribute="top" constant="44" id="Ihu-aU-clz"/>
                             <constraint firstItem="3Pf-sG-Che" firstAttribute="bottom" secondItem="rYz-bu-WB3" secondAttribute="bottom" id="KCV-FW-m3J"/>
                             <constraint firstAttribute="trailing" secondItem="3Pf-sG-Che" secondAttribute="trailing" constant="20" id="Nfe-di-RzQ"/>
                             <constraint firstAttribute="trailing" secondItem="oEM-x6-cmp" secondAttribute="trailing" id="NkH-0z-lB0"/>
                             <constraint firstItem="oEM-x6-cmp" firstAttribute="leading" secondItem="rYz-bu-WB3" secondAttribute="leading" id="QRZ-oN-kHQ"/>
-                            <constraint firstItem="EjK-X6-73n" firstAttribute="leading" secondItem="rYz-bu-WB3" secondAttribute="leading" id="Vzf-XB-KIm"/>
                             <constraint firstItem="3Pf-sG-Che" firstAttribute="leading" secondItem="rYz-bu-WB3" secondAttribute="leading" constant="20" id="nKv-9x-RaD"/>
                             <constraint firstItem="oEM-x6-cmp" firstAttribute="top" secondItem="rYz-bu-WB3" secondAttribute="top" id="uoA-ZN-1fQ"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="o3W-OF-Z0q"/>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="6D8-ix-WCm" appends="YES" id="17i-zB-GcS"/>
                             <outletCollection property="gestureRecognizers" destination="Lri-49-wlc" appends="YES" id="mAh-b9-qtK"/>
@@ -408,13 +380,10 @@
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="320" height="400"/>
                     <connections>
-                        <outlet property="finishButton" destination="2WO-9f-fdL" id="pmd-7x-0ge"/>
+                        <outlet property="banner" destination="oEM-x6-cmp" id="Ce4-rW-uGB"/>
                         <outlet property="tableView" destination="3Pf-sG-Che" id="wgU-9V-DwZ"/>
                         <outlet property="tableViewLeadingConstraint" destination="nKv-9x-RaD" id="sTU-3M-scm"/>
                         <outlet property="tableViewTrailingConstraint" destination="Nfe-di-RzQ" id="58y-kg-AZ7"/>
-                        <outlet property="titleBarHeightConstraint" destination="sxL-1e-rVl" id="xab-V7-hzc"/>
-                        <outlet property="titleLabel" destination="5Yo-7G-yK7" id="hGx-94-XRg"/>
-                        <outlet property="titleView" destination="EjK-X6-73n" id="TmN-HX-yrT"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="REd-wj-wdR" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -437,9 +406,6 @@
         <namedColor name="Background">
             <color red="0.94117647058823528" green="0.93725490196078431" blue="0.92941176470588238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
-        <namedColor name="Banner Text">
-            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
         <namedColor name="Clear">
             <color red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
@@ -452,5 +418,8 @@
         <namedColor name="Text Emphasised">
             <color red="0.89800000190734863" green="0.74900001287460327" blue="0.37299999594688416" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
     </resources>
 </document>

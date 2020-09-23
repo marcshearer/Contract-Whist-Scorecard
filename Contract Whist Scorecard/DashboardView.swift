@@ -141,7 +141,7 @@ class DashboardView : UIView, DashboardActionDelegate {
     
     private func showHighScores(allowSync: Bool = true) {
         DashboardViewController.show(from: self.parentViewController!,
-                                     dashboardNames: [(title: "High Scores",  fileName: "HighScoresDashboard",  imageName: nil)], allowSync: allowSync, backImage: "back", backgroundColor: Palette.banner) {
+                                     dashboardNames: [(title: "High Scores",  fileName: "HighScoresDashboard",  imageName: nil)], allowSync: allowSync, backImage: "back", backgroundColor: Palette.banner, container: self.parentViewController?.container ?? .main, menuFinishText: "Back to Results") {
             self.delegate?.reloadData?()
         }
     }

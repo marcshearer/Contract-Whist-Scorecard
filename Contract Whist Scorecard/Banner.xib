@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <device id="retina6_1" orientation="landscape" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
@@ -27,7 +27,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="Rat-5l-zqR" userLabel="Title Label">
-                    <rect key="frame" x="20" y="0.0" width="374" height="44"/>
+                    <rect key="frame" x="64" y="0.0" width="330" height="44"/>
                     <color key="backgroundColor" name="Clear"/>
                     <accessibility key="accessibilityConfiguration" identifier="titleLabel"/>
                     <constraints>
@@ -67,12 +67,8 @@
             <accessibility key="accessibilityConfiguration" identifier="bannerContent"/>
             <constraints>
                 <constraint firstItem="Hhl-Cx-Vdj" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="2vY-ZF-IPR"/>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="7vQ-Tb-bGS" secondAttribute="trailing" constant="20" id="7Nz-xS-Otx">
-                    <variation key="heightClass=compact" constant="0.0"/>
-                </constraint>
-                <constraint firstItem="27E-De-fIC" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="20" id="8KN-d4-qqE">
-                    <variation key="heightClass=compact" constant="0.0"/>
-                </constraint>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="7vQ-Tb-bGS" secondAttribute="trailing" constant="20" id="7Nz-xS-Otx"/>
+                <constraint firstItem="27E-De-fIC" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="20" id="8KN-d4-qqE"/>
                 <constraint firstItem="7vQ-Tb-bGS" firstAttribute="top" secondItem="27E-De-fIC" secondAttribute="top" id="90s-MM-qa7"/>
                 <constraint firstItem="Rat-5l-zqR" firstAttribute="top" secondItem="27E-De-fIC" secondAttribute="top" id="A3g-P1-1bP"/>
                 <constraint firstItem="Hhl-Cx-Vdj" firstAttribute="top" secondItem="Rat-5l-zqR" secondAttribute="bottom" id="KxO-jw-StI"/>

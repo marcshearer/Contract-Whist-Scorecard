@@ -594,6 +594,7 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
     }
 }
 
+
 public enum Container {
     case left
     case main

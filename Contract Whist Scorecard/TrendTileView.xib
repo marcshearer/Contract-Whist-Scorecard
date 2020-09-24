@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -25,7 +26,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="160" height="160"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6YX-hp-bhC" customClass="GraphView" customModule="Whist_2" customModuleProvider="target">
-                            <rect key="frame" x="-15" y="38" width="175" height="122"/>
+                            <rect key="frame" x="-15" y="42" width="175" height="118"/>
                             <color key="backgroundColor" name="Clear"/>
                         </view>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Activity" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="ZGJ-lr-yz2" userLabel="Title">
@@ -38,7 +39,7 @@
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="right" contentVerticalAlignment="top" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sEg-2u-hzJ" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
+                        <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="right" contentVerticalAlignment="top" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sEg-2u-hzJ" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
                             <rect key="frame" x="130" y="16" width="22" height="22"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="22" id="k1Z-CD-ulU"/>
@@ -55,7 +56,7 @@
                         <constraint firstItem="sEg-2u-hzJ" firstAttribute="top" secondItem="eqd-Gv-cEk" secondAttribute="top" constant="16" id="i8J-I5-DRc"/>
                         <constraint firstAttribute="bottom" secondItem="6YX-hp-bhC" secondAttribute="bottom" id="jz6-Ly-xxj"/>
                         <constraint firstItem="6YX-hp-bhC" firstAttribute="leading" secondItem="eqd-Gv-cEk" secondAttribute="leading" constant="-15" id="rmd-t7-bwZ"/>
-                        <constraint firstItem="6YX-hp-bhC" firstAttribute="top" secondItem="sEg-2u-hzJ" secondAttribute="bottom" id="smZ-R2-auO"/>
+                        <constraint firstItem="6YX-hp-bhC" firstAttribute="top" secondItem="sEg-2u-hzJ" secondAttribute="bottom" constant="4" id="smZ-R2-auO"/>
                         <constraint firstItem="ZGJ-lr-yz2" firstAttribute="top" secondItem="eqd-Gv-cEk" secondAttribute="top" constant="16" id="sxc-nQ-iYw"/>
                     </constraints>
                 </view>

@@ -142,7 +142,7 @@ class PlayersViewController: ScorecardViewController, PlayersViewDelegate, UICol
     private func setupSize() {
         self.minAcross = (ScorecardUI.landscapePhone() ? 5 : 3)
         self.horizontalInset = ((self.menuController?.isVisible ?? false) ? 20 : 16)
-        self.spacing = self.collectionView.frame.width / 25
+        self.spacing = min(16.0, self.collectionView.frame.width / 25)
         self.collectionView.contentInset = UIEdgeInsets(top: self.verticalInset, left: self.horizontalInset, bottom: self.verticalInset, right: self.horizontalInset)
         let availableWidth = self.collectionView.frame.width + self.spacing - (2 * self.horizontalInset)
         let idealAcross = max(self.minAcross, Int(availableWidth / idealWidth))

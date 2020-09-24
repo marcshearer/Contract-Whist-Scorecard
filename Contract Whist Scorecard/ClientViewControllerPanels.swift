@@ -20,6 +20,8 @@ protocol PanelContainer {
 
     var containers: Bool {get}
     
+    func visible(container: Container) -> Bool
+    
     func panelLayoutSubviews()
     
     func presentInContainers(_ items: [PanelContainerItem], rightPanelTitle: String?, animated: Bool, completion: (() -> ())?)
@@ -137,6 +139,21 @@ extension ClientViewController : PanelContainer {
         self.leftContainer?.setNeedsLayout()
         self.rightContainer?.setNeedsLayout()
         self.rightInsetContainer?.setNeedsLayout()
+    }
+    
+    internal func visible(container: Container) -> Bool {
+        if !self.containers {
+            return false
+        } else {
+            switch container {
+            case .left:
+                return self.leftPanelTrailingConstraint.constant > 0
+            case .main:
+                return true
+            case .right, .rightInset, .mainRight:
+                return self.rightPanelLeadingConstraint.constant < 0
+            }
+        }
     }
     
     internal func rightPanelDefaultScreenColors() {

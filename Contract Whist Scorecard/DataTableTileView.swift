@@ -61,6 +61,7 @@ class DataTableTileView: UIView, DashboardTileDelegate, UITableViewDataSource, U
     @IBOutlet private weak var contentView: UIView!
     @IBOutlet private weak var tileView: UIView!
 
+    @IBOutlet private weak var titleContainerHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var typeButton: ClearButton!
     @IBOutlet private weak var typeButtonTrailingConstraint: NSLayoutConstraint!
@@ -143,12 +144,11 @@ class DataTableTileView: UIView, DashboardTileDelegate, UITableViewDataSource, U
         self.contentView.addShadow(shadowSize: CGSize(width: 4.0, height: 4.0))
         self.tileView.roundCorners(cornerRadius: 8.0)
         
+        self.tableView.layoutIfNeeded()
         if self.tableView.frame.width > 0 {
-            self.tableView.layoutIfNeeded()
             self.calculateRows()
-            if self.headings {
-                self.tableViewTopConstraint.constant = -self.rowHeight
-            }
+            self.tableViewTopConstraint.constant = (self.headings ? 0 : self.rowHeight)
+            self.titleContainerHeightConstraint.constant = self.rowHeight
             
             if let availableFields = self.dataSource?.availableFields,
                let minColumns = self.dataSource?.minColumns {
@@ -160,7 +160,7 @@ class DataTableTileView: UIView, DashboardTileDelegate, UITableViewDataSource, U
                 }
                 for index in 0..<availableFields.count {
                     if self.tableView.frame.width < minWidth {
-                        availableFields[index].adjustedWidth = availableFields[index].width * self.tableView.frame.width / minWidth
+                        availableFields[index].adjustedWidth = availableFields[index].width * (self.tableView.frame.width) / minWidth
                     } else {
                         availableFields[index].adjustedWidth = availableFields[index].width
                     }
@@ -203,15 +203,13 @@ class DataTableTileView: UIView, DashboardTileDelegate, UITableViewDataSource, U
     }
     
     private func calculateRows() {
-        let totalHeight = self.tableView.frame.height
+        let totalHeight = self.contentView.frame.height
         self.minRowHeight = max(self.minRowHeight, ScorecardUI.screenHeight / 24)
-        self.rows = Int(totalHeight / self.minRowHeight)
-        var fitRows = self.rows
-        if self.rows > self.records.count {
-            fitRows = Int(totalHeight / CGFloat(self.maxRowHeight))
-            self.rows = self.records.count
-        }
-        self.rowHeight = totalHeight / CGFloat(max(fitRows, self.rows))
+        let fitRows = Int(totalHeight / self.minRowHeight)
+        let headingRows = (self.headings ? 1 : 0)
+        let actualRows = min(fitRows, self.records.count + headingRows)
+        self.rows = actualRows
+        self.rowHeight = min(self.maxRowHeight, totalHeight / CGFloat(actualRows))
     }
     
     private func moveTypeButton() {

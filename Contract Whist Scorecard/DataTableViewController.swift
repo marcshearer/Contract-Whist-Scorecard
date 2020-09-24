@@ -729,11 +729,13 @@ class DataTableFormatter {
         // Sort selected columns by sequence
         displayedFields.sort(by: { $0.sequence < $1.sequence })
         
-        // Find and expand pad column
+        // Find and expand pad columns
         if widthRemaining > 0 {
-            if let index = displayedFields.firstIndex(where: { $0.pad }) {
-                displayedFields[index].adjustedWidth += min(120, widthRemaining)
-                widthRemaining = max(0, widthRemaining - 120)
+            let padFields = displayedFields.filter{$0.pad}
+            let adjust: CGFloat = min(200, (widthRemaining - 1) / CGFloat(padFields.count))
+            for field in padFields {
+                field.adjustedWidth += adjust
+                widthRemaining -= adjust
             }
         }
         

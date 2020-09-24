@@ -13,8 +13,8 @@ class DataTableTilePersonalStatsDataSource : DataTableTileViewDataSource {
     let availableFields: [DataTableField] = [
         DataTableField("",              "",          sequence: 1,   width: 7,   type: .string),
         DataTableField("",              "",          sequence: 4,   width: 7,   type: .string),
-        DataTableField("name",          "Stat",      sequence: 2,   width: 100, type: .string,        align: .left),
-        DataTableField("value",         "Value",     sequence: 3,   width: 30,  type: .string)
+        DataTableField("name",          "Stat",      sequence: 2,   width: 60,  type: .string,  align: .left, pad: true),
+        DataTableField("value",         "Value",     sequence: 3,   width: 50,  type: .string,  align: .left)
     ]
 
     let minColumns = 4

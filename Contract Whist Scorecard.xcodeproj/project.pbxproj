@@ -50,6 +50,10 @@
 		B214FBA51FCADC7B00F4F39B /* Contract Whist Watch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = B214FB881FCADC7B00F4F39B /* Contract Whist Watch.app */; };
 		B214FBAF1FCB711B00F4F39B /* WatchRoundInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B214FBAE1FCB711B00F4F39B /* WatchRoundInterfaceController.swift */; };
 		B214FBB11FCB71EB00F4F39B /* Watch Manager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B214FBB01FCB71EB00F4F39B /* Watch Manager.swift */; };
+		B216268C251B892200BDEE70 /* AwardsDashboardContainerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2162689251B892200BDEE70 /* AwardsDashboardContainerView.xib */; };
+		B216268D251B892200BDEE70 /* PersonalDashboardContainerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B216268A251B892200BDEE70 /* PersonalDashboardContainerView.xib */; };
+		B216268E251B892200BDEE70 /* EveryoneDashboardContainerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B216268B251B892200BDEE70 /* EveryoneDashboardContainerView.xib */; };
+		B216269C251B89DD00BDEE70 /* HighScoresDashboardContainerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B216269B251B89DD00BDEE70 /* HighScoresDashboardContainerView.xib */; };
 		B221EED5210B0DFE00F7FBA0 /* HandViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B221EED3210B0DFE00F7FBA0 /* HandViewController.storyboard */; };
 		B221EED7210B0E2D00F7FBA0 /* HandViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B221EED6210B0E2D00F7FBA0 /* HandViewController.swift */; };
 		B22500F11F48425C0042D566 /* Scorecard Comms.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22500F01F48425C0042D566 /* Scorecard Comms.swift */; };
@@ -337,6 +341,10 @@
 		B214FBA11FCADC7B00F4F39B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B214FBAE1FCB711B00F4F39B /* WatchRoundInterfaceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchRoundInterfaceController.swift; sourceTree = "<group>"; };
 		B214FBB01FCB71EB00F4F39B /* Watch Manager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Watch Manager.swift"; sourceTree = "<group>"; };
+		B2162689251B892200BDEE70 /* AwardsDashboardContainerView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AwardsDashboardContainerView.xib; sourceTree = "<group>"; };
+		B216268A251B892200BDEE70 /* PersonalDashboardContainerView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PersonalDashboardContainerView.xib; sourceTree = "<group>"; };
+		B216268B251B892200BDEE70 /* EveryoneDashboardContainerView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EveryoneDashboardContainerView.xib; sourceTree = "<group>"; };
+		B216269B251B89DD00BDEE70 /* HighScoresDashboardContainerView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HighScoresDashboardContainerView.xib; sourceTree = "<group>"; };
 		B221EED4210B0DFE00F7FBA0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/HandViewController.storyboard; sourceTree = "<group>"; };
 		B221EED6210B0E2D00F7FBA0 /* HandViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HandViewController.swift; sourceTree = "<group>"; };
 		B22500F01F48425C0042D566 /* Scorecard Comms.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Scorecard Comms.swift"; sourceTree = "<group>"; };
@@ -953,10 +961,13 @@
 		B23970D424AF76CC00E3C2A9 /* Results Dashboards */ = {
 			isa = PBXGroup;
 			children = (
+				B216268B251B892200BDEE70 /* EveryoneDashboardContainerView.xib */,
 				B228E3C124A10F36006D91CE /* EveryoneDashboardPortraitView.xib */,
 				B20CF54624A7D74500F27A9C /* EveryoneDashboardLandscapeView.xib */,
+				B2162689251B892200BDEE70 /* AwardsDashboardContainerView.xib */,
 				B228E3BF24A10ECC006D91CE /* AwardsDashboardPortraitView.xib */,
 				B20CF54524A7D74500F27A9C /* AwardsDashboardLandscapeView.xib */,
+				B216268A251B892200BDEE70 /* PersonalDashboardContainerView.xib */,
 				B228E3BB24A10274006D91CE /* PersonalDashboardPortraitView.xib */,
 				B20CF54324A7BD3B00F27A9C /* PersonalDashboardLandscapeView.xib */,
 			);
@@ -966,6 +977,7 @@
 		B23970D524AF76E500E3C2A9 /* High Scores Dashboards */ = {
 			isa = PBXGroup;
 			children = (
+				B216269B251B89DD00BDEE70 /* HighScoresDashboardContainerView.xib */,
 				B23970D924AF77DE00E3C2A9 /* HighScoresDashboardPortraitView.xib */,
 				B23970D824AF77DE00E3C2A9 /* HighScoresDashboardLandscapeView.xib */,
 			);
@@ -1741,12 +1753,14 @@
 				B2594E862251FEB2004398FB /* MyDevices.sh in Resources */,
 				B23D46F62514AACF0018E954 /* NextHandViewController.storyboard in Resources */,
 				B228E3C024A10ECC006D91CE /* AwardsDashboardPortraitView.xib in Resources */,
+				B216269C251B89DD00BDEE70 /* HighScoresDashboardContainerView.xib in Resources */,
 				B2E065CD24AB0EE30055C376 /* RelatedPlayersTableViewCell.xib in Resources */,
 				B228E3BC24A10274006D91CE /* PersonalDashboardPortraitView.xib in Resources */,
 				B2A9096324A1BBDB00B35B69 /* DataTableTileView.xib in Resources */,
 				B2E37D0724E7DFC60074C8F3 /* Launch Screen.storyboard in Resources */,
 				B22789021FB83AA7009BABCA /* SelectionViewController.storyboard in Resources */,
 				B22789331FB88FA5009BABCA /* DataTableViewController.storyboard in Resources */,
+				B216268E251B892200BDEE70 /* EveryoneDashboardContainerView.xib in Resources */,
 				B23970DC24AF77DE00E3C2A9 /* HighScoresDashboardPortraitView.xib in Resources */,
 				B2372E262489351800A6872D /* SampleTheme.xib in Resources */,
 				B2E57A1E24CAA36E00347A89 /* AwardView.xib in Resources */,
@@ -1759,6 +1773,7 @@
 				B2CBB81724A9D71400B336CB /* CreatePlayerView.xib in Resources */,
 				B22E38DA24A05F8900D61BBA /* CountTileView.xib in Resources */,
 				B2A9096924A1C3A000B35B69 /* DataTableTileCollectionViewCell.xib in Resources */,
+				B216268C251B892200BDEE70 /* AwardsDashboardContainerView.xib in Resources */,
 				B2C19E932370541E009485E0 /* Assets.xcassets in Resources */,
 				B221EED5210B0DFE00F7FBA0 /* HandViewController.storyboard in Resources */,
 				B20CF54824A7D74500F27A9C /* EveryoneDashboardLandscapeView.xib in Resources */,
@@ -1800,6 +1815,7 @@
 				B22789181FB84A75009BABCA /* RoundSummaryViewController.storyboard in Resources */,
 				B20CF54724A7D74500F27A9C /* AwardsDashboardLandscapeView.xib in Resources */,
 				B2A9096724A1C15700B35B69 /* DataTableTileTableViewCell.xib in Resources */,
+				B216268D251B892200BDEE70 /* PersonalDashboardContainerView.xib in Resources */,
 				B22789121FB844CD009BABCA /* ScorepadViewController.storyboard in Resources */,
 				B204A766250F352600248915 /* ActionSheetViewController.storyboard in Resources */,
 			);

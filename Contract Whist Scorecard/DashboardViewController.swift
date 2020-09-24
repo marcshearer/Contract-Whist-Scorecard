@@ -17,6 +17,7 @@ import UIKit
 public enum Orientation: String, CaseIterable {
     case portrait = "Portrait"
     case landscape = "Landscape"
+    case container = "Container"
 }
 
 @objc protocol DashboardActionDelegate : class {
@@ -137,7 +138,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     override func viewWillLayoutSubviews() {
         Utility.mainThread {
             super.viewWillLayoutSubviews()
-            self.currentOrientation = ScorecardUI.landscapePhone() ? .landscape : .portrait
+            self.currentOrientation = (self.container == .mainRight && self.rootViewController.visible(container: .mainRight) ? .container : (ScorecardUI.landscapePhone() ? .landscape : .portrait))
             if self.rotated {
                 self.hideOrientationViews(not: self.currentOrientation)
             }

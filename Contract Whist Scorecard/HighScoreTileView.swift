@@ -193,12 +193,14 @@ class HighScoreTileView: UIView, DashboardTileDelegate, UITableViewDataSource, U
             cell.valueImageView.image = UIImage(named: "rosette")?.asTemplate()
             cell.valueImageView.tintColor = Palette.highScores
             cell.valueLabel.text = "\(score)"
+            cell.valueLabel.font = UIFont.systemFont(ofSize: max(6, cell.valueImageView.frame.width / 4))
 
         case .handsMade, .twosMade:
             title = (row.type == .handsMade ? "Bids Made" : "Twos Made")
             cell.valueLabel.text = "\(score)"
             let dial = Dial(view: cell.valueImageView)
             dial.draw(dialColor: Palette.highScores.withAlphaComponent(0.5), valueColor: Palette.highScores, radius: imageHeight * 0.5, fraction: CGFloat(score) / CGFloat(Scorecard.game.rounds))
+            cell.valueLabel.font = UIFont.systemFont(ofSize: max(6, imageHeight / 3))
     
         case .winStreak:
             title = "Win Streak"

@@ -143,6 +143,8 @@ public protocol CommsConnectionDelegate : class {
     
     func connectionReceived(from peer: CommsPeer, info: [String : Any?]?) -> Bool
     
+    func error(_ message: String)
+    
 }
 
 extension CommsConnectionDelegate {

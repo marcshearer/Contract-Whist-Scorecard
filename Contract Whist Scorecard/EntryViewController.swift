@@ -114,7 +114,12 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
     @IBAction func rightSwipe(recognizer:UISwipeGestureRecognizer) {
         self.finishPressed()
     }
-        
+    
+    @IBAction func leftSwipe(recognizer:UISwipeGestureRecognizer) {
+        if !bidOnlyMode {
+            self.summaryClicked(self)
+        }
+    }
 // MARK: - View Overrides ========================================================================== -
     
     override func viewDidLoad() {

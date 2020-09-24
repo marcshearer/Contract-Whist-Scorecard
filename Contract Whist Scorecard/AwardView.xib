@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -57,14 +58,14 @@
                         <constraint firstItem="EJM-m3-Wch" firstAttribute="trailing" secondItem="ABv-4t-EtT" secondAttribute="trailing" id="hUe-rI-DRJ"/>
                     </constraints>
                 </view>
-                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7TL-TW-6qV" userLabel="Count Badge Image">
-                    <rect key="frame" x="87" y="-7.5" width="26" height="25"/>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="7TL-TW-6qV" userLabel="Count Badge Image">
+                    <rect key="frame" x="84" y="-12.5" width="32" height="33"/>
                     <constraints>
-                        <constraint firstAttribute="width" secondItem="7TL-TW-6qV" secondAttribute="height" multiplier="1:1" constant="1" id="KM8-bO-qLx"/>
+                        <constraint firstAttribute="width" secondItem="7TL-TW-6qV" secondAttribute="height" multiplier="25:26" id="KM8-bO-qLx"/>
                     </constraints>
                 </imageView>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.20000000000000001" translatesAutoresizingMaskIntoConstraints="NO" id="Uj7-jg-0py" userLabel="Count Badge">
-                    <rect key="frame" x="82.5" y="5" width="25" height="0.0"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.20000000000000001" translatesAutoresizingMaskIntoConstraints="NO" id="Uj7-jg-0py" userLabel="Count Badge">
+                    <rect key="frame" x="84" y="-12.5" width="32" height="33"/>
                     <fontDescription key="fontDescription" type="system" weight="light" pointSize="10"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
@@ -72,10 +73,13 @@
             </subviews>
             <color key="backgroundColor" name="Clear"/>
             <constraints>
+                <constraint firstItem="7TL-TW-6qV" firstAttribute="centerY" secondItem="ABv-4t-EtT" secondAttribute="top" constant="4" id="Big-5r-a9T"/>
                 <constraint firstItem="Uj7-jg-0py" firstAttribute="trailing" secondItem="7TL-TW-6qV" secondAttribute="trailing" id="Elr-TI-hFp"/>
+                <constraint firstItem="7TL-TW-6qV" firstAttribute="height" secondItem="ABv-4t-EtT" secondAttribute="height" multiplier="0.33" id="FCk-he-GaS"/>
                 <constraint firstItem="Uj7-jg-0py" firstAttribute="leading" secondItem="7TL-TW-6qV" secondAttribute="leading" id="Gf0-zI-w9P"/>
                 <constraint firstItem="Uj7-jg-0py" firstAttribute="top" secondItem="7TL-TW-6qV" secondAttribute="top" id="NHi-5K-8sU"/>
                 <constraint firstAttribute="bottom" secondItem="ABv-4t-EtT" secondAttribute="bottom" id="ew0-Pl-Zh7"/>
+                <constraint firstItem="7TL-TW-6qV" firstAttribute="centerX" secondItem="ABv-4t-EtT" secondAttribute="trailing" id="ewY-Em-0fU"/>
                 <constraint firstItem="ABv-4t-EtT" firstAttribute="top" secondItem="1TZ-J7-WRJ" secondAttribute="top" id="gGG-nu-Hig"/>
                 <constraint firstAttribute="trailing" secondItem="ABv-4t-EtT" secondAttribute="trailing" id="quH-3Q-aVI"/>
                 <constraint firstItem="ABv-4t-EtT" firstAttribute="leading" secondItem="1TZ-J7-WRJ" secondAttribute="leading" id="tgO-SP-DjE"/>

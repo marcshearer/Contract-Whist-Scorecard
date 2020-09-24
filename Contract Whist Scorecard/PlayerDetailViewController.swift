@@ -522,7 +522,7 @@ class PlayerDetailViewController: ScorecardViewController, PlayerDetailViewDeleg
             let record = RecordsOptions(rawValue: indexPath.row)!
             if record == .winStreak {
             // Win streak - special case
-                _ = HistoryViewer(from: self, winStreakPlayer: self.playerDetail.playerUUID)
+                _ = HistoryViewer(from: self, playerUUID: self.playerDetail.playerUUID, winStreak: true)
             } else {
                 var highScoreType: HighScoreType?
                 switch record {

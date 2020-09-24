@@ -368,6 +368,10 @@ class RabbitMQServerService : RabbitMQService, CommsHostServiceDelegate, CommsCo
         }
     }
     
+    internal func error(_ message: String) {
+        fatalError(message)
+     }
+    
     // MARK: - Comms Handler State handlers ========================================================================= -
     
     internal func controllerStateChange(to state: CommsServiceState) {
@@ -1149,6 +1153,10 @@ fileprivate class RabbitMQPeer: NSObject, CommsDataDelegate, CommsConnectionDele
         return connectSuccess
     }
     
+    internal func error(_ message: String) {
+        fatalError(message)
+     }
+        
     public func disconnect(reason: String = "", reconnect: Bool = false, reflectStateChange: Bool = false) {
         if self.state == .connected {
             self._autoReconnect = reconnect

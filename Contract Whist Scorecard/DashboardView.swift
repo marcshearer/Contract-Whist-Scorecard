@@ -65,10 +65,10 @@ class DashboardView : UIView, DashboardActionDelegate {
     
     // MARK: - Dashboard Action Delegate =============================================================== -
     
-    func action(view: DashboardDetailType) {
+    func action(view: DashboardDetailType, personal: Bool) {
         switch view {
         case .history:
-            self.historyViewer = HistoryViewer(from: self.parentViewController!) {
+            self.historyViewer = HistoryViewer(from: self.parentViewController!, playerUUID: (personal ? Scorecard.activeSettings.thisPlayerUUID : nil)) {
                 self.historyViewer = nil
                 self.delegate?.reloadData?()
             }
@@ -80,7 +80,7 @@ class DashboardView : UIView, DashboardActionDelegate {
         case .highScores:
             self.showHighScores()
         }
-        delegate?.action(view: view)
+        delegate?.action(view: view, personal: personal)
     }
     
     // MARK: - High score utilities ====================================================================== -
@@ -88,7 +88,7 @@ class DashboardView : UIView, DashboardActionDelegate {
     public func drillHighScore(from viewController: ScorecardViewController, sourceView: UIView, type: HighScoreType, occurrence: Int, detailParticipantMO: ParticipantMO?, playerUUID: String) {
         if type == .winStreak {
             // Win streak - special case
-            self.historyViewer = HistoryViewer(from: viewController, winStreakPlayer: playerUUID) {
+            self.historyViewer = HistoryViewer(from: viewController, playerUUID: playerUUID, winStreak: true) {
                 self.historyViewer = nil
             }
         } else {

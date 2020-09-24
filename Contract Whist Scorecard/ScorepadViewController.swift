@@ -64,6 +64,7 @@ class ScorepadViewController: ScorecardViewController,
     private var entryViewController: EntryViewController!
     private var lastNavBarHeight:CGFloat = 0.0
     private var lastViewHeight:CGFloat = 0.0
+    private var lastViewWidth: CGFloat = 0.0
     private var rotated = false
     private var observer: NSObjectProtocol?
     private var paddingGradientLayer: [CAGradientLayer] = []
@@ -84,7 +85,6 @@ class ScorepadViewController: ScorecardViewController,
     @IBOutlet private weak var headerTableView: UITableView!
     @IBOutlet private weak var bodyTableView: UITableView!
     @IBOutlet private weak var footerTableView: UITableView!
-    @IBOutlet public weak var scorepadView: UIView!
     @IBOutlet private weak var tapGestureRecognizer: UITapGestureRecognizer!
     @IBOutlet private var paddingViewLines: [UIView]!
     @IBOutlet private weak var leftPaddingView: InsetPaddingView!
@@ -174,16 +174,19 @@ class ScorepadViewController: ScorecardViewController,
     
     override internal func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        if lastNavBarHeight != banner.height || lastViewHeight != scorepadView.frame.height {
-            setupSize(to: scorepadView.safeAreaLayoutGuide.layoutFrame.size)
+        if self.lastNavBarHeight != self.banner.height ||
+            self.lastViewHeight != self.view.frame.height ||
+            self.lastViewWidth != self.view.frame.width {
+            setupSize(to: self.view.safeAreaLayoutGuide.layoutFrame.size)
             self.headerTableView.layoutIfNeeded()
             self.paddingViewLineWidth.forEach { $0.constant = (ScorecardUI.landscapePhone() ? 3 : 0)}
             self.paddingViewLines.forEach { $0.layoutIfNeeded() }
             self.headerTableView.reloadData()
             self.bodyTableView.reloadData()
             self.footerTableView.reloadData()
-            lastNavBarHeight = banner.frame.height
-            lastViewHeight = scorepadView.frame.height
+            self.lastNavBarHeight = banner.frame.height
+            self.lastViewHeight = self.view.frame.height
+            self.lastViewWidth = self.view.frame.width
             self.setupBorders()
         }
     }
@@ -998,7 +1001,7 @@ extension ScorepadViewController {
         self.paddingViewLines.forEach { $0.backgroundColor = Palette.banner.background }
         self.paddingViewLines.forEach { $0.backgroundColor = Palette.banner.background }
         self.rightPaddingView.bannerColor = Palette.banner.background
-        self.scorepadView.backgroundColor = Palette.normal.background
+        self.view.backgroundColor = Palette.normal.background
     }
 
     private func defaultCellColors(cell: ScorepadCollectionViewCell) {

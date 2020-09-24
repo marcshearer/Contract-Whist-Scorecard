@@ -66,17 +66,23 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
         DataTableField("datePlayed",    "",          sequence: 4,   width: 60,  type: .time,        combineHeading: "Date")
     ]
     
-    init(from viewController: ScorecardViewController, winStreakPlayer: String? = nil, completion: (()->())? = nil) {
+    init(from viewController: ScorecardViewController, playerUUID: String? = nil, winStreak: Bool = false, completion: (()->())? = nil) {
         super.init()
         
         self.sourceViewController = viewController
-        self.winStreakPlayer = winStreakPlayer
         
-        if winStreakPlayer != nil {
-            // Just showing the win streak for a player
-            self.viewTitle = "Win Streak"
-            self.allowSync = false
-            self.backImage = "back"
+        if let playerUUID = playerUUID {
+            if winStreak {
+                // Just showing the win streak for a player
+                self.winStreakPlayer = playerUUID
+                self.viewTitle = "Win Streak"
+                self.allowSync = false
+                self.backImage = "back"
+            } else {
+                // Filter by player
+                self.filterPlayerMO = Scorecard.shared.findPlayerByPlayerUUID(playerUUID)
+                self.filterState = .filtered
+            }
         }
         
         self.getHistory()
@@ -99,7 +105,7 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
             // Re-size window
             self.setFilterSelectionViewRequiredHeight()
             self.filterStateChange()
-        }
+        } 
     }
        
     internal func setupCustomButton(id: AnyHashable?) -> BannerButton? {

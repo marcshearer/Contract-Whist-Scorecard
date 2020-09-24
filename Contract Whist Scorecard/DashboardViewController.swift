@@ -22,7 +22,7 @@ public enum Orientation: String, CaseIterable {
 
 @objc protocol DashboardActionDelegate : class {
     
-    func action(view: DashboardDetailType)
+    func action(view: DashboardDetailType, personal: Bool)
     
     @objc optional func reloadData()
 
@@ -415,7 +415,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     
     // MARK: - Dashboard Action Delegate =============================================================== -
     
-    func action(view: DashboardDetailType) {
+    func action(view: DashboardDetailType, personal: Bool) {
         // Should already have been actioned in the individual dashboard - this is just to let us
         // refresh other views
         

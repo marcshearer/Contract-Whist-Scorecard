@@ -9,13 +9,14 @@
 import UIKit
 
 class BannerLogoView : UIView {
-    
-    @IBOutlet private weak var contentView: UIView!
-    
-    @IBInspectable public var strokeColor: UIColor = Palette.banner.text
-    @IBInspectable public var fillColor: UIColor = Palette.banner.background
+
     @IBInspectable public var lineWidth: CGFloat = 0.0
-    
+
+    public var strokeColor: UIColor = Palette.banner.text
+    public var fillColor: UIColor = Palette.banner.background
+
+    @IBOutlet private weak var contentView: UIView!
+        
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         self.loadBannerLogoView()
@@ -24,10 +25,6 @@ class BannerLogoView : UIView {
     override init(frame: CGRect) {
         super.init(frame:frame)
         self.loadBannerLogoView()
-    }
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
     }
     
     override func layoutSubviews() {
@@ -60,8 +57,8 @@ class BannerLogoView : UIView {
         let shapeLayer = CAShapeLayer()
         shapeLayer.path = path.cgPath
         shapeLayer.lineWidth = lineWidth
-        shapeLayer.fillColor = fillColor.cgColor
-        shapeLayer.strokeColor = strokeColor.cgColor
+        shapeLayer.fillColor = self.fillColor.cgColor
+        shapeLayer.strokeColor = self.strokeColor.cgColor
         
         self.contentView.layer.insertSublayer(shapeLayer, at: 0)
     }

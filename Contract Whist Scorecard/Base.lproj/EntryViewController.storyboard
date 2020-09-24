@@ -414,6 +414,7 @@
                         </variation>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="5oH-3E-qHk" appends="YES" id="ExL-K4-wHm"/>
+                            <outletCollection property="gestureRecognizers" destination="PVm-Qa-ixq" appends="YES" id="fkF-Xc-mfl"/>
                         </connections>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout"/>
@@ -443,6 +444,11 @@
                 <swipeGestureRecognizer direction="right" id="5oH-3E-qHk" userLabel="Right Swipe Gesture Recognizer">
                     <connections>
                         <action selector="rightSwipeWithRecognizer:" destination="mEi-hH-CUE" id="Eu0-Yn-aTR"/>
+                    </connections>
+                </swipeGestureRecognizer>
+                <swipeGestureRecognizer direction="left" id="PVm-Qa-ixq" userLabel="Left Swipe Gesture Recognizer">
+                    <connections>
+                        <action selector="leftSwipeWithRecognizer:" destination="mEi-hH-CUE" id="dcr-Bx-VRX"/>
                     </connections>
                 </swipeGestureRecognizer>
             </objects>

@@ -77,9 +77,9 @@ class Palette {
         Scorecard.shared.useGameColor = gameBanners
     }
 
-    public static func forcingGameBanners(actions: ()->()) {
+    public static func forcingGameBanners(to useGameColor: Bool = true, actions: ()->()) {
         let gameBanners = Scorecard.shared.useGameColor
-        Scorecard.shared.useGameColor = true
+        Scorecard.shared.useGameColor = useGameColor
         actions()
         Scorecard.shared.useGameColor = gameBanners
     }

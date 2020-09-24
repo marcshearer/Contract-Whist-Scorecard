@@ -127,7 +127,7 @@ class DataTableTileView: UIView, DashboardTileDelegate, UITableViewDataSource, U
      }
     
     @objc private func tapSelector(_ sender: UIView) {
-        self.dashboardDelegate?.action(view: detailType)
+        self.dashboardDelegate?.action(view: detailType, personal: personal)
     }
     
     override internal func layoutSubviews() {

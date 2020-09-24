@@ -483,6 +483,10 @@ class MultipeerServerService : MultipeerService, CommsHostServiceDelegate, MCNea
             }
         }
     }
+    
+    func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didNotStartAdvertisingPeer error: Error) {
+        self.connectionDelegate? .error("Unable to connect. Check that wifi is enabled")
+    }
 }
 
 

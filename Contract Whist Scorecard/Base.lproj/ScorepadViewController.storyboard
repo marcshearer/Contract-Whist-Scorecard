@@ -756,7 +756,6 @@
                         <outlet property="headerViewHeightConstraint" destination="Nae-oA-mIW" id="gzq-lY-isr"/>
                         <outlet property="leftPaddingView" destination="4mH-Ut-Ta9" id="Cz5-ot-eNZ"/>
                         <outlet property="rightPaddingView" destination="2V4-Rn-jn9" id="cFu-5X-uGw"/>
-                        <outlet property="scorepadView" destination="8bC-Xf-vdC" id="5On-pJ-fOR"/>
                         <outlet property="tapGestureRecognizer" destination="AaK-e0-qgV" id="klw-dw-bMu"/>
                         <outletCollection property="paddingViewLines" destination="gJV-Ai-5A3" collectionClass="NSMutableArray" id="131-b6-hlp"/>
                         <outletCollection property="paddingViewLines" destination="SeV-1g-Tzl" collectionClass="NSMutableArray" id="gnN-Cm-Npx"/>

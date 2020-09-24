@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_0" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -74,14 +75,14 @@
                             <state key="normal" image="cross grey"/>
                         </button>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Y3o-sV-ZJG" userLabel="Count Badge Image">
-                            <rect key="frame" x="188" y="15" width="32" height="31"/>
+                            <rect key="frame" x="188" y="27.5" width="32" height="31"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="32" id="FvG-Ny-xxn"/>
                                 <constraint firstAttribute="width" secondItem="Y3o-sV-ZJG" secondAttribute="height" multiplier="26:25" id="gV5-K5-dbK"/>
                             </constraints>
                         </imageView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.20000000298023224" translatesAutoresizingMaskIntoConstraints="NO" id="hVe-Cf-m7K" userLabel="Count Badge">
-                            <rect key="frame" x="188" y="15" width="32" height="31"/>
+                            <rect key="frame" x="188" y="27.5" width="32" height="31"/>
                             <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
@@ -99,7 +100,7 @@
                         <constraint firstItem="eBV-lw-ecw" firstAttribute="leading" secondItem="onT-bw-PDq" secondAttribute="leading" constant="40" id="AwJ-pL-RaX"/>
                         <constraint firstItem="7eq-ro-U8C" firstAttribute="leading" secondItem="onT-bw-PDq" secondAttribute="leading" constant="15" id="B7s-yY-K68"/>
                         <constraint firstAttribute="bottom" secondItem="i3s-rW-ZLv" secondAttribute="bottom" constant="16" id="Goz-zv-s5Y"/>
-                        <constraint firstAttribute="trailing" secondItem="Y3o-sV-ZJG" secondAttribute="trailing" constant="20" id="HXz-le-ceS"/>
+                        <constraint firstItem="Wgy-fH-2XD" firstAttribute="trailing" secondItem="Y3o-sV-ZJG" secondAttribute="trailing" constant="-12.5" id="HXz-le-ceS"/>
                         <constraint firstItem="i3s-rW-ZLv" firstAttribute="leading" secondItem="onT-bw-PDq" secondAttribute="leading" constant="30" id="IIW-WT-QKa"/>
                         <constraint firstItem="7eq-ro-U8C" firstAttribute="top" secondItem="onT-bw-PDq" secondAttribute="top" constant="15" id="MUb-Bh-Oyj"/>
                         <constraint firstItem="hVe-Cf-m7K" firstAttribute="trailing" secondItem="Y3o-sV-ZJG" secondAttribute="trailing" id="Odb-mo-xPG"/>
@@ -110,11 +111,12 @@
                         <constraint firstAttribute="width" constant="240" id="phi-Vc-BGX"/>
                         <constraint firstItem="hVe-Cf-m7K" firstAttribute="leading" secondItem="Y3o-sV-ZJG" secondAttribute="leading" id="pif-C8-lNb"/>
                         <constraint firstAttribute="trailing" secondItem="eBV-lw-ecw" secondAttribute="trailing" constant="40" id="qfw-3S-Go4"/>
-                        <constraint firstItem="Y3o-sV-ZJG" firstAttribute="top" secondItem="7eq-ro-U8C" secondAttribute="top" id="vFM-VL-A0W"/>
+                        <constraint firstItem="Y3o-sV-ZJG" firstAttribute="top" secondItem="Wgy-fH-2XD" secondAttribute="top" constant="-12.5" id="vFM-VL-A0W"/>
                         <constraint firstItem="eBV-lw-ecw" firstAttribute="top" secondItem="Wgy-fH-2XD" secondAttribute="bottom" constant="16" id="zZ3-Ia-bUl"/>
                     </constraints>
                 </view>
             </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <color key="backgroundColor" name="Clear"/>
             <accessibility key="accessibilityConfiguration" identifier="awardDetailViewContentView"/>
             <gestureRecognizers/>
@@ -123,7 +125,6 @@
                 <constraint firstItem="onT-bw-PDq" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="zI7-j2-MgC"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <point key="canvasLocation" x="131.8840579710145" y="99.776785714285708"/>
         </view>
     </objects>

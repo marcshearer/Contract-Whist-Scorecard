@@ -159,7 +159,11 @@ class LoopbackService: NSObject, CommsServiceDelegate, CommsHostServiceDelegate,
         // Pass it on
         return self.connectionDelegate?.connectionReceived(from: peer) ?? true
     }
-    
+        
+    internal func error(_ message: String) {
+        fatalError(message)
+     }
+
     // MARK: - State delegate handlers ======================================================================== -
     
     func stateChange(for peer: CommsPeer, reason: String?) {

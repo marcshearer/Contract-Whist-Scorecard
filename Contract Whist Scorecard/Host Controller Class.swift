@@ -471,6 +471,10 @@ enum InviteStatus {
         return true
     }
     
+    internal func error(_ message: String) {
+        self.showWhisper(message, hideAfter: 10.0)
+     }
+    
     private func updateFaceTimeAddress(info: [String : Any?]?, playerData: PlayerData) {
         if let address = info?["faceTimeAddress"] {
             playerData.faceTimeAddress = address as! String?

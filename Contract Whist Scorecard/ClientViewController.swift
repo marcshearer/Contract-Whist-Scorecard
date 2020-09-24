@@ -318,9 +318,11 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         
-        self.rotated = true
-        Scorecard.shared.reCenterPopup(self)
-        self.view.setNeedsLayout()
+        Palette.ignoringGameBanners {
+            self.rotated = true
+            Scorecard.shared.reCenterPopup(self)
+            self.view.setNeedsLayout()
+        }
     }
     
     override func viewDidLayoutSubviews() {
@@ -330,6 +332,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         let rotated = self.rotated
         self.firstLayout = false
         self.rotated = false
+        let useGameColors = Scorecard.shared.useGameColor
         
         Palette.ignoringGameBanners {
             
@@ -343,7 +346,9 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
                 self.setupBanner()
                 
                 // Update sizes to layout constraints immediately to aid calculations
-                self.view.layoutIfNeeded()
+                Palette.forcingGameBanners(to: useGameColors) {
+                    self.view.layoutIfNeeded()
+                }
                 
                 self.showThisPlayer()
             }

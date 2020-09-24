@@ -56,7 +56,7 @@ class TrendTileView: UIView, DashboardTileDelegate {
     }
     
     @objc private func tapSelector(_ sender: UIView) {
-        self.dashboardDelegate?.action(view: detailType)
+        self.dashboardDelegate?.action(view: detailType, personal: true)
     }
     
     override func awakeFromNib() {

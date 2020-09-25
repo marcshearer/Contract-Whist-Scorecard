@@ -186,6 +186,7 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
     internal func present(nextView: ScorecardView, willDismiss: Bool = true, context: [String:Any?]? = nil) {
     
         Scorecard.shared.useGameColor = (nextView != .none && nextView != .exit)
+        Scorecard.shared.trueUseGameColor = Scorecard.shared.useGameColor
         
         if nextView == self.activeView {
             // Already displaying - just refresh
@@ -649,7 +650,14 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        self.bannerClass?.layoutSubviews()
+        
+        var useGameColor = Scorecard.shared.trueUseGameColor
+        if self is RootViewController {
+            useGameColor = false
+        }
+        Palette.forcingGameBanners(to: useGameColor) {
+            self.bannerClass?.layoutSubviews()
+        }
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

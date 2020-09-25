@@ -94,8 +94,11 @@ class Reconcile: SyncDelegate {
             playerMO.totalScore = 0
             playerMO.winStreak = 0
             playerMO.maxScore = 0
+            playerMO.maxScoreSplit = 0
             playerMO.maxMade = 0
+            playerMO.maxMadeSplit = 0
             playerMO.maxTwos = 0
+            playerMO.maxTwosSplit = 0
             playerMO.datePlayed = nil
 
             for participantMO in participantList {
@@ -109,24 +112,28 @@ class Reconcile: SyncDelegate {
                     playerMO.totalScore += Int64(participantMO.totalScore)
                     playerMO.winStreak = (participantMO.place == 1 ? playerMO.winStreak + 1 : 0)
                     
-                    // Update max scores
-                    if Int64(participantMO.totalScore) > playerMO.maxScore && participantMO.gamesPlayed == 1 {
-                        playerMO.maxScore = Int64(participantMO.totalScore)
-                        playerMO.maxScoreDate = participantMO.datePlayed
+                    if participantMO.gamesPlayed == 1 {
+                        // Update max scores
+                        if Int64(participantMO.totalScore) > playerMO.maxScore || (Int64(participantMO.totalScore) == playerMO.maxScore && Int64(participantMO.handsMade) > playerMO.maxScoreSplit) {
+                            playerMO.maxScore = Int64(participantMO.totalScore)
+                            playerMO.maxScoreSplit = Int64(participantMO.handsMade)
+                            playerMO.maxScoreDate = participantMO.datePlayed
+                        }
+                        if Int64(participantMO.handsMade) > playerMO.maxMade || (Int64(participantMO.handsMade) == playerMO.maxMade && Int64(participantMO.totalScore) > playerMO.maxMadeSplit) {
+                            playerMO.maxMade = Int64(participantMO.handsMade)
+                            playerMO.maxMadeSplit = Int64(participantMO.totalScore)
+                            playerMO.maxMadeDate = participantMO.datePlayed
+                        }
+                        if playerMO.winStreak > playerMO.maxWinStreak {
+                            playerMO.maxWinStreak = playerMO.winStreak
+                            playerMO.maxWinStreakDate = participantMO.datePlayed
+                        }
+                        if Int64(participantMO.twosMade) > playerMO.maxTwos || (Int64(participantMO.twosMade) == playerMO.maxTwos && Int64(participantMO.totalScore) > playerMO.maxTwosSplit) {
+                            playerMO.maxTwos = Int64(participantMO.twosMade)
+                            playerMO.maxTwosSplit = Int64(participantMO.totalScore)
+                            playerMO.maxTwosDate = participantMO.datePlayed
+                        }
                     }
-                    if Int64(participantMO.handsMade) > playerMO.maxMade && participantMO.gamesPlayed == 1 {
-                        playerMO.maxMade = Int64(participantMO.handsMade)
-                        playerMO.maxMadeDate = participantMO.datePlayed
-                    }
-                    if playerMO.winStreak > playerMO.maxWinStreak && participantMO.gamesPlayed == 1 {
-                        playerMO.maxWinStreak = playerMO.winStreak
-                        playerMO.maxWinStreakDate = participantMO.datePlayed
-                    }
-                    if Int64(participantMO.twosMade) > playerMO.maxTwos && participantMO.gamesPlayed == 1 {
-                        playerMO.maxTwos = Int64(participantMO.twosMade)
-                        playerMO.maxTwosDate = participantMO.datePlayed
-                    }
-                    
                     // Update date last played
                     if playerMO.datePlayed == nil || participantMO.datePlayed! as Date > playerMO.datePlayed! as Date {
                         playerMO.datePlayed = participantMO.datePlayed

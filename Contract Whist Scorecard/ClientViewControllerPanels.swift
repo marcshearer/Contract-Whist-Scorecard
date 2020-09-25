@@ -20,7 +20,7 @@ protocol PanelContainer {
 
     var containers: Bool {get}
     
-    func visible(container: Container) -> Bool
+    func isVisible(container: Container) -> Bool
     
     func panelLayoutSubviews()
     
@@ -141,7 +141,7 @@ extension ClientViewController : PanelContainer {
         self.rightInsetContainer?.setNeedsLayout()
     }
     
-    internal func visible(container: Container) -> Bool {
+    internal func isVisible(container: Container) -> Bool {
         if !self.containers {
             return false
         } else {

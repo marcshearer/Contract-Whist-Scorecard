@@ -207,8 +207,8 @@ class DataTableTileView: UIView, DashboardTileDelegate, UITableViewDataSource, U
         self.minRowHeight = max(self.minRowHeight, ScorecardUI.screenHeight / 24)
         let fitRows = Int(totalHeight / self.minRowHeight)
         let headingRows = (self.headings ? 1 : 0)
-        let actualRows = min(fitRows, self.records.count + headingRows)
-        self.rows = actualRows
+        let actualRows = min(fitRows, self.records.count + 1) // Includes title if no headings
+        self.rows = actualRows - 1 + headingRows
         self.rowHeight = min(self.maxRowHeight, totalHeight / CGFloat(actualRows))
     }
     

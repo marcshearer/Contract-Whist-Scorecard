@@ -161,7 +161,7 @@ class ActionSheetViewController: UIViewController, UITableViewDataSource, UITabl
         viewController.actions = actions
         viewController.cancelActions = cancelActions
 
-        viewController.modalPresentationStyle = .overCurrentContext
+        viewController.modalPresentationStyle = .overFullScreen
         
         parentViewController.present(viewController, animated: false)
     }

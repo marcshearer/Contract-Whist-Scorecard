@@ -36,12 +36,15 @@ import CoreData
     public var thumbnail: Data?
     public var thumbnailDate: Date!
     public var maxScore: Int64 = 0
+    public var maxScoreSplit: Int64 = 0
     public var maxScoreDate: Date!
     public var maxMade: Int64 = 0
+    public var maxMadeSplit: Int64 = 0
     public var maxMadeDate: Date!
     public var maxWinStreak: Int64 = 0
     public var maxWinStreakDate: Date!
     public var maxTwos: Int64 = 0
+    public var maxTwosSplit: Int64 = 0
     public var maxTwosDate: Date!
     public var syncDate: Date!
     public var syncRecordID: String!
@@ -211,12 +214,15 @@ import CoreData
         playerMO.totalScore = self.totalScore
         playerMO.winStreak = self.winStreak
         playerMO.maxScore = self.maxScore
+        playerMO.maxScoreSplit = self.maxScoreSplit
         playerMO.maxScoreDate = self.maxScoreDate
         playerMO.maxMade = self.maxMade
+        playerMO.maxMadeSplit = self.maxMadeSplit
         playerMO.maxMadeDate = self.maxMadeDate
         playerMO.maxWinStreak = self.maxWinStreak
         playerMO.maxWinStreakDate = self.maxWinStreakDate
         playerMO.maxTwos = self.maxTwos
+        playerMO.maxTwosSplit = self.maxTwosSplit
         playerMO.maxTwosDate = self.maxTwosDate
         playerMO.syncDate = self.syncDate
         playerMO.syncRecordID = self.syncRecordID
@@ -247,12 +253,15 @@ import CoreData
         self.thumbnail = playerMO.thumbnail
         self.thumbnailDate = playerMO.thumbnailDate as Date?
         self.maxScore = playerMO.maxScore
+        self.maxScoreSplit = playerMO.maxScoreSplit
         self.maxScoreDate = playerMO.maxScoreDate as Date?
         self.maxMade = playerMO.maxMade
+        self.maxMadeSplit = playerMO.maxMadeSplit
         self.maxMadeDate = playerMO.maxMadeDate as Date?
         self.maxWinStreak = playerMO.maxWinStreak
         self.maxWinStreakDate = playerMO.maxWinStreakDate as Date?
         self.maxTwos = playerMO.maxTwos
+        self.maxTwosSplit = playerMO.maxTwosSplit
         self.maxTwosDate = playerMO.maxTwosDate as Date?
         self.syncDate = playerMO.syncDate as Date?
         self.syncRecordID = playerMO.syncRecordID
@@ -277,12 +286,15 @@ import CoreData
         self.winStreak = Utility.objectInt(cloudObject: cloudObject, forKey:"winStreak")
         self.thumbnailDate = Utility.objectDate(cloudObject: cloudObject, forKey:"thumbnailDate")
         self.maxScore = Utility.objectInt(cloudObject: cloudObject, forKey:"maxScore")
+        self.maxScoreSplit = Utility.objectInt(cloudObject: cloudObject, forKey:"maxScoreSplit")
         self.maxScoreDate = Utility.objectDate(cloudObject: cloudObject, forKey:"maxScoreDate")
         self.maxMade = Utility.objectInt(cloudObject: cloudObject, forKey:"maxMade")
+        self.maxMadeSplit = Utility.objectInt(cloudObject: cloudObject, forKey:"maxMadeSplit")
         self.maxMadeDate = Utility.objectDate(cloudObject: cloudObject, forKey:"maxMadeDate")
         self.maxWinStreak = Utility.objectInt(cloudObject: cloudObject, forKey:"maxWinStreak")
         self.maxWinStreakDate = Utility.objectDate(cloudObject: cloudObject, forKey:"maxWinStreakDate")
         self.maxTwos = Utility.objectInt(cloudObject: cloudObject, forKey:"maxTwos")
+        self.maxTwosSplit = Utility.objectInt(cloudObject: cloudObject, forKey:"maxTwosSplit")
         self.maxTwosDate = Utility.objectDate(cloudObject: cloudObject, forKey:"maxTwosDate")
         self.syncDate = Utility.objectDate(cloudObject: cloudObject, forKey: "syncDate")
         self.syncRecordID = cloudObject.recordID.recordName

@@ -59,9 +59,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     
     // Startup and reconcile
     internal var reconcile: Reconcile!
-    internal var reconcileAlertController: UIAlertController!
-    internal var reconcileContinue: UIAlertAction!
-    internal var reconcileIndicatorView: UIActivityIndicatorView!
+    internal var reconcileAlertViewController: AlertViewController!
 
     // Actions
     private var menuActions: [MenuAction]!
@@ -318,11 +316,10 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         
-        Palette.ignoringGameBanners {
-            self.rotated = true
-            Scorecard.shared.reCenterPopup(self)
-            self.view.setNeedsLayout()
-        }
+        self.rotated = true
+        Scorecard.shared.reCenterPopup(self)
+        self.view.setNeedsLayout()
+        
     }
     
     override func viewDidLayoutSubviews() {
@@ -332,24 +329,18 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         let rotated = self.rotated
         self.firstLayout = false
         self.rotated = false
-        let useGameColors = Scorecard.shared.useGameColor
+        
+        Palette.respectingGameBanners {
+            self.mainContainer?.layoutIfNeeded()
+        }
         
         Palette.ignoringGameBanners {
             
-            self.mainContainer?.layoutIfNeeded()
             self.allocateContainerSizes()
             self.panelLayoutSubviews()
-            
+
             if firstLayout || rotated {
-            
-                // Layout banner
                 self.setupBanner()
-                
-                // Update sizes to layout constraints immediately to aid calculations
-                Palette.forcingGameBanners(to: useGameColors) {
-                    self.view.layoutIfNeeded()
-                }
-                
                 self.showThisPlayer()
             }
             
@@ -636,30 +627,17 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
 
         if playerMOList.count != 0 {
             // Create an alert controller
-            var title = ""
+            var message = ""
             if allPlayers {
-                title = "\n\n\nRebuilding all players\n\n\n\n"
+                message = "Rebuilding all players"
             } else {
-                title = "Some players may have been corrupted during synchronisation and are being rebuilt\n\n\n"
+                message = "Some players may have been corrupted during synchronisation and are being rebuilt"
             }
             
-            self.reconcileAlertController = UIAlertController(title: title, message: "", preferredStyle: .alert)
-            self.reconcileContinue = UIAlertAction(title: "Continue", style: UIAlertAction.Style.default, handler: nil)
-            self.reconcileAlertController.addAction(self.reconcileContinue)
-            self.reconcileContinue.isEnabled = false
-            
-            //add the activity indicator as a subview of the alert controller's view
-            self.reconcileIndicatorView = UIActivityIndicatorView(frame: CGRect(x: 0, y: 150,
-                                                                                width: self.reconcileAlertController.view.frame.width,
-                                                                                height: 100))
-            self.reconcileIndicatorView.style = UIActivityIndicatorView.Style.large
-            self.reconcileIndicatorView.color = UIColor.black
-            self.reconcileIndicatorView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-            self.reconcileAlertController.view.addSubview(self.reconcileIndicatorView)
-            self.reconcileIndicatorView.isUserInteractionEnabled = true
-            self.reconcileIndicatorView.startAnimating()
-            
-            self.present(self.reconcileAlertController, animated: true, completion: nil)
+            self.reconcileAlertViewController = AlertViewController.show(from: self, message, title: "Rebuild Players", extraHeight: 30, okButtonText: nil)
+
+            //add the activity indicator
+            self.reconcileAlertViewController.activityIndicator(isHidden: false, offset: 30)
             
             // Set reconcile running
             reconcile = Reconcile()
@@ -670,22 +648,18 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     
     public func reconcileAlertMessage(_ message: String) {
         Utility.mainThread {
-            self.reconcileAlertController.title = message
-            self.reconcileAlertController.message = ""
+            self.reconcileAlertViewController.set(message: message)
         }
     }
     
     public func reconcileMessage(_ message: String) {
-        Utility.mainThread {
-            self.reconcileAlertController.message = message
-        }
     }
     
     public func reconcileCompletion(_ errors: Bool) {
         Utility.mainThread {
-            self.reconcileIndicatorView.stopAnimating()
-            self.reconcileIndicatorView.isHidden = true
-            self.reconcileContinue.isEnabled = true
+            self.reconcileAlertViewController.activityIndicator(isHidden: true)
+            self.reconcileAlertViewController.set(message: (errors ? "Error rebuilding players" : "Players rebuilt successfully"))
+            self.reconcileAlertViewController.set(button: .ok, text: "Continue")
         }
     }
     
@@ -1208,16 +1182,28 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     }
     
     private func setupBanner() {
+        var title: String
+        var titleFont: UIFont?
+        var titleColor: UIColor
+        if (self.container == .main && self.isVisible(container: .left)) {
+            title = self.containerTitle
+            titleFont = Banner.panelFont
+            titleColor = self.defaultBannerTextColor()
+        } else {
+            title = "W H I S T"
+            titleFont = Banner.heavyFont
+            titleColor = Palette.banner.themeText
+        }
+        
         self.banner.set(
+            title: title,
             rightButtons: [
                 BannerButton(image: UIImage(systemName: "line.horizontal.3"), width: 30, action: self.adminButtonPressed, menuHide: false, id: "admin")],
+            titleFont: titleFont,
+            titleColor: titleColor,
             normalOverrideHeight: 75)
+
         self.banner.setButton("admin", isHidden: true)
-        if (self.menuController?.isVisible ?? false) && self.container == .main {
-            self.banner.set(title: self.containerTitle, titleFont: Banner.panelFont, titleColor: self.defaultBannerTextColor())
-        } else {
-            self.banner.set(title: "W H I S T", titleFont: Banner.heavyFont, titleColor: Palette.banner.themeText)
-        }
     }
     
     // MARK: - Client controller delegates ======================================================================== -

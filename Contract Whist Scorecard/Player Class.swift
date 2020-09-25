@@ -126,7 +126,7 @@ class Player {
             var twosMade: Int64
             
             // Check if they won this game
-            let myScore = Scorecard.game.scores.totalScore(playerNumber: self.playerNumber)
+            let myScore = Int64(Scorecard.game.scores.totalScore(playerNumber: self.playerNumber))
             place = 1
             for otherPlayer in 1...Scorecard.game.currentPlayers {
                 if Scorecard.game.player(enteredPlayerNumber: otherPlayer).playerNumber != self.playerNumber {
@@ -158,8 +158,8 @@ class Player {
                 self.playerMO!.gamesWon += ((place == 1 ? 1 : 0) - self.savedGamesWon)
                 self.savedGamesWon = (place == 1 ? 1 : 0)
                 
-                self.playerMO!.totalScore += (Int64(myScore) - self.savedTotalScore)
-                self.savedTotalScore = Int64(myScore)
+                self.playerMO!.totalScore += (myScore - self.savedTotalScore)
+                self.savedTotalScore = myScore
                 
                 // Update current win streak
                 if self.previousWinStreak == nil {
@@ -174,12 +174,14 @@ class Player {
                 self.savedTwosMade = twosMade
                 
                 // Update high scores
-                if Int64(myScore) > self.playerMO!.maxScore {
-                    self.playerMO!.maxScore = Int64(myScore)
+                if myScore > self.playerMO!.maxScore {
+                    self.playerMO!.maxScore = myScore
+                    self.playerMO!.maxScoreSplit = roundsMade
                     self.playerMO!.maxScoreDate = Date()
                 }
                 if Int64(roundsMade) > self.playerMO!.maxMade {
                     self.playerMO!.maxMade = roundsMade
+                    self.playerMO!.maxMadeSplit = myScore
                     self.playerMO!.maxMadeDate = Date()
                 }
                 if self.playerMO!.winStreak > self.playerMO!.maxWinStreak {
@@ -188,6 +190,7 @@ class Player {
                 }
                 if Int64(twosMade) > self.playerMO!.maxTwos {
                     self.playerMO!.maxTwos = twosMade
+                    self.playerMO!.maxTwosSplit = myScore
                     self.playerMO!.maxTwosDate = Date()
                 }
                 

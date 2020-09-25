@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="16119" systemVersion="19F101" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17192" systemVersion="19G2021" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Award" representedClassName="AwardMO" syncable="YES" codeGenerationType="class">
         <attribute name="awardLevel" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="code" optional="YES" attributeType="String"/>
@@ -76,10 +76,13 @@
         <attribute name="localDateCreated" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="maxMade" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="maxMadeDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="maxMadeSplit" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="maxScore" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="maxScoreDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="maxScoreSplit" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="maxTwos" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="maxTwosDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="maxTwosSplit" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="maxWinStreak" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="maxWinStreakDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="name" attributeType="String"/>
@@ -109,6 +112,6 @@
         <element name="Award" positionX="0" positionY="153" width="128" height="178"/>
         <element name="Game" positionX="0" positionY="0" width="128" height="225"/>
         <element name="Participant" positionX="0" positionY="0" width="128" height="300"/>
-        <element name="Player" positionX="0" positionY="0" width="128" height="583"/>
+        <element name="Player" positionX="0" positionY="0" width="128" height="628"/>
     </elements>
 </model>

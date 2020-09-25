@@ -420,7 +420,7 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
     // MARK: - Show select players view and delegate view ================================================ -
     
     private func showRelatedPlayers() {
-        _ = RelatedPlayersViewController.show(from: self, email: self.downloadIdentifierTextField.text!, descriptionMode: .lastPlayed)
+        RelatedPlayersViewController.show(from: self, email: self.downloadIdentifierTextField.text!, descriptionMode: .lastPlayed)
     }
     
     internal func didDownloadPlayers(playerDetailList: [PlayerDetail], emailPlayerUUID: String?) {

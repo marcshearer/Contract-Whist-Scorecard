@@ -290,8 +290,11 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch TableView(rawValue: tableView.tag)! {
         case .options:
-            let (option, mainOption, _) = self.getOption(tag: tableView.tag, row: indexPath.row)
-            return (mainOption ? 40 : 35) + option.spaceBefore
+            if let (option, mainOption, _) = self.getOption(tag: tableView.tag, row: indexPath.row) {
+                return (mainOption ? 40 : 35) + option.spaceBefore
+            } else {
+                return 40
+            }
         case .settings:
             return 40
         }
@@ -300,74 +303,76 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Option") as! MenuPanelTableCell
         
-        let (option, mainOption, index) = self.getOption(tag: tableView.tag, row: indexPath.row)
-        if mainOption {
-            let disabled = self.disableOptions || self.disableAll
-            cell.titleLabel.text = (self.playingGame && self.gamePlayingTitle != nil ? self.gamePlayingTitle! : option.title)
-            cell.titleLabel.textColor = (option.menuOption == self.currentOption ? Palette.leftSidePanel.themeText : (disabled ? Palette.normal.faintText : Palette.leftSidePanel.text))
-            cell.isUserInteractionEnabled = !disabled
-            cell.titleLabel.font = UIFont.systemFont(ofSize: 24, weight: .semibold)
-            if option.menuOption == .playGame {
-                self.setOther(isEnabled: !disabled)
+        if let (option, mainOption, index) = self.getOption(tag: tableView.tag, row: indexPath.row) {
+            if mainOption {
+                let disabled = self.disableOptions || self.disableAll
+                cell.titleLabel.text = (self.playingGame && self.gamePlayingTitle != nil ? self.gamePlayingTitle! : option.title)
+                cell.titleLabel.textColor = (option.menuOption == self.currentOption ? Palette.leftSidePanel.themeText : (disabled ? Palette.normal.faintText : Palette.leftSidePanel.text))
+                cell.isUserInteractionEnabled = !disabled
+                cell.titleLabel.font = UIFont.systemFont(ofSize: 24, weight: .semibold)
+                if option.menuOption == .playGame {
+                    self.setOther(isEnabled: !disabled)
+                }
+            } else {
+                let disabled = self.disableAll
+                cell.titleLabel.text = "      \((option.pressed ? option.releaseTitle! : option.title))"
+                cell.titleLabel.textColor = option.titleColor ?? (self.suboptionHighlight == index ? Palette.leftSidePanel.themeText : (disabled ? Palette.normal.faintText : Palette.leftSidePanel.text))
+                cell.titleLabel.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
+                cell.isUserInteractionEnabled = !disabled
             }
-        } else {
-            let disabled = self.disableAll
-            cell.titleLabel.text = "      \((option.pressed ? option.releaseTitle! : option.title))"
-            cell.titleLabel.textColor = option.titleColor ?? (self.suboptionHighlight == index ? Palette.leftSidePanel.themeText : (disabled ? Palette.normal.faintText : Palette.leftSidePanel.text))
-            cell.titleLabel.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
-            cell.isUserInteractionEnabled = !disabled
+            cell.titleLabelTopConstraint.constant = option.spaceBefore
+            cell.titleLabel.setNeedsDisplay()
+            cell.selectedBackgroundView = UIView()
+            cell.selectedBackgroundView?.backgroundColor = UIColor.clear
         }
-        cell.titleLabelTopConstraint.constant = option.spaceBefore
-        cell.titleLabel.setNeedsDisplay()
-        cell.selectedBackgroundView = UIView()
-        cell.selectedBackgroundView?.backgroundColor = UIColor.clear
         
         return cell
     }
     
     func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        let (option, mainOption, index) = self.getOption(tag: tableView.tag, row: indexPath.row)
-        
-        var changed = false
-        var action = option.action
-        if mainOption {
-            changed = (option.menuOption != self.currentOption)
-        } else {
-            if let releaseAction = option.releaseAction, let _ = option.releaseTitle {
-                if option.pressed {
-                    action = releaseAction
-                }
-                option.pressed.toggle()
-                changed = true
-            } else {
-                changed = (self.suboptionHighlight == nil || self.suboptionHighlight != index)
-            }
-        }
-        
-        if changed {
-            // Update menu
-            if mainOption {
-                self.addSuboptions(option: option.menuOption)
-                self.setupOptionMap()
-            } else if self.suboptionHighlight != nil {
-                self.suboptionHighlight = index
-                if option.menuOption == .personalResults {
-                    self.resultsHighlight = index
-                }
-            }
-            self.reloadData()
+        if let (option, mainOption, index) = self.getOption(tag: tableView.tag, row: indexPath.row) {
             
-            // Execute option/action
-            if action != nil {
-                action?()
-            } else if let menuOption = option.menuOption {
-                self.dismissAndSelectOption(option: menuOption, changeOption: mainOption)
+            var changed = false
+            var action = option.action
+            if mainOption {
+                changed = (option.menuOption != self.currentOption)
+            } else {
+                if let releaseAction = option.releaseAction, let _ = option.releaseTitle {
+                    if option.pressed {
+                        action = releaseAction
+                    }
+                    option.pressed.toggle()
+                    changed = true
+                } else {
+                    changed = (self.suboptionHighlight == nil || self.suboptionHighlight != index)
+                }
+            }
+            
+            if changed {
+                // Update menu
+                if mainOption {
+                    self.addSuboptions(option: option.menuOption)
+                    self.setupOptionMap()
+                } else if self.suboptionHighlight != nil {
+                    self.suboptionHighlight = index
+                    if option.menuOption == .personalResults {
+                        self.resultsHighlight = index
+                    }
+                }
+                self.reloadData()
+                
+                // Execute option/action
+                if action != nil {
+                    action?()
+                } else if let menuOption = option.menuOption {
+                    self.dismissAndSelectOption(option: menuOption, changeOption: mainOption)
+                }
             }
         }
         return nil
     }
     
-    private func getOption(tag: Int, row: Int) -> (option: Option, mainOption: Bool, index: Int) {
+    private func getOption(tag: Int, row: Int) -> (option: Option, mainOption: Bool, index: Int)? {
         var option: Option
         var mainOption: Bool
         var index: Int

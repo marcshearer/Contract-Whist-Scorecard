@@ -1304,21 +1304,25 @@ class Sync {
             localRecord.twosMade = set(to: localRecord.twosMade, cloudRecord.twosMade)
             
             // Update the high scores
-            if localRecord.maxScore < cloudRecord.maxScore {
+            if localRecord.maxScore < cloudRecord.maxScore || (localRecord.maxScore == cloudRecord.maxScore && localRecord.maxScoreSplit < cloudRecord.maxScoreSplit) {
                 localRecord.maxScore = cloudRecord.maxScore
+                localRecord.maxScoreSplit = cloudRecord.maxScoreSplit
                 localRecord.maxScoreDate = cloudRecord.maxScoreDate
                 changed = true
-            } else if cloudRecord.maxScore < localRecord.maxScore {
+            } else if cloudRecord.maxScore < localRecord.maxScore || (cloudRecord.maxScore == localRecord.maxScore && cloudRecord.maxScoreSplit < localRecord.maxScoreSplit) {
                 cloudRecord.maxScore = localRecord.maxScore
+                cloudRecord.maxScoreSplit = localRecord.maxScoreSplit
                 cloudRecord.maxScoreDate = localRecord.maxScoreDate
                 changed = true
             }
-            if localRecord.maxMade < cloudRecord.maxMade {
+            if localRecord.maxMade < cloudRecord.maxMade || (localRecord.maxMade == cloudRecord.maxMade && localRecord.maxMadeSplit < cloudRecord.maxMadeSplit){
                 localRecord.maxMade = cloudRecord.maxMade
+                localRecord.maxMadeSplit = cloudRecord.maxMadeSplit
                 localRecord.maxMadeDate = cloudRecord.maxMadeDate
                 changed = true
-            } else if cloudRecord.maxMade < localRecord.maxMade {
+            } else if cloudRecord.maxMade < localRecord.maxMade  || (cloudRecord.maxMade == localRecord.maxMade && cloudRecord.maxMadeSplit < localRecord.maxMadeSplit){
                 cloudRecord.maxMade = localRecord.maxMade
+                cloudRecord.maxMadeSplit = localRecord.maxMadeSplit
                 cloudRecord.maxMadeDate = localRecord.maxMadeDate
                 changed = true
             }
@@ -1331,12 +1335,14 @@ class Sync {
                 cloudRecord.maxWinStreakDate = localRecord.maxWinStreakDate
                 changed = true
             }
-            if localRecord.maxTwos < cloudRecord.maxTwos {
+            if localRecord.maxTwos < cloudRecord.maxTwos || (localRecord.maxTwos == cloudRecord.maxTwos && localRecord.maxTwosSplit < cloudRecord.maxTwosSplit){
                 localRecord.maxTwos = cloudRecord.maxTwos
+                localRecord.maxTwosSplit = cloudRecord.maxTwosSplit
                 localRecord.maxTwosDate = cloudRecord.maxTwosDate
                 changed = true
-            } else if cloudRecord.maxTwos < localRecord.maxTwos {
+            } else if cloudRecord.maxTwos < localRecord.maxTwos  || (cloudRecord.maxTwos == localRecord.maxTwos && cloudRecord.maxTwosSplit < localRecord.maxTwosSplit){
                 cloudRecord.maxTwos = localRecord.maxTwos
+                cloudRecord.maxTwosSplit = localRecord.maxTwosSplit
                 cloudRecord.maxTwosDate = localRecord.maxTwosDate
                 changed = true
             }
@@ -2084,7 +2090,7 @@ class Sync {
                 completeAction(error)
             } else if cursor != nil {
                 // More to come - recurse
-                _ = self.read(recordType: recordType,
+                self.read(recordType: recordType,
                               predicate: predicate,
                               database: database,
                               cursor: cursor,
@@ -2138,10 +2144,12 @@ class Sync {
                 existing.twosMade += playerMO.twosMade - playerMO.syncTwosMade
                 if playerMO.maxScore > existing.maxScore {
                     existing.maxScore = playerMO.maxScore
+                    existing.maxScoreSplit = playerMO.maxScoreSplit
                     existing.maxScoreDate = playerMO.maxScoreDate
                 }
                 if playerMO.maxMade > existing.maxMade {
                     existing.maxMade = playerMO.maxMade
+                    existing.maxMadeSplit = playerMO.maxMadeSplit
                     existing.maxMadeDate = playerMO.maxMadeDate
                 }
                 if playerMO.maxWinStreak > existing.maxWinStreak {
@@ -2150,6 +2158,7 @@ class Sync {
                 }
                 if playerMO.maxTwos > existing.maxTwos {
                     existing.maxTwos = playerMO.maxTwos
+                    existing.maxTwosSplit = playerMO.maxTwosSplit
                     existing.maxTwosDate = playerMO.maxTwosDate
                 }
                 if playerMO.datePlayed != nil && existing.datePlayed != nil && playerMO.datePlayed! > existing.datePlayed! {

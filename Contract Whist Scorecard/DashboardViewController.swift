@@ -138,7 +138,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     override func viewWillLayoutSubviews() {
         Utility.mainThread {
             super.viewWillLayoutSubviews()
-            self.currentOrientation = (self.container == .mainRight && self.rootViewController.visible(container: .mainRight) ? .container : (ScorecardUI.landscapePhone() ? .landscape : .portrait))
+            self.currentOrientation = (self.container == .mainRight && self.rootViewController.isVisible(container: .mainRight) ? .container : (ScorecardUI.landscapePhone() ? .landscape : .portrait))
             if self.rotated {
                 self.hideOrientationViews(not: self.currentOrientation)
             }

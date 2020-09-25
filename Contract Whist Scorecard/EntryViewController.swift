@@ -33,6 +33,7 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
     private var firstTime = true
     private var rotated = false
     private var lastViewHeight: CGFloat = 0.0
+    private var lastViewWidth: CGFloat = 0.0
     private var roundSummaryViewController: RoundSummaryViewController!
     private var smallScreen = false
     private var saveButton = 0
@@ -179,9 +180,10 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
         self.setupSize()
         self.scoreButtonCollectionView.reloadData()
         
-        if self.lastViewHeight != self.view.frame.height || self.firstTime {
+        if self.lastViewHeight != self.view.frame.height || lastViewWidth != self.view.frame.width || self.firstTime {
             self.playerTableView.reloadData()
             self.lastViewHeight = self.view.frame.height
+            self.lastViewWidth = self.view.frame.width
         }
     }
     

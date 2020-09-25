@@ -29,105 +29,112 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Message" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="XJF-ax-MaD">
-                                <rect key="frame" x="8" y="50" width="224" height="93"/>
+                                <rect key="frame" x="8" y="50" width="224" height="17"/>
                                 <accessibility key="accessibilityConfiguration" identifier="message"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vlC-bm-MBM" userLabel="Horizontal Separator">
-                                <rect key="frame" x="0.0" y="159" width="240" height="1"/>
-                                <color key="backgroundColor" name="Separator"/>
-                                <accessibility key="accessibilityConfiguration" identifier="horizontalSeparator"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uKe-UG-Cp5">
+                                <rect key="frame" x="0.0" y="159" width="240" height="41"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vlC-bm-MBM" userLabel="Horizontal Separator">
+                                        <rect key="frame" x="0.0" y="7" width="240" height="1"/>
+                                        <color key="backgroundColor" name="Separator"/>
+                                        <accessibility key="accessibilityConfiguration" identifier="horizontalSeparator"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="1" id="HwS-1p-MkQ"/>
+                                        </constraints>
+                                    </view>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Azx-e8-Uib" userLabel="OK Button">
+                                        <rect key="frame" x="0.0" y="8" width="78" height="33"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <state key="normal" title="OK"/>
+                                        <connections>
+                                            <action selector="okPressed:" destination="5nE-wB-eav" eventType="touchUpInside" id="9Mn-B4-her"/>
+                                        </connections>
+                                    </button>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sne-98-wpW" userLabel="Other Vertical Separator">
+                                        <rect key="frame" x="78" y="8" width="1" height="33"/>
+                                        <color key="backgroundColor" name="Separator"/>
+                                        <accessibility key="accessibilityConfiguration" identifier="otherSeparator"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="1" id="R1x-JQ-tNv"/>
+                                        </constraints>
+                                    </view>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3VP-Pg-BCM" userLabel="Other Button">
+                                        <rect key="frame" x="79" y="8" width="80" height="33"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="80" id="CCI-fG-vnv"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <state key="normal" title="Other"/>
+                                        <connections>
+                                            <action selector="otherPressed:" destination="5nE-wB-eav" eventType="touchUpInside" id="hpT-Pl-of5"/>
+                                        </connections>
+                                    </button>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JXa-6a-oVp" userLabel="Cancel Vertical Separator">
+                                        <rect key="frame" x="159" y="8" width="1" height="33"/>
+                                        <color key="backgroundColor" name="Separator"/>
+                                        <accessibility key="accessibilityConfiguration" identifier="cancelSeparator"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="1" id="3Rn-v5-gzP"/>
+                                        </constraints>
+                                    </view>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yXX-e4-3X5" userLabel="Cancel Button">
+                                        <rect key="frame" x="160" y="8" width="80" height="33"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="80" id="KBH-w0-adI"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <state key="normal" title="Cancel"/>
+                                        <connections>
+                                            <action selector="cancelPressed:" destination="5nE-wB-eav" eventType="touchUpInside" id="7lP-e9-c8V"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="1" id="HwS-1p-MkQ"/>
+                                    <constraint firstAttribute="bottom" secondItem="yXX-e4-3X5" secondAttribute="bottom" id="Alh-ze-1NO"/>
+                                    <constraint firstAttribute="trailing" secondItem="yXX-e4-3X5" secondAttribute="trailing" id="BaR-em-0ga"/>
+                                    <constraint firstItem="JXa-6a-oVp" firstAttribute="leading" secondItem="3VP-Pg-BCM" secondAttribute="trailing" id="BsJ-oy-o9R"/>
+                                    <constraint firstItem="yXX-e4-3X5" firstAttribute="leading" secondItem="JXa-6a-oVp" secondAttribute="trailing" id="Cen-ZB-CTo"/>
+                                    <constraint firstItem="yXX-e4-3X5" firstAttribute="top" secondItem="vlC-bm-MBM" secondAttribute="bottom" id="Clw-3e-pIA"/>
+                                    <constraint firstItem="JXa-6a-oVp" firstAttribute="top" secondItem="vlC-bm-MBM" secondAttribute="bottom" id="Cmd-rV-wfQ"/>
+                                    <constraint firstItem="sne-98-wpW" firstAttribute="top" secondItem="vlC-bm-MBM" secondAttribute="bottom" id="GfT-MW-xhX"/>
+                                    <constraint firstItem="3VP-Pg-BCM" firstAttribute="top" secondItem="vlC-bm-MBM" secondAttribute="bottom" id="L4e-FK-I02"/>
+                                    <constraint firstItem="Azx-e8-Uib" firstAttribute="top" secondItem="vlC-bm-MBM" secondAttribute="bottom" id="UX5-nV-SXD"/>
+                                    <constraint firstAttribute="height" constant="41" id="VJs-cr-lq0"/>
+                                    <constraint firstAttribute="bottom" secondItem="Azx-e8-Uib" secondAttribute="bottom" id="bPR-6b-r0g"/>
+                                    <constraint firstItem="sne-98-wpW" firstAttribute="leading" secondItem="Azx-e8-Uib" secondAttribute="trailing" id="blC-Cy-8hn"/>
+                                    <constraint firstItem="3VP-Pg-BCM" firstAttribute="leading" secondItem="sne-98-wpW" secondAttribute="trailing" id="kAU-Xs-r1e"/>
+                                    <constraint firstAttribute="bottom" secondItem="JXa-6a-oVp" secondAttribute="bottom" id="kIG-tx-v7I"/>
+                                    <constraint firstAttribute="bottom" secondItem="sne-98-wpW" secondAttribute="bottom" id="kgP-a4-fcr"/>
+                                    <constraint firstAttribute="bottom" secondItem="3VP-Pg-BCM" secondAttribute="bottom" id="nxA-me-sif"/>
+                                    <constraint firstAttribute="trailing" secondItem="vlC-bm-MBM" secondAttribute="trailing" id="qdg-mZ-vNE"/>
+                                    <constraint firstItem="Azx-e8-Uib" firstAttribute="leading" secondItem="uKe-UG-Cp5" secondAttribute="leading" id="sHh-J0-plI"/>
+                                    <constraint firstItem="vlC-bm-MBM" firstAttribute="leading" secondItem="uKe-UG-Cp5" secondAttribute="leading" id="x2n-6y-TXi"/>
                                 </constraints>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Azx-e8-Uib" userLabel="OK Button">
-                                <rect key="frame" x="0.0" y="160" width="78" height="40"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="6k9-Jm-YSQ"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <state key="normal" title="OK"/>
-                                <connections>
-                                    <action selector="okPressed:" destination="5nE-wB-eav" eventType="touchUpInside" id="9Mn-B4-her"/>
-                                </connections>
-                            </button>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sne-98-wpW" userLabel="Other Vertical Separator">
-                                <rect key="frame" x="78" y="160" width="1" height="40"/>
-                                <color key="backgroundColor" name="Separator"/>
-                                <accessibility key="accessibilityConfiguration" identifier="otherSeparator"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="1" id="R1x-JQ-tNv"/>
-                                </constraints>
-                            </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3VP-Pg-BCM" userLabel="Other Button">
-                                <rect key="frame" x="79" y="160" width="80" height="40"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="80" id="CCI-fG-vnv"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <state key="normal" title="Other"/>
-                                <connections>
-                                    <action selector="otherPressed:" destination="5nE-wB-eav" eventType="touchUpInside" id="hpT-Pl-of5"/>
-                                </connections>
-                            </button>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JXa-6a-oVp" userLabel="Cancel Vertical Separator">
-                                <rect key="frame" x="159" y="160" width="1" height="40"/>
-                                <color key="backgroundColor" name="Separator"/>
-                                <accessibility key="accessibilityConfiguration" identifier="cancelSeparator"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="1" id="3Rn-v5-gzP"/>
-                                </constraints>
-                            </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yXX-e4-3X5" userLabel="Cancel Button">
-                                <rect key="frame" x="160" y="160" width="80" height="40"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="80" id="KBH-w0-adI"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <state key="normal" title="Cancel"/>
-                                <connections>
-                                    <action selector="cancelPressed:" destination="5nE-wB-eav" eventType="touchUpInside" id="7lP-e9-c8V"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="rQR-2d-JyM"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="3VP-Pg-BCM" firstAttribute="top" secondItem="vlC-bm-MBM" secondAttribute="bottom" id="2VE-q8-Ac3"/>
                             <constraint firstItem="pBG-QZ-a8Y" firstAttribute="leading" secondItem="DdC-tk-IvO" secondAttribute="leading" constant="8" id="2eP-Xb-2fP"/>
                             <constraint firstItem="XJF-ax-MaD" firstAttribute="leading" secondItem="DdC-tk-IvO" secondAttribute="leading" constant="8" id="2hX-hW-mB1"/>
-                            <constraint firstItem="3VP-Pg-BCM" firstAttribute="leading" secondItem="sne-98-wpW" secondAttribute="trailing" id="2zN-gD-ltK"/>
-                            <constraint firstAttribute="bottom" secondItem="Azx-e8-Uib" secondAttribute="bottom" id="9pa-UJ-2yo"/>
-                            <constraint firstItem="sne-98-wpW" firstAttribute="top" secondItem="vlC-bm-MBM" secondAttribute="bottom" id="Bs1-i4-NFl"/>
-                            <constraint firstAttribute="trailing" secondItem="yXX-e4-3X5" secondAttribute="trailing" id="EDq-lk-aBg"/>
-                            <constraint firstItem="yXX-e4-3X5" firstAttribute="height" secondItem="Azx-e8-Uib" secondAttribute="height" id="Fyl-Vq-HVT"/>
-                            <constraint firstItem="sne-98-wpW" firstAttribute="leading" secondItem="Azx-e8-Uib" secondAttribute="trailing" id="HCH-mD-19n"/>
-                            <constraint firstItem="yXX-e4-3X5" firstAttribute="leading" secondItem="JXa-6a-oVp" secondAttribute="trailing" id="Jbe-YJ-cHG"/>
-                            <constraint firstItem="Azx-e8-Uib" firstAttribute="leading" secondItem="DdC-tk-IvO" secondAttribute="leading" id="Jt5-gS-0RS"/>
-                            <constraint firstItem="JXa-6a-oVp" firstAttribute="leading" secondItem="3VP-Pg-BCM" secondAttribute="trailing" id="LUv-jr-e9s"/>
+                            <constraint firstItem="rQR-2d-JyM" firstAttribute="bottom" secondItem="uKe-UG-Cp5" secondAttribute="bottom" id="Hhi-EE-pn5"/>
                             <constraint firstAttribute="trailing" secondItem="pBG-QZ-a8Y" secondAttribute="trailing" constant="8" id="NCH-RX-tnA"/>
-                            <constraint firstAttribute="trailing" secondItem="vlC-bm-MBM" secondAttribute="trailing" id="PBg-h5-b8j"/>
-                            <constraint firstItem="Azx-e8-Uib" firstAttribute="top" secondItem="vlC-bm-MBM" secondAttribute="bottom" id="PMO-8j-ruo"/>
                             <constraint firstItem="XJF-ax-MaD" firstAttribute="top" secondItem="pBG-QZ-a8Y" secondAttribute="bottom" id="Xnm-bd-ghS"/>
                             <constraint firstItem="pBG-QZ-a8Y" firstAttribute="top" secondItem="DdC-tk-IvO" secondAttribute="top" id="XzQ-bH-Wai"/>
-                            <constraint firstAttribute="bottom" secondItem="sne-98-wpW" secondAttribute="bottom" id="cju-SL-aDZ"/>
-                            <constraint firstItem="vlC-bm-MBM" firstAttribute="top" secondItem="XJF-ax-MaD" secondAttribute="bottom" constant="16" id="gCC-DV-aVe"/>
-                            <constraint firstItem="yXX-e4-3X5" firstAttribute="top" secondItem="vlC-bm-MBM" secondAttribute="bottom" id="juG-nP-Tlf"/>
-                            <constraint firstAttribute="bottom" secondItem="yXX-e4-3X5" secondAttribute="bottom" id="r8A-m0-9dq"/>
-                            <constraint firstAttribute="bottom" secondItem="JXa-6a-oVp" secondAttribute="bottom" id="ruO-RA-Nac"/>
-                            <constraint firstItem="3VP-Pg-BCM" firstAttribute="height" secondItem="Azx-e8-Uib" secondAttribute="height" id="spv-eS-mnT"/>
+                            <constraint firstItem="rQR-2d-JyM" firstAttribute="trailing" secondItem="uKe-UG-Cp5" secondAttribute="trailing" id="cqd-vq-aUN"/>
+                            <constraint firstItem="uKe-UG-Cp5" firstAttribute="leading" secondItem="rQR-2d-JyM" secondAttribute="leading" id="he1-xJ-YJ3"/>
                             <constraint firstAttribute="trailing" secondItem="XJF-ax-MaD" secondAttribute="trailing" constant="8" id="wip-ij-on4"/>
-                            <constraint firstItem="vlC-bm-MBM" firstAttribute="leading" secondItem="DdC-tk-IvO" secondAttribute="leading" id="xAn-iw-PCT"/>
-                            <constraint firstItem="JXa-6a-oVp" firstAttribute="top" secondItem="vlC-bm-MBM" secondAttribute="bottom" id="xz9-2x-2Ow"/>
-                            <constraint firstAttribute="bottom" secondItem="3VP-Pg-BCM" secondAttribute="bottom" id="zLw-uA-nEa"/>
                         </constraints>
                     </view>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="240" height="200"/>
                     <connections>
+                        <outlet property="buttonView" destination="uKe-UG-Cp5" id="IbE-e0-HVG"/>
                         <outlet property="cancelButton" destination="yXX-e4-3X5" id="fPt-C4-W4h"/>
                         <outlet property="cancelButtonWidthConstraint" destination="KBH-w0-adI" id="337-aT-Mcb"/>
                         <outlet property="cancelSeparatorWidthConstraint" destination="3Rn-v5-gzP" id="gsb-pM-jtS"/>

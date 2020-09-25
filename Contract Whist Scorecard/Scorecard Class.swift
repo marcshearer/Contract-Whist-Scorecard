@@ -69,6 +69,7 @@ class Scorecard {
      - Use game banner color for banners
     */
     public var useGameColor = false
+    public var trueUseGameColor = false
     
     // Variables for online games
     public var viewPresenting = ScorecardView.none

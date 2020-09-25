@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="ipad11_0rounded" orientation="portrait" layout="fullscreen" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -18,7 +20,7 @@
                         <subviews>
                             <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="blO-xq-TVH">
                                 <rect key="frame" x="826" y="0.0" width="8" height="1194"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="8" id="6pJ-Tk-nyU"/>
                                 </constraints>
@@ -82,7 +84,7 @@
                                             <constraint firstItem="DVD-5S-PtT" firstAttribute="centerY" secondItem="YLe-cz-ZL1" secondAttribute="centerY" constant="6" id="Qp4-yF-ZGw"/>
                                         </constraints>
                                     </view>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hJD-RF-VuY" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hJD-RF-VuY" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
                                         <rect key="frame" x="20" y="402" width="28" height="28"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="28" id="ghq-c4-VhI"/>
@@ -113,7 +115,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="koT-FI-YVU" userLabel="Middle Section">
                                 <rect key="frame" x="0.0" y="440" width="826" height="639"/>
                                 <subviews>
-                                    <tableView clipsSubviews="YES" tag="1" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="tn1-Ts-i5q" userLabel="Options Table View">
+                                    <tableView clipsSubviews="YES" tag="1" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="tn1-Ts-i5q" userLabel="Options Table View">
                                         <rect key="frame" x="40" y="20" width="746" height="619"/>
                                         <color key="backgroundColor" name="Clear"/>
                                         <prototypes>
@@ -267,7 +269,8 @@
                                 </constraints>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <viewLayoutGuide key="safeArea" id="sGe-Ev-2dR"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="q5j-3K-GRN" firstAttribute="leading" secondItem="Jqg-Ly-fcc" secondAttribute="leading" id="6gL-GC-UWF"/>
                             <constraint firstAttribute="trailing" secondItem="blO-xq-TVH" secondAttribute="trailing" id="6ii-ty-ccJ"/>
@@ -284,7 +287,6 @@
                             <constraint firstItem="q5j-3K-GRN" firstAttribute="top" secondItem="koT-FI-YVU" secondAttribute="bottom" id="ydH-fe-Scw"/>
                             <constraint firstItem="blO-xq-TVH" firstAttribute="top" secondItem="Jqg-Ly-fcc" secondAttribute="top" id="z0j-Oh-yVE"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="sGe-Ev-2dR"/>
                     </view>
                     <connections>
                         <outlet property="infoButton" destination="hJD-RF-VuY" id="h6e-Jb-gaa"/>
@@ -321,5 +323,8 @@
         <namedColor name="Clear">
             <color red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
     </resources>
 </document>

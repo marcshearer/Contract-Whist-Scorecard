@@ -22,6 +22,20 @@ enum HighScoreType: Int {
         case .winStreak: return "maxWinStreak"
         }
     }
+    
+    var playerSort: [(String, SortDirection)] {
+        switch self {
+        case .totalScore:
+            return [("maxScore", .descending), ("maxScoreSplit", .descending), ("maxScoreDate", .ascending)]
+        case .handsMade:
+            return [("maxMade", .descending), ("maxMadeSplit", .descending), ("maxMadeDate", .ascending)]
+        case .twosMade:
+            return [("maxTwos", .descending), ("maxTwosSplit", .descending), ("maxTwosDate", .ascending)]
+        case .winStreak:
+            return [("maxWinStreak", .descending), ("maxWinStreakDate", .ascending)]
+        }
+    }
+    
     var participantKey: String {
         switch self {
         case .totalScore: return "totalScore"
@@ -115,7 +129,8 @@ class DashboardView : UIView, DashboardActionDelegate {
     public func getHighScores(type: HighScoreType, forceParticipant: Bool = false, count: Int) -> [(name: String, score: Int, playerUUID: String, participantMO: ParticipantMO?)] {
         if count == 1 && !forceParticipant {
             // Can get them much more efficiently from the player record
-            return Array(Scorecard.shared.playerList.map{(name: $0.name!, score: $0.value(forKey: type.playerKey) as! Int, playerUUID: $0.playerUUID!, participantMO: nil)}.sorted(by: {$0.score > $1.score}).prefix(1))
+            let sortedPlayers = self.sorted(Scorecard.shared.playerList, by: type)
+            return Array(sortedPlayers.map{(name: $0.name!, score: $0.value(forKey: type.playerKey) as! Int, playerUUID: $0.playerUUID!, participantMO: nil)}.prefix(1))
         } else {
             // Have to search the participants as same player might appear more than once in list
             var highScores: [(playerUUID: String, value: Int, participantMO: ParticipantMO?)]
@@ -135,6 +150,37 @@ class DashboardView : UIView, DashboardActionDelegate {
             }
             return Array(data.prefix(count))
         }
+    }
+    
+    private func sorted(_ unsorted: [PlayerMO], by type: HighScoreType) -> [PlayerMO] {
+        let sortKeys = type.playerSort
+        return unsorted.sorted(by: {self.sort($0, $1, sortKeys)})
+    }
+       
+    private func sort(_ first: PlayerMO, _ second: PlayerMO, _ sortKeys: [(value: String, direction: SortDirection)]) -> Bool {
+        // Assumes values are either Int64 or Date
+        var result = false
+        for key in sortKeys {
+            var equal = true
+            var lessThan = false
+            if let firstValue = first.value(forKey: key.value) as? Int64,
+               let secondValue = second.value(forKey: key.value) as? Int64 {
+                equal = (firstValue == secondValue)
+                lessThan = (firstValue < secondValue)
+            } else if let firstValue = first.value(forKey: key.value) as? Date,
+                      let secondValue = second.value(forKey: key.value) as? Date {
+                equal = (firstValue == secondValue)
+                lessThan = (firstValue < secondValue)
+            }
+            if !equal {
+                result = lessThan
+                if key.direction == .descending {
+                    result.toggle()
+                }
+                break
+            }
+        }
+        return result
     }
     
     // MARK: - Functions to present other views ========================================================== -

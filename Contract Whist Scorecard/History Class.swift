@@ -212,7 +212,7 @@ class History {
             sort = [("totalScore", .descending), ("handsMade", .descending), ("datePlayed", .ascending)]
         case .handsMade:
             sort = [("handsMade", .descending), ("totalScore", .descending), ("datePlayed", .ascending)]
-        case.twosMade:
+        case .twosMade:
             sort = [("twosMade", .descending), ("totalScore", .descending), ("datePlayed", .ascending)]
         default:
             break

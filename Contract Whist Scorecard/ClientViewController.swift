@@ -51,7 +51,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     public var thisPlayerName: String!
     private var thisPlayerBeforeSettings: String!
     private var displayingPeer = 0
-    public var dismissImageView: UIImageView!
+    public var dismissImageViewStack: [UIImageView] = []
     internal var viewControllerStack: [(uniqueID: String, viewController: ScorecardViewController)] = []
 
     // Observers

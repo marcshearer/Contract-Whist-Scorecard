@@ -745,40 +745,40 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
     
     internal func createDismissImageView() {
         if var rootViewController = self.rootViewController {
-            Utility.debugMessage("Scorecard", "Creating dismiss image view on \(rootViewController.className)")
-            if rootViewController.dismissImageView == nil {
-                rootViewController.dismissImageView = UIImageView(frame: UIScreen.main.bounds)
-                rootViewController.view.addSubview(self.rootViewController.dismissImageView)
-                rootViewController.dismissImageView.accessibilityIdentifier = "dismissImageView"
-            }
-            rootViewController.dismissImageView.image = Utility.screenshot()
-            if let view = rootViewController.view {
-                rootViewController.dismissImageView.frame = view.convert(view.frame, to: nil)
-            }
-            rootViewController.view.bringSubviewToFront(rootViewController.dismissImageView)
+            Utility.debugMessage("Scorecard", "Creating dismiss image view on \(self.className)")
+            let dismissImageView = UIImageView(frame: UIScreen.main.bounds)
+            rootViewController.view.addSubview(dismissImageView)
+            dismissImageView.accessibilityIdentifier = "dismissImageView"
+            dismissImageView.image = Utility.screenshot()
+            dismissImageView.frame = rootViewController.view.convert(rootViewController.view.frame, to: nil)
+            rootViewController.view.bringSubviewToFront(dismissImageView)
+            rootViewController.dismissImageViewStack.append(dismissImageView)
+            
         }
     }
     
-    internal func hideDismissImageView(animated: Bool = true, completion: (()->())? = nil) {
+    internal func hideDismissImageView(animated: Bool = false, completion: (()->())? = nil) {
+        
+        let dismissImageView = self.rootViewController.dismissImageViewStack.last
         
         func hide() {
-            if self.rootViewController?.dismissImageView != nil {
-                self.rootViewController?.dismissImageView?.removeFromSuperview()
-                self.rootViewController?.dismissImageView = nil
+            if dismissImageView != nil {
+                dismissImageView?.removeFromSuperview()
+                self.rootViewController?.dismissImageViewStack.removeLast()
             }
             self.rootViewController?.dismissView = .none
             completion?()
         }
         
-        if self.rootViewController?.dismissImageView != nil {
+        if dismissImageView != nil {
             Utility.debugMessage("Scorecard", "Removing dismiss image view")
             if animated {
-                self.rootViewController?.dismissImageView?.alpha = 1.0
+                dismissImageView?.alpha = 1.0
                 Utility.animate(duration: 0.5, completion: {
-                    self.rootViewController?.dismissImageView?.alpha = 1.0
+                    dismissImageView?.alpha = 1.0
                     hide()
                 }, animations: {
-                    self.rootViewController?.dismissImageView?.alpha = 0.0
+                    dismissImageView?.alpha = 0.0
                 })
             } else {
                 hide()
@@ -829,7 +829,7 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
             self.view.removeFromSuperview()
             self.removeFromParent()
             if hideDismissImageView {
-                self.hideDismissImageView(animated: true) {
+                self.hideDismissImageView() {
                     popAndComplete()
                 }
             } else {

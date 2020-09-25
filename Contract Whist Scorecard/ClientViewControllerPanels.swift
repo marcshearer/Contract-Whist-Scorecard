@@ -15,7 +15,7 @@ struct PanelContainerItem {
 
 protocol PanelContainer {
     
-    var dismissImageView: UIImageView! {get set}
+    var dismissImageViewStack: [UIImageView] {get set}
     var viewControllerStack: [(uniqueID: String, viewController: ScorecardViewController)] {get set}
 
     var containers: Bool {get}

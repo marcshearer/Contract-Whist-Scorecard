@@ -105,6 +105,7 @@ enum ThemeBackgroundColorName: CaseIterable {
     case leftSidePanel
     case leftSidePanelBorder
     case rightGameDetailPanel
+    case rightGameDetailPanelShadow
 }
 
 enum ThemeTextColorSetName: CaseIterable {
@@ -439,7 +440,9 @@ class Themes {
                 .watermark                   : ThemeColor(#colorLiteral(red: 0.9724639058, green: 0.9726034999, blue: 0.9724336267, alpha: 1), #colorLiteral(red: 0.2195822597, green: 0.2196257114, blue: 0.2195765674, alpha: 1),  .lightBackground, .darkBackground),
                 .leftSidePanel               : ThemeColor(#colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1),  .darkBackground),
                 .leftSidePanelBorder         : ThemeColor(#colorLiteral(red: 0.4509385824, green: 0.4510071278, blue: 0.4509235024, alpha: 1), #colorLiteral(red: 0.4509385824, green: 0.4510071278, blue: 0.4509235024, alpha: 1),  .darkBackground),
-                .rightGameDetailPanel        : ThemeColor(#colorLiteral(red: 0.7058823529, green: 0.8549019608, blue: 0.862745098, alpha: 1), nil, .midBackground)],
+                .rightGameDetailPanel        : ThemeColor(#colorLiteral(red: 0.7058823529, green: 0.8549019608, blue: 0.862745098, alpha: 1), nil, .midBackground),
+                .rightGameDetailPanelShadow  : ThemeColor(#colorLiteral(red: 0.6274509804, green: 0.7764705882, blue: 0.7843137255, alpha: 1), nil, .midBackground)],
+
             text: [
                 .lightBackground             : ThemeTextColor(normal: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), contrast: #colorLiteral(red: 0.337254902, green: 0.4509803922, blue: 0.4549019608, alpha: 1), strong: #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1), faint: #colorLiteral(red: 0.6235294118, green: 0.6235294118, blue: 0.6235294118, alpha: 1), theme: #colorLiteral(red: 0.6745098039, green: 0.2196078431, blue: 0.2, alpha: 1)) ,
                 .midBackground               : ThemeTextColor(normal: #colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1), contrast: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), strong: #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1), theme: #colorLiteral(red: 0.5058823529, green: 0.1647058824, blue: 0.1490196078, alpha: 1), #colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1)) ,

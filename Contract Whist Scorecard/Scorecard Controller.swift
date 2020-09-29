@@ -461,8 +461,11 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
         var highScoresViewController: ScorecardViewController?
         
         if let parentViewController = self.fromViewController() {
-            highScoresViewController = DashboardViewController.show(from: parentViewController,
-                                                                    dashboardNames: [(title: "High Scores",  fileName: "HighScoresDashboard",  imageName: nil)], allowSync: false, backImage: "cross white", backgroundColor: Palette.banner)
+            highScoresViewController = DashboardViewController.show(
+                from: parentViewController, title: "High Scores",
+                dashboardNames: [(title: "High Scores",  fileName: "HighScoresDashboard",  imageName: nil)],
+                allowSync: false, backImage: "cross white", backgroundColor: Palette.banner,
+                container: .mainRight,  menuFinishText: "Return to Game Summary")
         }
         return highScoresViewController
     }
@@ -489,6 +492,7 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
         if self.gameDetailPanelViewController == nil {
             self.gameDetailPanelViewController = GameDetailPanelViewController.create()
             self.gameDetailPanelViewController.appController = self
+            self.gameDetailPanelViewController.controllerDelegate = self
             self.parentViewController?.rootViewController.presentInContainers([PanelContainerItem(viewController: gameDetailPanelViewController, container: .right)], animated: true, completion: nil)
             self.gameDetailDelegate = self.gameDetailPanelViewController
         }
@@ -696,14 +700,14 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
         
         // Fill in controller information
         viewControllerToPresent.controllerDelegate = appController
-        viewControllerToPresent.appController = appController
+        viewControllerToPresent.appController = appController ?? self.appController
         viewControllerToPresent.scorecardView = Scorecard.shared.viewPresenting
         viewControllerToPresent.container = container
         viewControllerToPresent.rootViewController = self.rootViewController
         viewControllerToPresent.menuController = self.rootViewController?.menuController
         viewControllerToPresent.uniqueID = viewControllerToPresent.uniqueID ?? UUID().uuidString
         
-        if self.rootViewController?.containers ?? false && (self.container == .main || self.container == .mainRight || self == self.rootViewController) && popoverSize == nil {
+        if self.rootViewController?.containers ?? false && (self.container == .main || self.container == .mainRight || self == self.rootViewController) && popoverSize == nil && container != nil {
             // Working in containers
             self.rootViewController?.presentInContainers([PanelContainerItem(viewController: viewControllerToPresent, container: container!)], animated: true, completion: completion)
             

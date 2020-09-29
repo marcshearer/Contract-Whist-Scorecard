@@ -186,7 +186,6 @@ class Recovery {
         }
     }
     
-    
     public func loadSavedValues() {
         // Load in the saved values from UserDefaults
         
@@ -238,6 +237,22 @@ class Recovery {
         // Reload game unique key / date
         Scorecard.game.datePlayed = UserDefaults.standard.object(forKey: "recoveryDatePlayed") as? Date
         Scorecard.game.gameUUID = UserDefaults.standard.string(forKey: "recoveryGameUUID")
+        
+        if Scorecard.game.gameComplete() {
+            // Try to reload managed objects
+            if let games = CoreData.fetch(from: "Game", filter: NSPredicate(format: "gameUUID = %@", Scorecard.game.gameUUID)) as? [GameMO] {
+                if games.count == 1 {
+                    Scorecard.game.gameMO = games.first!
+                }
+            }
+            if let participants = CoreData.fetch(from: "Participant", filter: NSPredicate(format: "gameUUID = %@", Scorecard.game.gameUUID)) as? [ParticipantMO] {
+                if participants.count == Scorecard.game.currentPlayers {
+                    for participantMO in participants {
+                        Scorecard.game.player(playerUUID: participantMO.playerUUID!)?.participantMO = participantMO
+                    }
+                }
+            }
+        }
         
         // Reload deal history
         self.loadDealHistory()

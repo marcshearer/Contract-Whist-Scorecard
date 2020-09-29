@@ -23,10 +23,10 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="88"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="title" value="Results"/>
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="menuHide" value="YES"/>
                                     <userDefinedRuntimeAttribute type="image" keyPath="finishImage" value="back"/>
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="disableOptions" value="NO"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="title" value="Results"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <outlet property="bannerHeightConstraint" destination="I2U-3v-5TF" id="FGS-or-dNF"/>
@@ -38,10 +38,7 @@
                                 <rect key="frame" x="0.0" y="88" width="414" height="0.0"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1jG-Wm-nUW">
-                                        <rect key="frame" x="107" y="0.0" width="200" height="0.0"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="200" id="fxp-9b-Pp3"/>
-                                        </constraints>
+                                        <rect key="frame" x="20" y="0.0" width="374" height="0.0"/>
                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
@@ -51,7 +48,8 @@
                                 <constraints>
                                     <constraint firstAttribute="height" id="7Z2-77-dTs"/>
                                     <constraint firstAttribute="bottom" secondItem="1jG-Wm-nUW" secondAttribute="bottom" id="JOH-nF-yIZ"/>
-                                    <constraint firstItem="1jG-Wm-nUW" firstAttribute="centerX" secondItem="EsP-5F-m7w" secondAttribute="centerX" id="vkx-Fm-iBn"/>
+                                    <constraint firstAttribute="trailing" secondItem="1jG-Wm-nUW" secondAttribute="trailing" constant="20" id="Rxy-E4-wHO"/>
+                                    <constraint firstItem="1jG-Wm-nUW" firstAttribute="leading" secondItem="EsP-5F-m7w" secondAttribute="leading" constant="20" id="h3Z-RE-dvs"/>
                                     <constraint firstItem="1jG-Wm-nUW" firstAttribute="top" secondItem="EsP-5F-m7w" secondAttribute="top" id="zjz-Yf-sAK"/>
                                 </constraints>
                             </view>
@@ -249,7 +247,6 @@
                         <outlet property="dashboardContainerView" destination="hiY-hK-Vax" id="ryL-kx-1Cw"/>
                         <outlet property="scrollCollectionView" destination="skN-et-kCR" id="CZd-QO-Y7H"/>
                         <outlet property="subtitleLabel" destination="1jG-Wm-nUW" id="WBB-VH-yY8"/>
-                        <outlet property="subtitleLabelWidthConstraint" destination="fxp-9b-Pp3" id="Re6-y9-tKA"/>
                         <outlet property="subtitleView" destination="EsP-5F-m7w" id="3rz-4g-956"/>
                         <outlet property="subtitleViewHeightConstraint" destination="7Z2-77-dTs" id="Xns-Pu-b9l"/>
                         <outletCollection property="topSectionProportionalHeightConstraint" destination="LAV-4g-Fk1" collectionClass="NSMutableArray" id="Ohv-hh-b2T"/>

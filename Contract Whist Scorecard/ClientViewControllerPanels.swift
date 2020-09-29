@@ -152,6 +152,8 @@ extension ClientViewController : PanelContainer {
                 return true
             case .right, .rightInset, .mainRight:
                 return self.rightPanelLeadingConstraint.constant < 0
+            default:
+                return false
             }
         }
     }
@@ -196,40 +198,41 @@ extension ClientViewController : PanelContainer {
                 viewController.rootViewController = self.rootViewController
                 viewController.menuController = self.rootViewController.menuController
                 viewController.container = container
-                let view = viewController.view!
-                switch container {
-                case .left:
-                    containerView = self.leftContainer
-                case .right:
-                    containerView = self.rightContainer
-                case .rightInset:
-                    containerView = self.rightInsetContainer
-                case .mainRight:
-                    containerView = self.mainRightContainer
-                default:
-                    containerView = self.mainContainer
-                }
-                if let containerView = containerView {
-                    // Got a container - add view controller / view to container
-                    rootViewController.addChild(viewController)
-                    view.frame = rootView.convert(containerView.frame, to: rootView)
-                    rootView.addSubview(view)
-                    viewController.didMove(toParent: rootViewController)
-                    rootView.bringSubviewToFront(view)
-                    
-                    // Add layout constraints
-                    view.translatesAutoresizingMaskIntoConstraints = false
-                    Constraint.anchor(view: rootView, control: containerView, to: view)
-                    if container == .rightInset {
-                        view.roundCorners(cornerRadius: 12.0)
+                if let view = viewController.view {
+                    switch container {
+                    case .left:
+                        containerView = self.leftContainer
+                    case .right:
+                        containerView = self.rightContainer
+                    case .rightInset:
+                        containerView = self.rightInsetContainer
+                    case .mainRight:
+                        containerView = self.mainRightContainer
+                    default:
+                        containerView = self.mainContainer
                     }
-                    if animated {
-                        view.alpha = 0.0
-                        animateViews.append(view)
-                    }
-                    if container == .main || container == .mainRight {
-                        // Add to controller stack
-                        self.rootViewController?.viewControllerStack.append((viewController.uniqueID, viewController))
+                    if let containerView = containerView {
+                        // Got a container - add view controller / view to container
+                        rootViewController.addChild(viewController)
+                        view.frame = rootView.convert(containerView.frame, to: rootView)
+                        rootView.addSubview(view)
+                        viewController.didMove(toParent: rootViewController)
+                        rootView.bringSubviewToFront(view)
+                        
+                        // Add layout constraints
+                        view.translatesAutoresizingMaskIntoConstraints = false
+                        Constraint.anchor(view: rootView, control: containerView, to: view)
+                        if container == .rightInset {
+                            view.roundCorners(cornerRadius: 12.0)
+                        }
+                        if animated {
+                            view.alpha = 0.0
+                            animateViews.append(view)
+                        }
+                        if container == .main || container == .mainRight {
+                            // Add to controller stack
+                            self.rootViewController?.viewControllerStack.append((viewController.uniqueID, viewController))
+                        }
                     }
                 }
             }

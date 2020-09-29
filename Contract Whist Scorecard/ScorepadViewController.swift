@@ -20,7 +20,7 @@ enum ScorepadMode {
 class ScorepadViewController: ScorecardViewController,
                               UITableViewDataSource, UITableViewDelegate,
                               UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout,
-                              ScorecardAlertDelegate, BannerDelegate {
+                              ScorecardAlertDelegate, BannerDelegate, GameDetailPanelInvokeDelegate {
  
     
     // MARK: - Class Properties ======================================================================== -
@@ -62,7 +62,7 @@ class ScorepadViewController: ScorecardViewController,
     
     // Local class variables
     private var entryViewController: EntryViewController!
-    private var lastNavBarHeight:CGFloat = 0.0
+    private var lastBannerHeight:CGFloat = 0.0
     private var lastViewHeight:CGFloat = 0.0
     private var lastViewWidth: CGFloat = 0.0
     private var rotated = false
@@ -144,9 +144,6 @@ class ScorepadViewController: ScorecardViewController,
         
         // Subscribe to score changes
         self.setupScoresSubscription()
-        
-        // Setup banner
-        self.setupBanner()
     }
     
     override internal func viewDidAppear(_ animated: Bool) {
@@ -164,6 +161,11 @@ class ScorepadViewController: ScorecardViewController,
         self.view.setNeedsLayout()
         
         Scorecard.shared.alertDelegate = self
+        
+        // Setup invoke delegate
+        var gameDetailDelegate = self.gameDetailDelegate
+        gameDetailDelegate?.invokeDelegate = self
+
     }
     
     override internal func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -174,17 +176,21 @@ class ScorepadViewController: ScorecardViewController,
     
     override internal func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        if self.lastNavBarHeight != self.banner.height ||
+        
+        self.setupBanner()
+        
+        if self.lastBannerHeight != self.banner.height ||
             self.lastViewHeight != self.view.frame.height ||
             self.lastViewWidth != self.view.frame.width {
-            setupSize(to: self.view.safeAreaLayoutGuide.layoutFrame.size)
+
+            self.setupSize(to: self.view.safeAreaLayoutGuide.layoutFrame.size)
             self.headerTableView.layoutIfNeeded()
             self.paddingViewLineWidth.forEach { $0.constant = (ScorecardUI.landscapePhone() ? 3 : 0)}
             self.paddingViewLines.forEach { $0.layoutIfNeeded() }
             self.headerTableView.reloadData()
             self.bodyTableView.reloadData()
             self.footerTableView.reloadData()
-            self.lastNavBarHeight = banner.frame.height
+            self.lastBannerHeight = banner.frame.height
             self.lastViewHeight = self.view.frame.height
             self.lastViewWidth = self.view.frame.width
             self.setupBorders()
@@ -204,8 +210,17 @@ class ScorepadViewController: ScorecardViewController,
             observer = nil
         }
         UIApplication.shared.isIdleTimerDisabled = false
+
+        var gameDetailDelegate = self.gameDetailDelegate
+        gameDetailDelegate?.invokeDelegate = nil
     }
     
+    // MARK: - Game Detail Invoke Delegate Handlers ============================================== -
+    
+    internal func invoke(_ view: ScorecardView) {
+        self.controllerDelegate?.didInvoke(view)
+    }
+
     // MARK: - TableView Overrides ===================================================================== -
 
     internal func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

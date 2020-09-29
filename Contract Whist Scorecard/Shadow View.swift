@@ -31,15 +31,23 @@ extension UIView {
        
     public func roundCorners(cornerRadius: CGFloat, topRounded:Bool = true, bottomRounded: Bool = true) {
         if topRounded || bottomRounded {
-            var roundedCorners: UIRectCorner = []
+            var corners: UIRectCorner = []
             if topRounded && bottomRounded {
-                roundedCorners = .allCorners
+                corners = .allCorners
             } else if topRounded {
-                roundedCorners = [.topLeft, .topRight]
+                corners = [.topLeft, .topRight]
             } else {
-                roundedCorners = [.bottomLeft, .bottomRight]
+                corners = [.bottomLeft, .bottomRight]
             }
-            let layerMask = UIBezierPath(roundedRect: self.bounds, byRoundingCorners: [roundedCorners], cornerRadii: CGSize(width: cornerRadius, height: cornerRadius))
+            self.roundCorners(cornerRadius: cornerRadius, corners: corners)
+        } else {
+            self.layer.mask = nil
+        }
+    }
+    
+    public func roundCorners(cornerRadius: CGFloat, corners: UIRectCorner) {
+        if !corners.isEmpty {
+            let layerMask = UIBezierPath(roundedRect: self.bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: cornerRadius, height: cornerRadius))
             let layer = CAShapeLayer()
             layer.frame = self.bounds
             layer.path = layerMask.cgPath

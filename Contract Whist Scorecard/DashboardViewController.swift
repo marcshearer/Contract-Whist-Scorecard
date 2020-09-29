@@ -84,7 +84,6 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     @IBOutlet private weak var subtitleView: UIView!
     @IBOutlet private weak var subtitleLabel: UILabel!
     @IBOutlet private weak var subtitleViewHeightConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var subtitleLabelWidthConstraint: NSLayoutConstraint!
     
     internal func finishPressed() {
         self.dismiss()
@@ -113,7 +112,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         // Setup form
         self.defaultViewColors()
         self.setupButtons()
@@ -126,6 +125,8 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
         self.carouselCollectionViewFlowLayout.delegate = self
         self.carouselCollectionView.decelerationRate = UIScrollView.DecelerationRate.fast
         self.currentPage = Int(self.dashboardViewInfo.count / 2)
+        
+        self.setupSubtitle()
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -136,32 +137,30 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     }
     
     override func viewWillLayoutSubviews() {
-        Utility.mainThread {
-            super.viewWillLayoutSubviews()
-            self.currentOrientation = (self.container == .mainRight && self.rootViewController.isVisible(container: .mainRight) ? .container : (ScorecardUI.landscapePhone() ? .landscape : .portrait))
-            if self.rotated {
-                self.hideOrientationViews(not: self.currentOrientation)
-            }
-            self.carouselCollectionView.layoutIfNeeded()
-            let width: CGFloat = self.carouselCollectionView.frame.width / 4
-            self.carouselCollectionView.contentInset = UIEdgeInsets(top: 0.0, left: width, bottom: 0.0, right: width)
-            self.carouselCollectionView.reloadData()
-            self.carouselCollectionView.layoutIfNeeded()
-            if self.firstTime || self.rotated {
-                self.carouselCollectionView.layoutIfNeeded()
-                self.carouselCollectionView.contentOffset = CGPoint(x: self.carouselCollectionView.bounds.width / 4.0, y: 0.0)
-                let selectedPage = (self.firstTime ? Int(self.dashboardViewInfo.count / 2) : self.currentPage)
-                self.changed(self.carouselCollectionView, itemAtCenter: selectedPage, forceScroll: true)
-                self.carouselCollectionView.reloadData()
-                if self.rotated {
-                    self.reloadData()
-                    self.didRotate()
-                }
-                self.firstTime = false
-                self.rotated = false
-            }
-            self.setupSubtitle()
+        super.viewWillLayoutSubviews()
+        self.currentOrientation = (self.container == .mainRight && self.rootViewController.isVisible(container: .mainRight) ? .container : (ScorecardUI.landscapePhone() ? .landscape : .portrait))
+        if self.rotated {
+            self.hideOrientationViews(not: self.currentOrientation)
         }
+        self.carouselCollectionView.layoutIfNeeded()
+        let width: CGFloat = self.carouselCollectionView.frame.width / 4
+        self.carouselCollectionView.contentInset = UIEdgeInsets(top: 0.0, left: width, bottom: 0.0, right: width)
+        self.carouselCollectionView.reloadData()
+        self.carouselCollectionView.layoutIfNeeded()
+        if self.firstTime || self.rotated {
+            self.carouselCollectionView.layoutIfNeeded()
+            self.carouselCollectionView.contentOffset = CGPoint(x: self.carouselCollectionView.bounds.width / 4.0, y: 0.0)
+            let selectedPage = (self.firstTime ? Int(self.dashboardViewInfo.count / 2) : self.currentPage)
+            self.changed(self.carouselCollectionView, itemAtCenter: selectedPage, forceScroll: true)
+            self.carouselCollectionView.reloadData()
+            if self.rotated {
+                self.reloadData()
+                self.didRotate()
+            }
+            self.firstTime = false
+            self.rotated = false
+        }
+        self.setupSubtitle()
     }
 
     override func viewDidLayoutSubviews() {
@@ -424,7 +423,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     
     // MARK: - Utility Routines ======================================================================== -
     
-    private func  setupSubtitle() {
+    private func setupSubtitle() {
         if let title = self.overrideTitle {
             self.banner.set(title: title)
         } else if self.dashboardViewInfo.count == 1 {
@@ -432,7 +431,6 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
             if self.container == .main || self.container == .mainRight {
                 self.subtitleLabel.text = subTitle
                 self.subtitleViewHeightConstraint.constant = 30
-                self.subtitleLabelWidthConstraint.constant = self.banner.titleWidth
                 self.subtitleView.backgroundColor = self.defaultBannerColor.background
                 self.subtitleLabel.textAlignment = self.defaultBannerAlignment
                 self.subtitleLabel.textColor = self.defaultBannerTextColor()
@@ -495,7 +493,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     
     // MARK: - Function to present and dismiss this view ================================================= -
     
-    @discardableResult class public func show(from viewController: ScorecardViewController, title: String? = nil, dashboardNames: [(title: String, fileName: String, imageName: String?)], allowSync: Bool = true, backImage: String = "home", backText: String = "", backgroundColor: PaletteColor = Palette.dark, container: Container = .main, bottomInset: CGFloat? = nil, menuFinishText: String? = nil, completion: (()->())? = nil) -> ScorecardViewController {
+    @discardableResult class public func show(from viewController: ScorecardViewController, title: String? = nil, dashboardNames: [(title: String, fileName: String, imageName: String?)], allowSync: Bool = true, backImage: String = "home", backText: String = "", backgroundColor: PaletteColor = Palette.dark, container: Container? = .main, bottomInset: CGFloat? = nil, menuFinishText: String? = nil, completion: (()->())? = nil) -> ScorecardViewController {
         
         let dashboardViewController = DashboardViewController.create(title: title, dashboardNames: dashboardNames, allowSync: allowSync, backImage: backImage, backText: backText, backgroundColor: backgroundColor, bottomInset: bottomInset, menuFinishText: menuFinishText, completion: completion)
         

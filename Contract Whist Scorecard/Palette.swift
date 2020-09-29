@@ -55,7 +55,8 @@ class Palette {
     @BackgroundColor(.leftSidePanel) static var leftSidePanel
     @BackgroundColor(.leftSidePanelBorder) static var leftSidePanelBorder
     @BackgroundColor(.rightGameDetailPanel) static var rightGameDetailPanel
-
+    @BackgroundColor(.rightGameDetailPanelShadow) static var rightGameDetailPanelShadow
+    
     // Specific colors
     @SpecificColor(.suitDiamondsHearts) static var suitDiamondsHearts
     @SpecificColor(.suitClubsSpades) static var suitClubsSpades

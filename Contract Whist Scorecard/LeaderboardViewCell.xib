@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="Leaderboard Cell" id="Kia-2c-Ogh" customClass="LeaderboardViewCell" customModule="Whist_2" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Kia-2c-Ogh" id="Ghi-GR-eAe">
+                <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="I6n-QC-ctb">
+                        <rect key="frame" x="0.0" y="2" width="414" height="42"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="999th" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="Fo5-H8-89G">
+                                <rect key="frame" x="16" y="0.0" width="60" height="42"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="60" id="f9J-4N-hsH"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="28"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="kco-pI-ySu">
+                                <rect key="frame" x="80" y="0.0" width="238" height="42"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="28"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="123" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="Ton-1u-mAa">
+                                <rect key="frame" x="322" y="0.0" width="60" height="42"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="60" id="bZQ-gm-WJv"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="28"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" name="Clear"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="kco-pI-ySu" secondAttribute="bottom" id="89g-P6-vuL"/>
+                            <constraint firstAttribute="bottom" secondItem="Ton-1u-mAa" secondAttribute="bottom" id="AkF-LV-T2l"/>
+                            <constraint firstItem="kco-pI-ySu" firstAttribute="top" secondItem="I6n-QC-ctb" secondAttribute="top" id="DzG-A2-Ig7"/>
+                            <constraint firstAttribute="bottom" secondItem="Fo5-H8-89G" secondAttribute="bottom" id="UQH-Nf-2vb"/>
+                            <constraint firstAttribute="trailing" secondItem="Ton-1u-mAa" secondAttribute="trailing" constant="32" id="UxZ-Tm-K7g"/>
+                            <constraint firstItem="kco-pI-ySu" firstAttribute="leading" secondItem="Fo5-H8-89G" secondAttribute="trailing" constant="4" id="WPA-Ol-3EE"/>
+                            <constraint firstItem="Fo5-H8-89G" firstAttribute="leading" secondItem="I6n-QC-ctb" secondAttribute="leading" constant="16" id="XrF-80-kjh"/>
+                            <constraint firstItem="Ton-1u-mAa" firstAttribute="leading" secondItem="kco-pI-ySu" secondAttribute="trailing" constant="4" id="i8G-zI-86j"/>
+                            <constraint firstItem="Ton-1u-mAa" firstAttribute="top" secondItem="I6n-QC-ctb" secondAttribute="top" id="nhR-Xt-Y58"/>
+                            <constraint firstItem="Fo5-H8-89G" firstAttribute="top" secondItem="I6n-QC-ctb" secondAttribute="top" id="zcW-jM-Wab"/>
+                        </constraints>
+                    </view>
+                </subviews>
+                <color key="backgroundColor" name="Clear"/>
+                <constraints>
+                    <constraint firstAttribute="bottom" secondItem="I6n-QC-ctb" secondAttribute="bottom" id="PCd-xR-sMS"/>
+                    <constraint firstItem="I6n-QC-ctb" firstAttribute="top" secondItem="Ghi-GR-eAe" secondAttribute="top" constant="2" id="Uyn-FY-Vck"/>
+                    <constraint firstItem="I6n-QC-ctb" firstAttribute="leading" secondItem="Ghi-GR-eAe" secondAttribute="leading" id="ZV4-oE-sDR"/>
+                    <constraint firstAttribute="trailing" secondItem="I6n-QC-ctb" secondAttribute="trailing" id="h1Z-KB-ezf"/>
+                </constraints>
+            </tableViewCellContentView>
+            <color key="backgroundColor" name="Clear"/>
+            <connections>
+                <outlet property="nameLabel" destination="kco-pI-ySu" id="kEe-43-f0a"/>
+                <outlet property="positionLabel" destination="Fo5-H8-89G" id="kQ3-ez-KpK"/>
+                <outlet property="scoreLabel" destination="Ton-1u-mAa" id="OOM-hk-oAX"/>
+                <outlet property="shadowView" destination="I6n-QC-ctb" id="bke-gB-ayH"/>
+                <outletCollection property="smallTextLabels" destination="Fo5-H8-89G" collectionClass="NSMutableArray" id="h6e-s8-nYJ"/>
+                <outletCollection property="textLabels" destination="kco-pI-ySu" collectionClass="NSMutableArray" id="Bjs-ii-1qp"/>
+                <outletCollection property="textLabels" destination="Ton-1u-mAa" collectionClass="NSMutableArray" id="sjr-ON-f4u"/>
+            </connections>
+            <point key="canvasLocation" x="-81" y="52"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <namedColor name="Clear">
+            <color red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+    </resources>
+</document>

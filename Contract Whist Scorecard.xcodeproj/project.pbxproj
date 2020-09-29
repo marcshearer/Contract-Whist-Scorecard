@@ -133,6 +133,9 @@
 		B25FC7CA22D0733C00D2E651 /* OverrideViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B25FC7C522D0733C00D2E651 /* OverrideViewController.storyboard */; };
 		B25FC7CB22D0733C00D2E651 /* ReviewViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B25FC7C722D0733C00D2E651 /* ReviewViewController.storyboard */; };
 		B25FC7CD22D4868500D2E651 /* Rotation Gesture.swift in Sources */ = {isa = PBXBuildFile; fileRef = B25FC7CC22D4868500D2E651 /* Rotation Gesture.swift */; };
+		B260AAC3251E345800CD1EB3 /* LeaderboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B260AAC2251E345800CD1EB3 /* LeaderboardView.swift */; };
+		B260AAD1251E34AA00CD1EB3 /* LeaderboardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B260AAD0251E34AA00CD1EB3 /* LeaderboardView.xib */; };
+		B260AAD7251E34C700CD1EB3 /* LeaderboardViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B260AAD6251E34C700CD1EB3 /* LeaderboardViewCell.xib */; };
 		B2666A1F1FADAC0700A34CB0 /* Test Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2666A1E1FADAC0700A34CB0 /* Test Extensions.swift */; };
 		B267DF75211F41FC0086D521 /* Admin Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = B267DF74211F41FC0086D521 /* Admin Menu.swift */; };
 		B2693CCB22C78C0B00596D85 /* Statistics Viewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2693CCA22C78C0B00596D85 /* Statistics Viewer.swift */; };
@@ -187,6 +190,7 @@
 		B2B755091E5B363200B1313B /* History Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B755081E5B363200B1313B /* History Class.swift */; };
 		B2B7550B1E5DEA6A00B1313B /* Reconcile.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B7550A1E5DEA6A00B1313B /* Reconcile.swift */; };
 		B2B7550D1E619A3F00B1313B /* DataAdmin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B7550C1E619A3F00B1313B /* DataAdmin.swift */; };
+		B2BB6C8D2521A85C001D7D70 /* LeaderboardViewHeaderFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2BB6C8C2521A85C001D7D70 /* LeaderboardViewHeaderFooterView.xib */; };
 		B2BBCCAA2327ECD0005678B2 /* HexagonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2BBCCA92327ECD0005678B2 /* HexagonView.swift */; };
 		B2BC51C71F7B5E8C0065F07D /* String Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2BC51C61F7B5E8C0065F07D /* String Extensions.swift */; };
 		B2BE8690234C6BF000766CF2 /* PlayerSelectionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2BE868F234C6BF000766CF2 /* PlayerSelectionView.xib */; };
@@ -424,6 +428,9 @@
 		B25FC7C622D0733C00D2E651 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/OverrideViewController.storyboard; sourceTree = "<group>"; };
 		B25FC7C822D0733C00D2E651 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/ReviewViewController.storyboard; sourceTree = "<group>"; };
 		B25FC7CC22D4868500D2E651 /* Rotation Gesture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Rotation Gesture.swift"; sourceTree = "<group>"; };
+		B260AAC2251E345800CD1EB3 /* LeaderboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaderboardView.swift; sourceTree = "<group>"; };
+		B260AAD0251E34AA00CD1EB3 /* LeaderboardView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LeaderboardView.xib; sourceTree = "<group>"; };
+		B260AAD6251E34C700CD1EB3 /* LeaderboardViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LeaderboardViewCell.xib; sourceTree = "<group>"; };
 		B2666A1E1FADAC0700A34CB0 /* Test Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Test Extensions.swift"; sourceTree = "<group>"; };
 		B267DF74211F41FC0086D521 /* Admin Menu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Admin Menu.swift"; sourceTree = "<group>"; };
 		B2693CCA22C78C0B00596D85 /* Statistics Viewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Statistics Viewer.swift"; sourceTree = "<group>"; };
@@ -478,6 +485,7 @@
 		B2B755081E5B363200B1313B /* History Class.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "History Class.swift"; sourceTree = "<group>"; };
 		B2B7550A1E5DEA6A00B1313B /* Reconcile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reconcile.swift; sourceTree = "<group>"; };
 		B2B7550C1E619A3F00B1313B /* DataAdmin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataAdmin.swift; sourceTree = "<group>"; };
+		B2BB6C8C2521A85C001D7D70 /* LeaderboardViewHeaderFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LeaderboardViewHeaderFooterView.xib; sourceTree = "<group>"; };
 		B2BBCCA92327ECD0005678B2 /* HexagonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HexagonView.swift; sourceTree = "<group>"; };
 		B2BC51C61F7B5E8C0065F07D /* String Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String Extensions.swift"; sourceTree = "<group>"; };
 		B2BE868F234C6BF000766CF2 /* PlayerSelectionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PlayerSelectionView.xib; sourceTree = "<group>"; };
@@ -1020,27 +1028,19 @@
 			name = "Thumbnail View";
 			sourceTree = "<group>";
 		};
-		B243385622E0A67C002EBD40 /* Custom Views */ = {
+		B243385622E0A67C002EBD40 /* Custom Application Views */ = {
 			isa = PBXGroup;
 			children = (
-				B203ECCC24F8EC41001E2CED /* Banner */,
-				B2B3501A24BC53110004DCB1 /* Group View */,
-				B24ABA3924B31B6700E3F130 /* Banner Logo */,
-				B283A1AE24AF43420065994B /* Bubble View */,
 				B2CBB81524A9D70000B336CB /* Create Player */,
 				B2E065C724AB02F00055C376 /* Related Players View */,
-				B2E894D22369EEF40011AD3D /* Confetti View */,
 				B2BE868E234C6BB600766CF2 /* Player Selection */,
-				B243385122D89AE7002EBD40 /* Thumbnail View */,
 				B243385C22E0AE97002EBD40 /* Player View */,
 				B243385722E0A68F002EBD40 /* Selected Players View */,
-				B243386122E57BD1002EBD40 /* Image Button View */,
-				B247A729248359D700591BBA /* Title Bar */,
-				B2430CCA22EABD4800C4FC77 /* Slide Out Button */,
 				B28E8C2124BEC0020053E237 /* Award View */,
+				B260AABA251E331F00CD1EB3 /* Leaderboard View */,
 				B235D78A2510823A002F5BB6 /* Deal View */,
 			);
-			name = "Custom Views";
+			name = "Custom Application Views";
 			sourceTree = "<group>";
 		};
 		B243385722E0A68F002EBD40 /* Selected Players View */ = {
@@ -1124,6 +1124,33 @@
 				B2594E842251FEB2004398FB /* MyDevices.sh */,
 			);
 			name = Scripts;
+			sourceTree = "<group>";
+		};
+		B260AABA251E331F00CD1EB3 /* Leaderboard View */ = {
+			isa = PBXGroup;
+			children = (
+				B260AAD0251E34AA00CD1EB3 /* LeaderboardView.xib */,
+				B2BB6C8C2521A85C001D7D70 /* LeaderboardViewHeaderFooterView.xib */,
+				B260AAD6251E34C700CD1EB3 /* LeaderboardViewCell.xib */,
+				B260AAC2251E345800CD1EB3 /* LeaderboardView.swift */,
+			);
+			name = "Leaderboard View";
+			sourceTree = "<group>";
+		};
+		B260AABB251E336700CD1EB3 /* Custom System Views */ = {
+			isa = PBXGroup;
+			children = (
+				B203ECCC24F8EC41001E2CED /* Banner */,
+				B24ABA3924B31B6700E3F130 /* Banner Logo */,
+				B2B3501A24BC53110004DCB1 /* Group View */,
+				B283A1AE24AF43420065994B /* Bubble View */,
+				B2E894D22369EEF40011AD3D /* Confetti View */,
+				B243385122D89AE7002EBD40 /* Thumbnail View */,
+				B243386122E57BD1002EBD40 /* Image Button View */,
+				B247A729248359D700591BBA /* Title Bar */,
+				B2430CCA22EABD4800C4FC77 /* Slide Out Button */,
+			);
+			name = "Custom System Views";
 			sourceTree = "<group>";
 		};
 		B27B1FE81F9B55ED00ED6FFF /* Contract Whist Scorecard UI Tests */ = {
@@ -1497,6 +1524,8 @@
 				CC4CC0F61DEADC32007FB24F /* Products */,
 				CC86557B1E021518000AF391 /* Standard Components */,
 				CC86557A1E021503000AF391 /* View Controllers */,
+				B243385622E0A67C002EBD40 /* Custom Application Views */,
+				B260AABB251E336700CD1EB3 /* Custom System Views */,
 				B288FABB1FB802FE00633FD7 /* Contract Whist Classes */,
 				B288FABC1FB8037300633FD7 /* Comms Classes */,
 				CC8655831E0216B6000AF391 /* Data & Utility Classes */,
@@ -1514,7 +1543,6 @@
 				B288FAB71FB8024A00633FD7 /* Miscellaneous Views */,
 				B2A44F292506887B0071F899 /* Alert */,
 				B204A764250F350800248915 /* Action Sheet */,
-				B243385622E0A67C002EBD40 /* Custom Views */,
 				B2E8E49523571CA2007A2FE7 /* Hexagon View */,
 			);
 			name = "View Controllers";
@@ -1744,6 +1772,8 @@
 				CCEA53E31DF3D19F0045292C /* Notes.txt in Resources */,
 				B22789241FB882F7009BABCA /* ClientViewController.storyboard in Resources */,
 				B2B3501C24BC53590004DCB1 /* ViewGroup.xib in Resources */,
+				B2BB6C8D2521A85C001D7D70 /* LeaderboardViewHeaderFooterView.xib in Resources */,
+				B260AAD7251E34C700CD1EB3 /* LeaderboardViewCell.xib in Resources */,
 				B20B1262245EFC2B001DD632 /* Contract Whist Comms Protocols.docx in Resources */,
 				B243386022E57BBC002EBD40 /* ImageButton.xib in Resources */,
 				B22789451FB8951A009BABCA /* GraphViewController.storyboard in Resources */,
@@ -1759,6 +1789,7 @@
 				B2A9096324A1BBDB00B35B69 /* DataTableTileView.xib in Resources */,
 				B2E37D0724E7DFC60074C8F3 /* Launch Screen.storyboard in Resources */,
 				B22789021FB83AA7009BABCA /* SelectionViewController.storyboard in Resources */,
+				B260AAD1251E34AA00CD1EB3 /* LeaderboardView.xib in Resources */,
 				B22789331FB88FA5009BABCA /* DataTableViewController.storyboard in Resources */,
 				B216268E251B892200BDEE70 /* EveryoneDashboardContainerView.xib in Resources */,
 				B23970DC24AF77DE00E3C2A9 /* HighScoresDashboardPortraitView.xib in Resources */,
@@ -2030,6 +2061,7 @@
 				B2C054781FB8B55700846F6E /* ConfirmCountViewController.swift in Sources */,
 				B2519457230C4284006240DE /* Custom Transitions.swift in Sources */,
 				CC4CC0F91DEADC32007FB24F /* AppDelegate.swift in Sources */,
+				B260AAC3251E345800CD1EB3 /* LeaderboardView.swift in Sources */,
 				B2F7281D1F7199AE006F0941 /* RabbitMQ Class.swift in Sources */,
 				B243385E22E0AEA8002EBD40 /* PlayerView.swift in Sources */,
 				B2CB5C5224669CDA009B44C5 /* Client Controller Class.swift in Sources */,

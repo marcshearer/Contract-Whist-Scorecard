@@ -208,12 +208,10 @@ class DataTableViewController: ScorecardViewController, UITableViewDataSource, U
     }
     
     public func deleteRows(at indexPaths: [IndexPath]) {
-        self.bodyView.beginUpdates()
         for indexPath in indexPaths {
             self.recordList.remove(at: indexPath.row)
         }
-        self.bodyView.deleteRows(at: indexPaths, with: .fade)
-        self.bodyView.endUpdates()
+        self.bodyView.reloadData()
     }
 
     // MARK: - TableView Overrides ===================================================================== -
@@ -281,7 +279,7 @@ class DataTableViewController: ScorecardViewController, UITableViewDataSource, U
         dataTableviewController.recordList = recordList
         dataTableviewController.delegate = delegate
         dataTableviewController.modalPresentationStyle = .fullScreen
-        sourceViewController.present(dataTableviewController, animated: true, completion: nil)
+        sourceViewController.present(dataTableviewController, animated: true, container: .none, completion: nil)
         
         return dataTableviewController
     }

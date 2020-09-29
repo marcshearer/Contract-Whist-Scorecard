@@ -44,6 +44,19 @@ enum HighScoreType: Int {
         case .winStreak: return ""
         }
     }
+    
+    var participantSort: [(String, SortDirection)] {
+        switch self {
+        case .totalScore:
+            return [("totalScore", .descending), ("handsMade", .descending), ("datePlayed", .ascending)]
+        case .handsMade:
+            return [("handsMade", .descending), ("totalScore", .descending), ("datePlayed", .ascending)]
+        case .twosMade:
+            return [("twosMade", .descending), ("totalScore", .descending), ("datePlayed", .ascending)]
+        default:
+            return []
+        }
+    }
 }
 
 class DashboardView : UIView, DashboardActionDelegate {
@@ -186,9 +199,15 @@ class DashboardView : UIView, DashboardActionDelegate {
     // MARK: - Functions to present other views ========================================================== -
     
     private func showHighScores(allowSync: Bool = true) {
-        DashboardViewController.show(from: self.parentViewController!,
-                                     dashboardNames: [(title: "High Scores",  fileName: "HighScoresDashboard",  imageName: nil)], allowSync: allowSync, backImage: "back", backgroundColor: Palette.banner, container: self.parentViewController?.container ?? .main, menuFinishText: "Back to Results") {
+        DashboardView.showHighScores(from: self.parentViewController!, allowSync: allowSync) {
             self.delegate?.reloadData?()
+        }
+    }
+    
+    public static func showHighScores(from parentViewController: ScorecardViewController, allowSync: Bool = false, completion: (()->())? = nil) {
+        DashboardViewController.show(from: parentViewController,
+                                     dashboardNames: [(title: "High Scores",  fileName: "HighScoresDashboard",  imageName: nil)], allowSync: allowSync, backImage: "cross white", backgroundColor: Palette.banner, container: parentViewController.container, menuFinishText: "Back to Results") {
+            completion?()
         }
     }
 }

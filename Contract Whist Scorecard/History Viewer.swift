@@ -155,7 +155,7 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
             self.getPlayerHistory()
         }
         
-        return history.games
+        return self.history.games
     }
     
     internal func completion() {
@@ -222,6 +222,7 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
                     self.dataTableViewController.alertMessage("Error deleting game")
                     return
                 }
+                self.history.games.remove(at: row)
                 self.dataTableViewController.deleteRows(at: [IndexPath(row: row, section: 0)])
             })
         }

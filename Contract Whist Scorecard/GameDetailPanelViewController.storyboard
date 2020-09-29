@@ -18,7 +18,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="380" height="834"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="77V-Gk-8Tl" userLabel="Scores View">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="77V-Gk-8Tl" userLabel="Scores Container View">
                                 <rect key="frame" x="32" y="110" width="316" height="672"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="2Qf-av-UH6" userLabel="Round Label">
@@ -117,11 +117,41 @@
                                     <constraint firstItem="dYu-Ae-cKw" firstAttribute="height" secondItem="2Qf-av-UH6" secondAttribute="height" multiplier="1:1" id="vDi-bG-KKI"/>
                                 </constraints>
                             </view>
-                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Un3-Aa-D7s" userLabel="Deal View">
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cQY-Id-R9z" userLabel="Deal Container View">
                                 <rect key="frame" x="32" y="110" width="316" height="672"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Last Deal" textAlignment="natural" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="TS3-pS-T6k">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Last Deal" textAlignment="natural" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="Vm0-6e-b9X">
                                         <rect key="frame" x="0.0" y="0.0" width="316" height="40"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="40" id="utU-ZP-ZVR"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="30"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zE0-tN-ndX" customClass="DealView" customModule="Whist_2" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="70" width="316" height="474"/>
+                                        <color key="backgroundColor" name="Clear"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="zE0-tN-ndX" secondAttribute="height" multiplier="2:3" id="eKB-se-8Xx"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" name="Clear"/>
+                                <constraints>
+                                    <constraint firstItem="Vm0-6e-b9X" firstAttribute="top" secondItem="cQY-Id-R9z" secondAttribute="top" id="0Bg-dc-p1i"/>
+                                    <constraint firstItem="Vm0-6e-b9X" firstAttribute="leading" secondItem="cQY-Id-R9z" secondAttribute="leading" id="9rs-SZ-mIb"/>
+                                    <constraint firstItem="zE0-tN-ndX" firstAttribute="leading" secondItem="cQY-Id-R9z" secondAttribute="leading" id="b7u-OE-tVn"/>
+                                    <constraint firstAttribute="trailing" secondItem="zE0-tN-ndX" secondAttribute="trailing" id="bce-cF-NDL"/>
+                                    <constraint firstAttribute="trailing" secondItem="Vm0-6e-b9X" secondAttribute="trailing" id="cdl-Bh-7jD"/>
+                                    <constraint firstItem="zE0-tN-ndX" firstAttribute="top" secondItem="Vm0-6e-b9X" secondAttribute="bottom" constant="30" id="wfw-tL-w3T"/>
+                                </constraints>
+                            </view>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Un3-Aa-D7s" userLabel="Leaderboard Container View">
+                                <rect key="frame" x="16" y="110" width="364" height="672"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="High Scores" textAlignment="natural" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="TS3-pS-T6k" userLabel="Leaderboard Label">
+                                        <rect key="frame" x="0.0" y="0.0" width="332" height="40"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="40" id="P26-Gw-ihk"/>
                                         </constraints>
@@ -129,54 +159,72 @@
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WqK-Jr-g18" customClass="DealView" customModule="Whist_2" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="70" width="316" height="474"/>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WqK-Jr-g18" customClass="LeaderboardView" customModule="Whist_2" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="70" width="364" height="602"/>
                                         <color key="backgroundColor" name="Clear"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" secondItem="WqK-Jr-g18" secondAttribute="height" multiplier="2:3" id="wuF-JO-sfY"/>
-                                        </constraints>
+                                        <connections>
+                                            <outlet property="parentViewController" destination="Xyp-Qs-iCJ" id="OrZ-sO-HJf"/>
+                                        </connections>
                                     </view>
                                 </subviews>
                                 <color key="backgroundColor" name="Clear"/>
+                                <gestureRecognizers/>
                                 <constraints>
                                     <constraint firstItem="TS3-pS-T6k" firstAttribute="top" secondItem="Un3-Aa-D7s" secondAttribute="top" id="4t6-Tz-fyL"/>
                                     <constraint firstAttribute="trailing" secondItem="WqK-Jr-g18" secondAttribute="trailing" id="6LQ-dj-6sA"/>
                                     <constraint firstItem="WqK-Jr-g18" firstAttribute="top" secondItem="TS3-pS-T6k" secondAttribute="bottom" constant="30" id="6Rh-Lz-twl"/>
-                                    <constraint firstAttribute="trailing" secondItem="TS3-pS-T6k" secondAttribute="trailing" id="LIB-vL-z9C"/>
+                                    <constraint firstAttribute="trailing" secondItem="TS3-pS-T6k" secondAttribute="trailing" constant="32" id="LIB-vL-z9C"/>
                                     <constraint firstItem="TS3-pS-T6k" firstAttribute="leading" secondItem="Un3-Aa-D7s" secondAttribute="leading" id="U5G-oq-ag7"/>
+                                    <constraint firstAttribute="bottom" secondItem="WqK-Jr-g18" secondAttribute="bottom" id="jGf-z3-iY6"/>
                                     <constraint firstItem="WqK-Jr-g18" firstAttribute="leading" secondItem="Un3-Aa-D7s" secondAttribute="leading" id="kvD-vF-fEi"/>
                                 </constraints>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="exR-eA-4BU" appends="YES" id="rxS-QO-fRH"/>
+                                </connections>
                             </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="PAd-9j-5X9"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="cQY-Id-R9z" firstAttribute="leading" secondItem="PAd-9j-5X9" secondAttribute="leading" constant="32" id="21r-xu-zzg"/>
                             <constraint firstItem="77V-Gk-8Tl" firstAttribute="top" secondItem="PAd-9j-5X9" secondAttribute="top" constant="110" id="6Dt-6J-lfs"/>
                             <constraint firstItem="PAd-9j-5X9" firstAttribute="bottom" secondItem="77V-Gk-8Tl" secondAttribute="bottom" constant="32" id="9F5-oZ-Qiu"/>
+                            <constraint firstItem="PAd-9j-5X9" firstAttribute="trailing" secondItem="cQY-Id-R9z" secondAttribute="trailing" constant="32" id="DXX-Jr-xPb"/>
                             <constraint firstItem="PAd-9j-5X9" firstAttribute="trailing" secondItem="77V-Gk-8Tl" secondAttribute="trailing" constant="32" id="FCU-WO-ndy"/>
+                            <constraint firstItem="cQY-Id-R9z" firstAttribute="top" secondItem="PAd-9j-5X9" secondAttribute="top" constant="110" id="I46-Ip-DQo"/>
                             <constraint firstItem="PAd-9j-5X9" firstAttribute="bottom" secondItem="Un3-Aa-D7s" secondAttribute="bottom" constant="32" id="SSS-7I-93e"/>
+                            <constraint firstItem="PAd-9j-5X9" firstAttribute="bottom" secondItem="cQY-Id-R9z" secondAttribute="bottom" constant="32" id="WI0-EC-Ebw"/>
                             <constraint firstItem="Un3-Aa-D7s" firstAttribute="top" secondItem="PAd-9j-5X9" secondAttribute="top" constant="110" id="aNW-Fe-qX7"/>
-                            <constraint firstItem="Un3-Aa-D7s" firstAttribute="leading" secondItem="PAd-9j-5X9" secondAttribute="leading" constant="32" id="dPW-pg-yV6"/>
+                            <constraint firstItem="Un3-Aa-D7s" firstAttribute="leading" secondItem="PAd-9j-5X9" secondAttribute="leading" constant="16" id="dPW-pg-yV6"/>
                             <constraint firstItem="77V-Gk-8Tl" firstAttribute="leading" secondItem="PAd-9j-5X9" secondAttribute="leading" constant="32" id="tcB-o4-T4a"/>
-                            <constraint firstItem="PAd-9j-5X9" firstAttribute="trailing" secondItem="Un3-Aa-D7s" secondAttribute="trailing" constant="32" id="tuw-bF-851"/>
+                            <constraint firstItem="PAd-9j-5X9" firstAttribute="trailing" secondItem="Un3-Aa-D7s" secondAttribute="trailing" id="tuw-bF-851"/>
                         </constraints>
                     </view>
                     <size key="freeformSize" width="380" height="834"/>
                     <connections>
-                        <outlet property="dealView" destination="Un3-Aa-D7s" id="t7B-Cu-wtn"/>
-                        <outlet property="lastHandLabel" destination="TS3-pS-T6k" id="UZw-P5-jWr"/>
-                        <outlet property="lastHandView" destination="WqK-Jr-g18" id="OFD-jJ-cfS"/>
+                        <outlet property="dealContainerView" destination="cQY-Id-R9z" id="f7Q-sm-Q1H"/>
+                        <outlet property="lastHandLabel" destination="Vm0-6e-b9X" id="X8S-to-xFg"/>
+                        <outlet property="lastHandView" destination="zE0-tN-ndX" id="JpD-kc-84Y"/>
+                        <outlet property="leaderboardContainerView" destination="Un3-Aa-D7s" id="5gt-RQ-Gli"/>
+                        <outlet property="leaderboardLabel" destination="TS3-pS-T6k" id="Zc8-Mn-b43"/>
+                        <outlet property="leaderboardView" destination="WqK-Jr-g18" id="kEM-pd-NSG"/>
                         <outlet property="overUnderLabel" destination="dYu-Ae-cKw" id="GzZ-l4-3Xw"/>
                         <outlet property="playerTableView" destination="Tc4-nB-MUR" id="eEn-cN-9JB"/>
                         <outlet property="roundLabel" destination="2Qf-av-UH6" id="DnZ-VD-BU1"/>
                         <outlet property="roundLabelWidthConstraint" destination="d1E-ku-9KP" id="AZd-ci-MFc"/>
-                        <outlet property="scoresView" destination="77V-Gk-8Tl" id="KGl-ot-5r8"/>
-                        <outletCollection property="strongLabels" destination="TS3-pS-T6k" collectionClass="NSMutableArray" id="67h-eb-CKa"/>
+                        <outlet property="scoresContainerView" destination="77V-Gk-8Tl" id="KGl-ot-5r8"/>
                         <outletCollection property="normalLabels" destination="2Qf-av-UH6" collectionClass="NSMutableArray" id="MmB-KN-r40"/>
                         <outletCollection property="normalLabels" destination="dYu-Ae-cKw" collectionClass="NSMutableArray" id="wUp-Ke-tcm"/>
+                        <outletCollection property="strongLabels" destination="Vm0-6e-b9X" collectionClass="NSMutableArray" id="iTQ-PL-OCy"/>
+                        <outletCollection property="normalLabels" destination="TS3-pS-T6k" collectionClass="NSMutableArray" id="Taf-7b-bhm"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hrk-wk-v05" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="exR-eA-4BU">
+                    <connections>
+                        <action selector="tapGestureWithRecognizer:" destination="Xyp-Qs-iCJ" id="Wws-1e-R47"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="60.804020100502512" y="55.395683453237417"/>
         </scene>

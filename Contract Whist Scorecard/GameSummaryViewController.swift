@@ -15,7 +15,7 @@ enum GameSummaryReturnMode {
     case newGame
 }
 
-class GameSummaryViewController: ScorecardViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, SyncDelegate, UIPopoverControllerDelegate, ButtonDelegate, BannerDelegate {
+class GameSummaryViewController: ScorecardViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, SyncDelegate, UIPopoverControllerDelegate, ButtonDelegate, BannerDelegate, GameDetailPanelInvokeDelegate {
 
     // Main state properties
     private let sync = Sync()
@@ -99,9 +99,10 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
     
     // MARK: - IB Actions ============================================================================== -
     
-    @IBAction func finishPressed() {
+    internal func finishPressed() {
         // Unwind to scorepad with current game intact
         self.confettiView.stop(immediate: true)
+        self.willDismiss()
         self.controllerDelegate?.didCancel()
     }
     
@@ -145,6 +146,9 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
                 
         // Work out who's won
         calculateWinner()
+        
+        var gameDetailDelegate = self.gameDetailDelegate
+        gameDetailDelegate?.invokeDelegate = self
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -180,6 +184,12 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
         rotated = false
         
         self.awardsTitleBar.set(title: (awardList.isEmpty ? "No New Awards" : "New Awards"))
+    }
+    
+    // MARK: - Game Detail Invoke Delegate Handlers ============================================== -
+    
+    internal func invoke(_ view: ScorecardView) {
+        self.controllerDelegate?.didInvoke(view)
     }
 
    // MARK: - TableView Overrides ================================================================ -
@@ -286,7 +296,7 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
             let index = indexPath.row + (collectionView.tag == winnersTag ? 0 : winners)
             self.playerSelected(index: index)
         } else {
-            let awardView = AwardDetailView(frame: self.view.frame)
+            let awardView = AwardDetailView(frame: CGRect(origin: CGPoint(), size: self.view.frame.size))
             let award = self.awardList[indexPath.row]
             awardView.set(backgroundColor: Palette.buttonFace.background, textColor: Palette.buttonFace.text)
             awardView.set(awards: self.awards, playerUUID: Scorecard.settings.thisPlayerUUID, award: award, mode: .awarding)
@@ -648,6 +658,7 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
     // MARK: - Sync routines including the delegate methods ======================================== -
     
     func synchroniseAndReturn(returnMode: GameSummaryReturnMode, advanceDealer: Bool = false, resetOverrides: Bool) {
+        self.willDismiss()
         completionMode = returnMode
         completionAdvanceDealer = advanceDealer
         completionResetOverrides = resetOverrides

@@ -200,23 +200,12 @@ class History {
         return results
     }
     
-    static public func getHighScores(type: HighScoreType, limit: Int = 3, playerUUIDList: [String]) -> [ParticipantMO] {
+    static public func getHighScores(type: HighScoreType, limit: Int = 3, minScore: Int16 = 0, playerUUIDList: [String]? = nil) -> [ParticipantMO] {
         // Setup query filters
-        var sort: [(key: String, direction: SortDirection)] = []
-        let predicate1 = NSPredicate(format: "gameUUID != 'B/F' AND excludeStats = false")
+        let playerUUIDList = playerUUIDList ?? Scorecard.shared.playerUUIDList()
+        let sort: [(key: String, direction: SortDirection)] = type.participantSort
+        let predicate1 = NSPredicate(format: "gameUUID != 'B/F' AND excludeStats = false AND totalScore >= %i", minScore)
         let predicate2 = NSPredicate(format: "playerUUID IN %@", argumentArray: [playerUUIDList])
-        
-        // Setup second sort
-        switch type {
-        case .totalScore:
-            sort = [("totalScore", .descending), ("handsMade", .descending), ("datePlayed", .ascending)]
-        case .handsMade:
-            sort = [("handsMade", .descending), ("totalScore", .descending), ("datePlayed", .ascending)]
-        case .twosMade:
-            sort = [("twosMade", .descending), ("totalScore", .descending), ("datePlayed", .ascending)]
-        default:
-            break
-        }
         
         // Get list of participants from Core Data
         let results: [ParticipantMO] = CoreData.fetch(from: "Participant",

@@ -124,7 +124,8 @@ class AwardDetailView: UIView {
     }
     
     public func show(from sourceView: UIView, hideBackground: Bool = true) {
-        self.contentView.frame = sourceView.frame
+        self.frame = CGRect(origin: CGPoint(), size: sourceView.frame.size)
+        self.contentView.frame = self.frame
         self.setNeedsLayout()
         self.layoutIfNeeded()
         self.layoutSubviews()

@@ -9,11 +9,18 @@
 import UIKit
 import Combine
 
+protocol GameDetailPanelInvokeDelegate {
+    
+    func invoke(_ view: ScorecardView)    
+}
+
 protocol GameDetailDelegate {
     
     var isVisible: Bool {get}
     
     func refresh(activeView: ScorecardView?, round: Int?)
+    
+    var invokeDelegate: GameDetailPanelInvokeDelegate? {get set}
 }
 
 extension GameDetailDelegate {
@@ -35,6 +42,7 @@ class GameDetailPanelViewController: ScorecardViewController, UITableViewDataSou
     private var latestRound: Int?
     private var gameComplete: Bool = false
     private var thisPlayer: Int?
+    internal var invokeDelegate: GameDetailPanelInvokeDelegate?
     
     @IBOutlet private weak var roundLabel: UILabel!
     @IBOutlet private weak var overUnderLabel: UILabel!
@@ -42,11 +50,18 @@ class GameDetailPanelViewController: ScorecardViewController, UITableViewDataSou
     @IBOutlet private weak var playerTableView: UITableView!
     @IBOutlet private weak var lastHandLabel: UILabel!
     @IBOutlet private weak var lastHandView: DealView!
+    @IBOutlet private weak var leaderboardLabel: UILabel!
+    @IBOutlet private weak var leaderboardView: LeaderboardView!
     @IBOutlet private var normalLabels: [UILabel]!
     @IBOutlet private var strongLabels: [UILabel]!
-    @IBOutlet private weak var scoresView: UIView!
-    @IBOutlet private weak var dealView: UIView!
+    @IBOutlet private weak var scoresContainerView: UIView!
+    @IBOutlet private weak var dealContainerView: UIView!
+    @IBOutlet private weak var leaderboardContainerView: UIView!
 
+    @IBAction private func tapGesture(recognizer: UITapGestureRecognizer) {
+        self.invokeDelegate?.invoke(.highScores)
+    }
+    
     override internal func viewDidLoad() {
         super.viewDidLoad()
         
@@ -70,12 +85,18 @@ class GameDetailPanelViewController: ScorecardViewController, UITableViewDataSou
     // MARK: - Refresh routines =================================================================== -
     
     internal func refresh(activeView: ScorecardView?, round: Int? = nil) {
+        let leaderboard = Scorecard.game.gameComplete()
         let scorepadView = ((activeView ?? self.appController?.activeView) == .scorepad)
-        let dealView = scorepadView && self.appController?.controllerType != .scoring
-        self.scoresView.isHidden = dealView
-        self.dealView.isHidden = !dealView
-        if dealView {
+        let lastDeal = scorepadView && self.appController?.controllerType != .scoring
+
+        self.scoresContainerView.isHidden = lastDeal || leaderboard
+        self.dealContainerView.isHidden = !lastDeal || leaderboard
+        self.leaderboardContainerView.isHidden = !leaderboard
+        
+        if lastDeal {
             self.refreshHand(specificRound: round)
+        } else if leaderboard {
+            self.leaderboardView.reloadData()
         } else {
             self.refreshTitle()
             self.refreshScores()
@@ -85,7 +106,7 @@ class GameDetailPanelViewController: ScorecardViewController, UITableViewDataSou
     private func refreshTitle() {
     
         if Scorecard.game.gameComplete() {
-            self.roundLabelWidthConstraint.constant = self.scoresView.frame.width
+            self.roundLabelWidthConstraint.constant = self.scoresContainerView.frame.width
             self.roundLabel.text = "Game Complete"
             self.overUnderLabel.text = ""
         } else {

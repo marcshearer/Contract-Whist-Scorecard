@@ -130,6 +130,7 @@ class Banner : UIView {
     private var normalOverrideHeight: CGFloat?
     private var containerOverrideHeight: CGFloat?
     private var attributedTitle: NSAttributedString?
+    private var menuTitle: String?
     
     public var height: CGFloat { return self.bannerHeightConstraint?.constant ?? self.frame.height }
     public var titleWidth: CGFloat { self.titleLabel.frame.width }
@@ -182,6 +183,9 @@ class Banner : UIView {
     }
     
     public func restored() {
+        if let menuTitle = menuTitle ?? attributedTitle?.string ?? title {
+            self.menuController?.set(gamePlayingTitle: menuTitle)
+        }
         self.setupMenuEntries()
     }
         
@@ -225,8 +229,11 @@ class Banner : UIView {
             self.attributedTitle = attributedTitle
             self.titleLabel.attributedText = attributedTitle
         }
-        if updateMenuTitle && (title != nil || attributedTitle != nil) {
-            self.menuController?.set(gamePlayingTitle: menuTitle ?? self.title)
+        if let menuTitle = menuTitle { self.menuTitle = menuTitle }
+        if updateMenuTitle {
+            if let menuTitle = menuTitle ?? attributedTitle?.string ?? title {
+                self.menuController?.set(gamePlayingTitle: menuTitle)
+            }
         }
         if let leftButtons = leftButtons           { self.leftButtons = leftButtons ; arrange = true }
         if let rightButtons = rightButtons         { self.rightButtons = rightButtons ; arrange = true }

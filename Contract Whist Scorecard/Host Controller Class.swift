@@ -1168,7 +1168,6 @@ enum InviteStatus {
             self.takeDelegates(nil)
             Scorecard.shared.setCommsDelegate(nil)
             self.hostService = nil
-            Scorecard.shared.resetSharing()
             Scorecard.game.reset()
             completion?()
         })

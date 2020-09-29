@@ -667,6 +667,7 @@ class MultipeerClientService : MultipeerService, CommsClientServiceDelegate, MCN
                         }
                         broadcastPeer?.playerName = info?["playerName"]
                         broadcastPeer?.playerUUID = info?["playerUUID"]
+                        broadcastPeer?.purpose = purpose
                         
                         // Notify delegate
                         self.browserDelegate?.peerFound(peer: broadcastPeer!.commsPeer)

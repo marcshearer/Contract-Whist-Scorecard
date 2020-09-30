@@ -139,7 +139,6 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
         self.haloWidth = haloWidth
         self.allowHaloWidth = allowHaloWidth
         self.thumbnailView.set(haloWidth: haloWidth, allowHaloWidth: allowHaloWidth)
-        self.thumbnailView.set(frame: self.frame)
     }
     
     public func set(haloColor: UIColor) {

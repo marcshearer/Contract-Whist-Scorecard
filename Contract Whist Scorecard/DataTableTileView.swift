@@ -310,6 +310,7 @@ class DataTableTileView: UIView, DashboardTileDelegate, UITableViewDataSource, U
                 let record = records[row - headingRows]
                 cell.textLabel.text = ""
                 cell.thumbnailView.set(data: nil)
+                cell.thumbnailView.isHidden = true
                 switch displayedFields[indexPath.row].type {
                 case .thumbnail:
                     var data: Data?
@@ -319,6 +320,7 @@ class DataTableTileView: UIView, DashboardTileDelegate, UITableViewDataSource, U
                         }
                     }
                     cell.thumbnailView.set(data: data, diameter: cell.frame.width - 4)
+                    cell.thumbnailView.isHidden = false
                 case .collection:
                     cell.layoutIfNeeded()
                     cell.setCollectionViewDataSourceDelegate(self, nib: self.contentCollectionViewNib, forValue: record.value(forKey: column.field) as! Int)

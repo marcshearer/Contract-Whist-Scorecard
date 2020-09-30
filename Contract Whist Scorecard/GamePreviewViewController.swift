@@ -121,7 +121,7 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
         case 2:
             // Next dealer
             self.showDealer(playerNumber: Scorecard.game.dealerIs, forceHide: true)
-            Scorecard.game.nextDealer()
+            Scorecard.game.nextDealer(currentPlayers: selectedPlayers.count)
             self.showCurrentDealer()
             
         default:
@@ -227,7 +227,7 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
                 self.initialising = false
                 self.controllerDelegate?.didAppear()
             }
-            if !cutting {
+            if !cutting && (rotated || firstTime) {
                 self.refreshPlayers()
                 self.showCurrentDealer()
             }
@@ -356,7 +356,7 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
         
         // Update layout to get correct size
         if !wasAlreadyDrawing {
-            self.view.layoutIfNeeded()
+           // self.view.layoutIfNeeded()
         }
 
         // Draw room

@@ -161,11 +161,7 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
             self.setupConstraints()
         }
         
-        if !self.alreadyDrawing {
-            self.selectedPlayersView.layoutIfNeeded()
-        }
-        
-        self.setupScreenSize()
+       self.setupScreenSize()
         self.setSize()
         
         if firstTime {

@@ -21,6 +21,9 @@ public class ThumbnailView: UIView {
     @IBOutlet public weak var name: UILabel!
     @IBOutlet public weak var nameHeightConstraint: NSLayoutConstraint!
     @IBOutlet public weak var additionalImage: UIImageView!
+    @IBOutlet private var haloConstraints: [NSLayoutConstraint]!
+    @IBOutlet private var imageConstraints: [NSLayoutConstraint]!
+    @IBOutlet private var initialsConstraints: [NSLayoutConstraint]!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -43,6 +46,9 @@ public class ThumbnailView: UIView {
         self.addSubview(contentView)
         contentView.frame = self.bounds
         contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        self.discHalo.backgroundColor = UIColor.clear
+        self.discImage.isHidden = true
+        self.discInitials.isHidden = true
     }
     
     public override var alpha: CGFloat {
@@ -139,18 +145,12 @@ public class ThumbnailView: UIView {
     
     public func set(frame: CGRect) {
         self.frame = frame
-        let allowHaloWidth = max(self.allowHaloWidth, self.haloWidth)
-        // Adjust components
-        let haloInset = allowHaloWidth - haloWidth
-        let haloSize = self.frame.width - (2.0 * haloInset)
-        self.discHalo.layer.frame = CGRect(x: haloInset, y: haloInset, width: haloSize , height: haloSize)
-        ScorecardUI.veryRoundCorners(self.discHalo, radius: self.discHalo.layer.frame.width / 2.0)
-        
-        let discSize: CGFloat = frame.width - (2 * allowHaloWidth)
-        self.discImage.frame = CGRect(x: haloWidth, y: haloWidth, width: discSize, height: discSize)
-        ScorecardUI.veryRoundCorners(self.discImage, radius: discSize / 2.0)
-        self.discInitials.frame = self.discImage.frame
-        ScorecardUI.veryRoundCorners(self.discInitials, radius: discSize / 2.0)
+        self.discHalo.layoutIfNeeded()
+        self.discImage.layoutIfNeeded()
+        self.discInitials.layoutIfNeeded()
+        ScorecardUI.veryRoundCorners(self.discHalo)
+        ScorecardUI.veryRoundCorners(self.discImage)
+        ScorecardUI.veryRoundCorners(self.discInitials)
     }
     
     public func set(textColor: UIColor) {
@@ -171,7 +171,9 @@ public class ThumbnailView: UIView {
     public func set(haloWidth: CGFloat, allowHaloWidth: CGFloat = 0.0) {
         self.haloWidth = haloWidth
         self.allowHaloWidth = allowHaloWidth
-        self.set(frame: frame)
+        self.haloConstraints.forEach{(constraint) in constraint.constant = max(0,allowHaloWidth - haloWidth)}
+        self.imageConstraints.forEach{(constraint) in constraint.constant = haloWidth}
+        self.initialsConstraints.forEach{(constraint) in constraint.constant = haloWidth}
     }
     
     public func set(haloColor: UIColor) {

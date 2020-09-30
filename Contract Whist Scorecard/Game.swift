@@ -679,8 +679,9 @@ class Game {
     
     // MARK: - Dealer manipulation =============================================================== -
     
-    public func nextDealer() {
-        self.saveDealer((Scorecard.game.dealerIs % Scorecard.game.currentPlayers) + 1)
+    public func nextDealer(currentPlayers: Int? = nil) {
+        let currentPlayers = currentPlayers ?? Scorecard.game.currentPlayers
+        self.saveDealer((Scorecard.game.dealerIs % currentPlayers) + 1)
     }
     
     public func previousDealer() {

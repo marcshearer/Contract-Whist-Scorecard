@@ -145,10 +145,10 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
         }
     }
     
-    public func setHaloWidth(slot: Int? = nil, haloWidth: CGFloat, allowHaloWidth: CGFloat = 0.0) {
+    public func setHaloWidth(slot: Int? = nil, haloWidth: CGFloat, allowHaloWidth: CGFloat? = nil) {
         for index in 0..<self.playerViews.count {
             if slot == nil || slot == index {
-                self.playerViews[index].set(haloWidth: haloWidth, allowHaloWidth: allowHaloWidth)
+                self.playerViews[index].set(haloWidth: haloWidth, allowHaloWidth: allowHaloWidth ?? haloWidth)
             }
         }
     }

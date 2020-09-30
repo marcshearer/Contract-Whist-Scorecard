@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
-        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -17,38 +17,63 @@
                 <outlet property="discInitials" destination="Nv3-ah-HNS" id="TFj-Y7-hbR"/>
                 <outlet property="name" destination="kXi-0g-avo" id="55p-4I-eaj"/>
                 <outlet property="nameHeightConstraint" destination="8tX-ur-eID" id="bRH-eZ-S3l"/>
+                <outletCollection property="haloConstraints" destination="GEb-NE-VYz" collectionClass="NSMutableArray" id="KQF-Jz-Q76"/>
+                <outletCollection property="haloConstraints" destination="SWp-vX-PiI" collectionClass="NSMutableArray" id="pls-7B-sMt"/>
+                <outletCollection property="haloConstraints" destination="gff-UU-Rnc" collectionClass="NSMutableArray" id="rej-fS-Emc"/>
+                <outletCollection property="imageConstraints" destination="9Fv-cN-ZhR" collectionClass="NSMutableArray" id="yJd-5Y-l4o"/>
+                <outletCollection property="imageConstraints" destination="Tvv-xq-2Lq" collectionClass="NSMutableArray" id="dt3-y1-2dj"/>
+                <outletCollection property="imageConstraints" destination="JTt-Ap-mof" collectionClass="NSMutableArray" id="S6E-an-G9S"/>
+                <outletCollection property="initialsConstraints" destination="J0b-DW-sE6" collectionClass="NSMutableArray" id="9f2-gh-sfa"/>
+                <outletCollection property="initialsConstraints" destination="ZGo-tT-J09" collectionClass="NSMutableArray" id="S2C-oz-0Lr"/>
+                <outletCollection property="initialsConstraints" destination="pGW-kC-2jB" collectionClass="NSMutableArray" id="Rul-z5-0cN"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" id="iN0-l3-epB" userLabel="Content View">
+        <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="iN0-l3-epB" userLabel="Content View">
             <rect key="frame" x="0.0" y="0.0" width="75" height="100"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PGG-ax-99W">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PGG-ax-99W" userLabel="Halo">
                     <rect key="frame" x="0.0" y="0.0" width="75" height="75"/>
                     <subviews>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rhG-BJ-BxN">
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="rhG-BJ-BxN">
                             <rect key="frame" x="0.0" y="0.0" width="75" height="75"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <accessibility key="accessibilityConfiguration" identifier="image"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="rhG-BJ-BxN" secondAttribute="height" multiplier="1:1" id="pFF-uB-Dcr"/>
+                            </constraints>
                         </imageView>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1" verticalHuggingPriority="1" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="Nv3-ah-HNS">
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1" verticalHuggingPriority="1" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="Nv3-ah-HNS">
+                            <rect key="frame" x="0.0" y="0.0" width="75" height="75"/>
+                            <accessibility key="accessibilityConfiguration" identifier="initials"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="Nv3-ah-HNS" secondAttribute="height" multiplier="1:1" id="QZo-lK-8C0"/>
+                            </constraints>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                         </label>
                     </subviews>
                     <color key="backgroundColor" name="Clear"/>
+                    <accessibility key="accessibilityConfiguration" identifier="halo"/>
                     <constraints>
+                        <constraint firstAttribute="trailing" secondItem="rhG-BJ-BxN" secondAttribute="trailing" id="9Fv-cN-ZhR"/>
+                        <constraint firstItem="Nv3-ah-HNS" firstAttribute="top" secondItem="PGG-ax-99W" secondAttribute="top" id="J0b-DW-sE6"/>
+                        <constraint firstItem="rhG-BJ-BxN" firstAttribute="top" secondItem="PGG-ax-99W" secondAttribute="top" id="JTt-Ap-mof"/>
+                        <constraint firstItem="rhG-BJ-BxN" firstAttribute="leading" secondItem="PGG-ax-99W" secondAttribute="leading" id="Tvv-xq-2Lq"/>
+                        <constraint firstItem="Nv3-ah-HNS" firstAttribute="leading" secondItem="PGG-ax-99W" secondAttribute="leading" id="ZGo-tT-J09"/>
+                        <constraint firstAttribute="trailing" secondItem="Nv3-ah-HNS" secondAttribute="trailing" id="pGW-kC-2jB"/>
                         <constraint firstAttribute="width" secondItem="PGG-ax-99W" secondAttribute="height" multiplier="1:1" id="ygX-ux-EP3"/>
                     </constraints>
                 </view>
                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="CSk-0Z-taK" userLabel="AdditionalImage">
                     <rect key="frame" x="9.5" y="15" width="56" height="45"/>
+                    <accessibility key="accessibilityConfiguration" identifier="additionalImage"/>
                 </imageView>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="kXi-0g-avo">
                     <rect key="frame" x="0.0" y="70" width="75" height="30"/>
                     <color key="backgroundColor" name="Clear"/>
+                    <accessibility key="accessibilityConfiguration" identifier="Name"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="30" id="8tX-ur-eID"/>
                     </constraints>
@@ -63,7 +88,7 @@
                 <constraint firstItem="CSk-0Z-taK" firstAttribute="centerX" secondItem="PGG-ax-99W" secondAttribute="centerX" id="AIK-e4-Z6N"/>
                 <constraint firstItem="PGG-ax-99W" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="GEb-NE-VYz"/>
                 <constraint firstAttribute="trailing" secondItem="kXi-0g-avo" secondAttribute="trailing" id="JjY-0J-bic"/>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="PGG-ax-99W" secondAttribute="trailing" id="SWp-vX-PiI"/>
+                <constraint firstAttribute="trailing" secondItem="PGG-ax-99W" secondAttribute="trailing" id="SWp-vX-PiI"/>
                 <constraint firstItem="PGG-ax-99W" firstAttribute="width" secondItem="PGG-ax-99W" secondAttribute="height" multiplier="1:1" id="aUA-DG-TuD"/>
                 <constraint firstItem="CSk-0Z-taK" firstAttribute="height" secondItem="PGG-ax-99W" secondAttribute="height" multiplier="0.6" id="ck3-LR-EJR"/>
                 <constraint firstItem="kXi-0g-avo" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="eoF-bM-Q6N"/>
@@ -74,7 +99,6 @@
                 <constraint firstItem="CSk-0Z-taK" firstAttribute="width" secondItem="PGG-ax-99W" secondAttribute="width" multiplier="0.75" id="ulf-Vs-mck"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <point key="canvasLocation" x="35.507246376811594" y="34.821428571428569"/>
         </view>
     </objects>

@@ -480,8 +480,14 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
         }
         if lastOption != .playGame {
             // Show a screenshot and dismiss current view to leave the screenshot showing before showing new screens on top of it
-            self.createDismissImageView()
             if let items = self.currentContainerItems {
+                // Hide any inset container views to avoid dodgy transitions
+                for item in items {
+                    if item.container == .rightInset {
+                        item.viewController.view.isHidden = true
+                    }
+                }
+                self.createDismissImageView()
                 self.dismissItems(items, removeSuboptions: changeOption) {
                     self.dismissAndSelectCompletion(option: option, completion: completion)
                 }

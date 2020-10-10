@@ -118,12 +118,13 @@ class LeaderboardView: UIView, UITableViewDataSource, UITableViewDelegate {
         // Check if any players in game not in top N
         var others: [ParticipantMO] = []
         for playerNumber in 1...Scorecard.game.currentPlayers {
-            let participantMO = Scorecard.game.player(enteredPlayerNumber: playerNumber).participantMO!
-            if let index = entries.firstIndex(where: {$0.participantMO ~ participantMO}) {
-                entries[index].currentGame = true
-            } else {
-                // Not in top N - find true position
-                others.append(participantMO)
+            if let participantMO = Scorecard.game.player(enteredPlayerNumber: playerNumber).participantMO {
+                if let index = entries.firstIndex(where: {$0.participantMO ~ participantMO}) {
+                    entries[index].currentGame = true
+                } else {
+                    // Not in top N - find true position
+                    others.append(participantMO)
+                }
             }
         }
         

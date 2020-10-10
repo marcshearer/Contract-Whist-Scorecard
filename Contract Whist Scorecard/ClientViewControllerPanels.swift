@@ -152,8 +152,6 @@ extension ClientViewController : PanelContainer {
                 return true
             case .right, .rightInset, .mainRight:
                 return self.rightPanelLeadingConstraint.constant < 0
-            default:
-                return false
             }
         }
     }

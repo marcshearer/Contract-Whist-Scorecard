@@ -352,6 +352,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
 
             if rotated || self.lastWidth != self.view.frame.width {
                 self.launchScreenView?.layoutSubviews()
+                self.thisPlayerThumbnail.setNeedsLayout()
                 self.hostCollectionView.reloadData()
                 self.lastWidth = self.view.frame.width
             }

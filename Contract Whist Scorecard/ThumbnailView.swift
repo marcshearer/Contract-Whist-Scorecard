@@ -41,6 +41,16 @@ public class ThumbnailView: UIView {
         self.set(haloWidth: haloWidth, allowHaloWidth: allowHaloWidth)
     }
     
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        self.discHalo.layoutIfNeeded()
+        self.discImage.layoutIfNeeded()
+        self.discInitials.layoutIfNeeded()
+        ScorecardUI.veryRoundCorners(self.discHalo)
+        ScorecardUI.veryRoundCorners(self.discImage)
+        ScorecardUI.veryRoundCorners(self.discInitials)
+    }
+    
     private func loadThumbnailView() {
         Bundle.main.loadNibNamed("ThumbnailView", owner: self, options: nil)
         self.addSubview(contentView)
@@ -145,12 +155,7 @@ public class ThumbnailView: UIView {
     
     public func set(frame: CGRect) {
         self.frame = frame
-        self.discHalo.layoutIfNeeded()
-        self.discImage.layoutIfNeeded()
-        self.discInitials.layoutIfNeeded()
-        ScorecardUI.veryRoundCorners(self.discHalo)
-        ScorecardUI.veryRoundCorners(self.discImage)
-        ScorecardUI.veryRoundCorners(self.discInitials)
+        self.layoutSubviews()
     }
     
     public func set(textColor: UIColor) {

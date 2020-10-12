@@ -534,7 +534,7 @@
 		B7B86B9863661F115CFF4BBC /* Pods-Contract Whist Scorecard.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Contract Whist Scorecard.release.xcconfig"; path = "Pods/Target Support Files/Pods-Contract Whist Scorecard/Pods-Contract Whist Scorecard.release.xcconfig"; sourceTree = "<group>"; };
 		CC395F4C1E064EC500165D1C /* Card Class.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Card Class.swift"; sourceTree = "<group>"; };
 		CC395F501E0905BE00165D1C /* Utility Library.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Utility Library.swift"; sourceTree = "<group>"; };
-		CC4CC0F51DEADC32007FB24F /* Whist 2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Whist 2.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CC4CC0F51DEADC32007FB24F /* Whist.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Whist.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CC4CC0F81DEADC32007FB24F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CC4CC0FA1DEADC32007FB24F /* ScorepadViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ScorepadViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		CC4CC1071DEADC32007FB24F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1504,7 +1504,7 @@
 		CC4CC0F61DEADC32007FB24F /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				CC4CC0F51DEADC32007FB24F /* Whist 2.app */,
+				CC4CC0F51DEADC32007FB24F /* Whist.app */,
 				B27B1FE71F9B55ED00ED6FFF /* Contract Whist Scorecard UI Tests.xctest */,
 				B214FB881FCADC7B00F4F39B /* Contract Whist Watch.app */,
 				B214FB941FCADC7B00F4F39B /* Contract Whist Watch Extension.appex */,
@@ -1657,7 +1657,7 @@
 			);
 			name = "Contract Whist Scorecard";
 			productName = "Contract Whist Scorecard";
-			productReference = CC4CC0F51DEADC32007FB24F /* Whist 2.app */;
+			productReference = CC4CC0F51DEADC32007FB24F /* Whist.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -2559,7 +2559,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 7.0;
 				PRODUCT_BUNDLE_IDENTIFIER = MarcShearer.Whist;
-				PRODUCT_NAME = "Whist 2";
+				PRODUCT_NAME = Whist;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2579,7 +2579,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 7.0;
 				PRODUCT_BUNDLE_IDENTIFIER = MarcShearer.Whist;
-				PRODUCT_NAME = "Whist 2";
+				PRODUCT_NAME = Whist;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

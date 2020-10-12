@@ -83,9 +83,8 @@ class LaunchScreenView: UIView, SyncDelegate, ReconcileDelegate {
         contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
     }
     
-    override func didMoveToSuperview() {
-        super.didMoveToSuperview()
-
+    public func start() {
+        
         if self.superview != nil {
             self.checkICloud()
         }

@@ -479,11 +479,11 @@ class Scorecard {
             recordID, error in
             if error == nil {
                 // Check for Marc, Jack, Test1 and Test2 devices
-                if recordID?.recordName == "_3221381655df644e1b5a67afaa21d97d" ||
-                    recordID?.recordName == "_f0efee7d46bfdafad4e403bd23ab48e6" ||
-                    recordID?.recordName == "_6a4c8d69b48141215f9570049dc70f69" ||
-                    recordID?.recordName == "_c4c157aa21caf6572e9a9b6fa1349f46" ||
-                    recordID?.recordName == "_a3eb2a77f1e670699112be1835571ae0" {
+                if recordID?.recordName == "_1e924f27c7b4b89fec7b3d9d7ba2a482" ||
+                    recordID?.recordName == "" ||
+                    recordID?.recordName == "" ||
+                    recordID?.recordName == "" ||
+                    recordID?.recordName == "" {
                     self.iCloudUserIsMe = true
                 }
             }

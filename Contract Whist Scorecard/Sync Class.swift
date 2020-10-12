@@ -988,7 +988,7 @@ class Sync {
                     }
                 }
                 if !cloudUpdateList.isEmpty {
-                    Sync.update(records: cloudUpdateList) { (error) in
+                    Sync.update(records: cloudUpdateList, completion: { (error) in
                         repeat {
                             if error == nil {
                                 // All OK
@@ -1006,7 +1006,7 @@ class Sync {
                             }
                             self.syncController()
                         } while false
-                    }
+                    })
                 } else {
                     self.syncController()
                 }

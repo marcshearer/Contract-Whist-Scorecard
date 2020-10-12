@@ -11,13 +11,13 @@ import Foundation
 class Config {
     
     // iCloud database identifer
-    public static let iCloudIdentifier = "iCloud.MarcShearer.Contract-Whist-Scorecard"
+    public static let iCloudIdentifier = "iCloud.MarcShearer.Whist"
     
     // In development don't use iCloud to notify invitees - hard-code as below
     public static let _debugNoICloudOnline = false
        
     // Use an online queue instead of/as well as push notifications - best not to do this if connected to network as will double up
-    public static let pushNotifications_onlineQueue = true
+    public static let pushNotifications_onlineQueue = false
     
     // Time unit for auto-play testing (in seconds) - card is played every unit
     public static var autoPlayTimeUnit = 0.2
@@ -32,7 +32,7 @@ class Config {
     
     public static let debugNoICloudOnline_QueueUUID = "debugNoICloudOnline"
     public static let debugNoICloudOnline_Users = [ InviteReceived(deviceName: "Marc's iPhone",
-                                                                   playerUUID: "mshearer@waitrose.com",
+                                                                   playerUUID: "marc@sheareronline.com",
                                                                    name: "Marc",
                                                                    inviteUUID: Config.debugNoICloudOnline_QueueUUID)]
     

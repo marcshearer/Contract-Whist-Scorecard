@@ -45,10 +45,13 @@
                         <userDefinedRuntimeAttribute type="string" keyPath="title" value="History"/>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="headings" value="NO"/>
                         <userDefinedRuntimeAttribute type="number" keyPath="maxRows">
-                            <integer key="value" value="5"/>
+                            <integer key="value" value="8"/>
                         </userDefinedRuntimeAttribute>
                         <userDefinedRuntimeAttribute type="number" keyPath="detail">
                             <integer key="value" value="1"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="maxRowHeight">
+                            <real key="value" value="60"/>
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                     <connections>

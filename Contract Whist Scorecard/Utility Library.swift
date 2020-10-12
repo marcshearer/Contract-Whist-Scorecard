@@ -495,23 +495,6 @@ class Utility {
                 print(outputMessage)
                 fflush(stdout)
             }
-            #if ContractWhist
-                // Write to rabbitMQ logs
-            if (RabbitMQConfig.devMode != .amqpServer || Scorecard.adminMode || force) && RabbitMQConfig.logQueue != "" && RabbitMQConfig.uriDevMode != "" {
-                    if Scorecard.shared.logService == nil {
-                        Scorecard.shared.logService = CommsHandler.client(proximity: .online, mode: .queue, serviceID: "whist-logger", deviceName: Scorecard.deviceName)
-                        Scorecard.shared.logService.start(queue: RabbitMQConfig.logQueue, filterPlayerUUID: "")
-                    }
-                    Scorecard.shared.logService.send("0", ["from"      : from,
-                                                    "message"   : message,
-                                                    "timestamp" : timestamp])
-                }
-                
-                // Write to multi-peer logs
-                if MultipeerLoggerConfig.logService != "" {
-                    MultipeerLogger.logger.write(timestamp: timestamp, source: from, message: message)
-                }
-            #endif
         }
         
         let sendingMessage = Utility.sendingMessage

@@ -1278,14 +1278,11 @@ class RabbitMQConfig {
     public static var rabbitMQUri = ""
     
     // Choose which rabbitMQ server to use in development mode
-    public static let devMode: RabbitMQUriDevMode = .localhost
+    public static let devMode: RabbitMQUriDevMode = .amqpServer
     
     // Use descriptive rabbitMQ session/connection IDs
     public static let descriptiveIDs = false
-    
-    // Queue for log messages - blank to disable else "WhistLogger"
-    public static let logQueue = ""
-    
+        
     // MARK: - rabbitMQ Dev Mode ======================================================================= -
     
     public enum RabbitMQUriDevMode {

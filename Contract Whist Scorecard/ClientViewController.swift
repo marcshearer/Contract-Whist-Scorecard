@@ -278,7 +278,6 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
             
             if self.launchScreen {
                 // Cover with launch screen
-                self.launchScreen = false
                 self.showLaunchScreen()
             }
         }
@@ -287,6 +286,11 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
+        if self.launchScreen {
+            self.launchScreen = false
+            self.launchScreenView?.start()
+        }
         
         Palette.ignoringGameBanners {
             

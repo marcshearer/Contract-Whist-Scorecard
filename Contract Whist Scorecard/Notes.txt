@@ -11,7 +11,11 @@ release/5.1                         master plus feature/network-abstraction
 List of outstanding things to do
 
 // Tasks for upgrade
+Update production schema
+Create version record manually
+Restore backup
 Run Convert email to UUID
+Replace any emails desired
 Run Create readable record IDs
 Run Create links
 

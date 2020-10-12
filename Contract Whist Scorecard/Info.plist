@@ -2,13 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSBonjourServices</key>
-	<array>
-		<string>_whdev_udp</string>
-		<string>_whdev._tcp</string>
-		<string>_whist._tcp</string>
-		<string>_whist._udp</string>
-	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -33,10 +26,21 @@
 	<string></string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_whdev_udp</string>
+		<string>_whdev._tcp</string>
+		<string>_whist._tcp</string>
+		<string>_whist._udp</string>
+	</array>
 	<key>NSCameraUsageDescription</key>
 	<string>You need to grant the app access to the camera so that it can include images of players</string>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>You need to grant the app access to communicate with nearby devices</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>You need to grant the app access to your current location to let it calculate and save the location of each game</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Screen shots</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>You need to grant the app access to your photo library so that it can include images of players</string>
 	<key>UILaunchStoryboardName</key>
@@ -56,9 +60,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Screen shots</string>
-	<key>NSLocalNetworkUsageDescription</key>
-	<string>You need to grant the app access to communicate with nearby devices</string>
 </dict>
 </plist>

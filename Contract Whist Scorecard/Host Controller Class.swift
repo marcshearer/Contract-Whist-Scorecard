@@ -31,6 +31,7 @@ enum InviteStatus {
     private var faceTimeAddress: [String] = []
     private var playingComputer = false
     private var robots: [Int : RobotDelegate]?
+    private var gameUUID: String?
 
     private weak var selectionViewController: SelectionViewController!
     private weak var gamePreviewViewController: GamePreviewViewController!
@@ -78,6 +79,7 @@ enum InviteStatus {
         
         self.startMode = mode
         self.playerData = []
+        self.gameUUID = (Scorecard.recovery.recovering ? Scorecard.game.gameUUID : UUID().uuidString)
         
         // Stop any existing sharing activity
         Scorecard.shared.stopSharing()
@@ -366,7 +368,7 @@ enum InviteStatus {
     private func newGame() {
         Scorecard.game.resetValues()
         Scorecard.game.datePlayed = Date()
-        Scorecard.game.gameUUID = UUID().uuidString
+        Scorecard.game.gameUUID = self.gameUUID ?? UUID().uuidString
         Scorecard.recovery.saveLocationAndDate()
         Scorecard.recovery.saveOverride()
     }
@@ -1150,7 +1152,7 @@ enum InviteStatus {
     
     private func startHostBroadcast(playerUUID: String!, name: String!, invite: [String]? = nil, queueUUID: String! = nil) {
         // Start host broadcast
-        self.hostService?.start(playerUUID: playerUUID, queueUUID: queueUUID, name: name, invite: invite, recoveryMode: Scorecard.recovery.recovering, matchGameUUID: (Scorecard.recovery.recovering ? Scorecard.game.gameUUID : nil))
+        self.hostService?.start(playerUUID: playerUUID, queueUUID: queueUUID, name: name, invite: invite, recoveryMode: Scorecard.recovery.recovering, matchGameUUID: self.gameUUID)
     }
     
     public func exitHost(returnHome: Bool) {

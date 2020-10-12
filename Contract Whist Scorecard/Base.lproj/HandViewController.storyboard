@@ -159,10 +159,10 @@
                                             <constraint firstAttribute="trailing" secondItem="S1A-pl-HLZ" secondAttribute="trailing" id="tkF-jD-OGG"/>
                                         </constraints>
                                     </view>
-                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="1000000" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="K4h-7g-xvz">
+                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="1000000" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="K4h-7g-xvz">
                                         <rect key="frame" x="196" y="68" width="200" height="280"/>
                                         <color key="backgroundColor" name="Clear"/>
-                                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="nz8-mf-k6T">
+                                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="0.0" id="nz8-mf-k6T">
                                             <size key="itemSize" width="50" height="50"/>
                                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                             <size key="footerReferenceSize" width="0.0" height="0.0"/>

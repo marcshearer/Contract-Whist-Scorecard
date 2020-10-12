@@ -15,6 +15,7 @@ public class Reachability {
     let monitor = NWPathMonitor()
     private var _connected: Bool?
     public var connected: Bool? { _connected }
+    private var isLoggedIn: Bool?
     
     init() {
         self.monitor.pathUpdateHandler = self.pathUpdateHandler
@@ -39,6 +40,7 @@ public class Reachability {
                     if newValue != Scorecard.shared.isLoggedIn {
                         // Changed - update it and reawaken listeners
                         Scorecard.shared.isLoggedIn = newValue
+                        self.isLoggedIn = newValue
                         NotificationCenter.default.post(name: .connectivityChanged, object: self, userInfo: ["available" : self._connected!])
                     }
                 })
@@ -57,11 +59,11 @@ public class Reachability {
     }
     
     public func waitForStatus(completion: @escaping (Bool)->()) {
-        self.wait(count: 50, completion: completion)
+        self.wait(count: 0, completion: completion)
     }
     
     private func wait(count: Int, completion: @escaping (Bool)->()) {
-        if count >= 50 || Scorecard.reachability.connected != nil {
+        if count >= 50 || (Scorecard.reachability.connected != nil && self.isLoggedIn != nil) {
             completion(Scorecard.reachability.connected ?? false)
         } else {
             Utility.executeAfter(delay: 0.01) {

@@ -174,12 +174,14 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        self.topArea.layoutIfNeeded()
-        self.middleArea.layoutIfNeeded()
-        self.bottomArea.layoutIfNeeded()
-        self.setupSize()
-        self.winnerCollectionView.reloadData()
-        self.awardsCollectionView.reloadData()
+        if firstTime || rotated {
+            self.topArea.layoutIfNeeded()
+            self.middleArea.layoutIfNeeded()
+            self.bottomArea.layoutIfNeeded()
+            self.setupSize()
+            self.winnerCollectionView.reloadData()
+            self.awardsCollectionView.reloadData()
+        }
         firstTime = false
         rotated = false
         

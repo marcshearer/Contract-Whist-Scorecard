@@ -650,6 +650,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
         self.round = Scorecard.game.handState.round
         self.bidMode = nil
         self.updateMirroredHand()
+        self.updatedMirroredTrickCards()
         self.handTableView.reloadData()
         self.bidCollectionView.reloadData()
         self.playedCardCollectionView.reloadData()
@@ -1080,14 +1081,19 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
         // Copy the trick cards to the version used by the collection (inside performBatchUpdates)
         // Need to copy individual values rather than pointers
         self.mirroredTrickCards = []
-        for card in Scorecard.game.handState.trickCards {
-            self.mirroredTrickCards.append(Card(fromNumber: card.toNumber()))
+        if var cards = Scorecard.game.handState.trickCards {
+            if cards.count == 0 {
+                cards = Scorecard.game.handState.lastCards
+            }
+            for card in cards {
+                self.mirroredTrickCards.append(Card(fromNumber: card.toNumber()))
+            }
         }
     }
     
     private func setInstructionsHighlight(to highlight: Bool) {
         let textType = (highlight ? ThemeTextType.normal : ThemeTextType.strong)
-        let backgroundColor = (bidMode ? Palette.normal : Palette.tableTop)
+        let backgroundColor = ((bidMode ?? false) ? Palette.normal : Palette.tableTop)
         self.banner.set(backgroundColor: backgroundColor, titleColor: backgroundColor.textColor(textType))
     }
     

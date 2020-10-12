@@ -719,7 +719,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         case hostCollection:
             let hostCell = collectionView.dequeueReusableCell(withReuseIdentifier: "Host Cell", for: indexPath) as! HostCollectionViewCell
             
-            hostCell.button.setProportions(top: 10, image: 40, imageBottom: 2, title: 10, titleBottom: 1, message: 18, bottom: 10)
+            hostCell.button.setProportions(top: 10, image: 37, imageBottom: 2, title: 13, titleBottom: 1, message: 18, bottom: 10)
             hostCell.button.delegate = self
             hostCell.button.tag = indexPath.row
             self.defaultCellColors(cell: hostCell)

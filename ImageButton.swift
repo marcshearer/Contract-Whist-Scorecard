@@ -196,6 +196,7 @@ class ImageButton: UIView {
 
     private func setupHeights() {
         let totalHeight: CGFloat = self.heightProportion.top + self.heightProportion.image + self.heightProportion.imageBottom + self.heightProportion.title + self.heightProportion.titleBottom + self.heightProportion.message + self.heightProportion.bottom
+        
         let scale = self.frame.height / totalHeight
         
         self.topConstraint.constant = self.heightProportion.top * scale
@@ -204,6 +205,7 @@ class ImageButton: UIView {
         self.titleHeightConstraint.constant = self.heightProportion.title * scale
         self.titleBottomConstraint.constant = self.heightProportion.titleBottom * scale
         self.messageHeightConstraint.constant = self.heightProportion.message * scale
+        
     }
     
 }

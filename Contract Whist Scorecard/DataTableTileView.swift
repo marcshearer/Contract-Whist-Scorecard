@@ -231,7 +231,7 @@ class DataTableTileView: UIView, DashboardTileDelegate, UITableViewDataSource, U
     // MARK: - Table view delegates ========================================================== -
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.rows + (self.headings ? 1 : 0)
+        return self.rows
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

@@ -116,6 +116,11 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
         
         // Look out for images arriving
         imageObserver = setPlayerDownloadNotification(name: .playerImageDownloaded)
+                
+        // Dismiss keyboard on tapping elsewhere
+        let tapGesture = UITapGestureRecognizer(target: self.view, action: #selector(UIView.endEditing(_:)))
+        tapGesture.cancelsTouchesInView = false
+        self.view.addGestureRecognizer(tapGesture)
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -330,8 +335,8 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
     // MARK: - TextField Targets ======================================================== -
     
     private func addTargets(_ textField: UITextField) {
-        textField.addTarget(self, action: #selector(PlayerDetailViewController.textFieldDidChange(_:)), for: UIControl.Event.editingChanged)
-        textField.addTarget(self, action: #selector(PlayerDetailViewController.textFieldShouldReturn(_:)), for: UIControl.Event.editingDidEndOnExit)
+        textField.addTarget(self, action: #selector(GetStartedViewController.textFieldDidChange(_:)), for: UIControl.Event.editingChanged)
+        textField.addTarget(self, action: #selector(GetStartedViewController.textFieldShouldReturn(_:)), for: UIControl.Event.editingDidEndOnExit)
     }
     
     @objc func textFieldDidChange(_ textField: UITextField) {
@@ -340,11 +345,11 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
     
     @objc func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if textField.text == "" {
-            // Don't allow blank field
-            return false
+            // Don't do anything if blank
         } else if textField.tag == downloadFieldTag {
             self.showRelatedPlayers()
         }
+        textField.resignFirstResponder()
         return true
     }
     
@@ -573,7 +578,7 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
         
         getStartedViewController.completion = completion
         
-        viewController.present(getStartedViewController, animated: true, completion: nil)
+        viewController.present(getStartedViewController, animated: true, container: nil, completion: nil)
     }
     
     private func dismiss() {

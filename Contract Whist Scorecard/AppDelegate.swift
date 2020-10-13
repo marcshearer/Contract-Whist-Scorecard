@@ -33,11 +33,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let _ = Scorecard.shared
         Themes.selectTheme(Scorecard.settings.colorTheme)
 
-        UINavigationBar.appearance().barTintColor = Palette.emphasis.background
-        UINavigationBar.appearance().tintColor = UIColor.white
-        UINavigationBar.appearance().isOpaque = true
-        UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).backgroundColor = Palette.normal.background
-        
         // Check if launched from notification
         if let options = launchOptions {
             let remoteNotification = options[.remoteNotification] as? [AnyHashable : Any]
@@ -51,6 +46,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Setup initial view controller
         self.window = UIWindow(frame: UIScreen.main.bounds)
         self.window?.overrideUserInterfaceStyle = Scorecard.settings.appearance.userInterfaceStyle
+
         let storyboard = UIStoryboard(name: "ClientViewController", bundle: nil)
         let initialViewController = storyboard.instantiateViewController(withIdentifier: "ClientViewController") as! ClientViewController
         initialViewController.rootViewController = initialViewController

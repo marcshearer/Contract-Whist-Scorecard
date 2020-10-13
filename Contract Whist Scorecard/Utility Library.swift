@@ -415,11 +415,11 @@ class Utility {
             view = Utility.getActiveViewController()!.view!
         }
         if animate {
-            view!.layoutIfNeeded()
+            view?.layoutIfNeeded()
             Utility._animating = true
             let animation = UIViewPropertyAnimator(duration: duration, curve: curve) {
                 animations()
-                view!.layoutIfNeeded()
+                view?.layoutIfNeeded()
             }
             animation.addCompletion { (_) in
                 Utility._animating = false

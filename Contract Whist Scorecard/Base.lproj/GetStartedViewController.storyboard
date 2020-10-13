@@ -12,12 +12,12 @@
         <!--Get Started-->
         <scene sceneID="bxj-G7-EJ4">
             <objects>
-                <viewController storyboardIdentifier="GetStartedViewController" title="Get Started" useStoryboardIdentifierAsRestorationIdentifier="YES" id="1IM-Ht-gqg" customClass="GetStartedViewController" customModule="Whist_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="GetStartedViewController" title="Get Started" useStoryboardIdentifierAsRestorationIdentifier="YES" id="1IM-Ht-gqg" customClass="GetStartedViewController" customModule="Whist" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" tag="-2" contentMode="scaleToFill" id="gBX-K1-URm">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="x1u-ya-Uop" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Whist_2" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="x1u-ya-Uop" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Whist" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="0.0"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="color" keyPath="bannerColor">
@@ -31,7 +31,7 @@
                                     <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mkc-cU-TeA" userLabel="Content View">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                         <subviews>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QFU-gO-Ca1" customClass="PlayerSelectionView" customModule="Whist_2" customModuleProvider="target">
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QFU-gO-Ca1" customClass="PlayerSelectionView" customModule="Whist" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="184.5" width="375" height="0.0"/>
                                                 <color key="backgroundColor" name="Clear"/>
                                                 <constraints>
@@ -45,7 +45,7 @@
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="66g-bK-cfb" userLabel="Top Section">
                                                 <rect key="frame" x="0.0" y="0.0" width="375" height="184.5"/>
                                                 <subviews>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YVn-Xz-nqH" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YVn-Xz-nqH" customClass="ClearButton" customModule="Whist" customModuleProvider="target">
                                                         <rect key="frame" x="20" y="12" width="30" height="30"/>
                                                         <color key="backgroundColor" name="Clear"/>
                                                         <constraints>
@@ -63,7 +63,7 @@
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sTu-EG-ngZ" userLabel="This Player Container View">
                                                                 <rect key="frame" x="0.0" y="0.0" width="275" height="80"/>
                                                                 <subviews>
-                                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pfN-IV-hS3" customClass="ThumbnailView" customModule="Whist_2" customModuleProvider="target">
+                                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pfN-IV-hS3" customClass="ThumbnailView" customModule="Whist" customModuleProvider="target">
                                                                         <rect key="frame" x="107.5" y="0.0" width="60" height="80"/>
                                                                         <color key="backgroundColor" name="Clear"/>
                                                                         <gestureRecognizers/>
@@ -113,7 +113,7 @@
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="H6T-vo-ms1" userLabel="Info Button Container">
                                                         <rect key="frame" x="26" y="104.5" width="28" height="30"/>
                                                         <subviews>
-                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Min-RN-IWk" customClass="RoundedButton" customModule="Whist_2" customModuleProvider="target">
+                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Min-RN-IWk" customClass="RoundedButton" customModule="Whist" customModuleProvider="target">
                                                                 <rect key="frame" x="0.0" y="0.0" width="28" height="30"/>
                                                                 <state key="normal" title="i"/>
                                                             </button>
@@ -166,7 +166,7 @@
                                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pC7-CE-6dr" userLabel="Bottom Section">
                                                 <rect key="frame" x="0.0" y="149.5" width="375" height="517.5"/>
                                                 <subviews>
-                                                    <view tag="1" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="F7d-oP-X1Z" userLabel="Download Players Title Bar" customClass="TitleBar" customModule="Whist_2" customModuleProvider="target">
+                                                    <view tag="1" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="F7d-oP-X1Z" userLabel="Download Players Title Bar" customClass="TitleBar" customModule="Whist" customModuleProvider="target">
                                                         <rect key="frame" x="20" y="34.5" width="335" height="90"/>
                                                         <color key="backgroundColor" name="Clear"/>
                                                         <constraints>
@@ -209,7 +209,7 @@
                                                                                 <nil key="textColor"/>
                                                                                 <nil key="highlightedColor"/>
                                                                             </label>
-                                                                            <textField opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter identifier" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="kTp-wT-5j4" customClass="TextField" customModule="Whist_2" customModuleProvider="target">
+                                                                            <textField opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter identifier" textAlignment="natural" minimumFontSize="13" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="kTp-wT-5j4" customClass="TextField" customModule="Whist" customModuleProvider="target">
                                                                                 <rect key="frame" x="30" y="43" width="275" height="34"/>
                                                                                 <constraints>
                                                                                     <constraint firstAttribute="height" constant="34" id="XP0-4c-H5a"/>
@@ -220,11 +220,12 @@
                                                                                     <outlet property="delegate" destination="1IM-Ht-gqg" id="xzE-9p-qxS"/>
                                                                                 </connections>
                                                                             </textField>
-                                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="r7j-ct-C03" userLabel="Download Players From Cloud" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
+                                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="r7j-ct-C03" userLabel="Download Players From Cloud" customClass="ShadowButton" customModule="Whist" customModuleProvider="target">
                                                                                 <rect key="frame" x="50.5" y="93" width="234.5" height="40"/>
                                                                                 <constraints>
                                                                                     <constraint firstAttribute="height" constant="40" id="W3C-er-vJR"/>
                                                                                 </constraints>
+                                                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                                 <state key="normal" title="Download Players from Cloud"/>
                                                                                 <userDefinedRuntimeAttributes>
                                                                                     <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -269,7 +270,7 @@
                                                                                 <color key="tintColor" name="Emphasis"/>
                                                                                 <color key="onTintColor" name="Emphasis"/>
                                                                             </switch>
-                                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hWL-vp-NMG" userLabel="Home Button" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
+                                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hWL-vp-NMG" userLabel="Home Button" customClass="ShadowButton" customModule="Whist" customModuleProvider="target">
                                                                                 <rect key="frame" x="30" y="135" width="275" height="50"/>
                                                                                 <constraints>
                                                                                     <constraint firstAttribute="height" constant="50" id="tFi-FF-5XO"/>
@@ -324,7 +325,7 @@
                                                                     <constraint firstAttribute="trailing" secondItem="Yxj-bF-zcW" secondAttribute="trailing" id="uFD-Mh-S47"/>
                                                                 </constraints>
                                                             </view>
-                                                            <view tag="2" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GKG-0U-Qdr" userLabel="Create Player Title Bar" customClass="TitleBar" customModule="Whist_2" customModuleProvider="target">
+                                                            <view tag="2" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GKG-0U-Qdr" userLabel="Create Player Title Bar" customClass="TitleBar" customModule="Whist" customModuleProvider="target">
                                                                 <rect key="frame" x="20" y="200" width="335" height="90"/>
                                                                 <color key="backgroundColor" name="Clear"/>
                                                                 <constraints>
@@ -355,7 +356,7 @@
                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FVx-vr-YSF">
                                                                         <rect key="frame" x="20" y="0.0" width="335" height="180"/>
                                                                         <subviews>
-                                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JFu-Mp-NY9" userLabel="Create Player View" customClass="CreatePlayerView" customModule="Whist_2" customModuleProvider="target">
+                                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JFu-Mp-NY9" userLabel="Create Player View" customClass="CreatePlayerView" customModule="Whist" customModuleProvider="target">
                                                                                 <rect key="frame" x="0.0" y="0.0" width="335" height="180"/>
                                                                                 <color key="backgroundColor" name="Clear"/>
                                                                                 <connections>
@@ -424,7 +425,7 @@
                                                                                         <color key="tintColor" name="Emphasis"/>
                                                                                         <color key="onTintColor" name="Emphasis"/>
                                                                                     </switch>
-                                                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NRM-Ik-bSI" userLabel="Home Button" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
+                                                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NRM-Ik-bSI" userLabel="Home Button" customClass="ShadowButton" customModule="Whist" customModuleProvider="target">
                                                                                         <rect key="frame" x="30" y="70" width="275" height="50"/>
                                                                                         <constraints>
                                                                                             <constraint firstAttribute="height" constant="50" id="glc-nS-wpp"/>
@@ -509,7 +510,7 @@
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LKq-GJ-a3A" userLabel="Change Button Container">
                                                 <rect key="frame" x="147.5" y="137" width="80" height="25"/>
                                                 <subviews>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pr2-db-kc2" customClass="RoundedButton" customModule="Whist_2" customModuleProvider="target">
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pr2-db-kc2" customClass="RoundedButton" customModule="Whist" customModuleProvider="target">
                                                         <rect key="frame" x="0.0" y="0.0" width="80" height="25"/>
                                                         <state key="normal" title="Change"/>
                                                         <connections>

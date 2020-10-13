@@ -301,9 +301,9 @@ class PlayersViewController: ScorecardViewController, PlayersViewDelegate, UICol
     }
     
     private func enableButtons() {
+        self.banner.setButton("cancel", isHidden: !removing, disableOptions: removing)
         self.banner.setButton("add", isHidden: removing)
         self.banner.setButton("remove", isHidden: removing)
-        self.banner.setButton("cancel", isHidden: !removing, disableOptions: removing)
     }
         
     // MARK: - Utility routines ============================================================================== -

@@ -217,7 +217,7 @@
 		B2E065C924AB03090055C376 /* RelatedPlayersView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2E065C824AB03090055C376 /* RelatedPlayersView.xib */; };
 		B2E065CB24AB031B0055C376 /* RelatedPlayersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E065CA24AB031B0055C376 /* RelatedPlayersView.swift */; };
 		B2E065CD24AB0EE30055C376 /* RelatedPlayersTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2E065CC24AB0EE30055C376 /* RelatedPlayersTableViewCell.xib */; };
-		B2E37D0724E7DFC60074C8F3 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B2E37D0624E7DFC60074C8F3 /* Launch Screen.storyboard */; };
+		B2E37D0724E7DFC60074C8F3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B2E37D0624E7DFC60074C8F3 /* LaunchScreen.storyboard */; };
 		B2E37D0F24E959C00074C8F3 /* MenuPanelViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B2E37D0E24E959C00074C8F3 /* MenuPanelViewController.storyboard */; };
 		B2E37D1124E959CE0074C8F3 /* MenuPanelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E37D1024E959CE0074C8F3 /* MenuPanelViewController.swift */; };
 		B2E556C122C9F86200C49821 /* Colors.xlsx in Resources */ = {isa = PBXBuildFile; fileRef = B2E556C022C9F86100C49821 /* Colors.xlsx */; };
@@ -512,7 +512,7 @@
 		B2E065C824AB03090055C376 /* RelatedPlayersView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RelatedPlayersView.xib; sourceTree = "<group>"; };
 		B2E065CA24AB031B0055C376 /* RelatedPlayersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelatedPlayersView.swift; sourceTree = "<group>"; };
 		B2E065CC24AB0EE30055C376 /* RelatedPlayersTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RelatedPlayersTableViewCell.xib; sourceTree = "<group>"; };
-		B2E37D0624E7DFC60074C8F3 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
+		B2E37D0624E7DFC60074C8F3 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B2E37D0E24E959C00074C8F3 /* MenuPanelViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MenuPanelViewController.storyboard; sourceTree = "<group>"; };
 		B2E37D1024E959CE0074C8F3 /* MenuPanelViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuPanelViewController.swift; sourceTree = "<group>"; };
 		B2E556C022C9F86100C49821 /* Colors.xlsx */ = {isa = PBXFileReference; lastKnownFileType = file; path = Colors.xlsx; sourceTree = "<group>"; };
@@ -587,7 +587,7 @@
 			isa = PBXGroup;
 			children = (
 				B298496824E6DF4400FADC06 /* LaunchScreenView.xib */,
-				B2E37D0624E7DFC60074C8F3 /* Launch Screen.storyboard */,
+				B2E37D0624E7DFC60074C8F3 /* LaunchScreen.storyboard */,
 				B2021D7D247FEA1900A82EBB /* LaunchScreenView.swift */,
 			);
 			name = "Launch Screen";
@@ -1787,7 +1787,7 @@
 				B2E065CD24AB0EE30055C376 /* RelatedPlayersTableViewCell.xib in Resources */,
 				B228E3BC24A10274006D91CE /* PersonalDashboardPortraitView.xib in Resources */,
 				B2A9096324A1BBDB00B35B69 /* DataTableTileView.xib in Resources */,
-				B2E37D0724E7DFC60074C8F3 /* Launch Screen.storyboard in Resources */,
+				B2E37D0724E7DFC60074C8F3 /* LaunchScreen.storyboard in Resources */,
 				B22789021FB83AA7009BABCA /* SelectionViewController.storyboard in Resources */,
 				B260AAD1251E34AA00CD1EB3 /* LeaderboardView.xib in Resources */,
 				B22789331FB88FA5009BABCA /* DataTableViewController.storyboard in Resources */,

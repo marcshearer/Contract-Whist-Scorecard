@@ -9,7 +9,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="Banner" customModule="Whist_2" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="Banner" customModule="Whist" customModuleProvider="target">
             <connections>
                 <outlet property="contentView" destination="iN0-l3-epB" id="grO-O2-btl"/>
                 <outlet property="leftViewGroup" destination="27E-De-fIC" id="7pq-7G-JpM"/>
@@ -37,7 +37,7 @@
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="27E-De-fIC" userLabel="Left View Group" customClass="ViewGroup" customModule="Whist_2" customModuleProvider="target">
+                <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="27E-De-fIC" userLabel="Left View Group" customClass="ViewGroup" customModule="Whist" customModuleProvider="target">
                     <rect key="frame" x="20" y="0.0" width="30" height="44"/>
                     <color key="backgroundColor" name="Clear"/>
                     <accessibility key="accessibilityConfiguration" identifier="leftViewGroup"/>
@@ -45,7 +45,7 @@
                         <constraint firstAttribute="height" constant="44" id="YtF-Vs-Cdh"/>
                     </constraints>
                 </view>
-                <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7vQ-Tb-bGS" userLabel="Right View Group" customClass="ViewGroup" customModule="Whist_2" customModuleProvider="target">
+                <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7vQ-Tb-bGS" userLabel="Right View Group" customClass="ViewGroup" customModule="Whist" customModuleProvider="target">
                     <rect key="frame" x="364" y="0.0" width="30" height="44"/>
                     <color key="backgroundColor" name="Clear"/>
                     <accessibility key="accessibilityConfiguration" identifier="rightViewGroup"/>
@@ -53,7 +53,7 @@
                         <constraint firstAttribute="height" constant="44" id="nHS-JI-ZUe"/>
                     </constraints>
                 </view>
-                <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Hhl-Cx-Vdj" userLabel="Lower View Group" customClass="ViewGroup" customModule="Whist_2" customModuleProvider="target">
+                <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Hhl-Cx-Vdj" userLabel="Lower View Group" customClass="ViewGroup" customModule="Whist" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="44" width="414" height="0.0"/>
                     <color key="backgroundColor" name="Clear"/>
                     <accessibility key="accessibilityConfiguration" identifier="lowerViewGroup"/>
@@ -71,7 +71,7 @@
                 <constraint firstItem="27E-De-fIC" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="20" id="8KN-d4-qqE"/>
                 <constraint firstItem="7vQ-Tb-bGS" firstAttribute="top" secondItem="27E-De-fIC" secondAttribute="top" id="90s-MM-qa7"/>
                 <constraint firstItem="Rat-5l-zqR" firstAttribute="top" secondItem="27E-De-fIC" secondAttribute="top" id="A3g-P1-1bP"/>
-                <constraint firstItem="Hhl-Cx-Vdj" firstAttribute="top" secondItem="Rat-5l-zqR" secondAttribute="bottom" id="KxO-jw-StI"/>
+                <constraint firstItem="Rat-5l-zqR" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="H2A-Sa-d7R"/>
                 <constraint firstItem="7vQ-Tb-bGS" firstAttribute="trailing" secondItem="Rat-5l-zqR" secondAttribute="trailing" id="X6r-jd-uz0"/>
                 <constraint firstItem="Rat-5l-zqR" firstAttribute="leading" secondItem="27E-De-fIC" secondAttribute="leading" id="m6o-oV-h4M"/>
                 <constraint firstAttribute="bottom" secondItem="Hhl-Cx-Vdj" secondAttribute="bottom" id="uld-sT-cEj"/>

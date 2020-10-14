@@ -165,7 +165,7 @@ class Notifications {
         let current = UNUserNotificationCenter.current()
         current.getNotificationSettings(completionHandler: { (settings) in
             switch settings.authorizationStatus {
-            case .notDetermined, .provisional :
+            case .notDetermined, .provisional, .ephemeral :
                 // Notification permission has not been asked yet, will ask if switch on relevant options
                 if request {
                     self.requestNotifications(successAction: accepted, failureAction: {refused?(true)})

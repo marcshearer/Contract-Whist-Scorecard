@@ -353,7 +353,6 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
             let buttonWidth: CGFloat = 130
             let clearHeight: CGFloat = 25
             let clearImageHeight: CGFloat = 10
-            let thumbnailHeight: CGFloat = 50
 
             // Create the filter button
             self.filterButton = ShadowButton(frame: CGRect(x: 0, y: 0, width: buttonWidth, height: buttonHeight), cornerRadius: 7.0)

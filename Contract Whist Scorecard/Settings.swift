@@ -306,12 +306,12 @@ class Settings : Equatable {
         }
         
         let records = updateList.map{$0.record}
-        Sync.update(records: records, recordIDsToDelete: recordIDsToDelete, database: database) { (error) in
-            Utility.debugMessage("Settings","Settings to iCloud complete (\(error?.localizedDescription ?? "Success"))")
-            if playersChanged {
-                Notifications.updateHighScoreSubscriptions()
-            }
-        }
+        Sync.update(records: records, recordIDsToDelete: recordIDsToDelete, database: database, completion: { (error) in
+                Utility.debugMessage("Settings","Settings to iCloud complete (\(error?.localizedDescription ?? "Success"))")
+                if playersChanged {
+                    Notifications.updateHighScoreSubscriptions()
+                }
+            })
     }
     
     private func saveToICloudRecord(existing: CKRecord?, label: String, type: String, value: String, deviceName: String?) -> CKRecord {

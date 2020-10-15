@@ -194,6 +194,9 @@ class DealView : UIView, UITableViewDataSource, UITableViewDelegate {
                         if handSuit.cards.count > self.splitSuit {
                             suitText = ""
                             for cardNumber in self.splitSuit..<handSuit.cards.count {
+                                if cardNumber != self.splitSuit {
+                                    suitText.append(" ")
+                                }
                                 suitText.append(handSuit.cards[cardNumber].toRankString())
                             }
                             self.content[playerNumber]!.append(Content(text: suitText))

@@ -382,7 +382,8 @@ public class Awards {
         
         if history.count < 21 {
             // Need at least ten
-            history = CoreData.fetch(from: "Participant", limit: 21, sort: ("datePlayed", .descending)) as! [ParticipantMO]
+            let anyDatePredicate = NSPredicate(format: "playerUUID = %@", current.playerUUID!)
+            history = CoreData.fetch(from: "Participant", filter: anyDatePredicate, limit: 21, sort: ("datePlayed", .descending)) as! [ParticipantMO]
         }
         
         if history.firstIndex(where: {$0.gameUUID == current.gameUUID}) == nil {

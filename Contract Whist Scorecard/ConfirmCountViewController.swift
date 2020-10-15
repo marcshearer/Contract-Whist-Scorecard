@@ -126,7 +126,7 @@ extension ConfirmCountViewController {
         self.labelTitle.textColor = Palette.roomInterior.text
         self.stepperCount.tintColor = Palette.normal.text
         self.textFieldCount.backgroundColor = Palette.alternate.background
-        self.textFieldCount.textColor = Palette.normal.text
+        self.textFieldCount.textColor = Palette.alternate.text
         self.verticalSeparator.backgroundColor = Palette.separator.background
         self.view.backgroundColor = Palette.normal.background
     }

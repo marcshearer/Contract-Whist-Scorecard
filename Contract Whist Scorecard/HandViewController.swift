@@ -1038,7 +1038,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
         if !Scorecard.game.roundStarted(Scorecard.game.selectedRound) {
             statusOverUnderLabel.text = ""
         } else {
-            statusOverUnderLabel.textColor = (totalRemaining == 0 ? Palette.contractEqual : (totalRemaining > 0 ? Palette.contractUnderLight : Palette.contractOver))
+            statusOverUnderLabel.textColor = (totalRemaining == 0 ? Palette.contractEqual : (totalRemaining > 0 ? Palette.contractUnder : Palette.contractOver))
             statusOverUnderLabel.text = " \(abs(Int64(totalRemaining))) \(totalRemaining >= 0 ? "under" : "over")"
         }
         statusRoundLabel.attributedText = Scorecard.game.roundTitle(round)
@@ -1275,8 +1275,8 @@ extension HandViewController {
 
     private func defaultViewColors() {
 
-        self.bidSeparator.backgroundColor = Palette.separator.background
-        self.bidTitleSeparator.backgroundColor = Palette.separator.background
+        self.bidSeparator.backgroundColor = Palette.hand.background
+        self.bidTitleSeparator.backgroundColor = Palette.hand.background
         self.bidView.backgroundColor = Palette.normal.background
         self.footerPaddingView.backgroundColor = Palette.hand.background
         self.handView.backgroundColor = Palette.hand.background

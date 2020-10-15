@@ -14,12 +14,12 @@
         <!--Dashboard View Controller-->
         <scene sceneID="xNP-9f-efV">
             <objects>
-                <viewController storyboardIdentifier="DashboardViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="D0r-VL-UQ4" customClass="DashboardViewController" customModule="Whist_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="DashboardViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="D0r-VL-UQ4" customClass="DashboardViewController" customModule="Whist" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" clipsSubviews="YES" contentMode="scaleToFill" id="qLc-Of-9eu" userLabel="Dashboard View">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kGC-DC-mvn" customClass="Banner" customModule="Whist_2" customModuleProvider="target">
+                            <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kGC-DC-mvn" customClass="Banner" customModule="Whist" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="88"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <userDefinedRuntimeAttributes>
@@ -57,9 +57,9 @@
                                 <rect key="frame" x="0.0" y="88" width="414" height="180"/>
                                 <subviews>
                                     <collectionView multipleTouchEnabled="YES" tag="1" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="gyh-A2-DhL">
-                                        <rect key="frame" x="0.0" y="45" width="414" height="120"/>
+                                        <rect key="frame" x="0.0" y="12" width="414" height="153"/>
                                         <color key="backgroundColor" name="Clear"/>
-                                        <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Rmq-nY-NHs" customClass="CustomCollectionViewLayout" customModule="Whist_2" customModuleProvider="target">
+                                        <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Rmq-nY-NHs" customClass="CustomCollectionViewLayout" customModule="Whist" customModuleProvider="target">
                                             <size key="itemSize" width="128" height="128"/>
                                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
@@ -75,8 +75,8 @@
                                             </userDefinedRuntimeAttributes>
                                         </collectionViewFlowLayout>
                                         <cells>
-                                            <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Carousel Cell" id="kJB-SH-uin" customClass="DashboardCarouselCell" customModule="Whist_2" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="-4" width="128" height="128"/>
+                                            <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Carousel Cell" id="kJB-SH-uin" customClass="DashboardCarouselCell" customModule="Whist" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="12.5" width="128" height="128"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <collectionViewCellContentView key="contentView" opaque="NO" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="DLW-0u-9PU">
                                                     <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
@@ -145,7 +145,7 @@
                                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         </collectionViewFlowLayout>
                                         <cells>
-                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Scroll Cell" id="8kK-ZL-v8R" customClass="DashboardScrollCell" customModule="Whist_2" customModuleProvider="target">
+                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Scroll Cell" id="8kK-ZL-v8R" customClass="DashboardScrollCell" customModule="Whist" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="-59" width="128" height="128"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="ISv-q8-fzx">
@@ -177,8 +177,8 @@
                                 <color key="backgroundColor" name="Clear"/>
                                 <accessibility key="accessibilityConfiguration" identifier="Top Section"/>
                                 <constraints>
-                                    <constraint firstItem="gyh-A2-DhL" firstAttribute="height" secondItem="TXF-Mu-K4x" secondAttribute="height" multiplier="2:3" id="3gj-NR-tfW">
-                                        <variation key="heightClass=compact" constant="-20"/>
+                                    <constraint firstItem="gyh-A2-DhL" firstAttribute="height" secondItem="TXF-Mu-K4x" secondAttribute="height" multiplier="17:20" id="3gj-NR-tfW">
+                                        <variation key="heightClass=compact" constant="-5"/>
                                     </constraint>
                                     <constraint firstItem="gyh-A2-DhL" firstAttribute="leading" secondItem="TXF-Mu-K4x" secondAttribute="leading" id="4f5-h9-91X"/>
                                     <constraint firstAttribute="bottom" secondItem="skN-et-kCR" secondAttribute="bottom" id="5eO-TN-x7a"/>
@@ -204,7 +204,7 @@
                         <constraints>
                             <constraint firstAttribute="bottom" secondItem="hiY-hK-Vax" secondAttribute="bottom" constant="34" id="1KP-tb-Eog"/>
                             <constraint firstItem="TXF-Mu-K4x" firstAttribute="trailing" secondItem="qLc-Of-9eu" secondAttribute="trailing" id="8lO-Jc-ddV"/>
-                            <constraint firstItem="TXF-Mu-K4x" firstAttribute="height" secondItem="qLc-Of-9eu" secondAttribute="height" multiplier="15:38" id="CKf-Oj-LQS"/>
+                            <constraint firstItem="TXF-Mu-K4x" firstAttribute="height" secondItem="qLc-Of-9eu" secondAttribute="height" multiplier="10:38" id="CKf-Oj-LQS"/>
                             <constraint firstItem="kGC-DC-mvn" firstAttribute="bottom" secondItem="c6O-8s-uBR" secondAttribute="top" constant="44" id="I2U-3v-5TF"/>
                             <constraint firstItem="TXF-Mu-K4x" firstAttribute="height" secondItem="qLc-Of-9eu" secondAttribute="height" multiplier="9.5:38" constant="-44" id="LAV-4g-Fk1"/>
                             <constraint firstItem="c6O-8s-uBR" firstAttribute="trailing" secondItem="hiY-hK-Vax" secondAttribute="trailing" id="MfL-Nq-dEF"/>

@@ -120,7 +120,7 @@ class DataAdmin {
     class func patchLocalDatabase(from viewController: UIViewController, silent: Bool = false) {
         var participantsUpdated = 0
         let history = History(getParticipants: true, includeBF: false)
-        _ = CoreData.update(updateLogic: {
+        CoreData.update(updateLogic: {
             for historyGame in history.games {
                 if historyGame.participant[0].handsPlayed == 25 {
                     var nonBonusScore:Int16 = 0
@@ -154,7 +154,7 @@ class DataAdmin {
     class func resetSyncRecordIDs(from viewController: UIViewController, silent: Bool = false) {
         var participantsUpdated = 0
         let history = History(getParticipants: true, includeBF: false)
-        _ = CoreData.update(updateLogic: {
+        CoreData.update(updateLogic: {
             for historyGame in history.games {
                 historyGame.gameMO.syncRecordID = nil
                 historyGame.gameMO.syncDate = nil

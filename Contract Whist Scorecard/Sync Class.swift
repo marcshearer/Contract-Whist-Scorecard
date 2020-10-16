@@ -694,7 +694,7 @@ class Sync {
                 if localRecordName == nil || (CKRecord.ID(recordName: localRecordName!) == cloudObject.recordID &&
                     cloudSyncDate! > localSyncDate) {
                     // Only update if never synced before or cloud newer and not a duplicate
-                    _ = CoreData.update(updateLogic: {
+                    CoreData.update(updateLogic: {
                     
                         History.cloudParticipantToMO(cloudObject: cloudObject, participantMO: historyParticipant.participantMO)
                         updated += 1
@@ -703,7 +703,7 @@ class Sync {
                 }
             } else {
                 // Not found - create it locally
-                _ = CoreData.update(updateLogic: {
+                CoreData.update(updateLogic: {
                     let participantMO = CoreData.create(from: "Participant") as! ParticipantMO
                     // Copy in data values from cloud
                     History.cloudParticipantToMO(cloudObject: cloudObject, participantMO: participantMO)
@@ -1587,7 +1587,7 @@ class Sync {
     private func rebuildWinStreaks() -> Bool {
         if self.participantPlayerUUIDList.count > 0 {
             let streaks = History.getWinStreaks(playerUUIDList: self.participantPlayerUUIDList, includeZeroes: true)
-            _ = CoreData.update {
+            CoreData.update {
                 for streak in streaks {
                     if let playerMO = Scorecard.shared.findPlayerByPlayerUUID(streak.playerUUID) {
                         playerMO.winStreak = Int64(streak.currentStreak)
@@ -2131,7 +2131,7 @@ class Sync {
         // Now check if this player was already on this device - unlikely but possible
         if let existing = Scorecard.shared.findPlayerByPlayerUUID(playerUUID) {
             // Need to merge the two player records and delete new one
-            _ = CoreData.update {
+            CoreData.update {
                 if existing.datePlayed == nil || (playerMO.datePlayed != nil && existing.datePlayed! < playerMO.datePlayed!) {
                     existing.datePlayed = playerMO.datePlayed
                     existing.winStreak = playerMO.winStreak
@@ -2171,7 +2171,7 @@ class Sync {
             }
         } else {
             // Replace player UUID in player itself
-            _ = CoreData.update {
+            CoreData.update {
                 playerMO.playerUUID = playerUUID
             }
         }
@@ -2179,7 +2179,7 @@ class Sync {
     
     private func replaceTablePlayerUUID(recordType: String, key: String, from: String, to: String) {
         let records = CoreData.fetch(from: recordType, filter: NSPredicate(format: "\(key) = %@", from))
-        _ = CoreData.update {
+        CoreData.update {
             for record in records {
                 record.setValue(to, forKey: key)
             }

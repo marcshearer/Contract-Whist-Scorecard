@@ -414,7 +414,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
                     let thumbnail = data!["image"] as! String
                     let thumbnailDate = data!["date"] as! String
                     if let playerMO = Scorecard.shared.findPlayerByPlayerUUID(playerUUID) {
-                        _ = CoreData.update( updateLogic: {
+                        CoreData.update( updateLogic: {
                             playerMO.thumbnail = NSData(base64Encoded: thumbnail, options: []) as Data?
                             playerMO.thumbnailDate = Utility.dateFromString(thumbnailDate) as Date?
                         })

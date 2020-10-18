@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -10,7 +11,7 @@
         <!--Confirm Count View Controller-->
         <scene sceneID="0yL-T5-8dg">
             <objects>
-                <viewController storyboardIdentifier="ConfirmCountViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Rc0-IA-yNN" customClass="ConfirmCountViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ConfirmCountViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Rc0-IA-yNN" customClass="ConfirmCountViewController" customModule="Whist" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="gIt-gJ-MMp"/>
                         <viewControllerLayoutGuide type="bottom" id="WDM-au-Ces"/>
@@ -53,7 +54,7 @@
                                     <constraint firstAttribute="height" constant="1" id="43T-Kg-7mJ"/>
                                 </constraints>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eXj-jl-wGR">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eXj-jl-wGR">
                                 <rect key="frame" x="140.5" y="240" width="139.5" height="40"/>
                                 <color key="backgroundColor" name="Room Interior"/>
                                 <constraints>
@@ -74,7 +75,7 @@
                                     <constraint firstAttribute="width" constant="1" id="Ui8-OJ-duR"/>
                                 </constraints>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8a5-3E-AzD">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8a5-3E-AzD">
                                 <rect key="frame" x="0.0" y="240" width="139.5" height="40"/>
                                 <color key="backgroundColor" name="Room Interior"/>
                                 <constraints>

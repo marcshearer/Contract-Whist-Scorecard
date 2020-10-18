@@ -333,6 +333,25 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
         return handState
     }
     
+    private func gameUUIDData() -> [String : Any] {
+        var data: [String:Any] = [:]
+        data["gameUUID"] = Scorecard.game.gameUUID
+        data["datePlayed"] = (Scorecard.game.datePlayed ?? Date()).toFullString()
+        return data
+    }
+    
+    private func locationData() -> [String : Any] {
+        var data: [String:Any] = [:]
+        if Scorecard.game.location.description != nil && Scorecard.game.location.description != "" {
+            data["description"] = Scorecard.game.location.description
+        }
+        if Scorecard.game.location.locationSet {
+            data["latitude"] = Scorecard.game.location.latitude
+            data["longitude"] = Scorecard.game.location.longitude
+        }
+        return data
+    }
+    
     public func sendHostState(from playerDelegate: ScorecardAppPlayerDelegate?, to commsPeer: CommsPeer! = nil) {
         var state: [String : Any] = [:]
         
@@ -344,11 +363,16 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
             state["allscores"] = self.scoresData()
             state["autoPlay"] = self.autoPlayData()
             state["handState"] = self.handStateData()
-            state["gameUUID"] = ["gameUUID" : Scorecard.game.gameUUID]
+            state["gameUUID"] = self.gameUUIDData()
+            state["location"] = self.locationData()
             state["playHand"] = [:]
         }
         
         self.commsDelegate?.send("state", state, to: commsPeer)
+    }
+    
+    public func sendLocation(to commsPeer: CommsPeer! = nil) {
+        self.commsDelegate?.send("location", self.locationData(), to: commsPeer)
     }
     
     public func sendScoringState(from playerDelegate: ScorecardAppPlayerDelegate?, to commsPeer: CommsPeer! = nil) {

@@ -49,7 +49,6 @@ class ScoringController: ScorecardAppController, ScorecardAppPlayerDelegate, Gam
             self.resetResumedPlayers()
             
             // Just go straight to scoring without preview
-            self.gameInProgress = true
             self.startGame()
         } else {
             // Show selection
@@ -273,6 +272,7 @@ class ScoringController: ScorecardAppController, ScorecardAppPlayerDelegate, Gam
     }
     
     func startGame() {
+        self.gameInProgress = true
         self.setupPlayers()
         Scorecard.shared.saveMaxScores()
         Scorecard.recovery.saveInitialValues()

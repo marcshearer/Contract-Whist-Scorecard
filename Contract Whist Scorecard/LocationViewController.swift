@@ -63,6 +63,9 @@ class LocationViewController: ScorecardViewController, UITableViewDataSource, UI
     internal func continuePressed() {
         if let delegate = self.controllerDelegate {
             self.newLocation.copy(to: Scorecard.game.location)
+            if Scorecard.game.isHosting {
+                Scorecard.shared.sendLocation()
+            }
             delegate.didProceed()
         } else {
             self.dismiss(self.newLocation)

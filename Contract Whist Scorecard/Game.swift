@@ -218,7 +218,7 @@ class Game {
         self.selectedRound = 1
         self.inProgress = false
         self.datePlayed = nil
-        self.gameUUID = ""
+        self.gameUUID = nil
         self.deal = nil
         
         // Reset game managed object
@@ -326,10 +326,8 @@ class Game {
                     
                     self.gameMO = CoreData.create(from: "Game") as? GameMO
                 }
-                if self.datePlayed == nil || self.gameUUID == "" {
-                    self.datePlayed = Date()
-                    self.gameUUID = UUID().uuidString
-                }
+                self.datePlayed = self.datePlayed ?? Date()
+                self.gameUUID = self.gameUUID ?? UUID().uuidString
                 self.gameMO.localDateCreated = Date()
                 self.gameMO.gameUUID = self.gameUUID
                 self.gameMO.datePlayed = self.datePlayed
@@ -346,6 +344,7 @@ class Game {
                     self.gameMO.location = self.location.description
                 }
                 self.gameMO.excludeStats = excludeStats
+                self.gameMO.temporary = (self.hasJoined ? true : false)
             }) {
                 // Failed
                 return false

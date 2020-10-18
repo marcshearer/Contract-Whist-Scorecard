@@ -164,6 +164,12 @@
 		B28E8C2324C03CC10053E237 /* Awards.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28E8C2224C03CC10053E237 /* Awards.swift */; };
 		B298496924E6DF4400FADC06 /* LaunchScreenView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B298496824E6DF4400FADC06 /* LaunchScreenView.xib */; };
 		B29AD706224F88060087160B /* Whisper Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29AD705224F88060087160B /* Whisper Class.swift */; };
+		B29D675F253B1B99000CE151 /* appicon green@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = B29D6759253B1B98000CE151 /* appicon green@3x.png */; };
+		B29D6760253B1B99000CE151 /* appicon green@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B29D675A253B1B98000CE151 /* appicon green@2x.png */; };
+		B29D6761253B1B99000CE151 /* appicon red@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B29D675B253B1B98000CE151 /* appicon red@2x.png */; };
+		B29D6762253B1B99000CE151 /* appicon red@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = B29D675C253B1B98000CE151 /* appicon red@3x.png */; };
+		B29D6763253B1B99000CE151 /* appicon yellow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B29D675D253B1B99000CE151 /* appicon yellow@2x.png */; };
+		B29D6764253B1B99000CE151 /* appicon yellow@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = B29D675E253B1B99000CE151 /* appicon yellow@3x.png */; };
 		B29FFF31223BA302002C01FE /* Banners.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29FFF30223BA302002C01FE /* Banners.swift */; };
 		B2A3D9A1248E2804008556B8 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2A3D9A0248E2804008556B8 /* Location.swift */; };
 		B2A44F222500DB970071F899 /* AwardDetailViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B2A44F212500DB970071F899 /* AwardDetailViewController.storyboard */; };
@@ -461,6 +467,12 @@
 		B28E8C2224C03CC10053E237 /* Awards.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Awards.swift; sourceTree = "<group>"; };
 		B298496824E6DF4400FADC06 /* LaunchScreenView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LaunchScreenView.xib; sourceTree = "<group>"; };
 		B29AD705224F88060087160B /* Whisper Class.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Whisper Class.swift"; sourceTree = "<group>"; };
+		B29D6759253B1B98000CE151 /* appicon green@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "appicon green@3x.png"; path = "../../Images/Media.xcassets/Appicon Green.imageset/appicon green@3x.png"; sourceTree = "<group>"; };
+		B29D675A253B1B98000CE151 /* appicon green@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "appicon green@2x.png"; path = "../../Images/Media.xcassets/Appicon Green.imageset/appicon green@2x.png"; sourceTree = "<group>"; };
+		B29D675B253B1B98000CE151 /* appicon red@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "appicon red@2x.png"; path = "../../Images/Media.xcassets/Appicon Red.imageset/appicon red@2x.png"; sourceTree = "<group>"; };
+		B29D675C253B1B98000CE151 /* appicon red@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "appicon red@3x.png"; path = "../../Images/Media.xcassets/Appicon Red.imageset/appicon red@3x.png"; sourceTree = "<group>"; };
+		B29D675D253B1B99000CE151 /* appicon yellow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "appicon yellow@2x.png"; path = "../../Images/Media.xcassets/Appicon Yellow.imageset/appicon yellow@2x.png"; sourceTree = "<group>"; };
+		B29D675E253B1B99000CE151 /* appicon yellow@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "appicon yellow@3x.png"; path = "../../Images/Media.xcassets/Appicon Yellow.imageset/appicon yellow@3x.png"; sourceTree = "<group>"; };
 		B29FFF30223BA302002C01FE /* Banners.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Banners.swift; sourceTree = "<group>"; };
 		B2A3D9A0248E2804008556B8 /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 		B2A44F212500DB970071F899 /* AwardDetailViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = AwardDetailViewController.storyboard; sourceTree = "<group>"; };
@@ -1348,6 +1360,19 @@
 			name = "Award View";
 			sourceTree = "<group>";
 		};
+		B29D6758253B1B35000CE151 /* App Icons */ = {
+			isa = PBXGroup;
+			children = (
+				B29D675A253B1B98000CE151 /* appicon green@2x.png */,
+				B29D6759253B1B98000CE151 /* appicon green@3x.png */,
+				B29D675B253B1B98000CE151 /* appicon red@2x.png */,
+				B29D675C253B1B98000CE151 /* appicon red@3x.png */,
+				B29D675D253B1B99000CE151 /* appicon yellow@2x.png */,
+				B29D675E253B1B99000CE151 /* appicon yellow@3x.png */,
+			);
+			name = "App Icons";
+			sourceTree = "<group>";
+		};
 		B2A44F202500DB750071F899 /* Award Detail */ = {
 			isa = PBXGroup;
 			children = (
@@ -1556,6 +1581,7 @@
 				CC4CC1071DEADC32007FB24F /* Info.plist */,
 				B2B1802621196166008D3BAA /* Contract_Whist_Scorecard.xcdatamodeld */,
 				B20DA04F1E1FEC5F0040221D /* Contract Whist Scorecard.entitlements */,
+				B29D6758253B1B35000CE151 /* App Icons */,
 			);
 			name = "Standard Components";
 			sourceTree = "<group>";
@@ -1776,6 +1802,7 @@
 				B260AAD7251E34C700CD1EB3 /* LeaderboardViewCell.xib in Resources */,
 				B20B1262245EFC2B001DD632 /* Contract Whist Comms Protocols.docx in Resources */,
 				B243386022E57BBC002EBD40 /* ImageButton.xib in Resources */,
+				B29D6763253B1B99000CE151 /* appicon yellow@2x.png in Resources */,
 				B22789451FB8951A009BABCA /* GraphViewController.storyboard in Resources */,
 				B24ABA3824B040D600E3F130 /* DataTableTileContentCollectionViewCell.xib in Resources */,
 				B228E3C224A10F36006D91CE /* EveryoneDashboardPortraitView.xib in Resources */,
@@ -1789,6 +1816,8 @@
 				B2A9096324A1BBDB00B35B69 /* DataTableTileView.xib in Resources */,
 				B2E37D0724E7DFC60074C8F3 /* LaunchScreen.storyboard in Resources */,
 				B22789021FB83AA7009BABCA /* SelectionViewController.storyboard in Resources */,
+				B29D675F253B1B99000CE151 /* appicon green@3x.png in Resources */,
+				B29D6762253B1B99000CE151 /* appicon red@3x.png in Resources */,
 				B260AAD1251E34AA00CD1EB3 /* LeaderboardView.xib in Resources */,
 				B22789331FB88FA5009BABCA /* DataTableViewController.storyboard in Resources */,
 				B216268E251B892200BDEE70 /* EveryoneDashboardContainerView.xib in Resources */,
@@ -1809,6 +1838,7 @@
 				B221EED5210B0DFE00F7FBA0 /* HandViewController.storyboard in Resources */,
 				B20CF54824A7D74500F27A9C /* EveryoneDashboardLandscapeView.xib in Resources */,
 				B227892A1FB885AC009BABCA /* ConfirmCountViewController.storyboard in Resources */,
+				B29D6761253B1B99000CE151 /* appicon red@2x.png in Resources */,
 				B28DDAA424A3274E0029FE36 /* HighScoreTileCollectionViewCell.xib in Resources */,
 				B24C5A4824C1F0650069759A /* AwardGridCollectionCell.xib in Resources */,
 				B2361A3722D5B965007D88BB /* ConfirmPlayedViewController.storyboard in Resources */,
@@ -1824,6 +1854,7 @@
 				B227891E1FB84F66009BABCA /* LocationViewController.storyboard in Resources */,
 				B2B2CE7324A733C00081CBFD /* PlayersViewController.storyboard in Resources */,
 				B23970DB24AF77DE00E3C2A9 /* HighScoresDashboardLandscapeView.xib in Resources */,
+				B29D6760253B1B99000CE151 /* appicon green@2x.png in Resources */,
 				B247A72B248359F500591BBA /* TitleBar.xib in Resources */,
 				B243385922E0A6C3002EBD40 /* SelectedPlayersView.xib in Resources */,
 				B22789001FB83AA7009BABCA /* GetStartedViewController.storyboard in Resources */,
@@ -1831,6 +1862,7 @@
 				B24C5A5124C3165E0069759A /* AwardsTileView.xib in Resources */,
 				B227893F1FB893C9009BABCA /* SettingsViewController.storyboard in Resources */,
 				B248F2F8249F54EA000275DD /* DashboardViewController.storyboard in Resources */,
+				B29D6764253B1B99000CE151 /* appicon yellow@3x.png in Resources */,
 				B22789421FB894AE009BABCA /* PlayerDetailViewController.storyboard in Resources */,
 				B28DDA9E24A325500029FE36 /* HighScoreTileView.xib in Resources */,
 				B283A1B024AF438D0065994B /* BubbleView.xib in Resources */,
@@ -2296,7 +2328,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 3T7CT2S464;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				IBSC_MODULE = Contract_Whist_Watch_Extension;
@@ -2322,7 +2354,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 3T7CT2S464;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				IBSC_MODULE = Contract_Whist_Watch_Extension;
@@ -2347,7 +2379,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 3T7CT2S464;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_WARN_PEDANTIC = NO;
@@ -2373,7 +2405,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 3T7CT2S464;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_WARN_PEDANTIC = NO;
@@ -2483,7 +2515,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -2538,7 +2570,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				"SWIFT_ACTIVE_COMPILATION_CONDITIONS[arch=*]" = ContractWhist;
@@ -2553,7 +2585,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Contract Whist Scorecard/Contract Whist Scorecard.entitlements";
-				CURRENT_PROJECT_VERSION = 0;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 3T7CT2S464;
 				GCC_WARN_PEDANTIC = NO;
 				INFOPLIST_FILE = "Contract Whist Scorecard/Info.plist";
@@ -2573,7 +2605,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Contract Whist Scorecard/Contract Whist Scorecard.entitlements";
-				CURRENT_PROJECT_VERSION = 0;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 3T7CT2S464;
 				GCC_WARN_PEDANTIC = NO;
 				INFOPLIST_FILE = "Contract Whist Scorecard/Info.plist";

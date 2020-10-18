@@ -140,10 +140,13 @@ class Theme {
     private var faintTextColor: [ThemeBackgroundColorName : UIColor] = [:]
     private var themeTextColor: [ThemeBackgroundColorName : UIColor] = [:]
     private var specificColor: [ThemeSpecificColorName : UIColor] = [:]
+    private var _icon: String?
+    public var icon: String? { self._icon }
     
     init(themeName: ThemeName) {
         self.themeName = themeName
         if let config = Themes.themes[themeName] {
+            self._icon = config.icon
             self.defaultTheme(from: config, all: true)
             
             if let basedOn = config.basedOn,
@@ -376,12 +379,14 @@ class ThemeTextColor {
 class ThemeConfig {
     
     let basedOn: ThemeName?
+    let icon: String?
     var backgroundColor: [ThemeBackgroundColorName: ThemeColor]
     var textColor: [ThemeTextColorSetName: ThemeTextColor]
     var specificColor: [ThemeSpecificColorName: ThemeTraitColor]
     
-    init(basedOn: ThemeName? = nil, background backgroundColor: [ThemeBackgroundColorName : ThemeColor], text textColor: [ThemeTextColorSetName : ThemeTextColor], specific specificColor: [ThemeSpecificColorName: ThemeTraitColor] = [:]) {
+    init(basedOn: ThemeName? = nil, icon: String? = nil, background backgroundColor: [ThemeBackgroundColorName : ThemeColor], text textColor: [ThemeTextColorSetName : ThemeTextColor], specific specificColor: [ThemeSpecificColorName: ThemeTraitColor] = [:]) {
         self.basedOn = basedOn
+        self.icon = icon
         self.backgroundColor = backgroundColor
         self.textColor = textColor
         self.specificColor = specificColor
@@ -463,6 +468,7 @@ class Themes {
                 .confetti                    : ThemeTraitColor(#colorLiteral(red: 0.8431372549, green: 0.7176470588, blue: 0.2509803922, alpha: 1))]
             ),
         .alternate: ThemeConfig(
+            icon: "AppIcon-Green",
             background: [
                 .gameBanner                  : ThemeColor(#colorLiteral(red: 0.4549019608, green: 0.5764705882, blue: 0.5921568627, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1),  .midBackground)   ,
                 .emphasis                    : ThemeColor(#colorLiteral(red: 0.4549019608, green: 0.5764705882, blue: 0.5921568627, alpha: 1), nil, .midBackground)   ,
@@ -498,6 +504,7 @@ class Themes {
                 .darkBackground              : ThemeTextColor(normal: #colorLiteral(red: 0.9411764706, green: 0.9411764706, blue: 0.9411764706, alpha: 1), contrast: #colorLiteral(red: 0.337254902, green: 0.4509803922, blue: 0.4549019608, alpha: 1), strong: #colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1), theme: #colorLiteral(red: 0.6699781418, green: 0.2215877175, blue: 0.2024611831, alpha: 1)) ]
         ),
         .blue: ThemeConfig(
+            icon: "AppIcon-Yellow",
             background: [
                 .background                  : ThemeColor(#colorLiteral(red: 0.9724639058, green: 0.9726034999, blue: 0.9724336267, alpha: 1), nil, .lightBackground) ,
                 .banner                      : ThemeColor(#colorLiteral(red: 0.8961163759, green: 0.7460593581, blue: 0.3743121624, alpha: 1), nil, .midBackground)   ,
@@ -543,6 +550,7 @@ class Themes {
                 .darkBackground              : ThemeTextColor(normal: #colorLiteral(red: 0.9411764706, green: 0.9411764706, blue: 0.9411764706, alpha: 1), contrast: #colorLiteral(red: 0.337254902, green: 0.4509803922, blue: 0.4549019608, alpha: 1), strong: #colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1), theme: #colorLiteral(red: 0.8961163759, green: 0.7460593581, blue: 0.3743121624, alpha: 1)) ]
         ),
         .green: ThemeConfig(
+            icon: "AppIcon-Green",
             background:  [
                 .emphasis                    : ThemeColor(#colorLiteral(red: 0.3921568627, green: 0.6509803922, blue: 0.6431372549, alpha: 1), nil, .midBackground) ,
                 .banner                      : ThemeColor(#colorLiteral(red: 0.3921568627, green: 0.6509803922, blue: 0.6431372549, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1),  .midBackground) ,
@@ -557,7 +565,26 @@ class Themes {
         )
     ]
     
-    public static func selectTheme(_ themeName: ThemeName) {
+    public static func selectTheme(_ themeName: ThemeName, changeIcon: Bool = false) {
+        let oldIcon = Themes.currentTheme?.icon
         Themes.currentTheme = Theme(themeName: themeName)
+        let newIcon = Themes.currentTheme.icon
+        if UIApplication.shared.supportsAlternateIcons && changeIcon && oldIcon != newIcon {
+            Themes.setApplicationIconName(Themes.currentTheme.icon)
+        }
+    }
+    
+    private static func setApplicationIconName(_ iconName: String?) {
+        if UIApplication.shared.responds(to: #selector(getter: UIApplication.supportsAlternateIcons)) && UIApplication.shared.supportsAlternateIcons {
+            
+            typealias setAlternateIconName = @convention(c) (NSObject, Selector, NSString?, @escaping (NSError) -> ()) -> ()
+            
+            let selectorString = "_setAlternateIconName:completionHandler:"
+            
+            let selector = NSSelectorFromString(selectorString)
+            let imp = UIApplication.shared.method(for: selector)
+            let method = unsafeBitCast(imp, to: setAlternateIconName.self)
+            method(UIApplication.shared, selector, iconName as NSString?, { _ in })
+        }
     }
 }

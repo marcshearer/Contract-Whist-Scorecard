@@ -204,14 +204,14 @@ class Player {
                     if self.participantMO == nil {
                         // Create the managed object for this participant in the game
                         self.participantMO = CoreData.create(from: "Participant")
-                        self.participantMO?.gameUUID = Scorecard.game.gameUUID
-                        self.participantMO?.datePlayed = Scorecard.game.datePlayed
                         self.participantMO?.localDateCreated = Date()
                         self.participantMO?.deviceUUID = UIDevice.current.identifierForVendor?.uuidString
                         self.participantMO?.name = self.playerMO?.name
                         self.participantMO?.playerUUID = self.playerMO?.playerUUID
                         self.participantMO?.playerNumber = Int16(self.scorecardPlayerNumber())
                     }
+                    self.participantMO?.gameUUID = Scorecard.game.gameUUID
+                    self.participantMO?.datePlayed = Scorecard.game.datePlayed
                     self.participantMO!.handsPlayed = Int16(Scorecard.game.rounds)
                     self.participantMO!.gamesPlayed = 1
                     self.participantMO!.place = place

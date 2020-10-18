@@ -322,7 +322,7 @@ extension GameSummaryViewController {
 extension Scorecard {
     
     public func getAutoPlayCount(from viewController: ScorecardViewController, completion: (()->())? = nil) {
-        ConfirmCountViewController.show(from: viewController, title: "Auto-play", message: "Enter the number of games you want to simulate", minimumValue: 1, handler: { (value) in
+        ConfirmCountViewController.show(from: viewController, title: "Auto-play", message: "Enter the number of games you want to simulate", minimumValue: 1, wraps: false, handler: { (value) in
             self.autoPlayGames = value
             let round = (self.autoPlayGames == 1 ? Scorecard.game.maxEnteredRound : 1)
             let defaultValue = (self.autoPlayGames == 1 ? round : Scorecard.game.rounds)

@@ -1368,7 +1368,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     
     private func selectColorTheme(item: Int) {
         Scorecard.settings.colorTheme = self.themeNames[item]
-        Themes.selectTheme(self.themeNames[item])
+        Themes.selectTheme(self.themeNames[item], changeIcon: true)
         self.defaultViewColors()
         self.banner.refresh()
         self.view.setNeedsDisplay()

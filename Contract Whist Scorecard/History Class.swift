@@ -461,6 +461,7 @@ class History {
         gameMO.excludeStats = Utility.objectBool(cloudObject: cloudObject, forKey: "excludeStats")
         gameMO.syncRecordID = cloudObject.recordID.recordName
         gameMO.syncDate = Utility.objectDate(cloudObject: cloudObject, forKey: "syncDate")
+        gameMO.temporary = false
         if gameMO.localDateCreated == nil {
             gameMO.localDateCreated = Date()
         }

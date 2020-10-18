@@ -10,10 +10,16 @@ import Foundation
 
 extension Date {
     
+    static let fullDateFormat = "yyyy-MM-dd HH:mm:ss.SSS ZZZZ"
+    
     init(from dateString: String, format: String = "dd/MM/yyyy") {
         let formatter = DateFormatter()
         formatter.dateFormat = format
         self = formatter.date(from: dateString) ?? Date(timeIntervalSince1970: 0)
+    }
+
+    init(fullDate dateString: String) {
+        self.init(from: dateString, format: Date.fullDateFormat)
     }
     
     func toString(format: String = "dd/MM/yyyy", localized: Bool = true) -> String {
@@ -24,6 +30,10 @@ extension Date {
             formatter.dateFormat = format
         }
         return formatter.string(from: self)
+    }
+    
+    func toFullString() -> String {
+        return self.toString(format: Date.fullDateFormat, localized: false)
     }
     
     static public func startOfMinute(addMinutes: Int = 0, onlyAddIfRounded: Bool = false, rounding: Int = 1, from date: Date = Date()) -> Date {

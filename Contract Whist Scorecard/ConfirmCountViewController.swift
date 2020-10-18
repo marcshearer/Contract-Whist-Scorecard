@@ -15,6 +15,7 @@ class ConfirmCountViewController : ScorecardViewController, UIPopoverPresentatio
     var value = 1
     var minimumValue: Int?
     var maximumValue: Int?
+    var wraps = true
     var confirmHandler: ((Int)->())!
     var sourceView: UIView?
     
@@ -58,6 +59,7 @@ class ConfirmCountViewController : ScorecardViewController, UIPopoverPresentatio
         if self.maximumValue != nil {
             self.stepperCount.maximumValue = Double(self.maximumValue!)
         }
+        self.stepperCount.wraps = self.wraps
         ScorecardUI.roundCorners(view)
     }
     
@@ -83,13 +85,14 @@ class ConfirmCountViewController : ScorecardViewController, UIPopoverPresentatio
         }
     }
     
-    static func show(from parentViewController: ScorecardViewController, title: String, message: String, defaultValue: Int = 1, minimumValue: Int? = nil, maximumValue: Int? = nil, height: Int = 260, handler: @escaping ((Int)->())) {
+    static func show(from parentViewController: ScorecardViewController, title: String, message: String, defaultValue: Int = 1, minimumValue: Int? = nil, maximumValue: Int? = nil, wraps: Bool = true, height: Int = 260, handler: @escaping ((Int)->())) {
         
         let storyboard = UIStoryboard(name: "ConfirmCountViewController", bundle: nil)
         let viewController = storyboard.instantiateViewController(withIdentifier: "ConfirmCountViewController") as! ConfirmCountViewController
         
         viewController.minimumValue = minimumValue
         viewController.maximumValue = maximumValue
+        viewController.wraps = wraps
         viewController.formTitle = title
         viewController.message = message
         viewController.value = defaultValue

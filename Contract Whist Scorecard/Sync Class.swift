@@ -875,7 +875,7 @@ class Sync {
         if history.games.count != 0 {
             for historyGame in history.games {
                 // First check if game confirmed - i.e. we have a cloud RecordID - should all be unconfirmed
-                if historyGame.gameMO.syncRecordID == nil {
+                if historyGame.gameMO.syncRecordID == nil && !historyGame.gameMO.temporary {
                     // Not confirmed yet - send it
                     let gameMO = historyGame.gameMO!
                     let recordID = CKRecord.ID(recordName: "Games-\(Utility.dateString(gameMO.datePlayed!, format: self.recordIdDateFormat, localized: false))+\(gameMO.deviceName!)+\(gameMO.gameUUID!)")

@@ -115,7 +115,6 @@ enum InviteStatus {
             if Scorecard.recovery.onlineMode == .invite {
                 self.sendInvites()
             }
-            self.gameInProgress = true
             self.startGame()
             
         } else {
@@ -374,6 +373,7 @@ enum InviteStatus {
     }
     
     func startGame() {
+        self.gameInProgress = true
         self.setupPlayers()
         Scorecard.shared.saveMaxScores()
         Scorecard.recovery.saveInitialValues()

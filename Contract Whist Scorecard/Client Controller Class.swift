@@ -299,6 +299,9 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
                     if let data = data?["gameUUID"] as? [String:Any?]? {
                         stopProcessing = self.processQueue(descriptor: "gameUUID", data: data, peer: peer) || stopProcessing
                     }
+                    if let data = data?["location"] as? [String:Any?]? {
+                        stopProcessing = self.processQueue(descriptor: "location", data: data, peer: peer) || stopProcessing
+                    }
                     if let data = data?["handState"] as? [String:Any?]? {
                         stopProcessing =  self.processQueue(descriptor: "handState", data: data, peer: peer) || stopProcessing
                         
@@ -313,8 +316,10 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
                     
                 case "gameUUID":
                     
-                    if let gameUUID = data!["gameUUID"] as? String {
+                    if let gameUUID = data!["gameUUID"] as? String,
+                       let datePlayed = data!["datePlayed"] as? String {
                         Scorecard.game.gameUUID = gameUUID
+                        Scorecard.game.datePlayed = Date(fullDate: datePlayed)
                         if Scorecard.recovery.recoveryAvailable {
                             if gameUUID == Scorecard.recovery.gameUUID {
                                 // Matches last game we had - recover deal history
@@ -327,6 +332,15 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
                             // Not recovering - remove history
                             Scorecard.game.dealHistory = [:]
                         }
+                    }
+                    
+                case "location":
+                    if let description = data!["description"] as? String {
+                        Scorecard.game.location.description = description
+                    }
+                    if let latitude = data!["latitude"] as? Double,
+                       let longitude = data!["longitude"] as? Double {
+                        Scorecard.game.location.setLocation(latitude: latitude, longitude: longitude)
                     }
                     
                 case "settings":

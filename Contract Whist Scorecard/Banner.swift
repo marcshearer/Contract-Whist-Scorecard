@@ -106,6 +106,7 @@ class Banner : UIView {
     @IBInspectable var menuSpaceBefore: CGFloat = 0.0
     @IBInspectable var disableOptions: Bool = false
     @IBInspectable var lowerViewHeight: CGFloat = 0
+    @IBInspectable var bottomAlignTitle: Bool = false
 
     public static let defaultFont = UIFont.systemFont(ofSize: 28, weight: .semibold)
     public static let heavyFont = UIFont(name: "Avenir-Heavy", size: 34)
@@ -145,6 +146,7 @@ class Banner : UIView {
     @IBOutlet private weak var parentViewController: ScorecardViewController!
     @IBOutlet private weak var delegate: BannerDelegate?
     @IBOutlet private var bannerHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var bannerTopConstraint: NSLayoutConstraint!
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
@@ -201,6 +203,14 @@ class Banner : UIView {
             self.bannerHeightConstraint?.constant = self.normalOverrideHeight ?? self.parentViewController!.defaultBannerHeight
         } else {
             self.bannerHeightConstraint?.constant = self.containerOverrideHeight ?? self.parentViewController!.defaultBannerHeight
+        }
+        
+        // Position relative to top
+        self.bannerTopConstraint.constant = 0
+        if self.parentViewController?.containerBanner ?? false  || self.bottomAlignTitle {
+            if let height = self.bannerHeightConstraint?.constant {
+                self.bannerTopConstraint.constant = height - self.titleLabel.frame.height - self.lowerViewGroupHeightConstraint.constant
+            }
         }
         
         self.showHideButtons()

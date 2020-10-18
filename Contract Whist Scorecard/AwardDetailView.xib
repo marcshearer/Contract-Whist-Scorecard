@@ -9,7 +9,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AwardDetailView" customModule="Whist_2" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AwardDetailView" customModule="Whist" customModuleProvider="target">
             <connections>
                 <outlet property="awardView" destination="Wgy-fH-2XD" id="Mog-Ap-MPn"/>
                 <outlet property="contentView" destination="iN0-l3-epB" id="Y4O-3R-GTq"/>
@@ -34,7 +34,7 @@
                 <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="onT-bw-PDq" userLabel="Shadow View">
                     <rect key="frame" x="30" y="0.0" width="240" height="350"/>
                     <subviews>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Wgy-fH-2XD" customClass="AwardView" customModule="Whist_2" customModuleProvider="target">
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Wgy-fH-2XD" customClass="AwardView" customModule="Whist" customModuleProvider="target">
                             <rect key="frame" x="32.5" y="40" width="175" height="175"/>
                             <color key="backgroundColor" name="Clear"/>
                             <accessibility key="accessibilityConfiguration" identifier="awardView"/>
@@ -52,7 +52,7 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="Lec-jZ-nt1" userLabel="Title Label">
-                            <rect key="frame" x="20" y="272" width="200" height="35"/>
+                            <rect key="frame" x="20" y="262" width="200" height="35"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="35" id="lIc-wv-BTc"/>
                             </constraints>
@@ -106,7 +106,7 @@
                         <constraint firstItem="hVe-Cf-m7K" firstAttribute="trailing" secondItem="Y3o-sV-ZJG" secondAttribute="trailing" id="Odb-mo-xPG"/>
                         <constraint firstItem="Lec-jZ-nt1" firstAttribute="leading" secondItem="onT-bw-PDq" secondAttribute="leading" constant="20" id="UE7-xB-uLv"/>
                         <constraint firstItem="Wgy-fH-2XD" firstAttribute="top" secondItem="onT-bw-PDq" secondAttribute="top" constant="40" id="clD-7I-I1F"/>
-                        <constraint firstItem="Lec-jZ-nt1" firstAttribute="top" secondItem="eBV-lw-ecw" secondAttribute="bottom" constant="10" id="idz-j5-e01"/>
+                        <constraint firstItem="Lec-jZ-nt1" firstAttribute="top" secondItem="eBV-lw-ecw" secondAttribute="bottom" id="idz-j5-e01"/>
                         <constraint firstItem="Wgy-fH-2XD" firstAttribute="height" secondItem="onT-bw-PDq" secondAttribute="height" multiplier="1:2" id="jbi-AS-fib"/>
                         <constraint firstAttribute="width" constant="240" id="phi-Vc-BGX"/>
                         <constraint firstItem="hVe-Cf-m7K" firstAttribute="leading" secondItem="Y3o-sV-ZJG" secondAttribute="leading" id="pif-C8-lNb"/>

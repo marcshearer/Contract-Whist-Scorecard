@@ -11,6 +11,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="Banner" customModule="Whist" customModuleProvider="target">
             <connections>
+                <outlet property="bannerTopConstraint" destination="H2A-Sa-d7R" id="3tG-hu-FNL"/>
                 <outlet property="contentView" destination="iN0-l3-epB" id="grO-O2-btl"/>
                 <outlet property="leftViewGroup" destination="27E-De-fIC" id="7pq-7G-JpM"/>
                 <outlet property="lowerViewGroup" destination="Hhl-Cx-Vdj" id="1uK-z6-LdQ"/>

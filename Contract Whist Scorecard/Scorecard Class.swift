@@ -378,10 +378,7 @@ class Scorecard {
             
             if Scorecard.reachability.connected ?? false {
                 self.isNetworkAvailable = true
-                
-                // First act immediately using stored values
-                action?()
-                
+                                
                 // Now check icloud asynchronously
                 CKContainer.init(identifier: Config.iCloudIdentifier).accountStatus(completionHandler: { (accountStatus, errorMessage) -> Void in
                     self.isLoggedIn = (accountStatus == .available)

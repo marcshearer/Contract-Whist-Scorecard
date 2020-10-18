@@ -61,7 +61,7 @@ class StatisticsViewer : NSObject, DataTableViewerDelegate {
         dataTableViewController = DataTableViewController.show(from: viewController, delegate: self, recordList: recordList)
     }
     
-    internal func didSelect(row: Int, record: DataTableViewerDataSource, field: String) {
+    internal func didSelect(record: DataTableViewerDataSource, field: String) {
         let record = record as! PlayerDetail
         switch field {
         case "info":

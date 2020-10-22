@@ -623,6 +623,7 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
     internal var menuController: MenuController!
     internal var rightTitleLabel: UILabel!
     internal var rightCaptionLabel: UILabel!
+    internal var helpView: HelpView!
     
     internal var uniqueID: String!
     internal weak var bannerClass: Banner!
@@ -633,7 +634,8 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
                         
         self.presentationController?.delegate = self
         self.uniqueID = self.uniqueID ?? UUID().uuidString
-
+        
+        self.helpView = HelpView(in: self)
         
         Utility.debugMessage(self.className, "didLoad")
     }
@@ -650,6 +652,11 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
             // New active view - notify app controller that view display complete
             self.appController?.setViewPresentingComplete()
         }
+    }
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        self.helpView?.finished()
     }
     
     override func viewDidLayoutSubviews() {
@@ -938,7 +945,7 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
         })
     }
     
-    // Methods that should be overridden (if called) in sub-classes =============================================== -
+    // Methods that could/should be overridden (if called) in sub-classes ==================================== -
     
     internal func backButtonPressed() {
         fatalError("Must be overridden")

@@ -389,7 +389,7 @@ class SelectPlayersViewController: ScorecardViewController, SyncDelegate, Button
         selectPlayersViewController.playerDetailView = playerDetailView
         selectPlayersViewController.completion = completion
     
-        viewController.present(selectPlayersViewController, appController: appController, animated: true, completion: nil)
+        viewController.present(selectPlayersViewController, appController: appController, animated: true, container: .mainRight, completion: nil)
         
         return selectPlayersViewController
     }

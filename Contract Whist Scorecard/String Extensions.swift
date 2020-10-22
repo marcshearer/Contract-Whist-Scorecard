@@ -76,25 +76,10 @@ extension String {
     }
     
     func labelHeight(width: CGFloat? = nil, font: UIFont? = nil) -> CGFloat {
-        let label = UILabel(frame: CGRect(x: 0, y: 0, width: width ?? CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude))
-        label.numberOfLines = (width == nil ? 1 : 0)
-        if let font = font {
-            label.font = font
-        }
-        label.text = self
-        label.sizeToFit()
-        return label.frame.height
+        return NSAttributedString(self).labelHeight(width: width, font: font)
     }
 
     func labelWidth(height: CGFloat? = nil, font: UIFont? = nil) -> CGFloat {
-        let label = UILabel(frame: CGRect(x: 0, y: 0, width: CGFloat.greatestFiniteMagnitude, height: height ?? 30))
-        label.numberOfLines = (height == nil ? 1 : 0)
-        if let font = font {
-            label.font = font
-        }
-        label.text = self
-        label.sizeToFit()
-        return label.frame.width
+        return NSAttributedString(self).labelWidth(height: height, font: font)
     }
-
 }

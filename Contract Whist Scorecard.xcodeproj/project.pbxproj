@@ -129,6 +129,8 @@
 		B2519457230C4284006240DE /* Custom Transitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2519456230C4284006240DE /* Custom Transitions.swift */; };
 		B2594E852251FEB2004398FB /* launch_multiple_simulators.sh in Resources */ = {isa = PBXBuildFile; fileRef = B2594E832251FEB1004398FB /* launch_multiple_simulators.sh */; };
 		B2594E862251FEB2004398FB /* MyDevices.sh in Resources */ = {isa = PBXBuildFile; fileRef = B2594E842251FEB2004398FB /* MyDevices.sh */; };
+		B25D760D253EBE3D008D2B69 /* FocusGradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B25D760C253EBE3D008D2B69 /* FocusGradientView.swift */; };
+		B25D761C253EFBB8008D2B69 /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B25D761B253EFBB8008D2B69 /* HelpView.swift */; };
 		B25FC7C922D0733C00D2E651 /* SelectPlayersViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B25FC7C322D0733C00D2E651 /* SelectPlayersViewController.storyboard */; };
 		B25FC7CA22D0733C00D2E651 /* OverrideViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B25FC7C522D0733C00D2E651 /* OverrideViewController.storyboard */; };
 		B25FC7CB22D0733C00D2E651 /* ReviewViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B25FC7C722D0733C00D2E651 /* ReviewViewController.storyboard */; };
@@ -242,6 +244,8 @@
 		B2F7281B1F6D74F9006F0941 /* Invite.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F7281A1F6D74F9006F0941 /* Invite.swift */; };
 		B2F7281D1F7199AE006F0941 /* RabbitMQ Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F7281C1F7199AE006F0941 /* RabbitMQ Class.swift */; };
 		B2FA298E1EA9E215002A5D03 /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2FA298D1EA9E215002A5D03 /* Alert.swift */; };
+		B2FFB631253DBC4200D1DCCA /* SpeechBubbleView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2FFB630253DBC4200D1DCCA /* SpeechBubbleView.xib */; };
+		B2FFB637253DBC7700D1DCCA /* SpeechBubbleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2FFB636253DBC7700D1DCCA /* SpeechBubbleView.swift */; };
 		CC395F4D1E064EC500165D1C /* Card Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC395F4C1E064EC500165D1C /* Card Class.swift */; };
 		CC395F511E0905BE00165D1C /* Utility Library.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC395F501E0905BE00165D1C /* Utility Library.swift */; };
 		CC4CC0F91DEADC32007FB24F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC4CC0F81DEADC32007FB24F /* AppDelegate.swift */; };
@@ -430,6 +434,8 @@
 		B2519456230C4284006240DE /* Custom Transitions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Custom Transitions.swift"; sourceTree = "<group>"; };
 		B2594E832251FEB1004398FB /* launch_multiple_simulators.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = launch_multiple_simulators.sh; sourceTree = "<group>"; };
 		B2594E842251FEB2004398FB /* MyDevices.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = MyDevices.sh; sourceTree = "<group>"; };
+		B25D760C253EBE3D008D2B69 /* FocusGradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusGradientView.swift; sourceTree = "<group>"; };
+		B25D761B253EFBB8008D2B69 /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
 		B25FC7C422D0733C00D2E651 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/SelectPlayersViewController.storyboard; sourceTree = "<group>"; };
 		B25FC7C622D0733C00D2E651 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/OverrideViewController.storyboard; sourceTree = "<group>"; };
 		B25FC7C822D0733C00D2E651 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/ReviewViewController.storyboard; sourceTree = "<group>"; };
@@ -543,6 +549,8 @@
 		B2F7281A1F6D74F9006F0941 /* Invite.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Invite.swift; sourceTree = "<group>"; };
 		B2F7281C1F7199AE006F0941 /* RabbitMQ Class.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RabbitMQ Class.swift"; sourceTree = "<group>"; };
 		B2FA298D1EA9E215002A5D03 /* Alert.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
+		B2FFB630253DBC4200D1DCCA /* SpeechBubbleView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SpeechBubbleView.xib; sourceTree = "<group>"; };
+		B2FFB636253DBC7700D1DCCA /* SpeechBubbleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechBubbleView.swift; sourceTree = "<group>"; };
 		B7B86B9863661F115CFF4BBC /* Pods-Contract Whist Scorecard.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Contract Whist Scorecard.release.xcconfig"; path = "Pods/Target Support Files/Pods-Contract Whist Scorecard/Pods-Contract Whist Scorecard.release.xcconfig"; sourceTree = "<group>"; };
 		CC395F4C1E064EC500165D1C /* Card Class.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Card Class.swift"; sourceTree = "<group>"; };
 		CC395F501E0905BE00165D1C /* Utility Library.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Utility Library.swift"; sourceTree = "<group>"; };
@@ -1138,6 +1146,22 @@
 			name = Scripts;
 			sourceTree = "<group>";
 		};
+		B25D7605253EBE08008D2B69 /* Focus Gradient */ = {
+			isa = PBXGroup;
+			children = (
+				B25D760C253EBE3D008D2B69 /* FocusGradientView.swift */,
+			);
+			name = "Focus Gradient";
+			sourceTree = "<group>";
+		};
+		B25D761A253EFB90008D2B69 /* Help View */ = {
+			isa = PBXGroup;
+			children = (
+				B25D761B253EFBB8008D2B69 /* HelpView.swift */,
+			);
+			name = "Help View";
+			sourceTree = "<group>";
+		};
 		B260AABA251E331F00CD1EB3 /* Leaderboard View */ = {
 			isa = PBXGroup;
 			children = (
@@ -1156,6 +1180,9 @@
 				B24ABA3924B31B6700E3F130 /* Banner Logo */,
 				B2B3501A24BC53110004DCB1 /* Group View */,
 				B283A1AE24AF43420065994B /* Bubble View */,
+				B2FFB62F253DBBFC00D1DCCA /* Speech Bubble */,
+				B25D7605253EBE08008D2B69 /* Focus Gradient */,
+				B25D761A253EFB90008D2B69 /* Help View */,
 				B2E894D22369EEF40011AD3D /* Confetti View */,
 				B243385122D89AE7002EBD40 /* Thumbnail View */,
 				B243386122E57BD1002EBD40 /* Image Button View */,
@@ -1513,6 +1540,15 @@
 			name = "Hexagon View";
 			sourceTree = "<group>";
 		};
+		B2FFB62F253DBBFC00D1DCCA /* Speech Bubble */ = {
+			isa = PBXGroup;
+			children = (
+				B2FFB630253DBC4200D1DCCA /* SpeechBubbleView.xib */,
+				B2FFB636253DBC7700D1DCCA /* SpeechBubbleView.swift */,
+			);
+			name = "Speech Bubble";
+			sourceTree = "<group>";
+		};
 		CC4CC0EC1DEADC32007FB24F = {
 			isa = PBXGroup;
 			children = (
@@ -1830,6 +1866,7 @@
 				B28DDAA224A327180029FE36 /* HighScoreTileTableViewCell.xib in Resources */,
 				B243385522D89B72002EBD40 /* ThumbnailView.xib in Resources */,
 				B22789151FB8490F009BABCA /* EntryViewController.storyboard in Resources */,
+				B2FFB631253DBC4200D1DCCA /* SpeechBubbleView.xib in Resources */,
 				B2CBB81724A9D71400B336CB /* CreatePlayerView.xib in Resources */,
 				B22E38DA24A05F8900D61BBA /* CountTileView.xib in Resources */,
 				B2A9096924A1C3A000B35B69 /* DataTableTileCollectionViewCell.xib in Resources */,
@@ -2022,6 +2059,7 @@
 				B2B3501E24BC539B0004DCB1 /* ViewGroup.swift in Sources */,
 				B2E7621E1E73E6A6001DAF4F /* GetStartedViewController.swift in Sources */,
 				B22500F11F48425C0042D566 /* Scorecard Comms.swift in Sources */,
+				B25D760D253EBE3D008D2B69 /* FocusGradientView.swift in Sources */,
 				CC7A49081DF28BEB00703D38 /* Scorecard UI.swift in Sources */,
 				B2E7621C1E6C98A0001DAF4F /* Notifications.swift in Sources */,
 				B2430CC922EABD3100C4FC77 /* SlideOutButtonView.swift in Sources */,
@@ -2034,6 +2072,7 @@
 				49075FFC1E0E578E008E06FA /* PlayersViewController.swift in Sources */,
 				B250610020CD7F480030EE8F /* Recovery.swift in Sources */,
 				B2BBCCAA2327ECD0005678B2 /* HexagonView.swift in Sources */,
+				B2FFB637253DBC7700D1DCCA /* SpeechBubbleView.swift in Sources */,
 				B2A44F262500DBB50071F899 /* AwardDetailViewController.swift in Sources */,
 				B2CBB81924A9D81500B336CB /* CreatePlayerView.swift in Sources */,
 				B204A768250F353600248915 /* ActionSheetViewController.swift in Sources */,
@@ -2076,6 +2115,7 @@
 				B28E8C2324C03CC10053E237 /* Awards.swift in Sources */,
 				B235D2BE1F82288A0019384B /* Notification Simulator.swift in Sources */,
 				B2F70E521EE8BC470092C19F /* Host Controller Class.swift in Sources */,
+				B25D761C253EFBB8008D2B69 /* HelpView.swift in Sources */,
 				B214FBB11FCB71EB00F4F39B /* Watch Manager.swift in Sources */,
 				B23970D124AF50BB00E3C2A9 /* DataTableTileStatsDataSource.swift in Sources */,
 				B2D2AAB01E1FF8A600E211A9 /* SyncViewController.swift in Sources */,
@@ -2328,7 +2368,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = 3T7CT2S464;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				IBSC_MODULE = Contract_Whist_Watch_Extension;
@@ -2354,7 +2394,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = 3T7CT2S464;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				IBSC_MODULE = Contract_Whist_Watch_Extension;
@@ -2379,7 +2419,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = 3T7CT2S464;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_WARN_PEDANTIC = NO;
@@ -2405,7 +2445,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = 3T7CT2S464;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_WARN_PEDANTIC = NO;
@@ -2585,7 +2625,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Contract Whist Scorecard/Contract Whist Scorecard.entitlements";
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = 3T7CT2S464;
 				GCC_WARN_PEDANTIC = NO;
 				INFOPLIST_FILE = "Contract Whist Scorecard/Info.plist";
@@ -2605,7 +2645,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Contract Whist Scorecard/Contract Whist Scorecard.entitlements";
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = 3T7CT2S464;
 				GCC_WARN_PEDANTIC = NO;
 				INFOPLIST_FILE = "Contract Whist Scorecard/Info.plist";

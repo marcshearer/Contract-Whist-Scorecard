@@ -123,6 +123,23 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
             self.rootViewController.selectAvailableDevice(deviceName: deviceName)
         }
     }
+    
+    @IBAction func infoPressed(_ sender: UIButton) {
+        if currentOption == .playGame && self.rootViewController.viewControllerStack.isEmpty {
+            self.view.superview?.bringSubviewToFront(self.view)
+            self.helpView.show(alwaysNext: true) { (finishPressed) in
+                self.view.superview?.insertSubview(self.view, at: 1)
+                if !finishPressed {
+                    self.rootViewController.panelInfoPressed(alwaysNext: false, completion: nil)
+                }
+            }
+        } else {
+            self.view.superview?.bringSubviewToFront(self.view)
+            self.rootViewController.panelInfoPressed(alwaysNext: false) { (finishPressed) in
+                self.view.superview?.insertSubview(self.view, at: 1)
+            }
+        }
+    }
         
     // MARK: - View Overrides ========================================================================== -
 
@@ -140,6 +157,9 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
         
         // Show this player
         self.showThisPlayer()
+        
+        // Set up help
+        self.setupHelpView()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -412,8 +432,7 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
     private func setOther(isEnabled: Bool) {
         // Enable/disable other controls when enable/disable Play Game
         self.thisPlayerThumbnail.isUserInteractionEnabled = isEnabled
-        self.thisPlayerThumbnail.alpha = (isEnabled ? 1.0 : 0.8)
-        self.infoButton.isEnabled = isEnabled
+        self.thisPlayerThumbnail.alpha = (isEnabled ? 1.0 : 0.6)
     }
     
     private func addSuboptions(option: MenuOption?, highlight: Int? = nil) {
@@ -438,8 +457,8 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
             self.titleLabel.setNeedsDisplay()
             self.thisPlayerThumbnail.set(textColor: Palette.leftSidePanel.text)
             self.thisPlayerThumbnail.setNeedsDisplay()
-            self.infoButton.setBackgroundColor(Palette.leftSidePanel.faintText)
-            self.infoButton.setTitleColor(Palette.leftSidePanel.text, for: .normal)
+            self.infoButton.setBackgroundColor(Palette.normal.themeText)
+            self.infoButton.tintColor = Palette.banner.text
             self.infoButton.setNeedsDisplay()
         }
     }
@@ -629,3 +648,34 @@ class MenuPanelTableCell: UITableViewCell {
     @IBOutlet fileprivate weak var titleLabel: UILabel!
     @IBOutlet fileprivate weak var titleLabelTopConstraint: NSLayoutConstraint!
 }
+
+extension MenuPanelViewController {
+    
+    internal func setupHelpView() {
+        
+        self.helpView.reset()
+        
+        self.helpView.add("This shows you who the default player for this device is. You can change the default player by tapping the image", views: [self.thisPlayerThumbnail], border: 8)
+        
+        for (item, element) in self.optionMap.enumerated() {
+            if element.mainOption {
+                let option = self.options[element.index]
+                switch option.menuOption {
+                case .playGame:
+                    self.helpView.add("This menu option displays the game playing options", views: [self.optionsTableView], item: item, horizontalBorder: 16)
+                case .personalResults:
+                    self.helpView.add("This menu option allows you to view dashboards showing your own history and statistics and history and statistics for all players on this device. You can drill into each tile in the dashboard to see supporting data.", views: [self.optionsTableView], item: item, horizontalBorder: 16)
+                case .awards:
+                    self.helpView.add("This menu option displays the awards achieved so far by this player and other awards which are available to be achieved in the future", views: [self.optionsTableView], item: item, horizontalBorder: 16)
+                case .profiles:
+                    self.helpView.add("This menu option allows you to add/remove players from this device or to view/modify the details of an existing player", views: [self.optionsTableView], item: item, horizontalBorder: 16)
+                default:
+                    break
+                }
+            }
+        }
+            
+        self.helpView.add("This menu option allows you to customise the Whist app to meet your individual requirements. Options include choosing a colour theme for your device.", views: [self.settingsTableView], item: 0, horizontalBorder: 16)
+    }
+}
+

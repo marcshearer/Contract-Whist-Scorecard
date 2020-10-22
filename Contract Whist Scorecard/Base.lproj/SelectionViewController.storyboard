@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina6_1" orientation="landscape" appearance="light"/>
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -13,13 +13,13 @@
         <!--Selection -->
         <scene sceneID="UIh-IU-VZU">
             <objects>
-                <viewController storyboardIdentifier="SelectionViewController" title="Selection" useStoryboardIdentifierAsRestorationIdentifier="YES" id="zGV-gf-a3n" userLabel="Selection " customClass="SelectionViewController" customModule="Whist_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SelectionViewController" title="Selection" useStoryboardIdentifierAsRestorationIdentifier="YES" id="zGV-gf-a3n" userLabel="Selection " customClass="SelectionViewController" customModule="Whist" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Whs-Ka-Uxd">
-                        <rect key="frame" x="0.0" y="0.0" width="896" height="414"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="I6P-n6-4nd" userLabel="Banner" customClass="Banner" customModule="Whist_2" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="896" height="44"/>
+                            <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="I6P-n6-4nd" userLabel="Banner" customClass="Banner" customModule="Whist" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="88"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="string" keyPath="title" value="Choose Players"/>
@@ -34,17 +34,35 @@
                                     <outlet property="parentViewController" destination="zGV-gf-a3n" id="gb9-xy-41s"/>
                                 </connections>
                             </view>
-                            <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fMn-h0-pxo" userLabel="Top Section">
-                                <rect key="frame" x="0.0" y="44" width="852" height="165.5"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fMn-h0-pxo" userLabel="Top Section">
+                                <rect key="frame" x="0.0" y="88" width="414" height="344.5"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jtX-GA-7ms" customClass="SelectedPlayersView" customModule="Whist_2" customModuleProvider="target">
-                                        <rect key="frame" x="68" y="-7" width="716" height="139"/>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jtX-GA-7ms" customClass="SelectedPlayersView" customModule="Whist" customModuleProvider="target">
+                                        <rect key="frame" x="33" y="27.5" width="348" height="289.5"/>
                                         <color key="backgroundColor" name="Clear"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="jtX-GA-7ms" secondAttribute="height" multiplier="1:1" priority="1" id="Tt8-TI-dee"/>
                                         </constraints>
                                     </view>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SmT-70-IDi" customClass="ShadowButton" customModule="Whist" customModuleProvider="target">
+                                        <rect key="frame" x="10" y="306.5" width="28" height="28"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="28" id="EDa-eJ-rWI"/>
+                                            <constraint firstAttribute="width" secondItem="SmT-70-IDi" secondAttribute="height" multiplier="1:1" id="Elb-H0-aq5"/>
+                                        </constraints>
+                                        <color key="tintColor" red="1" green="0.99998801950000005" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <state key="normal" image="questionmark" catalog="system"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                <real key="value" value="14"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="infoPressed:" destination="zGV-gf-a3n" eventType="touchUpInside" id="bJX-6x-A6f"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
+                                <viewLayoutGuide key="safeArea" id="b9A-zT-1QY"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <constraints>
                                     <constraint firstItem="jtX-GA-7ms" firstAttribute="centerY" secondItem="fMn-h0-pxo" secondAttribute="centerY" id="8SR-co-FAh">
@@ -53,11 +71,13 @@
                                     <constraint firstItem="jtX-GA-7ms" firstAttribute="height" secondItem="fMn-h0-pxo" secondAttribute="height" multiplier="315:375" id="IFR-bY-9Oh"/>
                                     <constraint firstItem="jtX-GA-7ms" firstAttribute="width" secondItem="fMn-h0-pxo" secondAttribute="width" multiplier="315:375" id="dcw-Cf-fDG"/>
                                     <constraint firstItem="jtX-GA-7ms" firstAttribute="top" secondItem="fMn-h0-pxo" secondAttribute="top" priority="1" constant="16" id="de2-gi-2za"/>
+                                    <constraint firstItem="SmT-70-IDi" firstAttribute="leading" secondItem="b9A-zT-1QY" secondAttribute="leading" constant="10" id="ekp-1Y-rxL"/>
+                                    <constraint firstAttribute="bottom" secondItem="SmT-70-IDi" secondAttribute="bottom" constant="10" id="tap-3n-kTk"/>
                                     <constraint firstItem="jtX-GA-7ms" firstAttribute="centerX" secondItem="fMn-h0-pxo" secondAttribute="centerX" id="z5e-0N-nq9"/>
                                 </constraints>
                             </view>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="1" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" bounces="NO" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" indicatorStyle="black" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Tlx-l1-ig7" userLabel="Unselected Collection View">
-                                <rect key="frame" x="54" y="209.5" width="788" height="133.5"/>
+                                <rect key="frame" x="10" y="432.5" width="394" height="379.5"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="5" minimumInteritemSpacing="10" id="gIj-Vz-0t7">
                                     <size key="itemSize" width="75" height="100"/>
@@ -66,7 +86,7 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="Add Player Cell" id="OMj-K7-VFT" customClass="SelectionCell" customModule="Whist_2" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="Add Player Cell" id="OMj-K7-VFT" customClass="SelectionCell" customModule="Whist" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="75" height="100"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
@@ -74,8 +94,8 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                         </view>
                                     </collectionViewCell>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="Unselected Cell" id="Rab-qC-bur" customClass="SelectionCell" customModule="Whist_2" customModuleProvider="target">
-                                        <rect key="frame" x="89" y="0.0" width="75" height="100"/>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="Unselected Cell" id="Rab-qC-bur" customClass="SelectionCell" customModule="Whist" customModuleProvider="target">
+                                        <rect key="frame" x="106.5" y="0.0" width="75" height="100"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                             <rect key="frame" x="0.0" y="0.0" width="75" height="100"/>
@@ -89,10 +109,10 @@
                                 </connections>
                             </collectionView>
                             <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="InS-yo-Fkz" userLabel="Bottom Section">
-                                <rect key="frame" x="44" y="343" width="808" height="50"/>
+                                <rect key="frame" x="0.0" y="812" width="414" height="50"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Eyy-DC-T6m" userLabel="Clear All Button (not used)" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
-                                        <rect key="frame" x="332" y="0.0" width="100" height="30"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Eyy-DC-T6m" userLabel="Clear All Button (not used)" customClass="ShadowButton" customModule="Whist" customModuleProvider="target">
+                                        <rect key="frame" x="157" y="0.0" width="100" height="30"/>
                                         <gestureRecognizers/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="C98-Yc-X2g"/>
@@ -106,8 +126,8 @@
                                             <action selector="clearAllButtonPressed:" destination="zGV-gf-a3n" eventType="touchUpInside" id="Xd0-C4-7FG"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7SY-Bw-ahm" userLabel="Continue Button" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
-                                        <rect key="frame" x="279" y="8" width="250" height="50"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7SY-Bw-ahm" userLabel="Continue Button" customClass="ShadowButton" customModule="Whist" customModuleProvider="target">
+                                        <rect key="frame" x="83" y="8" width="248" height="50"/>
                                         <color key="backgroundColor" name="Clear"/>
                                         <constraints>
                                             <constraint firstAttribute="width" relation="lessThanOrEqual" constant="250" id="FVT-mx-Ofy"/>
@@ -164,6 +184,7 @@
                         <outlet property="bottomSectionHeightConstraint" destination="aWA-CG-uRM" id="Qwc-V8-Ob1"/>
                         <outlet property="clearAllButton" destination="Eyy-DC-T6m" id="qqj-cw-TrH"/>
                         <outlet property="continueButton" destination="7SY-Bw-ahm" id="JM3-ek-6LL"/>
+                        <outlet property="infoButton" destination="SmT-70-IDi" id="bbc-jQ-fh7"/>
                         <outlet property="selectedPlayersView" destination="jtX-GA-7ms" id="pif-ug-DbZ"/>
                         <outlet property="topSectionView" destination="fMn-h0-pxo" id="VdW-Ke-7Vg"/>
                         <outlet property="unselectedCollectionView" destination="Tlx-l1-ig7" id="vRw-k0-8iE"/>
@@ -188,6 +209,7 @@
     </scenes>
     <resources>
         <image name="home" width="22" height="23"/>
+        <image name="questionmark" catalog="system" width="96" height="128"/>
         <namedColor name="Background">
             <color red="0.94117647058823528" green="0.93725490196078431" blue="0.92941176470588238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>

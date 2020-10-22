@@ -41,39 +41,39 @@
 			<false/>
 		</dict>
 	</dict>
-    <key>CFBundleIcons~ipad</key>
-    <dict>
-        <key>CFBundleAlternateIcons</key>
-        <dict>
-            <key>AppIcon-Green</key>
-            <dict>
-                <key>CFBundleIconFiles</key>
-                <array>
-                    <string>appicon green</string>
-                </array>
-                <key>UIPrerenderedIcon</key>
-                <false/>
-            </dict>
-            <key>AppIcon-Yellow</key>
-            <dict>
-                <key>CFBundleIconFiles</key>
-                <array>
-                    <string>appicon yellow</string>
-                </array>
-                <key>UIPrerenderedIcon</key>
-                <false/>
-            </dict>
-        </dict>
-        <key>CFBundlePrimaryIcon</key>
-        <dict>
-            <key>CFBundleIconFiles</key>
-            <array>
-                <string>appicon red</string>
-            </array>
-            <key>UIPrerenderedIcon</key>
-            <false/>
-        </dict>
-    </dict>
+	<key>CFBundleIcons~ipad</key>
+	<dict>
+		<key>CFBundleAlternateIcons</key>
+		<dict>
+			<key>AppIcon-Green</key>
+			<dict>
+				<key>CFBundleIconFiles</key>
+				<array>
+					<string>appicon green</string>
+				</array>
+				<key>UIPrerenderedIcon</key>
+				<false/>
+			</dict>
+			<key>AppIcon-Yellow</key>
+			<dict>
+				<key>CFBundleIconFiles</key>
+				<array>
+					<string>appicon yellow</string>
+				</array>
+				<key>UIPrerenderedIcon</key>
+				<false/>
+			</dict>
+		</dict>
+		<key>CFBundlePrimaryIcon</key>
+		<dict>
+			<key>CFBundleIconFiles</key>
+			<array>
+				<string>appicon red</string>
+			</array>
+			<key>UIPrerenderedIcon</key>
+			<false/>
+		</dict>
+	</dict>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>

@@ -48,6 +48,17 @@ extension ScorecardViewController {
     
 }
 
+extension UIView {
+    
+    func absoluteFrame() -> CGRect {
+        if let superview = self.superview {
+            return superview.convert(self.frame, to: nil)
+        } else {
+            return CGRect()
+        }
+    }
+}
+
 extension CGPoint {
     
     func distance(to point: CGPoint) -> CGFloat {
@@ -65,6 +76,14 @@ extension CGRect {
         get {
             return CGPoint(x: self.midX, y: self.midY)
         }
+    }
+
+    func offsetBy(dx: CGFloat, dy: CGFloat) -> CGRect {
+        return CGRect(x: self.minX + dx, y: self.minY + dy, width: self.width, height: self.height)
+    }
+    
+    func grownBy(dx: CGFloat, dy: CGFloat) -> CGRect {
+        return CGRect(x: self.minX - dx, y: self.minY - dy, width: self.width + (2 * dx), height: self.height + (2 * dy))
     }
 }
 
@@ -212,11 +231,12 @@ extension NSAttributedString {
     }
     
     func labelHeight(width: CGFloat? = nil, font: UIFont? = nil) -> CGFloat {
-        let label = UILabel(frame: CGRect(x: 0, y: 0, width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude))
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: width ?? CGFloat.greatestFiniteMagnitude, height: ScorecardUI.screenHeight))
         label.numberOfLines = (width == nil ? 1 : 0)
         if let font = font {
             label.font = font
         }
+        label.lineBreakMode = .byWordWrapping
         label.attributedText = self
         label.sizeToFit()
         return label.frame.height

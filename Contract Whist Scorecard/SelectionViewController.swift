@@ -63,6 +63,7 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
     @IBOutlet private weak var bottomSectionHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var clearAllButton: ShadowButton!
     @IBOutlet private weak var continueButton: ShadowButton!
+    @IBOutlet private weak var infoButton: ShadowButton!
     @IBOutlet private var sideBySideConstraints: [NSLayoutConstraint]!
     @IBOutlet private var aboveAndBelowConstraints: [NSLayoutConstraint]!
     @IBOutlet private var sideBySideTabletConstraints: [NSLayoutConstraint]!
@@ -82,6 +83,12 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
     internal func finishPressed() {
         finishAction()       
     }
+    
+    @IBAction public func infoPressed(_ sender: Any) {
+        self.helpView?.show()
+    }
+    
+
     
     @IBAction func clearAllButtonPressed(_ sender: UIButton) {
         if selectedList.count > 0 {
@@ -116,6 +123,9 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
         
         // Notify app controller view has loaded
         self.controllerDelegate?.didLoad()
+        
+        // Setup help
+        self.setupHelpView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -161,7 +171,11 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
             self.setupConstraints()
         }
         
-       self.setupScreenSize()
+        if !self.alreadyDrawing {
+            self.selectedPlayersView.layoutIfNeeded()
+        }
+        
+        self.setupScreenSize()
         self.setSize()
         
         if firstTime {
@@ -306,7 +320,8 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
         if self.smallScreen {
             // Banner continuation button used on small or landscape phone
             self.continueButton.isHidden = true
-            self.banner.setButton("continue", isHidden: hidden)
+            self.banner.setButton("continue", isHidden: false)
+            self.banner.setButton("continue", isEnabled: !hidden)
             self.bottomSectionHeightConstraint.constant = 0
         } else {
             // Main continue button used on other devices
@@ -318,6 +333,8 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
         clearAllButton.isHidden = true // Left this in case we reinstate (selectedList.count > (self.selectionMode == .invitees ? 1 : 0))
         
         self.banner.set(title: (self.smallScreen && !ScorecardUI.landscapePhone() ? (smallFormTitle ?? self.formTitle) : self.formTitle))
+        
+        self.infoButton.isHidden = (self.menuController?.isVisible ?? false)
 
     }
     
@@ -876,5 +893,25 @@ extension SelectionViewController {
         self.continueButton.setBackgroundColor(Palette.continueButton.background)
         self.continueButton.setTitleColor(Palette.continueButton.text, for: .normal)
         self.view.backgroundColor = Palette.normal.background
+        self.infoButton.setBackgroundColor(Palette.bannerShadow.background)
+        self.infoButton.tintColor = Palette.bannerShadow.text
+    }
+}
+
+extension SelectionViewController {
+    
+    internal func setupHelpView() {
+        
+        self.helpView.reset()
+        
+        self.helpView.add("This screen allows you to select players \(self.selectionMode == .players ? "for your game" : "to invite to your online game").\n\nClick (or drag) players in the list \(ScorecardUI.portraitPhone() ? "on the bottom" : "at the right") of the screen to add them to the game.\n\nClick (or drag) players in the room to remove them.\n\nClick on the '+' to add a new player to your device")
+        
+        self.helpView.add("The 'room' contains the players who you want to take part in the game.\(self.selectionMode == .players ? "" : " Your own player should appear at the bottom of the room.") Click on a player to remove them from the room.", views: [self.selectedPlayersView], border: 4)
+        
+        self.helpView.add("This area contains other players on the device. Click on a player to add them to the game (assuming there is a space in the room).", views: [self.unselectedCollectionView], item: 1, itemTo: 9999, border: 4)
+        
+        self.helpView.add("You can use the '+' button to add a new player to the device (and hence to the available players).", views: [self.unselectedCollectionView], item: 0)
+        
+        self.helpView.add("\((selectedList.count < 3 ? "When enough players have been added to the game, the 'Continue' button will be enabled. ": ""))Click the 'Continue' button to \(self.selectionMode == .players ? "start scoring the game" : "send invitations to the other players and start the game").", views: [self.continueButton, self.banner.getButton("continue")], border: 4)
     }
 }

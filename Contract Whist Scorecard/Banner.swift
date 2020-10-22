@@ -45,10 +45,10 @@ public class BannerButton: NSObject {
     public static var defaultFont = UIFont.systemFont(ofSize: 18)
     
     /// Used for genuine banner buttons
-    init(title: String? = nil, attributedTitle: NSAttributedString? = nil, image: UIImage? = nil, width: CGFloat = 30.0, action: (()->())?, releaseAction: (()->())? = nil, type: BannerButtonType = .clear, menuHide: Bool = false, menuText: String? = nil, releaseMenuText: String? = nil, menuSpaceBefore: CGFloat = 0, menuTextColor: UIColor? = nil, gameDetailHide: Bool = false, backgroundColor: ThemeBackgroundColorName? = nil, textColorType: ThemeTextType? = .normal, specificTextColor: UIColor? = nil, font: UIFont = BannerButton.defaultFont, alignment: UIControl.ContentHorizontalAlignment? = .none, id: AnyHashable? = nil) {
+    init(title: String? = nil, attributedTitle: NSAttributedString? = nil, image: UIImage? = nil, asTemplate: Bool = true, width: CGFloat = 30.0, action: (()->())?, releaseAction: (()->())? = nil, type: BannerButtonType = .clear, menuHide: Bool = false, menuText: String? = nil, releaseMenuText: String? = nil, menuSpaceBefore: CGFloat = 0, menuTextColor: UIColor? = nil, gameDetailHide: Bool = false, backgroundColor: ThemeBackgroundColorName? = nil, textColorType: ThemeTextType? = .normal, specificTextColor: UIColor? = nil, font: UIFont = BannerButton.defaultFont, alignment: UIControl.ContentHorizontalAlignment? = .none, id: AnyHashable? = nil) {
         self.title = title
         self.attributedTitle = attributedTitle
-        self.image = image?.asTemplate()
+        self.image = (asTemplate ? image?.asTemplate() : image)
         self.width = width
         self.action = action
         self.releaseAction = releaseAction
@@ -301,6 +301,10 @@ class Banner : UIView {
         }
         if let disableOptions = disableOptions   { self.disableOptions = disableOptions }
         self.setupMenuEntries()
+    }
+    
+    public func getButton(_ id: AnyHashable) -> UIButton? {
+        return buttonIds[id]?.control
     }
     
     public func alertFlash(_ id: AnyHashable = Banner.finishButton, duration: TimeInterval = 0.2, after: Double = 0.0, repeatCount: Int = 1, backgroundColor: UIColor? = nil) {

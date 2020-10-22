@@ -82,6 +82,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     private var isLoggedIn: Bool?
     private var imageObserver: NSObjectProtocol?
     private var whisper: Whisper!
+    private var speechBubble: SpeechBubbleView!
     
     private var hostingOptions: Int = 0
     private var onlineItem: Int?
@@ -126,7 +127,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     @IBOutlet private weak var leftPaddingView: InsetPaddingView!
     @IBOutlet private weak var thisPlayerContainerView: UIView!
     @IBOutlet private weak var thisPlayerOverlap: UIView!
-    @IBOutlet private weak var thisPlayerThumbnail: ThumbnailView!
+    @IBOutlet internal weak var thisPlayerThumbnail: ThumbnailView!
     @IBOutlet internal weak var infoButton: ShadowButton!
     @IBOutlet internal weak var hostTitleBar: TitleBar!
     @IBOutlet internal weak var hostCollectionContainerView: UIView!
@@ -148,7 +149,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     @IBOutlet private weak var playerSelectionViewWidthConstraint: NSLayoutConstraint!
     @IBOutlet private weak var tapGestureRecognizer: UITapGestureRecognizer!
     @IBOutlet private weak var flowLayout: CustomCollectionViewLayout!
-    @IBOutlet private var actionButtons: [ImageButton]!
+    @IBOutlet internal var actionButtons: [ImageButton]!
     @IBOutlet internal var menuHeightConstraints: [NSLayoutConstraint]!
     @IBOutlet internal var noMenuHeightConstraints: [NSLayoutConstraint]!
     @IBOutlet private weak var settingsBadgeButton: ShadowButton!
@@ -167,8 +168,8 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         self.showActionMenu()
     }
     
-    @IBAction func infoButtonPressed(_ sender: UIButton) {
-        self.showWalkthrough()
+    @IBAction func infoPressed(_ sender: Any) {
+        self.helpView?.show()
     }
     
     @IBAction func settingsBadgePressed(_ sender: UIButton) {
@@ -222,6 +223,9 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         // Setup colours (previously in storyboard) and setup whisper
         self.defaultScreenColors()
         self.whisper = Whisper()
+        
+        // Setup help bubble
+        self.speechBubble = SpeechBubbleView(in: self.view)
 
         // Check network
         self.checkNetwork()
@@ -282,7 +286,6 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
             }
         }
     }
-    
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -576,6 +579,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         self.hostController = nil
         self.scoringController = nil
         self.setupHostingOptions()
+        self.setupHelpView()
         self.appStateChange(to: .notConnected)
         self.checkPlayingGame()
         Scorecard.game?.resetValues()
@@ -1048,10 +1052,10 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         
         // Setup hosting options
         self.hostingOptions = 0
-        self.nearbyItem = -1
-        self.onlineItem = -1
-        self.scoringItem = -1
-        self.robotItem = -1
+        self.nearbyItem = nil
+        self.onlineItem = nil
+        self.scoringItem = nil
+        self.robotItem = nil
         
         if Scorecard.activeSettings.onlineGamesEnabled {
             self.nearbyItem = self.hostingOptions
@@ -1408,7 +1412,7 @@ extension ClientViewController {
             self.thisPlayerThumbnail.set(textColor: Palette.banner.text)
             self.thisPlayerThumbnail.set(font: UIFont.systemFont(ofSize: 15, weight: .bold))
             self.infoButton.setBackgroundColor(Palette.bannerShadow.background)
-            self.infoButton.setTitleColor(Palette.bannerShadow.text, for: .normal)
+            self.infoButton.tintColor = Palette.bannerShadow.text
             self.hostCollectionView.backgroundColor = Palette.buttonFace.background
             self.peerTitleBar.set(faceColor: Palette.buttonFace.background)
             self.peerTitleBar.set(textColor: Palette.buttonFace.text)
@@ -1455,5 +1459,50 @@ extension ClientViewController {
             cell.rightScrollButton.imageView?.tintColor = Palette.banner.text
             cell.cancelButton.imageView?.tintColor = Palette.banner.text
         }
+    }
+}
+
+extension ClientViewController {
+    
+    internal func setupHelpView() {
+        
+        self.helpView.reset()
+        
+        self.helpView.add("This shows you who the default player for this device is. You can change the default player by tapping the image", views: [self.thisPlayerThumbnail], border: 8)
+        
+        if let item = self.nearbyItem {
+            self.helpView.add("This allows you to start a game with nearby players on other devices using bluetooth. All devices must have bluetooth and WiFi switched on but do not need to be connected to the internet.", views: [self.hostCollectionView], item: item)
+        }
+        
+        if let item = self.onlineItem {
+            self.helpView.add("This allows you to start a game with players on other devices who are remote, using the public internet. All devices must be connected to the internet.", views: [self.hostCollectionView], item: item)
+        }
+        
+        if let item = self.scoringItem {
+            self.helpView.add("This allows you to score a game, played with a physical pack of cards.", views: [self.hostCollectionView], item: item)
+        }
+        
+        if let item = self.robotItem {
+            self.helpView.add("This allows you to play a game against three robots controlled by the computer", views: [self.hostCollectionView], item: item)
+        }
+        
+        self.helpView.add("This will show you details if another player starts hosting a game nearby, or an online game that you are invited to.", views: [self.peerCollectionView], item: 0)
+        
+        var text: String?
+        for button in self.actionButtons {
+            switch button.tag {
+            case playersItem:
+                text = "The Profiles button allows you to add/remove players from this device or to view/modify the details of an existing player"
+            case resultsItem:
+                text = "The Results button allows you to view dashboards showing your own history and statistics, your awards, and history and statistics for all players on this device. You can drill into each tile in the dashboard to see supporting data."
+            case settingsItem:
+                text = "The Settings button allows you to customise the Whist app to meet your individual requirements. Options include choosing a colour theme for your device."
+            default:
+                break
+            }
+            if let text = text {
+                self.helpView.add(text, views: [button])
+            }
+        }        
     }
 }

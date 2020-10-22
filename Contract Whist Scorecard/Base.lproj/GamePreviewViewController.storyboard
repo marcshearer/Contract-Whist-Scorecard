@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina5_9" orientation="portrait" appearance="light"/>
+    <device id="retina5_9" orientation="landscape" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -12,13 +12,13 @@
         <!--Game Preview-->
         <scene sceneID="GD7-Uz-hLB">
             <objects>
-                <viewController storyboardIdentifier="GamePreviewViewController" title="Game Preview" extendedLayoutIncludesOpaqueBars="YES" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="M5N-Yi-C04" userLabel="Game Preview" customClass="GamePreviewViewController" customModule="Whist_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="GamePreviewViewController" title="Game Preview" extendedLayoutIncludesOpaqueBars="YES" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="M5N-Yi-C04" userLabel="Game Preview" customClass="GamePreviewViewController" customModule="Whist" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="iUU-8s-ns4" userLabel="Game Preview View">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <rect key="frame" x="0.0" y="0.0" width="812" height="375"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IaK-Ab-3Lb" userLabel="Banner" customClass="Banner" customModule="Whist_2" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="88"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IaK-Ab-3Lb" userLabel="Banner" customClass="Banner" customModule="Whist" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="812" height="44"/>
                                 <viewLayoutGuide key="safeArea" id="7c5-cq-aKT"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <userDefinedRuntimeAttributes>
@@ -34,20 +34,40 @@
                                 </connections>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kP9-VZ-fcb" userLabel="Top Section">
-                                <rect key="frame" x="0.0" y="88" width="375" height="309"/>
+                                <rect key="frame" x="0.0" y="44" width="768" height="149"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nKd-io-ud9" customClass="SelectedPlayersView" customModule="Whist_2" customModuleProvider="target">
-                                        <rect key="frame" x="30" y="16" width="315" height="259.66666666666669"/>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nKd-io-ud9" customClass="SelectedPlayersView" customModule="Whist" customModuleProvider="target">
+                                        <rect key="frame" x="61.333333333333314" y="15.999999999999993" width="645.33333333333348" height="125.33333333333331"/>
                                         <color key="backgroundColor" name="Clear"/>
                                         <accessibility key="accessibilityConfiguration" identifier="selectedPlayers"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="nKd-io-ud9" secondAttribute="height" multiplier="1:1" priority="1" id="mMP-NC-rhX"/>
                                         </constraints>
                                     </view>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AQz-fV-DNp" customClass="ShadowButton" customModule="Whist" customModuleProvider="target">
+                                        <rect key="frame" x="10" y="111" width="28" height="28"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="AQz-fV-DNp" secondAttribute="height" multiplier="1:1" id="K2K-jm-p8Y"/>
+                                            <constraint firstAttribute="width" constant="28" id="KgA-ig-5v8"/>
+                                        </constraints>
+                                        <color key="tintColor" red="1" green="0.99998801950000005" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <state key="normal" image="questionmark" catalog="system"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                <real key="value" value="14"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="infoPressed:" destination="M5N-Yi-C04" eventType="touchUpInside" id="2T4-LH-TXo"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
+                                <viewLayoutGuide key="safeArea" id="CHw-sh-F4L"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <accessibility key="accessibilityConfiguration" identifier="topSection"/>
                                 <constraints>
+                                    <constraint firstItem="AQz-fV-DNp" firstAttribute="leading" secondItem="CHw-sh-F4L" secondAttribute="leading" constant="-34" id="9sU-a2-sfw"/>
+                                    <constraint firstAttribute="bottom" secondItem="AQz-fV-DNp" secondAttribute="bottom" constant="10" id="NZR-pg-uFm"/>
                                     <constraint firstItem="nKd-io-ud9" firstAttribute="width" secondItem="kP9-VZ-fcb" secondAttribute="width" multiplier="315:375" id="SDP-uO-8N0"/>
                                     <constraint firstItem="nKd-io-ud9" firstAttribute="centerY" secondItem="kP9-VZ-fcb" secondAttribute="centerY" id="Uix-xw-n5d">
                                         <variation key="heightClass=compact" constant="-20"/>
@@ -58,10 +78,10 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OvE-wK-XoH" userLabel="Upper Middle Section">
-                                <rect key="frame" x="0.0" y="397" width="375" height="38"/>
+                                <rect key="frame" x="44" y="193" width="724" height="38"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eVj-U8-RFG" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
-                                        <rect key="frame" x="137.66666666666666" y="8" width="100" height="30"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eVj-U8-RFG" customClass="ShadowButton" customModule="Whist" customModuleProvider="target">
+                                        <rect key="frame" x="312" y="8" width="100" height="30"/>
                                         <gestureRecognizers/>
                                         <constraints>
                                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="100" id="1ak-br-WkM"/>
@@ -82,13 +102,13 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" verticalHuggingPriority="1" verticalCompressionResistancePriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="iDT-Xi-tM5" userLabel="Lower Middle Section">
-                                <rect key="frame" x="0.0" y="435" width="375" height="293"/>
+                                <rect key="frame" x="44" y="231" width="724" height="73"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" verticalCompressionResistancePriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="x89-xH-iQy" userLabel="Left View">
-                                        <rect key="frame" x="0.0" y="0.0" width="202.66666666666666" height="293"/>
+                                    <view contentMode="scaleToFill" verticalCompressionResistancePriority="1" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="x89-xH-iQy" userLabel="Left View">
+                                        <rect key="frame" x="0.0" y="0.0" width="391" height="0.0"/>
                                         <subviews>
-                                            <view tag="1" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FyF-vn-V6o" userLabel="Cut for Dealer Button" customClass="ImageButton" customModule="Whist_2" customModuleProvider="target">
-                                                <rect key="frame" x="25.333333333333329" y="70.666666666666671" width="152" height="151.66666666666663"/>
+                                            <view tag="1" contentMode="scaleToFill" ambiguous="YES" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FyF-vn-V6o" userLabel="Cut for Dealer Button" customClass="ImageButton" customModule="Whist" customModuleProvider="target">
+                                                <rect key="frame" x="39" y="-156.33333333333334" width="313" height="312.66666666666669"/>
                                                 <viewLayoutGuide key="safeArea" id="Epv-wr-w77"/>
                                                 <color key="backgroundColor" name="Clear"/>
                                                 <constraints>
@@ -132,10 +152,10 @@
                                         </variation>
                                     </view>
                                     <view contentMode="scaleToFill" verticalCompressionResistancePriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="Bs3-BT-kuE" userLabel="Right View">
-                                        <rect key="frame" x="172.66666666666663" y="0.0" width="202.33333333333337" height="293"/>
+                                        <rect key="frame" x="333" y="0.0" width="391" height="73"/>
                                         <subviews>
-                                            <view tag="2" contentMode="scaleToFill" verticalHuggingPriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="xXV-k4-gfB" userLabel="Next Dealer Button" customClass="ImageButton" customModule="Whist_2" customModuleProvider="target">
-                                                <rect key="frame" x="25" y="70.666666666666671" width="152" height="151.66666666666663"/>
+                                            <view tag="2" contentMode="scaleToFill" verticalHuggingPriority="1" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xXV-k4-gfB" userLabel="Next Dealer Button" customClass="ImageButton" customModule="Whist" customModuleProvider="target">
+                                                <rect key="frame" x="39" y="-156.33333333333334" width="313" height="312.66666666666669"/>
                                                 <viewLayoutGuide key="safeArea" id="oxI-0X-Fyz"/>
                                                 <color key="backgroundColor" name="Clear"/>
                                                 <constraints>
@@ -178,7 +198,7 @@
                                         </variation>
                                     </view>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="PUR-r5-ySO">
-                                        <rect key="frame" x="0.0" y="106.66666666666663" width="375" height="80"/>
+                                        <rect key="frame" x="0.0" y="-3.3333333333333428" width="724" height="80"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="80" id="aF4-bC-pDj"/>
                                         </constraints>
@@ -205,10 +225,10 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d8e-Bu-nij" userLabel="Bottom Section">
-                                <rect key="frame" x="0.0" y="728" width="375" height="50"/>
+                                <rect key="frame" x="44" y="304" width="724" height="50"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Jbr-Nz-gFc" userLabel="Continue Button" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
-                                        <rect key="frame" x="75" y="8" width="225" height="50"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Jbr-Nz-gFc" userLabel="Continue Button" customClass="ShadowButton" customModule="Whist" customModuleProvider="target">
+                                        <rect key="frame" x="237" y="8" width="250" height="50"/>
                                         <color key="backgroundColor" name="Clear"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="50" id="7d9-vb-qYm"/>
@@ -240,6 +260,7 @@
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="IaK-Ab-3Lb" secondAttribute="trailing" id="1Kj-KT-h9H"/>
                             <constraint firstItem="OvE-wK-XoH" firstAttribute="top" secondItem="iDT-Xi-tM5" secondAttribute="bottom" priority="1" id="7bt-jT-hSz"/>
+                            <constraint firstItem="PUR-r5-ySO" firstAttribute="centerY" secondItem="nKd-io-ud9" secondAttribute="centerY" id="9AE-Fh-N6t"/>
                             <constraint firstItem="d8e-Bu-nij" firstAttribute="trailing" secondItem="wSn-mE-2UN" secondAttribute="trailing" id="C0F-Ak-Sqo"/>
                             <constraint firstItem="OvE-wK-XoH" firstAttribute="leading" secondItem="wSn-mE-2UN" secondAttribute="leading" id="DNq-Sb-Jb0"/>
                             <constraint firstItem="IaK-Ab-3Lb" firstAttribute="bottom" secondItem="wSn-mE-2UN" secondAttribute="top" constant="44" id="Jg6-aV-vNI"/>
@@ -278,6 +299,7 @@
                         <outlet property="bottomSectionHeightConstraint" destination="pcs-AF-kKl" id="ifD-DU-dcF"/>
                         <outlet property="continueButton" destination="Jbr-Nz-gFc" id="Ka8-Lr-cHN"/>
                         <outlet property="cutForDealerButton" destination="FyF-vn-V6o" id="dAr-ab-YCl"/>
+                        <outlet property="infoButton" destination="AQz-fV-DNp" id="iW2-KX-uq3"/>
                         <outlet property="leftViewLeadingConstraint" destination="5v8-TK-isx" id="789-jA-kX3"/>
                         <outlet property="lowerMiddleSectionView" destination="iDT-Xi-tM5" id="ap6-VS-csr"/>
                         <outlet property="messageLabel" destination="PUR-r5-ySO" id="Oax-pa-IKs"/>
@@ -308,6 +330,8 @@
                         <outletCollection property="sideBySideConstraints" destination="vcf-GF-4Hd" collectionClass="NSMutableArray" id="sGe-eo-rLt"/>
                         <outletCollection property="aboveAndBelowConstraints" destination="Dz2-mX-WIv" collectionClass="NSMutableArray" id="g1k-3e-1Q3"/>
                         <outletCollection property="sideBySideConstraints" destination="p7G-IF-Rkt" collectionClass="NSMutableArray" id="nkF-br-Ype"/>
+                        <outletCollection property="aboveAndBelowConstraints" destination="HVZ-SU-EL7" collectionClass="NSMutableArray" id="uh3-rV-Zo9"/>
+                        <outletCollection property="sideBySideConstraints" destination="9AE-Fh-N6t" collectionClass="NSMutableArray" id="rQ0-rQ-kaS"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vNy-VM-1Ya" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -324,6 +348,7 @@
         <image name="back" width="22" height="22"/>
         <image name="cut pack" width="82" height="64"/>
         <image name="next dealer" width="50" height="64"/>
+        <image name="questionmark" catalog="system" width="96" height="128"/>
         <namedColor name="Clear">
             <color red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>

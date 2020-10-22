@@ -31,6 +31,8 @@ protocol PanelContainer {
     func rightPanelDefaultScreenColors()
     
     func selectAvailableDevice(deviceName: String)
+    
+    func panelInfoPressed(alwaysNext: Bool, completion: ((Bool)->())?)
 }
 
 extension PanelContainer {
@@ -44,7 +46,9 @@ extension ClientViewController : PanelContainer {
     internal func panelLayoutSubviews() {
         let menuVisible = self.menuController?.isVisible ?? false
         self.topSection.isHidden = menuVisible
+        self.thisPlayerThumbnail.isHidden = menuVisible
         self.bottomSection.isHidden = menuVisible
+        self.actionButtons.forEach{ (button) in button.isHidden = menuVisible }
         
         // Set all menu-dependent constraints to inactive
         Constraint.setActive(self.menuHeightConstraints, to: false)
@@ -257,5 +261,29 @@ extension ClientViewController : PanelContainer {
     internal func selectAvailableDevice(deviceName: String) {
         // Connect to a particular device based on click-through of notification
         self.selectAvailable(deviceName: deviceName)
+    }
+    
+    internal func panelInfoPressed(alwaysNext: Bool, completion: ((Bool)->())?) {
+        let stack = self.viewControllerStack
+        if stack.isEmpty {
+            // Nothing displayed - call my own help function
+            self.helpView.show(alwaysNext: alwaysNext, completion: completion)
+        } else {
+            // Work back up the view controller stack until you find something in the main window
+            var mainViewController: ScorecardViewController?
+            for element in stack.reversed() {
+                if let container = element.viewController.container {
+                    if container == .main || container == .mainRight {
+                        mainViewController = element.viewController
+                        break
+                    }
+                }
+            }
+            if let helpView = mainViewController?.helpView {
+                helpView.show(alwaysNext: alwaysNext, completion: completion)
+            } else {
+                completion?(false)
+            }
+        }
     }
 }

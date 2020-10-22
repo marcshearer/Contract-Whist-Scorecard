@@ -254,6 +254,25 @@ class Polygon {
         return Polygon.roundedShapeLayer(in: view, definedBy: points, strokeColor: strokeColor, fillColor: fillColor, lineWidth: lineWidth, radius: radius)
     }
     
+    public class func speechBubble(frame: CGRect, point: CGPoint, strokeColor: UIColor, fillColor: UIColor = UIColor.clear, lineWidth: CGFloat = 2.0, radius: CGFloat = 10.0, arrowWidth: CGFloat? = nil) -> CAShapeLayer {
+        var points: [PolygonPoint] = []
+        points.append(PolygonPoint(x: frame.minX, y: frame.minY, pointType: .rounded))
+        points.append(PolygonPoint(x: frame.maxX, y: frame.minY, pointType: .rounded))
+        points.append(PolygonPoint(x: frame.maxX, y: frame.maxY, pointType: .rounded))
+        points.append(PolygonPoint(x: frame.minX, y: frame.maxY, pointType: .rounded))
+        let pointUp = (point.y < frame.minY)
+        let base = (pointUp ? frame.minY : frame.maxY)
+        let insertAt = (pointUp ? 1 : 3)
+        let sign: CGFloat = (pointUp ? 1 : -1)
+        let arrowHeight = abs(point.y - base)
+        let arrowWidth = arrowWidth ?? arrowHeight / 3
+        var arrow: [PolygonPoint] = []
+        arrow.append(PolygonPoint(x: point.x - (sign * arrowWidth / 2), y: base, pointType: .point))
+        arrow.append(PolygonPoint(origin: point, pointType: .point))
+        arrow.append(PolygonPoint(x: point.x + (sign * arrowWidth / 2), y: base, pointType: .point))
+        points.insert(contentsOf: arrow, at: insertAt)
+        return Polygon.roundedShapeLayer(definedBy: points, strokeColor: strokeColor, fillColor: fillColor, lineWidth: lineWidth, radius: radius)
+    }
 }
 
 class PolygonPoint {

@@ -12,12 +12,12 @@
         <!--Data Table Viewer-->
         <scene sceneID="RZz-A7-732">
             <objects>
-                <viewController storyboardIdentifier="DataTableViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="FsR-Kn-dnU" userLabel="Data Table Viewer" customClass="DataTableViewController" customModule="Whist_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="DataTableViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="FsR-Kn-dnU" userLabel="Data Table Viewer" customClass="DataTableViewController" customModule="Whist" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="5eb-gD-VJV">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="618"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="P6c-mS-fXT" customClass="Banner" customModule="Whist_2" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="P6c-mS-fXT" customClass="Banner" customModule="Whist" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="string" keyPath="title" value="History"/>
@@ -49,7 +49,7 @@
                                 <rect key="frame" x="0.0" y="78" width="375" height="540"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Data Table Body Cell" id="t2h-Qy-aAO" userLabel="Body Table View Cell" customClass="DataTableCell" customModule="Whist_2" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Data Table Body Cell" id="t2h-Qy-aAO" userLabel="Body Table View Cell" customClass="DataTableCell" customModule="Whist" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="t2h-Qy-aAO" id="ggU-xh-ecH">
@@ -66,7 +66,7 @@
                                                         <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                     </collectionViewFlowLayout>
                                                     <cells>
-                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Data Table Body Normal Cell" id="gRd-bz-jud" userLabel="Body Normal Cell" customClass="DataTableCollectionCell" customModule="Whist_2" customModuleProvider="target">
+                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Data Table Body Normal Cell" id="gRd-bz-jud" userLabel="Body Normal Cell" customClass="DataTableCollectionCell" customModule="Whist" customModuleProvider="target">
                                                             <rect key="frame" x="0.0" y="0.0" width="50" height="44"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -93,14 +93,14 @@
                                                                 <outlet property="textLabel" destination="saY-dq-bW5" id="ajX-Mi-T4I"/>
                                                             </connections>
                                                         </collectionViewCell>
-                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Data Table Body Button Cell" id="1Vj-9t-Vjc" userLabel="Body Button Cell" customClass="DataTableCollectionCell" customModule="Whist_2" customModuleProvider="target">
+                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Data Table Body Button Cell" id="1Vj-9t-Vjc" userLabel="Body Button Cell" customClass="DataTableCollectionCell" customModule="Whist" customModuleProvider="target">
                                                             <rect key="frame" x="54" y="0.0" width="50" height="44"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                                                 <rect key="frame" x="0.0" y="0.0" width="50" height="44"/>
                                                                 <autoresizingMask key="autoresizingMask"/>
                                                                 <subviews>
-                                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ceh-ei-v9a" userLabel="Body Button" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
+                                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ceh-ei-v9a" userLabel="Body Button" customClass="ClearButton" customModule="Whist" customModuleProvider="target">
                                                                         <rect key="frame" x="8" y="8" width="34" height="28"/>
                                                                         <color key="backgroundColor" name="Clear"/>
                                                                         <state key="normal" image="graph">
@@ -120,7 +120,7 @@
                                                                 <outlet property="bodyButton" destination="Ceh-ei-v9a" id="6Qx-yj-3qH"/>
                                                             </connections>
                                                         </collectionViewCell>
-                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Data Table Body Thumbnail Cell" id="OqO-Rh-cDg" userLabel="Body Thumbnail Cell" customClass="DataTableCollectionCell" customModule="Whist_2" customModuleProvider="target">
+                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Data Table Body Thumbnail Cell" id="OqO-Rh-cDg" userLabel="Body Thumbnail Cell" customClass="DataTableCollectionCell" customModule="Whist" customModuleProvider="target">
                                                             <rect key="frame" x="108.5" y="0.0" width="50" height="44"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -274,7 +274,7 @@
                                     <constraint firstAttribute="height" priority="750" constant="44" id="MUj-Xx-bYz"/>
                                 </constraints>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Data Table Header Cell" id="9Y5-Jh-t1d" userLabel="Header Table View Cell" customClass="DataTableCell" customModule="Whist_2" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Data Table Header Cell" id="9Y5-Jh-t1d" userLabel="Header Table View Cell" customClass="DataTableCell" customModule="Whist" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="9Y5-Jh-t1d" id="6SL-4M-90t">
@@ -291,7 +291,7 @@
                                                         <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                     </collectionViewFlowLayout>
                                                     <cells>
-                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" reuseIdentifier="Data Table Header Cell" id="1av-63-VO8" userLabel="Header Collection Cell" customClass="DataTableCollectionCell" customModule="Whist_2" customModuleProvider="target">
+                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" reuseIdentifier="Data Table Header Cell" id="1av-63-VO8" userLabel="Header Collection Cell" customClass="DataTableCollectionCell" customModule="Whist" customModuleProvider="target">
                                                             <rect key="frame" x="0.0" y="0.0" width="50" height="44"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">

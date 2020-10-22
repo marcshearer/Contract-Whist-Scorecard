@@ -166,6 +166,11 @@ class ShadowButton: UIButton {
         Constraint.anchor(view: self.titleOuterLabel!, control: self.titleInnerLabel!, attributes: .centerX, .centerY)
         Constraint.setWidth(control: self.titleInnerLabel!, width: self.frame.width - 10)
         Constraint.setHeight(control: self.titleInnerLabel!, height: self.frame.height - 2)
+
+        if self.image(for: .normal) != nil {
+            self.bringSubviewToFront(self.imageView!)
+        }
+
         self.backgroundColor = UIColor.clear
         self.titleLabel?.removeFromSuperview()
         self.hasInherited = true
@@ -208,6 +213,10 @@ class ShadowButton: UIButton {
         } else {
             self.titleInnerLabel?.font = font
         }
+    }
+    
+    public func setTitle(_ title: NSAttributedString) {
+        self.titleInnerLabel?.attributedText = title
     }
     
     public func toCircle() {

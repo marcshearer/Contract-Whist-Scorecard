@@ -636,7 +636,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
         self.banner.set(title: "Play Hand",
                         leftButtons: [
                             BannerButton(image: UIImage(named: "back"), action: self.finishPressed, menuHide: true, menuText: "Show Scorepad", id: finishButton),
-                            BannerButton(image: UIImage(named: "two"), action: self.lastHandPressed, releaseAction: self.lastHandReleased, menuHide: true, menuText: "Show last trick", releaseMenuText: "Hide last trick", id: lastHandButton)],
+                            BannerButton(image: UIImage(named: "two"), asTemplate: false, action: self.lastHandPressed, releaseAction: self.lastHandReleased, menuHide: true, menuText: "Show last trick", releaseMenuText: "Hide last trick", id: lastHandButton)],
                         rightButtons: [
                             BannerButton(width: 60, action: self.showScorepadPressed, gameDetailHide: true, font: Banner.defaultFont, id: overUnderButton),
                             BannerButton(attributedTitle: roundSuit, width: roundWidth, action: self.showScorepadPressed, gameDetailHide: true, font: Banner.defaultFont, id: roundSummaryButton)],

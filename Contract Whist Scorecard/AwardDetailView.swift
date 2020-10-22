@@ -78,7 +78,8 @@ class AwardDetailView: UIView {
         }
         if let detailFont = detailFont {
             self.titleLabel.font = detailFont
-            self.otherLabel.font = detailFont
+            let descriptor = detailFont.fontDescriptor
+            self.otherLabel.font = UIFont.italicSystemFont(ofSize: descriptor.pointSize)
         }
         
         self.shadow = shadow

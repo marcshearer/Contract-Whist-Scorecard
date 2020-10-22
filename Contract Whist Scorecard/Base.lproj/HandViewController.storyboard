@@ -74,10 +74,10 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5er-PT-zVx" userLabel="Separator">
-                                                <rect key="frame" x="-8" y="54" width="364" height="6"/>
+                                                <rect key="frame" x="-8" y="58" width="364" height="2"/>
                                                 <color key="backgroundColor" name="Separator"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="height" constant="6" id="Tvu-Zw-mK2"/>
+                                                    <constraint firstAttribute="height" constant="2" id="Tvu-Zw-mK2"/>
                                                 </constraints>
                                             </view>
                                         </subviews>

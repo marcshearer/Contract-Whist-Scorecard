@@ -78,6 +78,7 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
     @IBOutlet private weak var bottomSectionHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var cutForDealerButton: ImageButton!
     @IBOutlet private weak var nextDealerButton: ImageButton!
+    @IBOutlet private weak var infoButton: ShadowButton!
     @IBOutlet private var actionButtons: [ImageButton]!
     @IBOutlet private var sideBySideConstraints: [NSLayoutConstraint]!
     @IBOutlet private var aboveAndBelowConstraints: [NSLayoutConstraint]!
@@ -107,6 +108,10 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
     internal func continuePressed() {
         self.willDismiss()
         self.controllerDelegate?.didProceed()
+    }
+    
+    @IBAction func infoPressed(_ sender: UIButton) {
+        self.helpView.show()
     }
         
     internal func overrideSettingsPressed() {
@@ -179,6 +184,9 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
         
         // Become delegate of selected players view
         self.selectedPlayersView.delegate = self
+        
+        // Set up help
+        self.setupHelpView()
     }
         
     override internal func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -405,6 +413,7 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
                 }
             }
         }
+        self.infoButton.isHidden = self.menuController?.isVisible ?? false
         self.banner.set(title: (self.smallScreen && !ScorecardUI.landscapePhone() ? smallFormTitle : self.formTitle))
     }
     
@@ -804,6 +813,31 @@ extension GamePreviewViewController {
         self.overrideSettingsButton.setBackgroundColor(Palette.buttonFace.background)
         self.overrideSettingsButton.setTitleColor(Palette.buttonFace.text, for: .normal)
         self.view.backgroundColor = Palette.normal.background
+        self.infoButton.setBackgroundColor(Palette.bannerShadow.background)
+        self.infoButton.tintColor = Palette.bannerShadow.text
     }
 
+}
+
+extension GamePreviewViewController {
+    
+    internal func setupHelpView() {
+        
+        self.helpView.reset()
+        
+        var text: String?
+        
+        if self.readOnly && !Scorecard.game.hasJoined {
+            // Just watching someone else's game
+            text = "This screen allows you to see what's happening when you are viewing a game which has not yet started."
+        } else if Scorecard.game.hasJoined {
+            text = "This screen allows you to see what's happening when you have joined a game which has not yet started. You can see the other players who have joined, and you can monitor the cut for dealer when it is initiated by the host."
+        } else if (self.delegate?.gamePreviewHosting ?? false) {
+            text = "This screen allows you to monitor who has connected to your game as you wait for the other players to join. Once all players have joined you can cut for dealer or manually select the dealer. You can then start the game"
+        }
+        
+        if let text = text {
+            self.helpView.add(text)
+        }
+    }
 }

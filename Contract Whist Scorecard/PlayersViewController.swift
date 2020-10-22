@@ -295,7 +295,7 @@ class PlayersViewController: ScorecardViewController, PlayersViewDelegate, UICol
             lowerButtons: [
                 BannerButton(title: "Add", width: 140, action: self.addPlayerPressed, type: .shadow, menuHide: true, menuText: "Add Players", font: font, id: "add"),
                 BannerButton(title: "Remove", width: 140, action: self.removePlayerPressed, type: .shadow, menuHide: true, menuText: "Remove Players", font: font, id: "remove"),
-                BannerButton(title: "Cancel", width: 140, action: self.removePlayerCancelPressed, type: .shadow, menuHide: true, menuText: "End Removing Players", font: font, id: "cancel")],
+                BannerButton(title: "Finish", width: 140, action: self.removePlayerCancelPressed, type: .shadow, menuHide: true, menuText: "End Removing Players", font: font, id: "cancel")],
             menuOption: .profiles,
             normalOverrideHeight: 120)
     }

@@ -41,6 +41,7 @@ public class BannerButton: NSObject {
     fileprivate var isHidden = false
     fileprivate var isEnabled = true
     fileprivate var _isPressed = true
+    fileprivate let nonBanner: Bool
     public var isPressed: Bool { _isPressed }
     public static var defaultFont = UIFont.systemFont(ofSize: 18)
     
@@ -65,6 +66,7 @@ public class BannerButton: NSObject {
         self.alignment = alignment
         self.menuSpaceBefore = menuSpaceBefore
         self.id = id ?? UUID().uuidString as AnyHashable
+        self.nonBanner = false
     }
     
     /// Used for non-banner buttons
@@ -89,6 +91,7 @@ public class BannerButton: NSObject {
         self.alignment = nil
         self.menuSpaceBefore = menuSpaceBefore
         self.id = id ?? UUID().uuidString as AnyHashable
+        self.nonBanner = true
     }
 }
 
@@ -170,7 +173,7 @@ class Banner : UIView {
         }
         
         if finishText != nil || finishImage != nil {
-            self.leftButtons = [BannerButton(title: self.finishText, image: self.finishImage?.asTemplate(), width: (self.finishText == nil ? 30 : 100), action: self.delegate?.finishPressed, menuHide: self.menuHide, menuText: self.menuText, menuSpaceBefore: self.menuSpaceBefore, id: Banner.finishButton)]
+            self.leftButtons = [BannerButton(title: self.finishText, image: self.finishImage?.asTemplate(), width: (self.finishText == nil ? 22 : 100), action: self.delegate?.finishPressed, menuHide: self.menuHide, menuText: self.menuText, menuSpaceBefore: self.menuSpaceBefore, id: Banner.finishButton)]
             arrange = true
         }
         
@@ -303,8 +306,26 @@ class Banner : UIView {
         self.setupMenuEntries()
     }
     
-    public func getButton(_ id: AnyHashable) -> UIButton? {
-        return buttonIds[id]?.control
+    public func getButton(id: AnyHashable) -> (control: UIButton, title: NSAttributedString)? {
+        var menuTitle = NSAttributedString()
+        if let button = buttonIds[id], let control = button.control {
+            if button.nonBanner {
+                return nil
+            } else {
+                if let attributedTitle = button.attributedTitle {
+                    menuTitle = NSAttributedString(attributedTitle.string, color: Palette.normal.themeText)
+                } else if let title = button.title {
+                    menuTitle = NSAttributedString(title, color: Palette.normal.themeText)
+                } else if let image = button.image {
+                    let image = NSMutableAttributedString(attachment: NSTextAttachment(image: image.asTemplate()))
+                    image.addAttribute(NSAttributedString.Key.foregroundColor, value: Palette.normal.themeText, range: NSRange(0...image.length - 1))
+                    menuTitle = image
+                }
+                return (control, " " + menuTitle + "  button")
+            }
+        } else {
+            return nil
+        }
     }
     
     public func alertFlash(_ id: AnyHashable = Banner.finishButton, duration: TimeInterval = 0.2, after: Double = 0.0, repeatCount: Int = 1, backgroundColor: UIColor? = nil) {
@@ -529,7 +550,7 @@ class Banner : UIView {
         for button in buttons {
             if !button.isHidden && button.isEnabled {
                 if let title = button.menuText {
-                    results.append(Option(title: title, releaseTitle: button.releaseMenuText, titleColor: button.menuTextColor, spaceBefore: button.menuSpaceBefore, action: button.action, releaseAction: button.releaseAction))
+                    results.append(Option(title: title, releaseTitle: button.releaseMenuText, titleColor: button.menuTextColor, spaceBefore: button.menuSpaceBefore, id: button.id, action: button.action, releaseAction: button.releaseAction))
                 }
             }
         }

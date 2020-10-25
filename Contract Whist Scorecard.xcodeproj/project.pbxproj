@@ -129,7 +129,7 @@
 		B2519457230C4284006240DE /* Custom Transitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2519456230C4284006240DE /* Custom Transitions.swift */; };
 		B2594E852251FEB2004398FB /* launch_multiple_simulators.sh in Resources */ = {isa = PBXBuildFile; fileRef = B2594E832251FEB1004398FB /* launch_multiple_simulators.sh */; };
 		B2594E862251FEB2004398FB /* MyDevices.sh in Resources */ = {isa = PBXBuildFile; fileRef = B2594E842251FEB2004398FB /* MyDevices.sh */; };
-		B25D760D253EBE3D008D2B69 /* FocusGradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B25D760C253EBE3D008D2B69 /* FocusGradientView.swift */; };
+		B25D760D253EBE3D008D2B69 /* FocusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B25D760C253EBE3D008D2B69 /* FocusView.swift */; };
 		B25D761C253EFBB8008D2B69 /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B25D761B253EFBB8008D2B69 /* HelpView.swift */; };
 		B25FC7C922D0733C00D2E651 /* SelectPlayersViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B25FC7C322D0733C00D2E651 /* SelectPlayersViewController.storyboard */; };
 		B25FC7CA22D0733C00D2E651 /* OverrideViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B25FC7C522D0733C00D2E651 /* OverrideViewController.storyboard */; };
@@ -434,7 +434,7 @@
 		B2519456230C4284006240DE /* Custom Transitions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Custom Transitions.swift"; sourceTree = "<group>"; };
 		B2594E832251FEB1004398FB /* launch_multiple_simulators.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = launch_multiple_simulators.sh; sourceTree = "<group>"; };
 		B2594E842251FEB2004398FB /* MyDevices.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = MyDevices.sh; sourceTree = "<group>"; };
-		B25D760C253EBE3D008D2B69 /* FocusGradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusGradientView.swift; sourceTree = "<group>"; };
+		B25D760C253EBE3D008D2B69 /* FocusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusView.swift; sourceTree = "<group>"; };
 		B25D761B253EFBB8008D2B69 /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
 		B25FC7C422D0733C00D2E651 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/SelectPlayersViewController.storyboard; sourceTree = "<group>"; };
 		B25FC7C622D0733C00D2E651 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/OverrideViewController.storyboard; sourceTree = "<group>"; };
@@ -1146,12 +1146,12 @@
 			name = Scripts;
 			sourceTree = "<group>";
 		};
-		B25D7605253EBE08008D2B69 /* Focus Gradient */ = {
+		B25D7605253EBE08008D2B69 /* Focus View */ = {
 			isa = PBXGroup;
 			children = (
-				B25D760C253EBE3D008D2B69 /* FocusGradientView.swift */,
+				B25D760C253EBE3D008D2B69 /* FocusView.swift */,
 			);
-			name = "Focus Gradient";
+			name = "Focus View";
 			sourceTree = "<group>";
 		};
 		B25D761A253EFB90008D2B69 /* Help View */ = {
@@ -1180,9 +1180,9 @@
 				B24ABA3924B31B6700E3F130 /* Banner Logo */,
 				B2B3501A24BC53110004DCB1 /* Group View */,
 				B283A1AE24AF43420065994B /* Bubble View */,
-				B2FFB62F253DBBFC00D1DCCA /* Speech Bubble */,
-				B25D7605253EBE08008D2B69 /* Focus Gradient */,
 				B25D761A253EFB90008D2B69 /* Help View */,
+				B2FFB62F253DBBFC00D1DCCA /* Speech Bubble */,
+				B25D7605253EBE08008D2B69 /* Focus View */,
 				B2E894D22369EEF40011AD3D /* Confetti View */,
 				B243385122D89AE7002EBD40 /* Thumbnail View */,
 				B243386122E57BD1002EBD40 /* Image Button View */,
@@ -2059,7 +2059,7 @@
 				B2B3501E24BC539B0004DCB1 /* ViewGroup.swift in Sources */,
 				B2E7621E1E73E6A6001DAF4F /* GetStartedViewController.swift in Sources */,
 				B22500F11F48425C0042D566 /* Scorecard Comms.swift in Sources */,
-				B25D760D253EBE3D008D2B69 /* FocusGradientView.swift in Sources */,
+				B25D760D253EBE3D008D2B69 /* FocusView.swift in Sources */,
 				CC7A49081DF28BEB00703D38 /* Scorecard UI.swift in Sources */,
 				B2E7621C1E6C98A0001DAF4F /* Notifications.swift in Sources */,
 				B2430CC922EABD3100C4FC77 /* SlideOutButtonView.swift in Sources */,

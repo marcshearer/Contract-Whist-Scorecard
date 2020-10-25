@@ -3,7 +3,7 @@
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -12,9 +12,6 @@
             <connections>
                 <outlet property="contentView" destination="iN0-l3-epB" id="phe-32-0pQ"/>
                 <outlet property="label" destination="doD-iF-e1r" id="PK8-wR-LhY"/>
-                <outlet property="labelContainerView" destination="5Rv-Lg-no9" id="Tqv-dZ-rEo"/>
-                <outlet property="labelContainerViewBottomConstraint" destination="heS-7b-REH" id="9Fh-Fv-gUp"/>
-                <outlet property="labelContainerViewTopConstraint" destination="7Ss-RY-7vf" id="OhS-23-yXN"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -22,32 +19,15 @@
             <rect key="frame" x="0.0" y="0.0" width="382" height="80"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5Rv-Lg-no9" userLabel="Label Container">
-                    <rect key="frame" x="0.0" y="0.0" width="382" height="80"/>
-                    <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="doD-iF-e1r">
-                            <rect key="frame" x="8" y="8" width="366" height="64"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                            <nil key="textColor"/>
-                            <nil key="highlightedColor"/>
-                        </label>
-                    </subviews>
-                    <color key="backgroundColor" name="Clear"/>
-                    <constraints>
-                        <constraint firstAttribute="trailing" secondItem="doD-iF-e1r" secondAttribute="trailing" constant="8" id="9r9-IF-PIB"/>
-                        <constraint firstItem="doD-iF-e1r" firstAttribute="leading" secondItem="5Rv-Lg-no9" secondAttribute="leading" constant="8" id="W5q-3g-2WZ"/>
-                        <constraint firstItem="doD-iF-e1r" firstAttribute="top" secondItem="5Rv-Lg-no9" secondAttribute="top" constant="8" id="b2K-C0-QDd"/>
-                        <constraint firstAttribute="bottom" secondItem="doD-iF-e1r" secondAttribute="bottom" constant="8" id="qu3-rS-u96"/>
-                    </constraints>
-                </view>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" insetsLayoutMarginsFromSafeArea="NO" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="doD-iF-e1r">
+                    <rect key="frame" x="170" y="29" width="41.5" height="20.5"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
             </subviews>
             <color key="backgroundColor" name="Clear"/>
-            <constraints>
-                <constraint firstItem="5Rv-Lg-no9" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="3mV-Rm-Yqx"/>
-                <constraint firstAttribute="trailing" secondItem="5Rv-Lg-no9" secondAttribute="trailing" id="4IN-AO-kEG"/>
-                <constraint firstItem="5Rv-Lg-no9" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="7Ss-RY-7vf"/>
-                <constraint firstAttribute="bottom" secondItem="5Rv-Lg-no9" secondAttribute="bottom" id="heS-7b-REH"/>
-            </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <point key="canvasLocation" x="55" y="80"/>
         </view>

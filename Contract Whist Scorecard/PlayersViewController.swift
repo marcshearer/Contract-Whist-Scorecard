@@ -32,6 +32,8 @@ class PlayersViewController: ScorecardViewController, PlayersViewDelegate, UICol
     
     private var removing: Bool = false
     private var isEnabled: Bool = true
+    private var rotated: Bool = false
+    private var firstTime: Bool = true
     
     // UI properties
     private var horizontalInset: CGFloat = 16.0
@@ -101,6 +103,7 @@ class PlayersViewController: ScorecardViewController, PlayersViewDelegate, UICol
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         Scorecard.shared.reCenterPopup(self)
+        self.rotated = true
         view.setNeedsLayout()
     }
     
@@ -115,7 +118,11 @@ class PlayersViewController: ScorecardViewController, PlayersViewDelegate, UICol
         collectionViewLayout!.invalidateLayout()
         self.collectionView.reloadData()
         
-        self.setupButtons()
+        if self.firstTime || self.rotated {
+            self.setupButtons()
+            self.firstTime = false
+            self.rotated = false
+        }
         self.enableButtons()
     }
     

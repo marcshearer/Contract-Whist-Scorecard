@@ -906,12 +906,14 @@ extension SelectionViewController {
         
         self.helpView.add("This screen allows you to select players \(self.selectionMode == .players ? "for your game" : "to invite to your online game").\n\nClick (or drag) players in the list \(ScorecardUI.portraitPhone() ? "on the bottom" : "at the right") of the screen to add them to the game.\n\nClick (or drag) players in the room to remove them.\n\nClick on the '+' to add a new player to your device")
         
-        self.helpView.add("The 'room' contains the players who you want to take part in the game.\(self.selectionMode == .players ? "" : " Your own player should appear at the bottom of the room.") Click on a player to remove them from the room.", views: [self.selectedPlayersView], border: 4)
+        self.helpView.add("The @*/room@*/ contains the players who you select to take part in the game.\(self.selectionMode == .players ? "" : " Your own player always appears at the bottom of the room.") Click on a player to remove them from the room.", views: [self.selectedPlayersView], radius: 44)
         
         self.helpView.add("This area contains other players on the device. Click on a player to add them to the game (assuming there is a space in the room).", views: [self.unselectedCollectionView], item: 1, itemTo: 9999, border: 4)
         
-        self.helpView.add("You can use the '+' button to add a new player to the device (and hence to the available players).", views: [self.unselectedCollectionView], item: 0)
+        self.helpView.add("You can use the {} to add a new player to the device (and hence to the available players).", descriptor: "@*+@* button", views: [self.unselectedCollectionView], item: 0)
         
-        self.helpView.add("\((selectedList.count < 3 ? "When enough players have been added to the game, the 'Continue' button will be enabled. ": ""))Click the 'Continue' button to \(self.selectionMode == .players ? "start scoring the game" : "send invitations to the other players and start the game").", views: [self.continueButton, self.banner.getButton("continue")], border: 4)
+        self.helpView.add("\((selectedList.count < 3 ? "When enough players have been added to the game, the {} will be enabled. ": ""))Click the {} to \(self.selectionMode == .players ? "start scoring the game" : "send invitations to the other players and start the game").", descriptor: "@*/Continue@*/ button", views: [self.continueButton], bannerId: "continue", radius: self.continueButton.frame.height / 2)
+        
+        self.helpView.add("The {} abandons the game and takes you back to the home screen.", bannerId: Banner.finishButton, border: 4, horizontalBorder: 8, verticalBorder: 4)
     }
 }

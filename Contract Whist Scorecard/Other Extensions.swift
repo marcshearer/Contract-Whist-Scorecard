@@ -216,6 +216,60 @@ extension NSAttributedString {
         self.init(string: string, attributes: attributes)
     }
     
+    convenience init(markdown string: String, font: UIFont? = nil) {
+        let font = font ?? UIFont.systemFont(ofSize: 17)
+        let tokens = ["@*/",
+                      "**",
+                      "//",
+                      "@@",
+                      "*/",
+                      "@/",
+                      "@*",
+                      ]
+        let pointSize = font.fontDescriptor.pointSize
+        let boldItalicFont = UIFont(descriptor: font.fontDescriptor.withSymbolicTraits([.traitItalic, .traitBold])! , size: pointSize)
+        let attributes: [[NSAttributedString.Key : Any]] = [
+            [NSAttributedString.Key.foregroundColor: Palette.normal.themeText,
+             NSAttributedString.Key.font: boldItalicFont],
+            
+            [NSAttributedString.Key.font : UIFont.systemFont(ofSize: pointSize, weight: .bold)],
+            
+            [NSAttributedString.Key.font: UIFont.italicSystemFont(ofSize: pointSize)],
+            
+            [NSAttributedString.Key.foregroundColor: Palette.normal.themeText],
+            
+            [NSAttributedString.Key.font : boldItalicFont],
+            
+            [NSAttributedString.Key.foregroundColor: Palette.normal.themeText,
+             NSAttributedString.Key.font: UIFont.italicSystemFont(ofSize: pointSize)],
+            
+            [NSAttributedString.Key.foregroundColor: Palette.normal.themeText,
+             NSAttributedString.Key.font: UIFont.systemFont(ofSize: pointSize, weight: .bold)]
+        ]
+        self.init(attributedString: NSAttributedString.replace(in: string, tokens: tokens, with: attributes))
+    }
+    
+    private static func replace(in string: String, tokens: [String], with attributes: [[NSAttributedString.Key : Any]], level: Int = 0) -> NSAttributedString {
+        var result = NSAttributedString()
+        let part = string.components(separatedBy: tokens[level])
+        for (index, substring) in part.enumerated() {
+            if index % 2 == 0 {
+                if level == tokens.count - 1 {
+                    result = result + NSAttributedString(substring)
+                } else {
+                    result = result + replace(in: substring, tokens: tokens, with: attributes, level: level + 1)
+                }
+            } else {
+                result = result + NSAttributedString(string: substring, attributes: attributes[level])
+            }
+        }
+        return result
+    }
+    
+    static func ~= (left: inout NSAttributedString, right: String) {
+        left = NSAttributedString(right)
+    }
+    
     static func + (left: NSAttributedString, right: NSAttributedString) -> NSAttributedString {
         let result = NSMutableAttributedString()
         result.append(left)
@@ -227,6 +281,13 @@ extension NSAttributedString {
         let result = NSMutableAttributedString()
         result.append(left)
         result.append(NSAttributedString(right))
+        return result
+    }
+    
+    static func + (left: String, right: NSAttributedString) -> NSAttributedString {
+        let result = NSMutableAttributedString()
+        result.append(NSAttributedString(left))
+        result.append(right)
         return result
     }
     

@@ -406,7 +406,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     @discardableResult internal func showSettings(presentCompletion: (()->())? = nil) -> ScorecardViewController {
         self.thisPlayerBeforeSettings = Scorecard.settings.thisPlayerUUID
         let settingsViewController = SettingsViewController.create(backText: "", backImage: "home", completion: self.showSettingsCompletion)
-        self.present(settingsViewController, animated: true, container: .main, completion: presentCompletion)
+        self.present(settingsViewController, animated: true, container: .mainRight, completion: presentCompletion)
         return settingsViewController
     }
     
@@ -1471,32 +1471,32 @@ extension ClientViewController {
         self.helpView.add("This shows you who the default player for this device is. You can change the default player by tapping the image", views: [self.thisPlayerThumbnail], border: 8)
         
         if let item = self.nearbyItem {
-            self.helpView.add("This allows you to start a game with nearby players on other devices using bluetooth. All devices must have bluetooth and WiFi switched on but do not need to be connected to the internet.", views: [self.hostCollectionView], item: item)
+            self.helpView.add("This @*/Nearby@*/ button allows you to start a game with nearby players on other devices using bluetooth. All devices must have bluetooth and WiFi switched on but do not need to be connected to the internet.", views: [self.hostCollectionView], item: item)
         }
         
         if let item = self.onlineItem {
-            self.helpView.add("This allows you to start a game with players on other devices who are remote, using the public internet. All devices must be connected to the internet.", views: [self.hostCollectionView], item: item)
+            self.helpView.add("The @*/Online@*/ button allows you to start a game with players on other devices who are remote, using the public internet. All devices must be connected to the internet.", views: [self.hostCollectionView], item: item)
         }
         
         if let item = self.scoringItem {
-            self.helpView.add("This allows you to score a game, played with a physical pack of cards.", views: [self.hostCollectionView], item: item)
+            self.helpView.add("The @*/Score@*/ button allows you to score a game, played with a physical pack of cards.", views: [self.hostCollectionView], item: item)
         }
         
         if let item = self.robotItem {
-            self.helpView.add("This allows you to play a game against three robots controlled by the computer", views: [self.hostCollectionView], item: item)
+            self.helpView.add("The @*/Robot@*/ button allows you to play a game against three robots controlled by the computer", views: [self.hostCollectionView], item: item)
         }
         
-        self.helpView.add("This will show you details if another player starts hosting a game nearby, or an online game that you are invited to.", views: [self.peerCollectionView], item: 0)
+        self.helpView.add("This area will show you details if another player starts hosting a game nearby, or an online game that you are invited to.", views: [self.peerCollectionView], item: 0)
         
         var text: String?
         for button in self.actionButtons {
             switch button.tag {
             case playersItem:
-                text = "The Profiles button allows you to add/remove players from this device or to view/modify the details of an existing player"
+                text = "The @*/Profiles@*/ button allows you to add/remove players from this device or to view/modify the details of an existing player"
             case resultsItem:
-                text = "The Results button allows you to view dashboards showing your own history and statistics, your awards, and history and statistics for all players on this device. You can drill into each tile in the dashboard to see supporting data."
+                text = "The @*/Results@*/ button allows you to view dashboards showing your own history and statistics, your awards, and history and statistics for all players on this device. You can drill into each tile in the dashboard to see supporting data."
             case settingsItem:
-                text = "The Settings button allows you to customise the Whist app to meet your individual requirements. Options include choosing a colour theme for your device."
+                text = "The @*/Settings@*/ button allows you to customise the Whist app to meet your individual requirements. Options include choosing a colour theme for your device."
             default:
                 break
             }

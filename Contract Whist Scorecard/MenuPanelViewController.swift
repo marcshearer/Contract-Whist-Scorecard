@@ -30,13 +30,15 @@ class Option {
     fileprivate let releaseAction: (()->())?
     fileprivate let spaceBefore: CGFloat
     fileprivate var pressed: Bool
+    fileprivate var id: AnyHashable?
     
-    init(title: String, releaseTitle: String? = nil, titleColor: UIColor? = nil, menuOption: MenuOption? = nil, spaceBefore:CGFloat = 0.0, action: (()->())? = nil, releaseAction: (()->())? = nil) {
+    init(title: String, releaseTitle: String? = nil, titleColor: UIColor? = nil, menuOption: MenuOption? = nil, spaceBefore:CGFloat = 0.0, id: AnyHashable? = nil, action: (()->())? = nil, releaseAction: (()->())? = nil) {
         self.title = title
         self.releaseTitle = releaseTitle
         self.titleColor = titleColor
         self.menuOption = menuOption
         self.spaceBefore = spaceBefore
+        self.id = id
         self.action = action
         self.releaseAction = releaseAction
         self.pressed = false
@@ -64,6 +66,10 @@ protocol MenuController {
     func set(playingGame: Bool)
     
     func set(gamePlayingTitle: String?)
+    
+    func getSuboptionView(id: AnyHashable?) -> (view: UITableView, item: Int, title: NSAttributedString)?
+    
+    func showHelp(helpElement: HelpViewElement, showNext: Bool, completion: @escaping (Bool)->())
 }
 
 class MenuPanelViewController : ScorecardViewController, MenuController, UITableViewDelegate, UITableViewDataSource {
@@ -101,7 +107,6 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
     @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var thisPlayerContainer: UIView!
     @IBOutlet private weak var thisPlayerThumbnail: ThumbnailView!
-    @IBOutlet private weak var infoButton: ShadowButton!
     @IBOutlet private weak var optionsTableView: UITableView!
     @IBOutlet private weak var settingsTableView: UITableView!
     @IBOutlet private weak var notificationsView: UIView!
@@ -124,7 +129,7 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
         }
     }
     
-    @IBAction func infoPressed(_ sender: UIButton) {
+    @objc internal func infoPressed(_ sender: UIButton) {
         if currentOption == .playGame && self.rootViewController.viewControllerStack.isEmpty {
             self.view.superview?.bringSubviewToFront(self.view)
             self.helpView.show(alwaysNext: true) { (finishPressed) in
@@ -224,6 +229,18 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
         self.disableOptions = disableOptions
         self.setupOptionMap()
         self.reloadData()
+    }
+    
+    func getSuboptionView(id: AnyHashable?) -> (view: UITableView, item: Int, title: NSAttributedString)? {
+        if let item = self.optionMap.firstIndex(where: {$0.mainOption == false && self.suboptions[$0.index].id == id}) {
+            return (self.optionsTableView, item, NSAttributedString(markdown: "@*/\(self.suboptions[self.optionMap[item].index].title)@*/ menu option"))
+        } else {
+            return nil
+        }
+    }
+    
+    func showHelp(helpElement: HelpViewElement, showNext: Bool, completion: @escaping (Bool)->()) {
+        self.helpView.showMenuElement(element: helpElement, showNext: showNext, completion: completion)
     }
     
     internal func refresh() {
@@ -328,8 +345,11 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
                 let disabled = self.disableOptions || self.disableAll
                 cell.titleLabel.text = (self.playingGame && self.gamePlayingTitle != nil ? self.gamePlayingTitle! : option.title)
                 cell.titleLabel.textColor = (option.menuOption == self.currentOption ? Palette.leftSidePanel.themeText : (disabled ? Palette.normal.faintText : Palette.leftSidePanel.text))
-                cell.isUserInteractionEnabled = !disabled
                 cell.titleLabel.font = UIFont.systemFont(ofSize: 24, weight: .semibold)
+                cell.infoButton.setBackgroundColor(Palette.normal.themeText)
+                cell.infoButton.tintColor = Palette.banner.text
+                cell.infoButton.isHidden = (option.menuOption != self.currentOption)
+                cell.infoButton.addTarget(self, action: #selector(MenuPanelViewController.infoPressed), for: .touchUpInside)
                 if option.menuOption == .playGame {
                     self.setOther(isEnabled: !disabled)
                 }
@@ -338,7 +358,7 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
                 cell.titleLabel.text = "      \((option.pressed ? option.releaseTitle! : option.title))"
                 cell.titleLabel.textColor = option.titleColor ?? (self.suboptionHighlight == index ? Palette.leftSidePanel.themeText : (disabled ? Palette.normal.faintText : Palette.leftSidePanel.text))
                 cell.titleLabel.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
-                cell.isUserInteractionEnabled = !disabled
+                cell.infoButton.isHidden = true
             }
             cell.titleLabelTopConstraint.constant = option.spaceBefore
             cell.titleLabel.setNeedsDisplay()
@@ -354,17 +374,23 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
             
             var changed = false
             var action = option.action
-            if mainOption {
-                changed = (option.menuOption != self.currentOption)
-            } else {
-                if let releaseAction = option.releaseAction, let _ = option.releaseTitle {
-                    if option.pressed {
-                        action = releaseAction
+            if !self.disableAll {
+                if mainOption {
+                    if !self.disableOptions {
+                        changed = (option.menuOption != self.currentOption)
                     }
-                    option.pressed.toggle()
-                    changed = true
                 } else {
-                    changed = (self.suboptionHighlight == nil || self.suboptionHighlight != index)
+                    if !self.disableAll {
+                        if let releaseAction = option.releaseAction, let _ = option.releaseTitle {
+                            if option.pressed {
+                                action = releaseAction
+                            }
+                            option.pressed.toggle()
+                            changed = true
+                        } else {
+                            changed = (self.suboptionHighlight == nil || self.suboptionHighlight != index)
+                        }
+                    }
                 }
             }
             
@@ -457,9 +483,6 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
             self.titleLabel.setNeedsDisplay()
             self.thisPlayerThumbnail.set(textColor: Palette.leftSidePanel.text)
             self.thisPlayerThumbnail.setNeedsDisplay()
-            self.infoButton.setBackgroundColor(Palette.normal.themeText)
-            self.infoButton.tintColor = Palette.banner.text
-            self.infoButton.setNeedsDisplay()
         }
     }
     
@@ -594,7 +617,7 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
         case .settings:
             // Need to invoke settings from root view controller
             if let settingsViewController = self.rootViewController.invokeOption(option, completion: completion) {
-                self.currentContainerItems = [PanelContainerItem(viewController: settingsViewController, container: .main)]
+                self.currentContainerItems = [PanelContainerItem(viewController: settingsViewController, container: .mainRight)]
             }
             
         default:
@@ -647,6 +670,7 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
 class MenuPanelTableCell: UITableViewCell {
     @IBOutlet fileprivate weak var titleLabel: UILabel!
     @IBOutlet fileprivate weak var titleLabelTopConstraint: NSLayoutConstraint!
+    @IBOutlet fileprivate weak var infoButton: ShadowButton!
 }
 
 extension MenuPanelViewController {
@@ -662,20 +686,20 @@ extension MenuPanelViewController {
                 let option = self.options[element.index]
                 switch option.menuOption {
                 case .playGame:
-                    self.helpView.add("This menu option displays the game playing options", views: [self.optionsTableView], item: item, horizontalBorder: 16)
+                    self.helpView.add("This @*/Play Game@*/ menu option displays the main home page which allows you to start or join a game.", views: [self.optionsTableView], item: item, horizontalBorder: 16)
                 case .personalResults:
-                    self.helpView.add("This menu option allows you to view dashboards showing your own history and statistics and history and statistics for all players on this device. You can drill into each tile in the dashboard to see supporting data.", views: [self.optionsTableView], item: item, horizontalBorder: 16)
+                    self.helpView.add("The @*/Results@*/ menu option allows you to view dashboards showing your own history and statistics and history and statistics for all players on this device. You can drill into each tile in the dashboard to see supporting data.", views: [self.optionsTableView], item: item, horizontalBorder: 16)
                 case .awards:
-                    self.helpView.add("This menu option displays the awards achieved so far by this player and other awards which are available to be achieved in the future", views: [self.optionsTableView], item: item, horizontalBorder: 16)
+                    self.helpView.add("The @*/Awards@*/ menu option displays the awards achieved so far by this player and other awards which are available to be achieved in the future", views: [self.optionsTableView], item: item, horizontalBorder: 16)
                 case .profiles:
-                    self.helpView.add("This menu option allows you to add/remove players from this device or to view/modify the details of an existing player", views: [self.optionsTableView], item: item, horizontalBorder: 16)
+                    self.helpView.add("The @*/Profiles@*/ menu option allows you to add/remove players from this device or to view/modify the details of an existing player", views: [self.optionsTableView], item: item, horizontalBorder: 16)
                 default:
                     break
                 }
             }
         }
             
-        self.helpView.add("This menu option allows you to customise the Whist app to meet your individual requirements. Options include choosing a colour theme for your device.", views: [self.settingsTableView], item: 0, horizontalBorder: 16)
+        self.helpView.add("The @*/Settings@*/ menu option allows you to customise the Whist app to meet your individual requirements. Options include choosing a colour theme for your device.", views: [self.settingsTableView], item: 0, horizontalBorder: 16)
     }
 }
 

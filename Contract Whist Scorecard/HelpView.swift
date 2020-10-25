@@ -9,20 +9,23 @@
 import UIKit
 
 class HelpViewElement {
-    let text: ()->(NSAttributedString)
+    let text: ()->NSAttributedString
+    let descriptor: NSAttributedString?
     let views: [UIView]?
     let section: Int
     let itemFrom: Int?
     let itemTo: Int?
+    let bannerId: AnyHashable?
     let horizontalBorder: CGFloat
     let verticalBorder: CGFloat
+    let radius: CGFloat
     
-    init(text: (()->String)? = nil, attributedText: (()->NSAttributedString)? = nil, views: [UIView?]? = nil, section: Int = 0, item: Int? = nil, itemTo: Int? = nil, border: CGFloat = 0, horizontalBorder: CGFloat? = nil, verticalBorder: CGFloat? = nil) {
+    init(text: (()->String)? = nil, attributedText: (()->NSAttributedString)? = nil, descriptor: NSAttributedString? = nil, views: [UIView?]? = nil, section: Int = 0, item: Int? = nil, itemTo: Int? = nil, bannerId: AnyHashable? = nil, border: CGFloat = 0, horizontalBorder: CGFloat? = nil, verticalBorder: CGFloat? = nil, radius: CGFloat = 8.0) {
         
         if let attributedText = attributedText {
             self.text = attributedText
         } else if let text = text {
-            self.text = { NSAttributedString(text()) }
+            self.text = { NSAttributedString(markdown: text()) }
         } else {
             self.text = { NSAttributedString() }
         }
@@ -39,33 +42,46 @@ class HelpViewElement {
             self.views = nil
         }
         
+        self.descriptor = descriptor
         self.section = section
         self.itemFrom = item
         self.itemTo = itemTo ?? item
+        self.bannerId = bannerId
         self.horizontalBorder = horizontalBorder ?? border
         self.verticalBorder = verticalBorder ?? border
+        self.radius = radius
         
         assert(self.views?.count ?? 0 == 1 || itemFrom == nil, "items are only relevant for a single view")
-        assert(self.views?.count ?? 1 >= 1, "At least one view must be specified")
+        assert((self.views?.count ?? 1) >= 1 || bannerId != nil, "At least one view or banner ID must be specified")
     }
+}
+
+fileprivate enum HelpViewSource: String {
+    case view = ""
+    case menu = " menu option"
+    case banner = " button"
 }
 
 fileprivate struct HelpViewActiveElement {
     let element: HelpViewElement
     let frame: CGRect?
     let views: [UIView]?
+    let source: HelpViewSource
+    let descriptor: NSAttributedString?
     
-    init(element: HelpViewElement, frame: CGRect? = nil, views: [UIView]? = nil) {
+    init(element: HelpViewElement, frame: CGRect? = nil, views: [UIView]? = nil, source: HelpViewSource = .view, descriptor: NSAttributedString? = nil) {
         self.element = element
         self.frame = frame
         self.views = views
+        self.source = source
+        self.descriptor = descriptor
     }
 }
 
 class HelpView : UIView, UIGestureRecognizerDelegate {
     
     private var speechBubble: SpeechBubbleView!
-    private var focusGradient: FocusGradientView!
+    private var focus: FocusView!
     private var nextButton: ShadowButton!
     private var finishButton: ShadowButton!
     private var tapGesture: UITapGestureRecognizer!
@@ -93,7 +109,7 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.speechBubble = SpeechBubbleView(in: self)
-        self.focusGradient = FocusGradientView(in: self)
+        self.focus = FocusView(in: self)
         self.nextButton = self.addButton(title: "Next", target: #selector(HelpView.nextPressed))
         self.finishButton = self.addButton(title: "Exit", target: #selector(HelpView.self.finishPressed))
         self.isHidden = true
@@ -106,10 +122,6 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
         self.parentView = parentViewController.view
         self.tapGesture = UITapGestureRecognizer(target: self, action: #selector(HelpView.nextPressed))
         self.tapGesture.delegate = self
-        if !self.parentViewController.rootViewController.containers {
-            self.addGestureRecognizer(self.tapGesture)
-        }
-
         parentView.addSubview(self)
     }
     
@@ -122,13 +134,14 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
         self.elements = []
     }
     
-    public func add(_ text: @escaping @autoclosure ()->String, views: [UIView?]? = nil, section: Int = 0, item: Int? = nil, itemTo: Int? = nil, border: CGFloat = 0, horizontalBorder: CGFloat? = nil, verticalBorder: CGFloat? = nil) {
+    public func add(_ text: @escaping @autoclosure ()->String, descriptor: String? = nil, views: [UIView?]? = nil, section: Int = 0, item: Int? = nil, itemTo: Int? = nil, bannerId: AnyHashable? = nil, border: CGFloat = 0, horizontalBorder: CGFloat? = nil, verticalBorder: CGFloat? = nil, radius: CGFloat = 8.0) {
         
-        self.elements.append(HelpViewElement(text: text, views: views, section: section, item: item, itemTo: itemTo, border: border, horizontalBorder: horizontalBorder, verticalBorder: verticalBorder))
+        self.elements.append(HelpViewElement(text: text, descriptor: (descriptor != nil ? NSAttributedString(markdown: descriptor!) : nil), views: views, section: section, item: item, itemTo: itemTo, bannerId: bannerId, border: border, horizontalBorder: horizontalBorder, verticalBorder: verticalBorder, radius: radius))
     }
     
-    public func add(_ attributedText: @escaping @autoclosure ()->NSAttributedString, views: [UIView?]? = nil, section: Int = 0, item: Int? = nil, itemTo: Int? = nil, border: CGFloat = 0, horizontalBorder: CGFloat? = nil, verticalBorder: CGFloat? = nil) {
-        self.elements.append(HelpViewElement(attributedText: attributedText, views: views, section: section, item: item, itemTo: itemTo, border: border, horizontalBorder: horizontalBorder, verticalBorder: verticalBorder))
+    public func add(_ attributedText: @escaping @autoclosure ()->NSAttributedString, descriptor: NSAttributedString, views: [UIView?]? = nil, section: Int = 0, item: Int? = nil, itemTo: Int? = nil, bannerId: AnyHashable? = nil, border: CGFloat = 0, horizontalBorder: CGFloat? = nil, verticalBorder: CGFloat? = nil, radius: CGFloat = 8) {
+        
+        self.elements.append(HelpViewElement(attributedText: attributedText, descriptor: descriptor, views: views, section: section, item: item, itemTo: itemTo, bannerId: bannerId, border: border, horizontalBorder: horizontalBorder, verticalBorder: verticalBorder, radius: radius))
     }
     
     public func show(alwaysNext: Bool = false, completion: ((Bool)->())? = nil) {
@@ -136,15 +149,14 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
         self.completion = completion
 
         self.isHidden = false
-
-        if self.parentViewController.rootViewController.containers {
-            self.parentViewController.rootViewController.view.addGestureRecognizer(self.tapGesture)
-        }
+        self.addTapGesture()
         
         // Build a list of currently active elements and calculate their containing frame
         self.activeElements = []
         for element in self.elements {
             var activeFrames: [(frame: CGRect, view: UIView)] = []
+            
+            // Check views
             if let views = element.views {
                 for view in views {
                     var cell: UIView?
@@ -208,7 +220,34 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
                         self.activeElements.append(HelpViewActiveElement(element: element, frame: superFrame, views: activeFrames.map{$0.view}))
                     }
                 }
-            } else {
+            }
+            
+            // Check banner ID
+            if let id = element.bannerId {
+                
+                if let banner = self.parentViewController.bannerClass {
+                    // Get banner button
+                    if let bannerButton = banner.getButton(id: id) {
+                        let control = bannerButton.control
+                        if !control.isHidden {
+                            self.activeElements.append(HelpViewActiveElement(element: element, frame: control.frame, views: [control], source: .banner, descriptor: bannerButton.title))
+                        }
+                    }
+                }
+                
+                if let menuController = self.parentViewController.menuController {
+                    // And get menu sub-option in container mode
+                    if menuController.isVisible {
+                        if let menuOption = menuController.getSuboptionView(id: id) {
+                            if let cell = menuOption.view.cellForRow(at: IndexPath(row: menuOption.item, section: 0)) {
+                                self.activeElements.append(HelpViewActiveElement(element: element, frame: cell.frame, views: [cell], source: .menu, descriptor: menuOption.title))
+                            }
+                        }
+                    }
+                }
+            }
+            
+            if (element.views?.count ?? 0) == 0 && element.bannerId == nil {
                 // Text is not related to a control - always include it
                 self.activeElements.append(HelpViewActiveElement(element: element))
             }
@@ -223,44 +262,103 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
     }
     
     private func showElement() {
+        let showNext = (self.alwaysNext || self.currentElement < self.activeElements.count - 1)
         let activeElement = self.activeElements[self.currentElement]
+        
+        if activeElement.source == .menu {
+            // Need to execute remotely in the menu controller
+            if self.parentViewController.menuController?.isVisible ?? false {
+                let sourceElement = activeElement.element
+                let menuElement = HelpViewElement(attributedText: sourceElement.text, descriptor: activeElement.descriptor, views: activeElement.views, horizontalBorder: sourceElement.horizontalBorder, verticalBorder: sourceElement.verticalBorder)
+                
+                self.removeTapGesture()
+                self.isHidden = true
+                self.parentViewController.menuController?.showHelp(helpElement: menuElement, showNext: showNext, completion: self.menuCompletion)
+            } else {
+                self.next()
+            }
+        } else {
+            // Show ordinary subview of current view
+            self.showActiveElement(activeElement: activeElement, showNext: showNext)
+        }
+    }
+    
+    public func showMenuElement(element: HelpViewElement, showNext: Bool, completion: @escaping (Bool)->()) {
+        // Used to execute a specific element remotely (in a menu controller)
+        self.completion = { (finishPressed) in
+            self.removeTapGesture()
+            self.isHidden = true
+            completion(finishPressed)
+        }
+        self.addTapGesture()
+        self.isHidden = false
+        if let view = element.views?.first {
+            self.activeElements = [HelpViewActiveElement(element: element, frame: view.frame, views: [view], source: .menu)]
+            self.currentElement = 0
+            self.showActiveElement(activeElement: self.activeElements.first!, showNext: showNext)
+        }
+    }
+    
+    private func showActiveElement(activeElement: HelpViewActiveElement, showNext: Bool) {
         let element = activeElement.element
         let frame = activeElement.frame
         let arrowHeight = (frame == nil ? 0 : self.arrowHeight)
         var direction = SpeechBubbleArrowDirection.up
         var point: CGPoint
         
-        let requiredHeight = self.speechBubble.height(element.text(), arrowHeight: arrowHeight) + self.buttonHeight + self.buttonSpacing + self.border
+        let text = element.text().mutableCopy() as! NSMutableAttributedString
+        if let descriptor = activeElement.descriptor ?? element.descriptor {
+            if let range = text.string.range(of: "{}") {
+                let nsRange = NSRange(range, in: text.string)
+                text.replaceCharacters(in: nsRange, with: descriptor)
+            }
+        }
+        
+        let requiredHeight = self.speechBubble.height(text, arrowHeight: arrowHeight) + self.buttonHeight + self.buttonSpacing + self.border
         
         if let frame = frame, let superview = activeElement.views?.first?.superview {
             let frame = self.convert(frame.grownBy(dx: element.horizontalBorder, dy: element.verticalBorder), from: superview)
-            self.focusGradient.set(around: frame)
-                        
-            direction = (requiredHeight + frame.maxY > ScorecardUI.screenHeight ? .down : .up)
-            point = CGPoint(x: frame.midX, y: (direction == .up ? frame.maxY : frame.minY))
+            self.focus.set(around: frame, radius: (activeElement.source == .view ? element.radius : 8.0))
+            
+            if ScorecardUI.portraitPhone() {
+                direction = (requiredHeight + frame.maxY > ScorecardUI.screenHeight ? .down : .up)
+                point = CGPoint(x: frame.midX, y: (direction == .up ? frame.maxY : frame.minY))
+            } else {
+                direction = (frame.maxX > ScorecardUI.screenWidth - 375 ? .right : .left)
+                point = CGPoint(x: (direction == .left ? frame.maxX : frame.minX), y: frame.midY)
+            }
+            
         } else {
             point = self.convert(CGPoint(x: self.parentView.frame.midX, y: (self.parentView.frame.height - requiredHeight) / 2), from: nil)
-            self.focusGradient.set(around: CGRect(origin: point, size: CGSize()))
+            self.focus.set(around: CGRect(origin: point, size: CGSize()), radius: 0)
         }
         
-        let extremity = (point.y + (requiredHeight * direction.rawValue))
+        let extremity = direction.offset(point: point, by: -requiredHeight).y
         if extremity < 0 || extremity > self.parentView.frame.height {
             // Doesn't fit - skip it
             self.nextPressed(self.nextButton)
         } else {
-            self.speechBubble.show(element.text(), point: point, direction: direction, arrowHeight: arrowHeight, arrowWidth: 0)
-            
-            let next = (self.alwaysNext || self.currentElement < self.activeElements.count - 1)
+            self.speechBubble.show(text, point: point, direction: direction, arrowHeight: arrowHeight, arrowWidth: 0) // TODO
             
             let minY = (direction == .up ? self.speechBubble.frame.maxY + self.buttonSpacing: self.speechBubble.frame.minY - self.buttonSpacing - self.buttonHeight)
             
-            let offset = (next ? self.buttonWidth + self.buttonSpacing : (self.buttonWidth / 2))
+            let offset = (showNext ? self.buttonWidth + self.buttonSpacing : (self.buttonWidth / 2))
             self.finishButton.frame = CGRect(x: self.speechBubble.frame.midX - offset, y: minY, width: self.buttonWidth, height: self.buttonHeight)
             
-            self.nextButton.isHidden = !next
-            if next {
+            self.nextButton.isHidden = !showNext
+            if showNext {
                 self.nextButton.frame = CGRect(x: self.speechBubble.frame.midX + self.buttonSpacing, y: minY, width: self.buttonWidth, height: self.buttonHeight)
             }
+        }
+    }
+
+    private func menuCompletion(finishPressed: Bool) {
+        if finishPressed {
+            self.finished()
+        } else {
+            self.addTapGesture()
+            self.isHidden = false
+            self.next()
         }
     }
     
@@ -295,7 +393,23 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
         return button
     }
     
-    @objc private func nextPressed(_ sender: UIButton) {
+    private func addTapGesture() {
+        if self.parentViewController.rootViewController.containers {
+            self.parentViewController.rootViewController.view.addGestureRecognizer(self.tapGesture)
+        } else {
+            self.addGestureRecognizer(self.tapGesture)
+        }
+    }
+    
+    private func removeTapGesture() {
+        if self.parentViewController.rootViewController.containers {
+            self.parentViewController.rootViewController.view.removeGestureRecognizer(self.tapGesture)
+        } else {
+            self.removeGestureRecognizer(self.tapGesture)
+        }
+    }
+    
+    private func next() {
         self.currentElement += 1
         if self.currentElement >= self.activeElements.count {
             self.finished(false)
@@ -304,16 +418,18 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
         }
     }
     
-    @objc private func finishPressed(_ sender: UIButton) {
-        self.finished(true)
+    @objc private func nextPressed(_ sender: UIButton) {
+        self.next()
     }
     
     public func finished(_ finishPressed: Bool = true) {
-        if self.parentViewController.rootViewController.containers {
-            self.parentViewController.rootViewController.view.removeGestureRecognizer(self.tapGesture)
-        }
+        self.removeTapGesture()
         self.isHidden = true
         self.completion?(finishPressed)
+    }
+    
+    @objc private func finishPressed(_ sender: UIButton) {
+        self.finished(true)
     }
     
       // MARK: - Gesture Recognizer Delegates ============================================================ -

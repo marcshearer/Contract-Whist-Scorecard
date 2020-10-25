@@ -8,9 +8,24 @@
 
 import UIKit
 
-enum SpeechBubbleArrowDirection: CGFloat {
-    case up = 1
-    case down = -1
+enum SpeechBubbleArrowDirection {
+    case up
+    case down
+    case left
+    case right
+    
+    func offset(point: CGPoint, by: CGFloat) -> CGPoint {
+        switch self {
+        case .up:
+            return CGPoint(x: point.x, y: point.y - by)
+        case .down:
+            return CGPoint(x: point.x, y: point.y + by)
+        case .left:
+            return CGPoint(x: point.x - by, y: point.y)
+        case .right:
+            return CGPoint(x: point.x + by, y: point.y)
+        }
+    }
 }
 
 class SpeechBubbleView : UIView {
@@ -57,17 +72,35 @@ class SpeechBubbleView : UIView {
             let font = self.font ?? UIFont.systemFont(ofSize: 17)
             let width = min(375, self.superview!.frame.width) - (self.spacing * 2)
             let textHeight = self.label.attributedText?.labelHeight(width: width - (self.textInset * 2), font: font) ?? 100
-            let height = textHeight + arrowHeight + (2 * textInset)
+            let height = textHeight + (2 * textInset)
             let direction = self.direction ?? (self.point.y < ScorecardUI.screenHeight / 2 ? .up : .down)
-            let minX = min(max(self.spacing, self.point.x - (width / 2)), self.superview!.frame.maxX - self.spacing - width)
-            let minY = self.point.y - (direction == .up ? 0 : height)
-            let textOffsetY = (direction == .up ? self.arrowHeight : 0)
-            self.frame = CGRect(x: minX, y: minY, width: width, height: height)
+            
+            var minX: CGFloat
+            var minY: CGFloat
+            switch direction {
+            case .up:
+                minX = self.point.x - (width / 2)
+                minY = self.point.y + self.arrowHeight
+            case .down:
+                minX = self.point.x - (width / 2)
+                minY = self.point.y - height - self.arrowHeight
+            case .left:
+                minX = self.point.x + self.arrowHeight
+                minY = self.point.y - (height / 2)
+            case .right:
+                minX = self.point.x - width - self.arrowHeight
+                minY = self.point.y - (height / 2)
+            }
+            minX = min(max(self.spacing, minX), ScorecardUI.screenWidth - self.spacing - width)
+            minY = min(max(self.spacing, minY), ScorecardUI.screenHeight - self.spacing - height)
+            
+            var labelFrame = CGRect(x: minX, y: minY, width: width, height: height)
+            self.frame = self.superFrame(frame: labelFrame, point: point)
             self.contentView.frame = self.bounds
-            let point = self.superview!.convert(self.point!, to: self)
-            self.labelContainerViewTopConstraint.constant = (direction == .up ? self.arrowHeight : 0)
-            self.labelContainerViewBottomConstraint.constant = (direction == .up ? 0 : self.arrowHeight)
-            let shapeLayer = Polygon.speechBubble(frame: (CGRect(x: 0, y: textOffsetY, width: width, height: height - self.arrowHeight)), point: point, strokeColor: Palette.buttonFace.background, fillColor: Palette.buttonFace.background, arrowWidth: self.arrowWidth)
+            labelFrame = self.superview!.convert(labelFrame, to: self)
+            self.label.frame = labelFrame.grownBy(dx: -self.textInset, dy: -self.textInset)
+            let localPoint = self.superview!.convert(self.point!, to: self)
+            let shapeLayer = Polygon.speechBubble(frame: labelFrame, point: localPoint, strokeColor: Palette.buttonFace.background, fillColor: Palette.buttonFace.background, arrowWidth: self.arrowWidth)
             
             // Remove any previous sublayers
             if let sublayers = contentView.layer.sublayers {
@@ -80,6 +113,12 @@ class SpeechBubbleView : UIView {
             // Add this sublayer
             self.contentView.layer.insertSublayer(shapeLayer, at: 0)
         }
+    }
+    
+    private func superFrame(frame: CGRect, point: CGPoint) -> CGRect {
+        let minX = min(frame.minX, point.x)
+        let minY = min(frame.minY, point.y)
+        return CGRect(x: minX, y: minY, width: max(frame.maxX, point.x) - minX, height: max(frame.maxY, point.y) - minY)
     }
     
     public func height(_ text: NSAttributedString, font: UIFont? = nil, arrowHeight: CGFloat? = nil) -> CGFloat {

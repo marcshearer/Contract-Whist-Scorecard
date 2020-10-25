@@ -295,7 +295,9 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
     func selectedPlayersView(moved playerMO: PlayerMO, to slot: Int) {
         // Update related list element
         self.selectedPlayers[slot] = playerMO
-        self.updateSelectedPlayers(selectedPlayers)
+        if self.delegate?.gamePreviewHosting ?? false {
+            self.updateSelectedPlayers(selectedPlayers)
+        }
         self.delegate?.gamePreview?(moved: playerMO, to: slot)
     }
     
@@ -411,9 +413,11 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
                     self.actionButtons.forEach{(button) in button.isHidden = true}
                     self.messageLabel.attributedText = self.delegate?.gamePreviewWaitMessage
                 }
+            } else if self.appController?.controllerType == .scoring {
+                self.messageLabel.isHidden = true
             }
         }
-        self.infoButton.isHidden = self.menuController?.isVisible ?? false
+        self.infoButton.isHidden = (self.menuController?.isVisible ?? false)
         self.banner.set(title: (self.smallScreen && !ScorecardUI.landscapePhone() ? smallFormTitle : self.formTitle))
     }
     
@@ -830,14 +834,55 @@ extension GamePreviewViewController {
         if self.readOnly && !Scorecard.game.hasJoined {
             // Just watching someone else's game
             text = "This screen allows you to see what's happening when you are viewing a game which has not yet started."
+        } else if self.appController?.controllerType == .scoring {
+            text = "This screen allows you to review the players you have chosen for the game.\n\nYou can cut for dealer or manually select the dealer.\n\nYou can then start the game."
         } else if Scorecard.game.hasJoined {
-            text = "This screen allows you to see what's happening when you have joined a game which has not yet started. You can see the other players who have joined, and you can monitor the cut for dealer when it is initiated by the host."
+            text = "This screen allows you to see what's happening when you have joined a game which has not yet started.\n\nYou can see the other players who have joined, and you can monitor the cut for dealer when it is initiated by the host."
+        } else if Scorecard.game.isPlayingComputer {
+            text = "This screen allows you to preview your game against the 3 robots.\n\nYou can cut for dealer or manually select the dealer.\n\nYou can then start the game."
         } else if (self.delegate?.gamePreviewHosting ?? false) {
-            text = "This screen allows you to monitor who has connected to your game as you wait for the other players to join. Once all players have joined you can cut for dealer or manually select the dealer. You can then start the game"
+            text = "This screen allows you to monitor who has connected to your game as you wait for the other players to join.\n\nOnce all players have joined you can cut for dealer or manually select the dealer.\n\nYou can then start the game."
         }
         
         if let text = text {
             self.helpView.add(text)
         }
+        
+        if !self.readOnly {
+            var text = ""
+            
+            if Scorecard.game.isPlayingComputer {
+                text = "The @*/room@*/ contains the players in the game. This is always you and 3 robots. You cannot cange them."
+            } else if self.appController?.controllerType == .scoring {
+                text = "The @*/room@*/ contains the players you have chosen. You can't change them, but you can drag the players to different positions in the room"
+            } else if Scorecard.shared.commsDelegate?.connectionMode == .invite {
+                text = "The @*/room@*/ contains  yourself (at the bottom) and the other players you have invited to join the game. They will be dim until they have accepted their invitation. You cannot change these players, but you can drag the other players to different positions in the room."
+            } else {
+                text = "The @*/room@*/ contains yourself (at the bottom) and the other players who have joined your game. You can tap on one of the other players to reject them or you can drag the other players to different positions in the room."
+            }
+            
+            self.helpView.add(text, views: [self.selectedPlayersView], radius: 40)
+            
+        }
+        
+        self.helpView.add("You will be kept informed of progress towards starting the game by this message", views: [self.messageLabel], border: 4)
+        
+        if !self.readOnly {
+        
+            self.helpView.add("The @*/Cut for Dealer@*/ button allows you to randomly select the dealer who will also be the person to start the bidding in the first round.", views: [self.cutForDealerButton])
+
+            self.helpView.add("The @*/Next Dealer@*/ button allows you to move the dealer manually around the players (clockwise). You can also do this by using a rotate gesture with 2 fingers.", views: [self.nextDealerButton])
+            
+            let canStartGame = self.controllerDelegate?.canProceed ?? true || Scorecard.game.isPlayingComputer
+            self.helpView.add("\(canStartGame ? "" : "When all the players have joined the @*/Continue@*/ button will be enabled.") Click the @*/Continue@*/ button to start the game.", descriptor: "@*/Continue@*/ button", views: [self.continueButton], bannerId: "continue", radius: self.continueButton.frame.height / 2)
+        
+            self.helpView.add("The {} allows you to change the settings for the current game only. You can change the number of cards in each hand and include/exclude the game in history and/or statistics.", descriptor: "@*/Override@*/ button", views: [self.overrideSettingsButton], bannerId: "override")
+
+        }
+        
+        self.helpView.add("The {} takes you back to the selection screen and allows you to change the players in the game", bannerId: "cancel", horizontalBorder: 8, verticalBorder: 4)
+
+        self.helpView.add("The {} abandons the game and takes you back to the home screen.", bannerId: "home", border: 4, horizontalBorder: 8, verticalBorder: 4)
+        
     }
 }

@@ -863,9 +863,10 @@ extension GamePreviewViewController {
             
             self.helpView.add(text, views: [self.selectedPlayersView], radius: 40)
             
+            self.helpView.add("The {} allows you to change the settings for the current game only. You can change the number of cards in each hand and include/exclude the game in history and/or statistics.", descriptor: "@*/Override@*/ button", views: [self.overrideSettingsButton], bannerId: "override")
         }
         
-        self.helpView.add("You will be kept informed of progress towards starting the game by this message", views: [self.messageLabel], border: 4)
+        self.helpView.add("You will be kept informed of progress towards starting the game by this message", views: [self.messageLabel], horizontalBorder: -4)
         
         if !self.readOnly {
         
@@ -874,9 +875,7 @@ extension GamePreviewViewController {
             self.helpView.add("The @*/Next Dealer@*/ button allows you to move the dealer manually around the players (clockwise). You can also do this by using a rotate gesture with 2 fingers.", views: [self.nextDealerButton])
             
             let canStartGame = self.controllerDelegate?.canProceed ?? true || Scorecard.game.isPlayingComputer
-            self.helpView.add("\(canStartGame ? "" : "When all the players have joined the @*/Continue@*/ button will be enabled.") Click the @*/Continue@*/ button to start the game.", descriptor: "@*/Continue@*/ button", views: [self.continueButton], bannerId: "continue", radius: self.continueButton.frame.height / 2)
-        
-            self.helpView.add("The {} allows you to change the settings for the current game only. You can change the number of cards in each hand and include/exclude the game in history and/or statistics.", descriptor: "@*/Override@*/ button", views: [self.overrideSettingsButton], bannerId: "override")
+            self.helpView.add("\(canStartGame ? "" : "When all the players have joined the {} will be enabled.") Click the @*/Continue@*/ button to start the game.", descriptor: "@*/Continue@*/ button", views: [self.continueButton], bannerId: "continue", radius: self.continueButton.frame.height / 2)
 
         }
         

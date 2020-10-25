@@ -131,17 +131,17 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
     
     @objc internal func infoPressed(_ sender: UIButton) {
         if currentOption == .playGame && self.rootViewController.viewControllerStack.isEmpty {
-            self.view.superview?.bringSubviewToFront(self.view)
+            // self.view.superview?.bringSubviewToFront(self.view)
             self.helpView.show(alwaysNext: true) { (finishPressed) in
-                self.view.superview?.insertSubview(self.view, at: 1)
+                //self.view.superview?.insertSubview(self.view, at: 1)
                 if !finishPressed {
                     self.rootViewController.panelInfoPressed(alwaysNext: false, completion: nil)
                 }
             }
         } else {
-            self.view.superview?.bringSubviewToFront(self.view)
+            // self.view.superview?.bringSubviewToFront(self.view)
             self.rootViewController.panelInfoPressed(alwaysNext: false) { (finishPressed) in
-                self.view.superview?.insertSubview(self.view, at: 1)
+            // self.view.superview?.insertSubview(self.view, at: 1)
             }
         }
     }
@@ -240,7 +240,11 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
     }
     
     func showHelp(helpElement: HelpViewElement, showNext: Bool, completion: @escaping (Bool)->()) {
-        self.helpView.showMenuElement(element: helpElement, showNext: showNext, completion: completion)
+        self.view.superview?.bringSubviewToFront(self.view)
+        self.helpView.showMenuElement(element: helpElement, showNext: showNext, completion: { (finishPressed) in
+            self.view.superview?.insertSubview(self.view, at: 1)
+            completion(finishPressed)
+        })
     }
     
     internal func refresh() {

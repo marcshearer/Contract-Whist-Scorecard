@@ -254,7 +254,7 @@ class Polygon {
         return Polygon.roundedShapeLayer(in: view, definedBy: points, strokeColor: strokeColor, fillColor: fillColor, lineWidth: lineWidth, radius: radius)
     }
     
-    public class func speechBubble(frame: CGRect, point: CGPoint, strokeColor: UIColor, fillColor: UIColor = UIColor.clear, lineWidth: CGFloat = 2.0, radius: CGFloat = 10.0, arrowWidth: CGFloat? = nil) -> CAShapeLayer {
+    public class func speechBubble(frame: CGRect, point: CGPoint?, strokeColor: UIColor, fillColor: UIColor = UIColor.clear, lineWidth: CGFloat = 2.0, radius: CGFloat = 10.0, arrowWidth: CGFloat? = nil) -> CAShapeLayer {
         var insert: Int
         var anchor: CGPoint
         var points: [PolygonPoint] = []
@@ -262,30 +262,34 @@ class Polygon {
         points.append(PolygonPoint(x: frame.maxX, y: frame.minY, pointType: .rounded))
         points.append(PolygonPoint(x: frame.maxX, y: frame.maxY, pointType: .rounded))
         points.append(PolygonPoint(x: frame.minX, y: frame.maxY, pointType: .rounded))
-        if point.y < frame.minY {
-            insert = 0
-            anchor = CGPoint(x: point.x, y: frame.minY)
-        } else if point.x > frame.maxX {
-            insert = 1
-            anchor = CGPoint(x: frame.maxX, y: point.y)
-        } else if point.x < frame.minX {
-            insert = 3
-            anchor = CGPoint(x: frame.minX, y: point.y)
-        } else {
-            insert = 2
-            anchor = CGPoint(x: point.x, y: frame.maxY)
+
+        if let point = point {
+            if point.y < frame.minY {
+                insert = 0
+                anchor = CGPoint(x: point.x, y: frame.minY)
+            } else if point.x > frame.maxX {
+                insert = 1
+                anchor = CGPoint(x: frame.maxX, y: point.y)
+            } else if point.x < frame.minX {
+                insert = 3
+                anchor = CGPoint(x: frame.minX, y: point.y)
+            } else {
+                insert = 2
+                anchor = CGPoint(x: point.x, y: frame.maxY)
+            }
+            var arrow: [PolygonPoint] = []
+            let start = points[insert].cgPoint
+            let anchorDistance = start.distance(to: anchor)
+            let arrowHeight = anchor.distance(to: point)
+            let arrowWidth = arrowWidth ?? arrowHeight / 3
+            let edgePointType: PolygonPointType = (arrowWidth == 0 ? .point : .quadRounded)
+            
+            arrow.append(PolygonPoint(origin: Polygon.partialPoint(from: start, to: anchor, distance: anchorDistance - (arrowWidth / 2)), pointType: edgePointType))
+            arrow.append(PolygonPoint(origin: point, pointType: .point))
+            arrow.append(PolygonPoint(origin: Polygon.partialPoint(from: start, to: anchor, distance: anchorDistance + (arrowWidth / 2)), pointType: edgePointType))
+            points.insert(contentsOf: arrow, at: insert + 1)
         }
-        var arrow: [PolygonPoint] = []
-        let start = points[insert].cgPoint
-        let anchorDistance = start.distance(to: anchor)
-        let arrowHeight = anchor.distance(to: point)
-        let arrowWidth = arrowWidth ?? arrowHeight / 3
-        let edgePointType: PolygonPointType = (arrowWidth == 0 ? .point : .quadRounded)
         
-        arrow.append(PolygonPoint(origin: Polygon.partialPoint(from: start, to: anchor, distance: anchorDistance - (arrowWidth / 2)), pointType: edgePointType))
-        arrow.append(PolygonPoint(origin: point, pointType: .point))
-        arrow.append(PolygonPoint(origin: Polygon.partialPoint(from: start, to: anchor, distance: anchorDistance + (arrowWidth / 2)), pointType: edgePointType))
-        points.insert(contentsOf: arrow, at: insert + 1)
         return Polygon.roundedShapeLayer(definedBy: points, strokeColor: strokeColor, fillColor: fillColor, lineWidth: lineWidth, radius: radius)
     }
 }

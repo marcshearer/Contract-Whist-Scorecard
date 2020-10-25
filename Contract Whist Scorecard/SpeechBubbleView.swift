@@ -35,8 +35,9 @@ class SpeechBubbleView : UIView {
     private var font: UIFont?
     private var arrowHeight: CGFloat = 16
     private var arrowWidth: CGFloat = 16 * 2 / 3
-    private let spacing: CGFloat = 16
     private let textInset: CGFloat = 8
+    
+    private static let spacing: CGFloat = 16
     
     @IBOutlet private weak var contentView: UIView!
     @IBOutlet private weak var labelContainerView: UIView!
@@ -69,11 +70,20 @@ class SpeechBubbleView : UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         if !self.isHidden {
+            let direction = self.direction ?? (self.point.y < ScorecardUI.screenHeight / 2 ? .up : .down)
             let font = self.font ?? UIFont.systemFont(ofSize: 17)
-            let width = min(375, self.superview!.frame.width) - (self.spacing * 2)
+            var width = SpeechBubbleView.width
+            switch direction {
+            case .left:
+                width = min(width, ScorecardUI.screenWidth - self.point.x - SpeechBubbleView.spacing - self.arrowHeight)
+            case .right:
+                width = min(width, self.point.x - SpeechBubbleView.spacing - self.arrowHeight)
+            default:
+                break
+            }
+            
             let textHeight = self.label.attributedText?.labelHeight(width: width - (self.textInset * 2), font: font) ?? 100
             let height = textHeight + (2 * textInset)
-            let direction = self.direction ?? (self.point.y < ScorecardUI.screenHeight / 2 ? .up : .down)
             
             var minX: CGFloat
             var minY: CGFloat
@@ -91,8 +101,8 @@ class SpeechBubbleView : UIView {
                 minX = self.point.x - width - self.arrowHeight
                 minY = self.point.y - (height / 2)
             }
-            minX = min(max(self.spacing, minX), ScorecardUI.screenWidth - self.spacing - width)
-            minY = min(max(self.spacing, minY), ScorecardUI.screenHeight - self.spacing - height)
+            minX = min(max(SpeechBubbleView.spacing, minX), ScorecardUI.screenWidth - SpeechBubbleView.spacing - width)
+            minY = min(max(SpeechBubbleView.spacing, minY), ScorecardUI.screenHeight - SpeechBubbleView.spacing - height)
             
             var labelFrame = CGRect(x: minX, y: minY, width: width, height: height)
             self.frame = self.superFrame(frame: labelFrame, point: point)
@@ -100,7 +110,7 @@ class SpeechBubbleView : UIView {
             labelFrame = self.superview!.convert(labelFrame, to: self)
             self.label.frame = labelFrame.grownBy(dx: -self.textInset, dy: -self.textInset)
             let localPoint = self.superview!.convert(self.point!, to: self)
-            let shapeLayer = Polygon.speechBubble(frame: labelFrame, point: localPoint, strokeColor: Palette.buttonFace.background, fillColor: Palette.buttonFace.background, arrowWidth: self.arrowWidth)
+            let shapeLayer = Polygon.speechBubble(frame: labelFrame, point: (self.arrowHeight == 0 ? nil : localPoint), strokeColor: Palette.buttonFace.background, fillColor: Palette.buttonFace.background, arrowWidth: self.arrowWidth)
             
             // Remove any previous sublayers
             if let sublayers = contentView.layer.sublayers {
@@ -124,11 +134,15 @@ class SpeechBubbleView : UIView {
     public func height(_ text: NSAttributedString, font: UIFont? = nil, arrowHeight: CGFloat? = nil) -> CGFloat {
                 
         let font = font ?? self.font ?? UIFont.systemFont(ofSize: 17)
-        let width = min(375, UIScreen.main.bounds.width) - (self.spacing * 2)
+        let width = SpeechBubbleView.width
         
         let textHeight = text.labelHeight(width: width - (self.textInset - 2), font: font)
         
         return textHeight + (arrowHeight ?? self.arrowHeight) + (2 * textInset)
+    }
+    
+    public static var width: CGFloat {
+        return min(375, UIScreen.main.bounds.width) - (SpeechBubbleView.spacing * 2)
     }
     
     public func show(_ text: NSAttributedString, point: CGPoint? = nil, direction: SpeechBubbleArrowDirection? = nil, font: UIFont? = nil, arrowHeight: CGFloat? = nil, arrowWidth: CGFloat? = nil) {

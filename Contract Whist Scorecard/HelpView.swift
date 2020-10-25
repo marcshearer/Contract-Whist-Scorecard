@@ -56,10 +56,21 @@ class HelpViewElement {
     }
 }
 
-fileprivate enum HelpViewSource: String {
-    case view = ""
-    case menu = " menu option"
-    case banner = " button"
+fileprivate enum HelpViewSource {
+    case view
+    case menu
+    case banner
+    
+    var sort: Int {
+        switch self {
+        case .view:
+            return 0
+        case .menu:
+            return 1
+        case .banner:
+            return 2
+        }
+    }
 }
 
 fileprivate struct HelpViewActiveElement {
@@ -68,6 +79,9 @@ fileprivate struct HelpViewActiveElement {
     let views: [UIView]?
     let source: HelpViewSource
     let descriptor: NSAttributedString?
+    let sequence: Int
+    
+    static var nextSequence = 0
     
     init(element: HelpViewElement, frame: CGRect? = nil, views: [UIView]? = nil, source: HelpViewSource = .view, descriptor: NSAttributedString? = nil) {
         self.element = element
@@ -75,6 +89,8 @@ fileprivate struct HelpViewActiveElement {
         self.views = views
         self.source = source
         self.descriptor = descriptor
+        self.sequence = HelpViewActiveElement.nextSequence
+        HelpViewActiveElement.nextSequence += 1
     }
 }
 
@@ -116,18 +132,19 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
     }
     
     convenience init(in parentViewController: ScorecardViewController) {
-        self.init(frame: parentViewController.view.frame)
+        self.init(frame: parentViewController.view.convert(UIScreen.main.bounds, from: nil))
         self.elements = []
         self.parentViewController = parentViewController
         self.parentView = parentViewController.view
-        self.tapGesture = UITapGestureRecognizer(target: self, action: #selector(HelpView.nextPressed))
+        self.tapGesture = UITapGestureRecognizer(target: self, action: #selector(HelpView.wasTapped))
         self.tapGesture.delegate = self
         parentView.addSubview(self)
+        parentViewController.rootViewController.view.bringSubviewToFront(self)
     }
     
     internal override func layoutSubviews() {
         super.layoutSubviews()
-        self.frame = self.parentView.bounds
+        self.frame = self.parentViewController.view.convert(UIScreen.main.bounds, from: nil)
     }
     
     public func reset() {
@@ -256,6 +273,7 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
         if self.activeElements.isEmpty {
             self.finished(false)
         } else {
+            self.activeElements.sort(by: {$0.source.sort < $1.source.sort || ($0.source.sort == $1.source.sort && $0.sequence < $1.sequence)})
             self.currentElement = 0
             self.showElement()
         }
@@ -308,9 +326,13 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
         
         let text = element.text().mutableCopy() as! NSMutableAttributedString
         if let descriptor = activeElement.descriptor ?? element.descriptor {
-            if let range = text.string.range(of: "{}") {
-                let nsRange = NSRange(range, in: text.string)
-                text.replaceCharacters(in: nsRange, with: descriptor)
+            while true {
+                if let range = text.string.range(of: "{}") {
+                    let nsRange = NSRange(range, in: text.string)
+                    text.replaceCharacters(in: nsRange, with: descriptor)
+                } else {
+                    break
+                }
             }
         }
         
@@ -333,15 +355,33 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
             self.focus.set(around: CGRect(origin: point, size: CGSize()), radius: 0)
         }
         
-        let extremity = direction.offset(point: point, by: -requiredHeight).y
-        if extremity < 0 || extremity > self.parentView.frame.height {
+        var doesntFit = false
+        if direction == .up || direction == .down {
+            let extremity = direction.offset(point: point, by: -requiredHeight).y
+            doesntFit = (extremity < 0 || extremity > self.parentView.frame.height)
+        } else {
+            let extremity = direction.offset(point: point, by: -SpeechBubbleView.width).x
+            doesntFit = (extremity < 0 || extremity > self.parentView.frame.width)
+        }
+            
+        if doesntFit {
             // Doesn't fit - skip it
             self.nextPressed(self.nextButton)
         } else {
-            self.speechBubble.show(text, point: point, direction: direction, arrowHeight: arrowHeight, arrowWidth: 0) // TODO
+            self.speechBubble.show(text, point: point, direction: direction, arrowHeight: (frame == nil ? 0 : arrowHeight), arrowWidth: 0)
             
-            let minY = (direction == .up ? self.speechBubble.frame.maxY + self.buttonSpacing: self.speechBubble.frame.minY - self.buttonSpacing - self.buttonHeight)
             
+            var buttonsBelow: Bool
+            switch direction {
+            case .up:
+                buttonsBelow = true
+            case .down:
+                buttonsBelow = false
+            default:
+                buttonsBelow = (self.speechBubble.frame.maxY + self.buttonHeight + (self.buttonSpacing * 2) < self.frame.height)
+            }
+            let minY = (buttonsBelow ? self.speechBubble.frame.maxY + self.buttonSpacing : self.speechBubble.frame.minY - self.buttonSpacing - self.buttonHeight)
+                
             let offset = (showNext ? self.buttonWidth + self.buttonSpacing : (self.buttonWidth / 2))
             self.finishButton.frame = CGRect(x: self.speechBubble.frame.midX - offset, y: minY, width: self.buttonWidth, height: self.buttonHeight)
             
@@ -409,6 +449,14 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
         }
     }
     
+    @objc private func wasTapped(_ gesture: UIGestureRecognizer) {
+        if self.finishButton.frame.contains(gesture.location(in: self)) {
+            self.finished()
+        } else {
+            self.next()
+        }
+    }
+    
     private func next() {
         self.currentElement += 1
         if self.currentElement >= self.activeElements.count {
@@ -435,7 +483,7 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
       // MARK: - Gesture Recognizer Delegates ============================================================ -
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-        return gestureRecognizer == self.tapGesture
+            return gestureRecognizer == self.tapGesture
     }
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {

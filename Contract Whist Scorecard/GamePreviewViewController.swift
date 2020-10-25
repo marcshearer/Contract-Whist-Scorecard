@@ -448,7 +448,7 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
         }
         
         let leftButtons = [
-            BannerButton(image: UIImage(named: "back"), width: 30, action: self.finishPressed, menuHide: true, menuText: self.backText ?? "Abandon Game", menuSpaceBefore: (self.backText == nil ? 20.0 : 0.0), id: "cancel")]
+            BannerButton(image: UIImage(named: (self.backText == nil ? "home" : "back")), width: 30, action: self.finishPressed, menuHide: true, menuText: self.backText ?? "Abandon Game", menuSpaceBefore: (self.backText == nil ? 20.0 : 0.0), id: "cancel")]
         
         let nonBannerButtonsBefore = [
             BannerButton(control: self.overrideSettingsButton, action: self.overrideSettingsPressed, menuHide: true, menuText: "Override settings", id: "override"),

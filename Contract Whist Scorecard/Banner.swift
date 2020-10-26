@@ -231,8 +231,8 @@ class Banner : UIView {
         self.titleLabelInset.forEach{(constraint) in constraint.constant = inset}
     }
     
-    public func set(title: String? = nil, attributedTitle: NSAttributedString? = nil, menuTitle: String? = nil, leftButtons: [BannerButton]? = nil, rightButtons: [BannerButton]? = nil, lowerButtons: [BannerButton]? = nil, nonBannerButtonsBefore: [BannerButton]? = nil, nonBannerButtonsAfter: [BannerButton]? = nil, menuOption: MenuOption? = nil, backgroundColor: PaletteColor? = nil, titleFont: UIFont? = nil, titleColor: UIColor? = nil, titleAlignment: NSTextAlignment? = nil, disableOptions: Bool? = nil, updateMenuTitle: Bool = true, normalOverrideHeight: CGFloat? = nil, containerOverrideHeight: CGFloat? = nil) {
-        var arrange = false
+    public func set(title: String? = nil, attributedTitle: NSAttributedString? = nil, menuTitle: String? = nil, leftButtons: [BannerButton]? = nil, rightButtons: [BannerButton]? = nil, lowerButtons: [BannerButton]? = nil, nonBannerButtonsBefore: [BannerButton]? = nil, nonBannerButtonsAfter: [BannerButton]? = nil, menuOption: MenuOption? = nil, backgroundColor: PaletteColor? = nil, titleFont: UIFont? = nil, titleColor: UIColor? = nil, titleAlignment: NSTextAlignment? = nil, disableOptions: Bool? = nil, updateMenuTitle: Bool = true, normalOverrideHeight: CGFloat? = nil, containerOverrideHeight: CGFloat? = nil, forceArrange: Bool = false) {
+        var arrange = forceArrange
         var layout = false
         if let title = title {
             self.title = title

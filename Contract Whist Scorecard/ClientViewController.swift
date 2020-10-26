@@ -332,6 +332,12 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         let rotated = self.rotated
         self.firstLayout = false
         self.rotated = false
+
+        if firstLayout || rotated {
+            Palette.ignoringGameBanners {
+                self.allocateContainerSizes()
+            }
+        }
         
         Palette.respectingGameBanners {
             self.mainContainer?.layoutIfNeeded()
@@ -339,7 +345,6 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         
         Palette.ignoringGameBanners {
             
-            self.allocateContainerSizes()
             self.panelLayoutSubviews()
 
             if firstLayout || rotated {

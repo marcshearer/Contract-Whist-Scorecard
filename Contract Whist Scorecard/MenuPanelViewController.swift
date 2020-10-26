@@ -197,7 +197,7 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
     // MARK: - Menu Delegates ===================================================================== -
     
     internal var isVisible: Bool {
-        return self.view.frame.maxX > 0
+        return self.rootViewController.isVisible(container: .left)
     }
     
     internal func didDisappear() {

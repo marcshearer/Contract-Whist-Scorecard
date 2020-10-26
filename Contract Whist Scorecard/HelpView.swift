@@ -124,17 +124,17 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.speechBubble = SpeechBubbleView(in: self)
-        self.focus = FocusView(in: self)
-        self.nextButton = self.addButton(title: "Next", target: #selector(HelpView.nextPressed))
-        self.finishButton = self.addButton(title: "Exit", target: #selector(HelpView.self.finishPressed))
-        self.isHidden = true
     }
     
     convenience init(in parentViewController: ScorecardViewController) {
-        self.init(frame: parentViewController.view.convert(UIScreen.main.bounds, from: nil))
-        self.elements = []
+        self.init(frame: parentViewController.view.convert(parentViewController.screenBounds, from: nil))
         self.parentViewController = parentViewController
+        self.speechBubble = SpeechBubbleView(from: parentViewController, in: self)
+        self.focus = FocusView(from: parentViewController, in: self)
+        self.nextButton = self.addButton(title: "Next", target: #selector(HelpView.nextPressed))
+        self.finishButton = self.addButton(title: "Exit", target: #selector(HelpView.self.finishPressed))
+        self.isHidden = true
+        self.elements = []
         self.parentView = parentViewController.view
         self.tapGesture = UITapGestureRecognizer(target: self, action: #selector(HelpView.wasTapped))
         self.tapGesture.delegate = self
@@ -144,7 +144,7 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
     
     internal override func layoutSubviews() {
         super.layoutSubviews()
-        self.frame = self.parentViewController.view.convert(UIScreen.main.bounds, from: nil)
+        self.frame = self.parentViewController.view.convert(self.parentViewController.screenBounds, from: nil)
     }
     
     public func reset() {
@@ -319,7 +319,7 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
     
     private func showActiveElement(activeElement: HelpViewActiveElement, showNext: Bool) {
         let element = activeElement.element
-        let frame = activeElement.frame
+        var frame = activeElement.frame
         let arrowHeight = (frame == nil ? 0 : self.arrowHeight)
         var direction = SpeechBubbleArrowDirection.up
         var point: CGPoint
@@ -336,41 +336,55 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
             }
         }
         
-        let requiredHeight = self.speechBubble.height(text, arrowHeight: arrowHeight) + self.buttonHeight + self.buttonSpacing + self.border
+        // Reposition frame
+        let superview = activeElement.views?.first?.superview
+        if frame != nil && superview != nil {
+            frame = self.convert(frame!.grownBy(dx: element.horizontalBorder, dy: element.verticalBorder), from: superview!)
+        }
+
+        // Check if positioning left/right or above/below - if left/right check available width
+        let aboveBelow = (ScorecardUI.portraitPhone() || (!ScorecardUI.phoneSize() && !(self.parentViewController.menuController?.isVisible ?? false)))
+        let overrideWidth = (frame == nil || aboveBelow ? nil : SpeechBubbleView.width(availableWidth: max(frame!.minX, self.parentViewController.screenWidth - frame!.maxX)))
         
-        if let frame = frame, let superview = activeElement.views?.first?.superview {
-            let frame = self.convert(frame.grownBy(dx: element.horizontalBorder, dy: element.verticalBorder), from: superview)
+        // Get required height
+        let requiredHeight = self.speechBubble.height(text, arrowHeight: arrowHeight, width: overrideWidth) + self.buttonHeight + self.buttonSpacing + self.border
+        
+        if let frame = frame {
+            // Bubble mode - draw focus shape and work out connection point on frame for arrow
             self.focus.set(around: frame, radius: (activeElement.source == .view ? element.radius : 8.0))
             
-            if ScorecardUI.portraitPhone() {
-                direction = (requiredHeight + frame.maxY > ScorecardUI.screenHeight ? .down : .up)
+            if aboveBelow {
+                direction = (requiredHeight + frame.maxY > self.parentViewController.screenHeight ? .down : .up)
                 point = CGPoint(x: frame.midX, y: (direction == .up ? frame.maxY : frame.minY))
             } else {
-                direction = (frame.maxX > ScorecardUI.screenWidth - 375 ? .right : .left)
+                direction = (frame.maxX > self.parentViewController.screenWidth - 375 ? .right : .left)
                 point = CGPoint(x: (direction == .left ? frame.maxX : frame.minX), y: frame.midY)
             }
             
         } else {
+            // Just a message (no control) - draw focus shape covering entire screen
             point = self.convert(CGPoint(x: self.parentView.frame.midX, y: (self.parentView.frame.height - requiredHeight) / 2), from: nil)
             self.focus.set(around: CGRect(origin: point, size: CGSize()), radius: 0)
         }
         
+        // Check if fits
         var doesntFit = false
         if direction == .up || direction == .down {
             let extremity = direction.offset(point: point, by: -requiredHeight).y
-            doesntFit = (extremity < 0 || extremity > self.parentView.frame.height)
+            doesntFit = (extremity < 0 || extremity > self.frame.height)
         } else {
-            let extremity = direction.offset(point: point, by: -SpeechBubbleView.width).x
-            doesntFit = (extremity < 0 || extremity > self.parentView.frame.width)
+            let extremity = direction.offset(point: point, by: -(SpeechBubbleView.width(availableWidth: overrideWidth))).x
+            doesntFit = (extremity < 0 || extremity > self.frame.width)
         }
             
         if doesntFit {
             // Doesn't fit - skip it
             self.nextPressed(self.nextButton)
         } else {
-            self.speechBubble.show(text, point: point, direction: direction, arrowHeight: (frame == nil ? 0 : arrowHeight), arrowWidth: 0)
+            // Show bubble
+            self.speechBubble.show(text, point: point, direction: direction, width: overrideWidth, arrowHeight: (frame == nil ? 0 : arrowHeight), arrowWidth: 0)
             
-            
+            // Show Next / Finish buttons
             var buttonsBelow: Bool
             switch direction {
             case .up:
@@ -383,11 +397,11 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
             let minY = (buttonsBelow ? self.speechBubble.frame.maxY + self.buttonSpacing : self.speechBubble.frame.minY - self.buttonSpacing - self.buttonHeight)
                 
             let offset = (showNext ? self.buttonWidth + self.buttonSpacing : (self.buttonWidth / 2))
-            self.finishButton.frame = CGRect(x: self.speechBubble.frame.midX - offset, y: minY, width: self.buttonWidth, height: self.buttonHeight)
+            self.finishButton.frame = CGRect(x: self.speechBubble.labelFrame.midX - offset, y: minY, width: self.buttonWidth, height: self.buttonHeight)
             
             self.nextButton.isHidden = !showNext
             if showNext {
-                self.nextButton.frame = CGRect(x: self.speechBubble.frame.midX + self.buttonSpacing, y: minY, width: self.buttonWidth, height: self.buttonHeight)
+                self.nextButton.frame = CGRect(x: self.speechBubble.labelFrame.midX + self.buttonSpacing, y: minY, width: self.buttonWidth, height: self.buttonHeight)
             }
         }
     }

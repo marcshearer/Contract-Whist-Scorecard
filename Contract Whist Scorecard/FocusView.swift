@@ -12,6 +12,8 @@ class FocusView : UIView {
     
     private var aroundFrame: CGRect!
     private var radius: CGFloat!
+    private var parentViewController: ScorecardViewController!
+    private var parentView: UIView!
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
@@ -21,9 +23,11 @@ class FocusView : UIView {
         super.init(frame:frame)
     }
     
-    convenience init(in view: UIView, around aroundFrame: CGRect? = nil) {
-        self.init(frame: view.frame)
-        view.addSubview(self)
+    convenience init(from parentViewController:ScorecardViewController, in parentView: UIView, around aroundFrame: CGRect? = nil) {
+        self.init(frame: parentView.frame)
+        self.parentViewController = parentViewController
+        self.parentView = parentView
+        parentView.addSubview(self)
         if let aroundFrame = aroundFrame {
             self.aroundFrame = aroundFrame
             self.createShapeLayers()
@@ -52,12 +56,12 @@ class FocusView : UIView {
     }
     
     private func createShapeLayers() {
-        let maxDistance = max(self.aroundFrame.minX, self.aroundFrame.minY, ScorecardUI.screenWidth - self.aroundFrame.maxX, ScorecardUI.screenHeight - self.aroundFrame.maxY)
+        let maxDistance = max(self.aroundFrame.minX, self.aroundFrame.minY, self.parentViewController.screenWidth - self.aroundFrame.maxX, self.parentViewController.screenHeight - self.aroundFrame.maxY)
         
         _ = CGRect(x: self.aroundFrame.minX - maxDistance, y: self.aroundFrame.minY - maxDistance, width: self.aroundFrame.width + (2 * maxDistance), height: self.aroundFrame.height + (2 * maxDistance))
         
         let path = UIBezierPath()
-        self.draw(frame: UIScreen.main.bounds, in: path, radius: 0)
+        self.draw(frame: parentViewController.screenBounds, in: path, radius: 0)
         self.draw(frame: self.aroundFrame, in: path, radius: self.radius)
         let layer = CAShapeLayer()
         layer.fillRule = .evenOdd

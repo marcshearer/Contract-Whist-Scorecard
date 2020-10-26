@@ -100,19 +100,19 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="koT-FI-YVU" userLabel="Middle Section">
                                 <rect key="frame" x="0.0" y="440" width="826" height="639"/>
                                 <subviews>
-                                    <tableView clipsSubviews="YES" tag="1" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="tn1-Ts-i5q" userLabel="Options Table View">
+                                    <tableView clipsSubviews="YES" tag="1" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="tn1-Ts-i5q" userLabel="Options Table View">
                                         <rect key="frame" x="40" y="20" width="746" height="619"/>
                                         <color key="backgroundColor" name="Clear"/>
                                         <prototypes>
                                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationWidth="0.0" reuseIdentifier="Option" id="58D-Y9-CK7" customClass="MenuPanelTableCell" customModule="Whist" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="28" width="746" height="27.5"/>
+                                                <rect key="frame" x="0.0" y="28" width="746" height="27"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="58D-Y9-CK7" id="eSB-0r-Uhw">
-                                                    <rect key="frame" x="0.0" y="0.0" width="746" height="27.5"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="746" height="27"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="njw-JR-F2N">
-                                                            <rect key="frame" x="0.0" y="0.0" width="710" height="27.5"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="710" height="27"/>
                                                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="22"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>

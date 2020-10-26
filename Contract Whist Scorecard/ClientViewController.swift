@@ -82,7 +82,6 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     private var isLoggedIn: Bool?
     private var imageObserver: NSObjectProtocol?
     private var whisper: Whisper!
-    private var speechBubble: SpeechBubbleView!
     
     private var hostingOptions: Int = 0
     private var onlineItem: Int?
@@ -224,9 +223,6 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         self.defaultScreenColors()
         self.whisper = Whisper()
         
-        // Setup help bubble
-        self.speechBubble = SpeechBubbleView(in: self.view)
-
         // Check network
         self.checkNetwork()
         

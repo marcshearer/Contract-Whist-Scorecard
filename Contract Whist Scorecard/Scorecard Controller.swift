@@ -628,6 +628,10 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
     internal var uniqueID: String!
     internal weak var bannerClass: Banner!
     internal var gameDetailDelegate: GameDetailDelegate? { return self.appController?.gameDetailDelegate }
+    
+    internal var screenBounds: CGRect { return self.rootViewController.view.bounds }
+    internal var screenWidth: CGFloat { return self.screenBounds.width}
+    internal var screenHeight: CGFloat { return self.screenBounds.height}
 
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -3,21 +3,22 @@
     <device id="ipad11_0rounded" orientation="landscape" layout="fullscreen" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--Location-->
         <scene sceneID="GHJ-ri-wml">
             <objects>
-                <viewController storyboardIdentifier="LocationViewController" title="Location" useStoryboardIdentifierAsRestorationIdentifier="YES" id="IhQ-um-kHy" userLabel="Location" customClass="LocationViewController" customModule="Whist_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="LocationViewController" title="Location" useStoryboardIdentifierAsRestorationIdentifier="YES" id="IhQ-um-kHy" userLabel="Location" customClass="LocationViewController" customModule="Whist" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Od0-bd-l1r">
                         <rect key="frame" x="0.0" y="0.0" width="1194" height="834"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="syy-j8-mMN" userLabel="Banner" customClass="Banner" customModule="Whist_2" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="syy-j8-mMN" userLabel="Banner" customClass="Banner" customModule="Whist" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="1194" height="44"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="string" keyPath="title" value="Location"/>
@@ -32,9 +33,9 @@
                                     <outlet property="parentViewController" destination="IhQ-um-kHy" id="auJ-L2-Qag"/>
                                 </connections>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nmy-2i-PqR" userLabel="Search Bar Background">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EMa-BQ-dra">
                                 <rect key="frame" x="0.0" y="44" width="1194" height="60"/>
-                                <color key="backgroundColor" name="Table Top"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
                             <searchBar contentMode="redraw" text="Location" placeholder="Revised location for game" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qQB-iI-YgT">
                                 <rect key="frame" x="0.0" y="44" width="1194" height="60"/>
@@ -59,7 +60,7 @@
                                 </constraints>
                                 <color key="separatorColor" name="Background"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Location Table Cell" id="G6K-I8-6o4" customClass="LocationTableCell" customModule="Whist_2" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Location Table Cell" id="G6K-I8-6o4" customClass="LocationTableCell" customModule="Whist" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="1194" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="G6K-I8-6o4" id="El6-2N-yPd">
@@ -115,17 +116,10 @@
                                 <rect key="frame" x="578.5" y="398.5" width="37" height="37"/>
                                 <color key="color" name="Text"/>
                             </activityIndicatorView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8qh-o6-LGR">
-                                <rect key="frame" x="0.0" y="104" width="1194" height="30"/>
-                                <color key="backgroundColor" name="Clear"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="psP-Q8-t72"/>
-                                </constraints>
-                            </view>
                             <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Oue-Bc-ckN" userLabel="Bottom Section">
                                 <rect key="frame" x="0.0" y="731" width="1194" height="83"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YjF-f2-IdH" userLabel="Continue Button" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YjF-f2-IdH" userLabel="Continue Button" customClass="ShadowButton" customModule="Whist" customModuleProvider="target">
                                         <rect key="frame" x="472" y="8" width="250" height="50"/>
                                         <color key="backgroundColor" name="Clear"/>
                                         <constraints>
@@ -164,30 +158,27 @@
                         <color key="backgroundColor" name="Background"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstItem="8qh-o6-LGR" firstAttribute="leading" secondItem="Od0-bd-l1r" secondAttribute="leading" id="774-lX-ZbY"/>
-                            <constraint firstItem="uko-az-7BL" firstAttribute="top" secondItem="qQB-iI-YgT" secondAttribute="bottom" id="833-Q0-xYP"/>
+                            <constraint firstItem="EMa-BQ-dra" firstAttribute="trailing" secondItem="qQB-iI-YgT" secondAttribute="trailing" id="1wH-dT-x9F"/>
                             <constraint firstItem="Oue-Bc-ckN" firstAttribute="leading" secondItem="H8a-EA-jDv" secondAttribute="leading" id="9cZ-RA-Cs6"/>
                             <constraint firstAttribute="bottom" secondItem="KRq-QD-SP0" secondAttribute="bottom" id="CuE-qh-hJO"/>
                             <constraint firstItem="syy-j8-mMN" firstAttribute="top" secondItem="Od0-bd-l1r" secondAttribute="top" id="LYC-Qe-8ng"/>
+                            <constraint firstItem="EMa-BQ-dra" firstAttribute="leading" secondItem="qQB-iI-YgT" secondAttribute="leading" id="Ph0-zY-FK5"/>
                             <constraint firstItem="syy-j8-mMN" firstAttribute="trailing" secondItem="Od0-bd-l1r" secondAttribute="trailing" id="QAx-vw-oFX"/>
+                            <constraint firstItem="qQB-iI-YgT" firstAttribute="bottom" secondItem="uko-az-7BL" secondAttribute="top" id="Rle-20-PIC"/>
                             <constraint firstItem="X7E-aZ-m9h" firstAttribute="centerX" secondItem="H8a-EA-jDv" secondAttribute="centerX" id="Rwa-IO-ohp"/>
-                            <constraint firstItem="nmy-2i-PqR" firstAttribute="trailing" secondItem="Od0-bd-l1r" secondAttribute="trailing" id="USR-el-aWt"/>
-                            <constraint firstItem="8qh-o6-LGR" firstAttribute="trailing" secondItem="Od0-bd-l1r" secondAttribute="trailing" id="UYo-3q-Rm6"/>
                             <constraint firstAttribute="trailing" secondItem="uko-az-7BL" secondAttribute="trailing" id="Umk-UY-Dk5"/>
                             <constraint firstItem="KRq-QD-SP0" firstAttribute="leading" secondItem="Od0-bd-l1r" secondAttribute="leading" id="bBu-uS-Tgq"/>
                             <constraint firstItem="X7E-aZ-m9h" firstAttribute="centerY" secondItem="Od0-bd-l1r" secondAttribute="centerY" id="bGu-WZ-cdY"/>
                             <constraint firstItem="H8a-EA-jDv" firstAttribute="trailing" secondItem="Oue-Bc-ckN" secondAttribute="trailing" id="hQ0-he-QmH"/>
                             <constraint firstAttribute="trailing" secondItem="qQB-iI-YgT" secondAttribute="trailing" id="hsN-Y1-716"/>
                             <constraint firstItem="syy-j8-mMN" firstAttribute="leading" secondItem="Od0-bd-l1r" secondAttribute="leading" id="i56-ib-LM7"/>
-                            <constraint firstItem="nmy-2i-PqR" firstAttribute="leading" secondItem="Od0-bd-l1r" secondAttribute="leading" id="mNZ-55-V9B"/>
                             <constraint firstItem="qQB-iI-YgT" firstAttribute="leading" secondItem="Od0-bd-l1r" secondAttribute="leading" id="mYr-WO-NNZ"/>
-                            <constraint firstItem="8qh-o6-LGR" firstAttribute="top" secondItem="uko-az-7BL" secondAttribute="bottom" id="n7c-EW-izY"/>
                             <constraint firstAttribute="trailing" secondItem="KRq-QD-SP0" secondAttribute="trailing" id="ooc-Fy-96K"/>
-                            <constraint firstItem="KRq-QD-SP0" firstAttribute="top" secondItem="8qh-o6-LGR" secondAttribute="top" id="pc0-c5-T6d"/>
+                            <constraint firstItem="EMa-BQ-dra" firstAttribute="top" secondItem="qQB-iI-YgT" secondAttribute="top" id="pMe-ue-geN"/>
+                            <constraint firstItem="uko-az-7BL" firstAttribute="bottom" secondItem="KRq-QD-SP0" secondAttribute="top" id="pc0-c5-T6d"/>
                             <constraint firstItem="qQB-iI-YgT" firstAttribute="top" secondItem="syy-j8-mMN" secondAttribute="bottom" id="r2W-SG-Ccm"/>
+                            <constraint firstItem="EMa-BQ-dra" firstAttribute="bottom" secondItem="qQB-iI-YgT" secondAttribute="bottom" id="v4x-Dz-A6K"/>
                             <constraint firstItem="uko-az-7BL" firstAttribute="leading" secondItem="Od0-bd-l1r" secondAttribute="leading" id="wgE-dw-hgW"/>
-                            <constraint firstItem="uko-az-7BL" firstAttribute="top" secondItem="nmy-2i-PqR" secondAttribute="bottom" id="wyb-d5-KUC"/>
-                            <constraint firstItem="nmy-2i-PqR" firstAttribute="top" secondItem="syy-j8-mMN" secondAttribute="bottom" id="x57-og-ZNL"/>
                             <constraint firstItem="H8a-EA-jDv" firstAttribute="bottom" secondItem="Oue-Bc-ckN" secondAttribute="bottom" id="x82-rm-eJ6"/>
                             <constraint firstItem="syy-j8-mMN" firstAttribute="bottom" secondItem="H8a-EA-jDv" secondAttribute="top" constant="44" id="zhO-DQ-rXK"/>
                         </constraints>
@@ -195,14 +186,13 @@
                     <connections>
                         <outlet property="activityIndicator" destination="X7E-aZ-m9h" id="hwZ-Q7-Jtm"/>
                         <outlet property="banner" destination="syy-j8-mMN" id="Ny0-NY-jJX"/>
-                        <outlet property="bannerContinuationView" destination="8qh-o6-LGR" id="vu4-bh-WkT"/>
                         <outlet property="bottomSectionHeightConstraint" destination="SsS-Kw-dD1" id="3Sh-x7-mXN"/>
                         <outlet property="continueButton" destination="YjF-f2-IdH" id="gNA-yx-RtD"/>
                         <outlet property="locationMapView" destination="KRq-QD-SP0" id="FCf-Od-HV5"/>
                         <outlet property="locationTableView" destination="uko-az-7BL" id="xwd-Kw-i6P"/>
                         <outlet property="locationTableViewHeight" destination="swJ-Ow-NCo" id="T6L-fD-S52"/>
                         <outlet property="searchBar" destination="qQB-iI-YgT" id="Iae-ha-og2"/>
-                        <outlet property="searchBarBackgroundView" destination="nmy-2i-PqR" id="cbD-LT-GRT"/>
+                        <outlet property="searchBarBackgroundView" destination="EMa-BQ-dra" id="CZ8-ES-iaO"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AIX-En-fx9" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -230,5 +220,8 @@
         <namedColor name="Text">
             <color red="0.49411764705882355" green="0.49411764705882355" blue="0.49411764705882355" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
     </resources>
 </document>

@@ -119,13 +119,13 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
             viewController = self.showNextHand(round: context?["round"] as? Int)
             
         case .scorepad:
-            viewController = self.showScorepad(scorepadMode: (self.purpose == .playing ? .joining : .viewing))
+            viewController = self.showScorepad()
             
         case .roundSummary:
             viewController = self.showRoundSummary()
             
         case .gameSummary:
-            viewController = self.showGameSummary(mode: .joining)
+            viewController = self.showGameSummary()
             
         case .confirmPlayed:
             viewController = self.showConfirmPlayed(context: context, completion: completion)

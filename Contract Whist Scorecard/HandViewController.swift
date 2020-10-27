@@ -547,7 +547,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
     }
     
     private func cancel() {
-        Scorecard.shared.warnExitGame(from: self, mode: (Scorecard.shared.commsDelegate?.connectionType == .server ? .hosting : .joining)) {
+        Scorecard.shared.warnExitGame(from: self) {
             self.willDismiss()
             self.controllerDelegate?.didCancel()
         }

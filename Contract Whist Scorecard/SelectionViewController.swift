@@ -63,7 +63,6 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
     @IBOutlet private weak var bottomSectionHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var clearAllButton: ShadowButton!
     @IBOutlet private weak var continueButton: ShadowButton!
-    @IBOutlet private weak var infoButton: ShadowButton!
     @IBOutlet private var sideBySideConstraints: [NSLayoutConstraint]!
     @IBOutlet private var aboveAndBelowConstraints: [NSLayoutConstraint]!
     @IBOutlet private var sideBySideTabletConstraints: [NSLayoutConstraint]!
@@ -84,11 +83,9 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
         finishAction()       
     }
     
-    @IBAction public func infoPressed(_ sender: Any) {
+    internal func infoPressed() {
         self.helpView?.show()
     }
-    
-
     
     @IBAction func clearAllButtonPressed(_ sender: UIButton) {
         if selectedList.count > 0 {
@@ -334,8 +331,6 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
         
         self.banner.set(title: (self.smallScreen && !ScorecardUI.landscapePhone() ? (smallFormTitle ?? self.formTitle) : self.formTitle))
         
-        self.infoButton.isHidden = (self.menuController?.isVisible ?? false)
-
     }
     
     func setSize() {
@@ -427,6 +422,7 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
     private func setupButtons() {
         
         self.banner.set(rightButtons: [
+                BannerButton(image: UIImage(systemName: "questionmark"), action: self.infoPressed, type: .rounded, menuHide: true, id: "info"),
                 BannerButton(title: "Continue", image: UIImage(named: "forward"), width: 100, action: self.continuePressed, menuHide: true, id: "continue")])
         
         // Set cancel button and title
@@ -434,8 +430,8 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
     }
     
     private func setupScreenSize() {
-        // Check if need to restrict bottom because of screen size
-        self.smallScreen = (ScorecardUI.smallPhoneSize() || ScorecardUI.landscapePhone())
+        // Check if need to restrict bottom because of screen size - only now doing this on landscape phone
+        self.smallScreen = ScorecardUI.landscapePhone()
     }
     
     private func setupForm() {
@@ -893,8 +889,6 @@ extension SelectionViewController {
         self.continueButton.setBackgroundColor(Palette.continueButton.background)
         self.continueButton.setTitleColor(Palette.continueButton.text, for: .normal)
         self.view.backgroundColor = Palette.normal.background
-        self.infoButton.setBackgroundColor(Palette.bannerShadow.background)
-        self.infoButton.tintColor = Palette.bannerShadow.text
     }
 }
 
@@ -904,16 +898,16 @@ extension SelectionViewController {
         
         self.helpView.reset()
         
-        self.helpView.add("This screen allows you to select players \(self.selectionMode == .players ? "for your game" : "to invite to your online game").\n\nClick (or drag) players in the list \(ScorecardUI.portraitPhone() ? "on the bottom" : "at the right") of the screen to add them to the game.\n\nClick (or drag) players in the room to remove them.\n\nClick on the '+' to add a new player to your device")
+        self.helpView.add("This screen allows you to select players \(self.gameMode == .scoring ? "for your game" : "to invite to your online game").\n\nClick (or drag) players in the list \(ScorecardUI.portraitPhone() ? "on the bottom" : "at the right") of the screen to add them to the game.\n\nClick (or drag) players in the room to remove them.\n\nClick on the '+' to add a new player to your device")
         
-        self.helpView.add("The @*/room@*/ contains the players who you select to take part in the game.\(self.selectionMode == .players ? "" : " Your own player always appears at the bottom of the room.") Click on a player to remove them from the room.", views: [self.selectedPlayersView], radius: 44)
+        self.helpView.add("The @*/Room@*/ contains the players who you select to take part in the game.\(self.gameMode == .scoring ? "" : " Your own player always appears at the bottom of the room.") Click on a player to remove them from the room.", views: [self.selectedPlayersView], radius: 44)
         
         self.helpView.add("This area contains other players on the device. Click on a player to add them to the game (assuming there is a space in the room).", views: [self.unselectedCollectionView], item: 1, itemTo: 9999, border: 4)
         
         self.helpView.add("You can use the {} to add a new player to the device (and hence to the available players).", descriptor: "@*+@* button", views: [self.unselectedCollectionView], item: 0)
         
-        self.helpView.add("\((selectedList.count < 3 ? "When enough players have been added to the game, the {} will be enabled. ": ""))Click the {} to \(self.selectionMode == .players ? "start scoring the game" : "send invitations to the other players and start the game").", descriptor: "@*/Continue@*/ button", views: [self.continueButton], bannerId: "continue", radius: self.continueButton.frame.height / 2)
+        self.helpView.add("\((selectedList.count < 3 ? "When enough players have been added to the game, the {} will be enabled. ": ""))Click the {} to \(self.gameMode == .scoring ? "review the selected players and set the dealer prior to starting the game" : "send invitations to the other players and start the game").", descriptor: "@*/Continue@*/ button", views: [self.continueButton], bannerId: "continue", radius: self.continueButton.frame.height / 2)
         
-        self.helpView.add("The {} abandons the game and takes you back to the home screen.", bannerId: Banner.finishButton, border: 4, horizontalBorder: 8, verticalBorder: 4)
+        self.helpView.add("The {} abandons the game and takes you back to the home screen.", bannerId: Banner.finishButton, horizontalBorder: 8, verticalBorder: 4)
     }
 }

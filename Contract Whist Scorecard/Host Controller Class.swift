@@ -182,11 +182,11 @@ enum InviteStatus {
             viewController = self.showNextHand(round: context?["round"] as? Int)
             
         case .scorepad:
-            viewController = self.showScorepad(scorepadMode: .hosting)
+            viewController = self.showScorepad()
             self.autoDeal()
             
         case .gameSummary:
-            viewController = self.showGameSummary(mode: .hosting)
+            viewController = self.showGameSummary()
             
         case .confirmPlayed:
             viewController = self.showConfirmPlayed(context: context, completion: completion)

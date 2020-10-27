@@ -9,14 +9,7 @@
 import UIKit
 import CoreData
 import Combine
-
-enum ScorepadMode {
-    case scoring
-    case hosting
-    case joining
-    case viewing
-}
-    
+ 
 class ScorepadViewController: ScorecardViewController,
                               UITableViewDataSource, UITableViewDelegate,
                               UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout,
@@ -26,7 +19,6 @@ class ScorepadViewController: ScorecardViewController,
     // MARK: - Class Properties ======================================================================== -
     
     // Properties to pass state
-    public var scorepadMode: ScorepadMode!
     public var parentView: UIView!
     
     // Cell dimensions
@@ -100,7 +92,7 @@ class ScorepadViewController: ScorecardViewController,
     }
     
     internal func finishPressed() {
-        Scorecard.shared.warnExitGame(from: self, mode: scorepadMode) {
+        Scorecard.shared.warnExitGame(from: self) {
             self.willDismiss()
             self.controllerDelegate?.didCancel()
         }
@@ -111,7 +103,7 @@ class ScorepadViewController: ScorecardViewController,
     }
     
     @IBAction private func rightSwipe(recognizer:UISwipeGestureRecognizer) {
-        if scorepadMode == .scoring {
+        if self.gameMode == .scoring {
             let isHidden = banner.getButtonIsHidden(scoreEntryButton)
             let isEnabled = banner.getButtonIsEnabled(scoreEntryButton)
             if recognizer.state == .ended && !isHidden && isEnabled {
@@ -121,7 +113,7 @@ class ScorepadViewController: ScorecardViewController,
     }
     
     @IBAction private func leftSwipe(recognizer:UISwipeGestureRecognizer) {
-        if scorepadMode == .scoring {
+        if self.gameMode == .scoring {
             if recognizer.state == .ended {
                 self.scorePressed()
             }
@@ -149,7 +141,7 @@ class ScorepadViewController: ScorecardViewController,
     override internal func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        if scorepadMode == .viewing {
+        if self.gameMode == .viewing {
             headerTableView.isUserInteractionEnabled = true
             footerTableView.isUserInteractionEnabled = true
             tapGestureRecognizer.isEnabled = true
@@ -177,12 +169,11 @@ class ScorepadViewController: ScorecardViewController,
     override internal func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        self.setupBanner()
-        
         if self.lastBannerHeight != self.banner.height ||
             self.lastViewHeight != self.view.frame.height ||
             self.lastViewWidth != self.view.frame.width {
 
+            self.setupBanner()
             self.setupSize(to: self.view.safeAreaLayoutGuide.layoutFrame.size)
             self.headerTableView.layoutIfNeeded()
             self.paddingViewLineWidth.forEach { $0.constant = (ScorecardUI.landscapePhone() ? 3 : 0)}
@@ -190,7 +181,7 @@ class ScorepadViewController: ScorecardViewController,
             self.headerTableView.reloadData()
             self.bodyTableView.reloadData()
             self.footerTableView.reloadData()
-            self.lastBannerHeight = banner.frame.height
+            self.lastBannerHeight = self.banner.height
             self.lastViewHeight = self.view.frame.height
             self.lastViewWidth = self.view.frame.width
             self.setupBorders()
@@ -492,11 +483,11 @@ class ScorepadViewController: ScorecardViewController,
     
     private func setupBanner() {
         let scoreEntryButtonTitle = (Scorecard.game.gameComplete() ? "Scores" :
-                                    (scorepadMode == .hosting  || scorepadMode == .joining ? "Play" :
+                                        (self.gameMode.isHosting  || self.gameMode == .joining ? "Play" :
                                      "Score"))
         let scoreEntryButtonWidth = max(scoreEntryButtonTitle.labelWidth(font: BannerButton.defaultFont) + 16, 80)
         let menuText = (Scorecard.game.gameComplete() ? "Return to Game Summary" :
-                       (scorepadMode == .hosting  || scorepadMode == .joining ? "Play Hand" :
+                            (self.gameMode.isHosting  || self.gameMode == .joining ? "Play Hand" :
                         "Enter Score"))
         self.banner.set(
             menuTitle: "Scorepad",
@@ -628,7 +619,7 @@ class ScorepadViewController: ScorecardViewController,
         
     // MARK: - Function to present this view ==============================================================
     
-    class func show(from viewController: ScorecardViewController, appController: ScorecardAppController? = nil, existing scorepadViewController: ScorepadViewController? = nil, scorepadMode: ScorepadMode? = nil) -> ScorepadViewController {
+    class func show(from viewController: ScorecardViewController, appController: ScorecardAppController? = nil, existing scorepadViewController: ScorepadViewController? = nil) -> ScorepadViewController {
         var scorepadViewController: ScorepadViewController! = scorepadViewController
         
         if scorepadViewController == nil {
@@ -637,7 +628,6 @@ class ScorepadViewController: ScorecardViewController,
         }
         
         scorepadViewController.parentView = viewController.view
-        scorepadViewController.scorepadMode = scorepadMode
         scorepadViewController.controllerDelegate = appController
         
         viewController.present(scorepadViewController, appController: appController, animated: true)
@@ -903,14 +893,14 @@ class ScorepadViewController: ScorecardViewController,
     }
     
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        if self.scorepadMode == .scoring {
+        if self.gameMode == .scoring {
             return true
         } else {
             if collectionView.tag < 1000000 {
                 let round = collectionView.tag + 1
-                if (scorepadMode == .hosting || scorepadMode == .joining) && Scorecard.game!.dealHistory[round] != nil && (round < Scorecard.game!.handState.round || (round == Scorecard.game!.handState.round && Scorecard.game!.gameComplete())) {
+                if (self.gameMode.isHosting || self.gameMode == .joining) && Scorecard.game!.dealHistory[round] != nil && (round < Scorecard.game!.handState.round || (round == Scorecard.game!.handState.round && Scorecard.game!.gameComplete())) {
                     return true
-                } else if scorepadMode == .scoring {
+                } else if self.gameMode == .scoring {
                     return true
                 } else {
                     return false
@@ -928,14 +918,14 @@ class ScorepadViewController: ScorecardViewController,
         } else {
             // Body row tapped
             let round = collectionView.tag+1
-            if self.scorepadMode == .scoring {
+            if self.gameMode == .scoring {
                 if round >= Scorecard.game.maxEnteredRound {
                     // Row which is not yet entered tapped - edit last row
                     Scorecard.game.selectedRound = Scorecard.game.maxEnteredRound
                   } else {
                     Scorecard.game.selectedRound = round
                 }
-            } else if scorepadMode == .hosting || scorepadMode == .joining {
+            } else if self.gameMode.isHosting || self.gameMode == .joining {
                 if self.gameDetailDelegate?.isVisible ?? false {
                     self.gameDetailDelegate?.refresh(activeView: .scorepad, round: round)
                 } else {
@@ -943,7 +933,7 @@ class ScorepadViewController: ScorecardViewController,
                 }
             }
         }
-        if self.scorepadMode == .scoring {
+        if self.gameMode == .scoring {
             self.controllerDelegate?.didProceed(context: ["reeditMode" : Scorecard.game.roundComplete(Scorecard.game.selectedRound)])
             rotated = false
         }

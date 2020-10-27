@@ -126,7 +126,7 @@ Played</string>
                                                 <accessibility key="accessibilityConfiguration" identifier="thisPlayerOverlap"/>
                                             </view>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rhg-YK-v6u" customClass="ShadowButton" customModule="Whist" customModuleProvider="target">
-                                                <rect key="frame" x="20" y="83" width="28" height="28"/>
+                                                <rect key="frame" x="366" y="103" width="28" height="28"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="28" id="M3g-Di-BnU"/>
                                                     <constraint firstAttribute="width" secondItem="rhg-YK-v6u" secondAttribute="height" multiplier="1:1" id="QQQ-Gk-Tmr"/>
@@ -145,17 +145,17 @@ Played</string>
                                         <color key="backgroundColor" name="Clear"/>
                                         <accessibility key="accessibilityConfiguration" identifier="topSection"/>
                                         <constraints>
-                                            <constraint firstItem="rhg-YK-v6u" firstAttribute="leading" secondItem="baT-Lm-DyX" secondAttribute="leading" constant="20" id="6U5-Zj-hn0"/>
-                                            <constraint firstItem="rhg-YK-v6u" firstAttribute="bottom" secondItem="XTv-6o-LLq" secondAttribute="bottom" constant="-10" id="9kK-nZ-tJc"/>
                                             <constraint firstItem="XTv-6o-LLq" firstAttribute="leading" secondItem="baT-Lm-DyX" secondAttribute="leading" id="9tT-fP-i6K"/>
                                             <constraint firstItem="x7j-7w-yJj" firstAttribute="height" secondItem="baT-Lm-DyX" secondAttribute="height" multiplier="0.33" id="Bzi-e3-1sg"/>
                                             <constraint firstAttribute="bottom" secondItem="x7j-7w-yJj" secondAttribute="bottom" id="Grw-b1-DeL"/>
+                                            <constraint firstAttribute="trailing" secondItem="rhg-YK-v6u" secondAttribute="trailing" constant="20" id="Lpt-4b-nXG"/>
                                             <constraint firstItem="XTv-6o-LLq" firstAttribute="height" secondItem="baT-Lm-DyX" secondAttribute="height" multiplier="0.4" id="MZt-h6-3zi"/>
                                             <constraint firstItem="x7j-7w-yJj" firstAttribute="leading" secondItem="baT-Lm-DyX" secondAttribute="leading" id="Pdl-Kb-AA4"/>
                                             <constraint firstItem="XTv-6o-LLq" firstAttribute="top" secondItem="baT-Lm-DyX" secondAttribute="top" id="YHA-Pn-pco"/>
                                             <constraint firstAttribute="trailing" secondItem="XTv-6o-LLq" secondAttribute="trailing" id="a7q-9L-hle"/>
                                             <constraint firstItem="rhg-YK-v6u" firstAttribute="centerX" secondItem="baT-Lm-DyX" secondAttribute="centerX" id="b0M-Fp-ruV"/>
                                             <constraint firstItem="x7j-7w-yJj" firstAttribute="height" secondItem="baT-Lm-DyX" secondAttribute="height" multiplier="0.12" id="bsM-gr-gao"/>
+                                            <constraint firstAttribute="bottom" secondItem="rhg-YK-v6u" secondAttribute="bottom" constant="20" id="dt8-Hq-GNZ"/>
                                             <constraint firstAttribute="trailing" secondItem="x7j-7w-yJj" secondAttribute="trailing" id="jmq-QI-Us8"/>
                                             <constraint firstAttribute="height" priority="1" id="l4b-QK-6GL"/>
                                             <constraint firstItem="XTv-6o-LLq" firstAttribute="bottom" secondItem="x7j-7w-yJj" secondAttribute="top" id="u1j-SS-ZBA"/>
@@ -167,8 +167,7 @@ Played</string>
                                                 <exclude reference="zCm-db-ZhY"/>
                                                 <exclude reference="Bzi-e3-1sg"/>
                                                 <exclude reference="bsM-gr-gao"/>
-                                                <exclude reference="6U5-Zj-hn0"/>
-                                                <exclude reference="9kK-nZ-tJc"/>
+                                                <exclude reference="Lpt-4b-nXG"/>
                                                 <exclude reference="b0M-Fp-ruV"/>
                                             </mask>
                                         </variation>
@@ -183,8 +182,7 @@ Played</string>
                                             <mask key="constraints">
                                                 <include reference="zCm-db-ZhY"/>
                                                 <include reference="bsM-gr-gao"/>
-                                                <include reference="6U5-Zj-hn0"/>
-                                                <include reference="9kK-nZ-tJc"/>
+                                                <include reference="Lpt-4b-nXG"/>
                                             </mask>
                                         </variation>
                                     </view>
@@ -782,16 +780,16 @@ Played</string>
                                         <exclude reference="Snw-iS-dDR"/>
                                         <exclude reference="inc-aR-TRM"/>
                                         <exclude reference="rh3-oH-Lxh"/>
+                                        <exclude reference="9Wk-c7-FdU"/>
+                                        <exclude reference="CKy-zs-657"/>
+                                        <exclude reference="fnP-9P-Cib"/>
+                                        <exclude reference="tDV-xc-iia"/>
                                         <exclude reference="DzQ-08-4lK"/>
                                         <exclude reference="JVJ-yO-FIW"/>
                                         <exclude reference="MGB-uA-Kgc"/>
                                         <exclude reference="VZ7-0b-g2b"/>
                                         <exclude reference="ZCV-Iz-ViU"/>
                                         <exclude reference="mTM-oW-TVk"/>
-                                        <exclude reference="9Wk-c7-FdU"/>
-                                        <exclude reference="CKy-zs-657"/>
-                                        <exclude reference="fnP-9P-Cib"/>
-                                        <exclude reference="tDV-xc-iia"/>
                                         <exclude reference="OUH-j5-s4S"/>
                                         <exclude reference="Sew-ep-bqo"/>
                                         <exclude reference="fSW-34-Uk4"/>
@@ -821,11 +819,11 @@ Played</string>
                                         <include reference="Ibo-5M-oqI"/>
                                         <include reference="O08-2h-ok2"/>
                                         <include reference="Snw-iS-dDR"/>
+                                        <include reference="9Wk-c7-FdU"/>
+                                        <include reference="fnP-9P-Cib"/>
                                         <include reference="DzQ-08-4lK"/>
                                         <include reference="VZ7-0b-g2b"/>
                                         <include reference="mTM-oW-TVk"/>
-                                        <include reference="9Wk-c7-FdU"/>
-                                        <include reference="fnP-9P-Cib"/>
                                         <include reference="OUH-j5-s4S"/>
                                         <include reference="Sew-ep-bqo"/>
                                         <include reference="lng-Pt-qbI"/>
@@ -842,11 +840,11 @@ Played</string>
                                         <include reference="ixm-Te-QmJ"/>
                                         <include reference="inc-aR-TRM"/>
                                         <include reference="rh3-oH-Lxh"/>
+                                        <include reference="CKy-zs-657"/>
+                                        <include reference="tDV-xc-iia"/>
                                         <include reference="JVJ-yO-FIW"/>
                                         <include reference="MGB-uA-Kgc"/>
                                         <include reference="ZCV-Iz-ViU"/>
-                                        <include reference="CKy-zs-657"/>
-                                        <include reference="tDV-xc-iia"/>
                                         <include reference="fSW-34-Uk4"/>
                                         <include reference="n2D-zv-RsK"/>
                                         <include reference="uN4-Sq-JxP"/>
@@ -959,7 +957,7 @@ Played</string>
                     </connections>
                 </rotationGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="6036" y="1442"/>
+            <point key="canvasLocation" x="6034.7826086956529" y="1441.7410714285713"/>
         </scene>
     </scenes>
     <resources>

@@ -143,8 +143,8 @@ class SpeechBubbleView : UIView {
         return textHeight + (arrowHeight ?? self.arrowHeight) + (2 * textInset)
     }
     
-    public static func width(availableWidth: CGFloat? = nil) -> CGFloat {
-        return min(375, max(190, availableWidth ?? UIScreen.main.bounds.width), UIScreen.main.bounds.height) - (SpeechBubbleView.spacing * 2)
+    public static func width(availableWidth: CGFloat? = nil, minWidth: CGFloat = 190) -> CGFloat {
+        return min(375, max(minWidth, availableWidth ?? UIScreen.main.bounds.width), UIScreen.main.bounds.height) - (SpeechBubbleView.spacing * 2)
     }
     
     public var labelFrame: CGRect { return self.convert(self.label.frame, to: self.parentView)}

@@ -19,10 +19,7 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
 
     // Main state properties
     private let sync = Sync()
-    
-    // Properties to pass state
-    private var gameSummaryMode: ScorepadMode!
-    
+        
     // Constants
     private let stopPlayingTag = 1
     private let playAgainTag = 2
@@ -111,7 +108,7 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
     }
     
     @IBAction func tapGestureReceived(recognizer:UITapGestureRecognizer) {
-        if gameSummaryMode == .viewing {
+        if self.gameMode == .viewing {
             self.finishPressed()
         } else {
             // Stop confetti if it is falling and disable this tap gesture
@@ -138,7 +135,7 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
         self.setupBanner()
         
         // Setup buttons / swipes
-        if gameSummaryMode != .scoring && gameSummaryMode != .hosting {
+        if self.gameMode != .scoring && !self.gameMode.isHosting {
             self.playAgainButton.isEnabled = false
             self.playAgainButton.alpha = 0.3
             self.banner.setButton(playAgain, isHidden: true)
@@ -357,21 +354,21 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
     
     private func stopPlayingPressed() {
         // Unwind to home screen clearing current game
-        if gameSummaryMode != .viewing {
+        if self.gameMode != .viewing {
             UIApplication.shared.isIdleTimerDisabled = false
-            if gameSummaryMode == .joining {
+            if self.gameMode == .joining {
                 // Link to home via client (no sync)
                 self.controllerDelegate?.didProceed()
             } else {
-                self.finishGame(returnMode: .returnHome, resetOverrides: true, confirm: self.gameSummaryMode == .scoring)
+                self.finishGame(returnMode: .returnHome, resetOverrides: true, confirm: self.self.gameMode == .scoring)
             }
         }
     }
     
     private func playAgainPressed() {
         // Unwind to scorepad clearing current game and advancing dealer
-        if gameSummaryMode == .scoring || gameSummaryMode == .hosting {
-            self.finishGame(returnMode: .newGame, advanceDealer: true, resetOverrides: false, confirm: self.gameSummaryMode == .scoring)
+        if self.gameMode == .scoring || self.gameMode.isHosting {
+            self.finishGame(returnMode: .newGame, advanceDealer: true, resetOverrides: false, confirm: self.gameMode == .scoring)
         }
     }
     
@@ -513,7 +510,7 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
                 }
             }
             
-            if (gameSummaryMode != .scoring && gameSummaryMode != .hosting) || !Scorecard.activeSettings.saveHistory {
+            if (self.gameMode != .scoring && !self.gameMode.isHosting) || !Scorecard.activeSettings.saveHistory {
                 // Need to add current game since not written on this device
                 for playerNumber in 1...Scorecard.game.currentPlayers {
                     let totalScore = Scorecard.game.scores.totalScore(playerNumber: playerNumber)
@@ -595,7 +592,7 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
         }
         self.others = Scorecard.game.currentPlayers - winners
         
-        if !Scorecard.game.gameCompleteNotificationSent && (gameSummaryMode == .scoring || gameSummaryMode == .hosting) {
+        if !Scorecard.game.gameCompleteNotificationSent && (self.gameMode == .scoring || self.gameMode.isHosting) {
             // Save notification message
             self.saveGameNotification(newHighScore: newHighScore, winnerPlayerUUID: winnerPlayerUUID, winner: winnerNames, winningScore: Int(xref[0].score))
             Scorecard.game.gameCompleteNotificationSent = true
@@ -707,12 +704,11 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
     
     // MARK: - Function to present and dismiss this view ==============================================================
     
-    class public func show(from viewController: ScorecardViewController, appController: ScorecardAppController? = nil, gameSummaryMode: ScorepadMode? = nil) -> GameSummaryViewController {
+    class public func show(from viewController: ScorecardViewController, appController: ScorecardAppController? = nil) -> GameSummaryViewController {
         
         let storyboard = UIStoryboard(name: "GameSummaryViewController", bundle: nil)
         let gameSummaryViewController: GameSummaryViewController = storyboard.instantiateViewController(withIdentifier: "GameSummaryViewController") as! GameSummaryViewController
  
-        gameSummaryViewController.gameSummaryMode = gameSummaryMode
         gameSummaryViewController.controllerDelegate = appController
        
         viewController.present(gameSummaryViewController, appController: appController, animated: true, completion: nil)

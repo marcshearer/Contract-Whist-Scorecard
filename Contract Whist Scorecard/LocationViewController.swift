@@ -32,6 +32,7 @@ class LocationViewController: ScorecardViewController, UITableViewDataSource, UI
     private var testMode = false
     private let rowHeight: CGFloat = 50.0
     private var searchTextField: UITextField!
+    private var canFinish = false
     
     // MARK: - IB Outlets ============================================================================== -
     
@@ -39,7 +40,6 @@ class LocationViewController: ScorecardViewController, UITableViewDataSource, UI
     @IBOutlet private weak var locationMapView: MKMapView!
     @IBOutlet private weak var searchBar: UISearchBar!
     @IBOutlet private weak var searchBarBackgroundView: UIView!
-    @IBOutlet private weak var bannerContinuationView: BannerContinuation!
     @IBOutlet private weak var locationTableView: UITableView!
     @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet private weak var locationTableViewHeight: NSLayoutConstraint!
@@ -54,6 +54,11 @@ class LocationViewController: ScorecardViewController, UITableViewDataSource, UI
         } else {
             self.dismiss(nil)
         }
+    }
+    
+    internal func infoPressed() {
+        self.searchBar.resignFirstResponder()
+        self.helpView?.show()
     }
     
     @IBAction func continuePressed(_ sender: UIButton) {
@@ -95,6 +100,7 @@ class LocationViewController: ScorecardViewController, UITableViewDataSource, UI
         // Setup search text field
         self.searchTextField = searchBar.value(forKey: "searchField") as? UITextField
         self.searchTextField.textColor = Palette.normal.text
+        self.searchTextField.backgroundColor = Palette.normal.background
         
         if self.newLocation.description != nil && self.newLocation.locationSet && self.newLocation.description != "" && self.newLocation.description != "Online" {
             // Save last location
@@ -131,21 +137,29 @@ class LocationViewController: ScorecardViewController, UITableViewDataSource, UI
         } else {
             hideLocationList()
         }
+        
+        // Setup help
+        self.setupHelpView()
     }
     
     override internal func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         Scorecard.shared.reCenterPopup(self)
+        
         self.view.setNeedsLayout()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
+        // Show appropriate continue buttons
+        if self.canFinish {
+            self.showFinishButtons()
+        }
+        
         // Set colors of banner
         if let bannerColor = self.bannerColor {
             self.banner.set(backgroundColor: bannerColor, titleColor: Palette.tableTop.text)
-            self.bannerContinuationView.backgroundColor = bannerColor.background
             self.searchBarBackgroundView.backgroundColor = bannerColor.background
             self.locationTableView.backgroundColor = bannerColor.background
         }
@@ -332,6 +346,7 @@ class LocationViewController: ScorecardViewController, UITableViewDataSource, UI
         // Add banner continue button
         self.banner.set(
             rightButtons: [
+                BannerButton(image: UIImage(systemName: "questionmark"), action: self.infoPressed, type: .rounded, menuHide: true, id: "info"),
                 BannerButton(title: "Continue", image: UIImage(named: "forward"), width: 100, action: self.continuePressed, menuHide: true, id: "continue")])
         
         // Set continue button and title
@@ -350,6 +365,7 @@ class LocationViewController: ScorecardViewController, UITableViewDataSource, UI
         if !testMode {
             self.continueButton.isHidden = true
             self.banner.setButton("continue", isHidden: true)
+            self.canFinish = false
         }
     }
     
@@ -358,9 +374,10 @@ class LocationViewController: ScorecardViewController, UITableViewDataSource, UI
     }
     
     private func showFinishButtons(autoSelect: Bool = false) {
-        let bannerContinue = (ScorecardUI.landscapePhone() || ScorecardUI.smallPhoneSize())
+        let bannerContinue = ScorecardUI.landscapePhone()
         self.banner.setButton("continue", isHidden: !bannerContinue)
         self.continueButton.isHidden = bannerContinue
+        self.canFinish = true
         if self.testMode && autoSelect {
             // In test mode automatically select continue
             self.continuePressed(self.continueButton)
@@ -588,7 +605,6 @@ extension LocationViewController {
 
         self.activityIndicator.color = Palette.normal.text
         self.banner.set(backgroundColor: Palette.tableTop)
-        self.bannerContinuationView.backgroundColor = Palette.tableTop.background
         self.locationTableView.backgroundColor = Palette.tableTop.background
         self.locationTableView.separatorColor = Palette.normal.background
         self.searchBarBackgroundView.backgroundColor = Palette.tableTop.background
@@ -607,4 +623,24 @@ extension LocationViewController {
         }
     }
 
+}
+
+extension LocationViewController {
+    
+    internal func setupHelpView() {
+        
+        self.helpView.reset()
+          
+        self.helpView.add("This screen allows you to enter the current location which will be saved to the game history.\nThe current location will be shown on entry if you have allowed the app access to your current location.\nYou can also either select a recent location from the list (when the search bar is empty) or you can enter text in the search bar to search for a location.")
+        
+        self.helpView.add("Enter text to search for the current location in the @*/Search@*/ bar or set to blank to see a list of recent locations.", views: [self.searchTextField], border: 0, radius: 8)
+        
+        self.helpView.add("\((self.searchBar.text! != "" ? "Below the @*/Search@*/ bar you will see a list of matching locations. Blank out the search text to see recent locations from this device" : "When the @*/Search@*/ bar is empty you will see a list of the most recent locations where you have played. Enter some text to search for other locations")).", views: [self.locationTableView], radius: 0, shrink: true)
+        
+        self.helpView.add("The selected location will be shown on the map by a pin. You can zoom in and out using pinch gestures or swipe to move the map.\n\nYou **cannot** select a location from the map", views: [self.locationMapView], radius: 0, shrink: true)
+        
+        self.helpView.add("\((self.canFinish ? "When you have specified a location the {} will be enabled. " : ""))Click the {} to start the game.", descriptor: "@*/Continue@*/ button", views: [self.continueButton], bannerId: "continue", radius: self.continueButton.frame.height / 2)
+        
+        self.helpView.add("The {} will abandon the game and take you back to the home screen.", bannerId: Banner.finishButton)
+    }
 }

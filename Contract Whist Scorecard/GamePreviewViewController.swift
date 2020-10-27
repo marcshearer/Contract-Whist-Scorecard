@@ -78,7 +78,6 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
     @IBOutlet private weak var bottomSectionHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var cutForDealerButton: ImageButton!
     @IBOutlet private weak var nextDealerButton: ImageButton!
-    @IBOutlet private weak var infoButton: ShadowButton!
     @IBOutlet private var actionButtons: [ImageButton]!
     @IBOutlet private var sideBySideConstraints: [NSLayoutConstraint]!
     @IBOutlet private var aboveAndBelowConstraints: [NSLayoutConstraint]!
@@ -110,7 +109,7 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
         self.controllerDelegate?.didProceed()
     }
     
-    @IBAction func infoPressed(_ sender: UIButton) {
+    internal func infoPressed() {
         self.helpView.show()
     }
         
@@ -382,9 +381,9 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
                         
         } else if !cutting {
             // Hide / show buttons dependent on format
-            self.banner.setButton("continue", isHidden: !ScorecardUI.landscapePhone() && !ScorecardUI.smallPhoneSize())
-            self.continueButton.isHidden = ScorecardUI.landscapePhone() || ScorecardUI.smallPhoneSize()
-            self.bottomSectionHeightConstraint.constant = (ScorecardUI.landscapePhone() || ScorecardUI.smallPhoneSize() ? 0.0 : ((self.menuController?.isVisible ?? false) ? 75 : 58) + (self.view.safeAreaInsets.bottom == 0 ? 8.0 : 0.0))
+            self.banner.setButton("continue", isHidden: !ScorecardUI.landscapePhone())
+            self.continueButton.isHidden = ScorecardUI.landscapePhone()
+            self.bottomSectionHeightConstraint.constant = (ScorecardUI.landscapePhone() ? 0.0 : ((self.menuController?.isVisible ?? false) ? 75 : 58) + (self.view.safeAreaInsets.bottom == 0 ? 8.0 : 0.0))
             self.banner.setButton("override", isHidden: false)
             
             self.leftViewLeadingConstraint.constant = 0.0
@@ -417,7 +416,6 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
                 self.messageLabel.isHidden = true
             }
         }
-        self.infoButton.isHidden = (self.menuController?.isVisible ?? false)
         self.banner.set(title: (self.smallScreen && !ScorecardUI.landscapePhone() ? smallFormTitle : self.formTitle))
     }
     
@@ -428,9 +426,10 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
 
     
     private func setupButtons() {
-        var rightButtons: [BannerButton] = []
         var nonBannerButtonsAfter: [BannerButton] = []
-                
+             
+        var rightButtons = [
+            BannerButton(image: UIImage(systemName: "questionmark"), action: self.infoPressed, type: .rounded, menuHide: true, id: "info")]
         if self.readOnly {
             self.continueButton.isHidden = true
             self.cutForDealerButton.isEnabled = false
@@ -817,8 +816,6 @@ extension GamePreviewViewController {
         self.overrideSettingsButton.setBackgroundColor(Palette.buttonFace.background)
         self.overrideSettingsButton.setTitleColor(Palette.buttonFace.text, for: .normal)
         self.view.backgroundColor = Palette.normal.background
-        self.infoButton.setBackgroundColor(Palette.bannerShadow.background)
-        self.infoButton.tintColor = Palette.bannerShadow.text
     }
 
 }
@@ -831,34 +828,39 @@ extension GamePreviewViewController {
         
         var text: String?
         
-        if self.readOnly && !Scorecard.game.hasJoined {
-            // Just watching someone else's game
+        switch self.gameMode {
+        case .viewing:
             text = "This screen allows you to see what's happening when you are viewing a game which has not yet started."
-        } else if self.appController?.controllerType == .scoring {
+        case .scoring:
             text = "This screen allows you to review the players you have chosen for the game.\n\nYou can cut for dealer or manually select the dealer.\n\nYou can then start the game."
-        } else if Scorecard.game.hasJoined {
+        case .joining:
             text = "This screen allows you to see what's happening when you have joined a game which has not yet started.\n\nYou can see the other players who have joined, and you can monitor the cut for dealer when it is initiated by the host."
-        } else if Scorecard.game.isPlayingComputer {
+        case .playingComputer:
             text = "This screen allows you to preview your game against the 3 robots.\n\nYou can cut for dealer or manually select the dealer.\n\nYou can then start the game."
-        } else if (self.delegate?.gamePreviewHosting ?? false) {
+        case .hostingNearby, .hostingOnline:
             text = "This screen allows you to monitor who has connected to your game as you wait for the other players to join.\n\nOnce all players have joined you can cut for dealer or manually select the dealer.\n\nYou can then start the game."
+        default:
+            break
         }
         
         if let text = text {
             self.helpView.add(text)
         }
         
-        if !self.readOnly {
+        if self.gameMode != .viewing && self.gameMode != .joining {
             var text = ""
             
-            if Scorecard.game.isPlayingComputer {
+            switch self.gameMode {
+            case .playingComputer:
                 text = "The @*/room@*/ contains the players in the game. This is always you and 3 robots. You cannot cange them."
-            } else if self.appController?.controllerType == .scoring {
-                text = "The @*/room@*/ contains the players you have chosen. You can't change them, but you can drag the players to different positions in the room"
-            } else if Scorecard.shared.commsDelegate?.connectionMode == .invite {
+            case .scoring:
+                text = "The @*/Room@*/ contains the players you have chosen. You can't change them, but you can drag the players to different positions in the room"
+            case .hostingOnline:
                 text = "The @*/room@*/ contains  yourself (at the bottom) and the other players you have invited to join the game. They will be dim until they have accepted their invitation. You cannot change these players, but you can drag the other players to different positions in the room."
-            } else {
+            case .hostingNearby:
                 text = "The @*/room@*/ contains yourself (at the bottom) and the other players who have joined your game. You can tap on one of the other players to reject them or you can drag the other players to different positions in the room."
+            default:
+                break
             }
             
             self.helpView.add(text, views: [self.selectedPlayersView], radius: 40)
@@ -868,14 +870,14 @@ extension GamePreviewViewController {
         
         self.helpView.add("You will be kept informed of progress towards starting the game by this message", views: [self.messageLabel], horizontalBorder: -4)
         
-        if !self.readOnly {
+        if self.gameMode != .viewing && self.gameMode != .joining {
         
             self.helpView.add("The @*/Cut for Dealer@*/ button allows you to randomly select the dealer who will also be the person to start the bidding in the first round.", views: [self.cutForDealerButton])
 
             self.helpView.add("The @*/Next Dealer@*/ button allows you to move the dealer manually around the players (clockwise). You can also do this by using a rotate gesture with 2 fingers.", views: [self.nextDealerButton])
             
-            let canStartGame = self.controllerDelegate?.canProceed ?? true || Scorecard.game.isPlayingComputer
-            self.helpView.add("\(canStartGame ? "" : "When all the players have joined the {} will be enabled.") Click the @*/Continue@*/ button to start the game.", descriptor: "@*/Continue@*/ button", views: [self.continueButton], bannerId: "continue", radius: self.continueButton.frame.height / 2)
+            let canStartGame = self.controllerDelegate?.canProceed ?? true || self.gameMode == .playingComputer
+            self.helpView.add("\(canStartGame ? "" : "When all the players have joined the {} will be enabled.") Click the {} to \((self.gameMode == .scoring || self.gameMode == .hostingNearby) && Scorecard.activeSettings.saveLocation ? "enter the current location and " : "")start the game.", descriptor: "@*/Continue@*/ button", views: [self.continueButton], bannerId: "continue", radius: self.continueButton.frame.height / 2)
 
         }
         

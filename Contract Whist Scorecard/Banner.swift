@@ -394,20 +394,15 @@ class Banner : UIView {
                 clearButton.setContentHuggingPriority(UILayoutPriority(rawValue: 1), for: .horizontal)
                 buttonControl = clearButton
                 
-            case .rounded:
-                let roundedButton = RoundedButton(frame: frame)
-                roundedButton.toCircle()
-                if let title = button.title { roundedButton.setTitle(title, for: .normal) }
-                roundedButton.setTitleFont(button.font!)
-                buttonControl = roundedButton
-                alignment = .center
-                
-            case .shadow:
+            case .rounded, .shadow:
                 let shadowButton = ShadowButton(frame: frame)
                 if let title = button.title { shadowButton.setTitle(title, for: .normal) }
                 shadowButton.setTitleFont(button.font!)
                 buttonControl = shadowButton
                 alignment = .center
+                if button.type == .rounded {
+                    shadowButton.toCircle()
+                }
                 
             case .nonBanner:
                 fatalError("Shouldn't use non-banner buttons in a banner group")
@@ -463,20 +458,13 @@ class Banner : UIView {
             button.control?.backgroundColor = UIColor.clear
             textColor = button.specificTextColor ?? self.overrideColor?.text ?? self.parentViewController.defaultBannerTextColor()
             
-        case .rounded:
-            if let shadowButton = button.control as? RoundedButton {
-                let color = PaletteColor(button.backgroundColor!)
-                shadowButton.backgroundColor = color.background
-                textColor = button.specificTextColor ?? color.textColor(button.textColorType!)
-            }
-            
-        case .shadow:
+        case .rounded, .shadow:
             if let shadowButton = button.control as? ShadowButton {
                 let color = PaletteColor(button.backgroundColor!)
                 shadowButton.setBackgroundColor(color.background)
                 textColor = button.specificTextColor ?? color.textColor(button.textColorType!)
             }
-            
+                        
         default:
             break
         }

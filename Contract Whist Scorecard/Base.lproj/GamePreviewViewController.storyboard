@@ -44,30 +44,11 @@
                                             <constraint firstAttribute="width" secondItem="nKd-io-ud9" secondAttribute="height" multiplier="1:1" priority="1" id="mMP-NC-rhX"/>
                                         </constraints>
                                     </view>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AQz-fV-DNp" customClass="ShadowButton" customModule="Whist" customModuleProvider="target">
-                                        <rect key="frame" x="10" y="271" width="28" height="28"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" secondItem="AQz-fV-DNp" secondAttribute="height" multiplier="1:1" id="K2K-jm-p8Y"/>
-                                            <constraint firstAttribute="width" constant="28" id="KgA-ig-5v8"/>
-                                        </constraints>
-                                        <color key="tintColor" red="1" green="0.99998801950000005" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                        <state key="normal" image="questionmark" catalog="system"/>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                <real key="value" value="14"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                        <connections>
-                                            <action selector="infoPressed:" destination="M5N-Yi-C04" eventType="touchUpInside" id="2T4-LH-TXo"/>
-                                        </connections>
-                                    </button>
                                 </subviews>
                                 <viewLayoutGuide key="safeArea" id="CHw-sh-F4L"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <accessibility key="accessibilityConfiguration" identifier="topSection"/>
                                 <constraints>
-                                    <constraint firstItem="AQz-fV-DNp" firstAttribute="leading" secondItem="CHw-sh-F4L" secondAttribute="leading" constant="10" id="9sU-a2-sfw"/>
-                                    <constraint firstAttribute="bottom" secondItem="AQz-fV-DNp" secondAttribute="bottom" constant="10" id="NZR-pg-uFm"/>
                                     <constraint firstItem="nKd-io-ud9" firstAttribute="width" secondItem="kP9-VZ-fcb" secondAttribute="width" multiplier="315:375" id="SDP-uO-8N0"/>
                                     <constraint firstItem="nKd-io-ud9" firstAttribute="centerY" secondItem="kP9-VZ-fcb" secondAttribute="centerY" id="Uix-xw-n5d">
                                         <variation key="heightClass=compact" constant="-20"/>
@@ -108,7 +89,7 @@
                                         <rect key="frame" x="0.0" y="0.0" width="202.66666666666666" height="293"/>
                                         <subviews>
                                             <view tag="1" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FyF-vn-V6o" userLabel="Cut for Dealer Button" customClass="ImageButton" customModule="Whist" customModuleProvider="target">
-                                                <rect key="frame" x="25.333333333333329" y="70.666666666666686" width="152" height="151.66666666666663"/>
+                                                <rect key="frame" x="25.333333333333329" y="70.666666666666671" width="152" height="151.66666666666663"/>
                                                 <viewLayoutGuide key="safeArea" id="Epv-wr-w77"/>
                                                 <color key="backgroundColor" name="Clear"/>
                                                 <constraints>
@@ -155,7 +136,7 @@
                                         <rect key="frame" x="172.66666666666663" y="0.0" width="202.33333333333337" height="293"/>
                                         <subviews>
                                             <view tag="2" contentMode="scaleToFill" verticalHuggingPriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="xXV-k4-gfB" userLabel="Next Dealer Button" customClass="ImageButton" customModule="Whist" customModuleProvider="target">
-                                                <rect key="frame" x="25" y="70.666666666666686" width="152" height="151.66666666666663"/>
+                                                <rect key="frame" x="25" y="70.666666666666671" width="152" height="151.66666666666663"/>
                                                 <viewLayoutGuide key="safeArea" id="oxI-0X-Fyz"/>
                                                 <color key="backgroundColor" name="Clear"/>
                                                 <constraints>
@@ -299,7 +280,6 @@
                         <outlet property="bottomSectionHeightConstraint" destination="pcs-AF-kKl" id="ifD-DU-dcF"/>
                         <outlet property="continueButton" destination="Jbr-Nz-gFc" id="Ka8-Lr-cHN"/>
                         <outlet property="cutForDealerButton" destination="FyF-vn-V6o" id="dAr-ab-YCl"/>
-                        <outlet property="infoButton" destination="AQz-fV-DNp" id="iW2-KX-uq3"/>
                         <outlet property="leftViewLeadingConstraint" destination="5v8-TK-isx" id="789-jA-kX3"/>
                         <outlet property="lowerMiddleSectionView" destination="iDT-Xi-tM5" id="ap6-VS-csr"/>
                         <outlet property="messageLabel" destination="PUR-r5-ySO" id="Oax-pa-IKs"/>
@@ -348,7 +328,6 @@
         <image name="back" width="22" height="22"/>
         <image name="cut pack" width="82" height="64"/>
         <image name="next dealer" width="50" height="64"/>
-        <image name="questionmark" catalog="system" width="96" height="128"/>
         <namedColor name="Clear">
             <color red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>

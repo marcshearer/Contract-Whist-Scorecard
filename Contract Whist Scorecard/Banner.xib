@@ -3,7 +3,7 @@
     <device id="retina6_1" orientation="landscape" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -45,6 +45,11 @@
                     <constraints>
                         <constraint firstAttribute="height" constant="44" id="YtF-Vs-Cdh"/>
                     </constraints>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="spacing">
+                            <real key="value" value="8"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
                 </view>
                 <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7vQ-Tb-bGS" userLabel="Right View Group" customClass="ViewGroup" customModule="Whist" customModuleProvider="target">
                     <rect key="frame" x="364" y="0.0" width="30" height="44"/>
@@ -53,6 +58,11 @@
                     <constraints>
                         <constraint firstAttribute="height" constant="44" id="nHS-JI-ZUe"/>
                     </constraints>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="spacing">
+                            <real key="value" value="8"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
                 </view>
                 <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Hhl-Cx-Vdj" userLabel="Lower View Group" customClass="ViewGroup" customModule="Whist" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="44" width="414" height="0.0"/>

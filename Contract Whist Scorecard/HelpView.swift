@@ -19,8 +19,9 @@ class HelpViewElement {
     let horizontalBorder: CGFloat
     let verticalBorder: CGFloat
     let radius: CGFloat
+    let shrink: Bool
     
-    init(text: (()->String)? = nil, attributedText: (()->NSAttributedString)? = nil, descriptor: NSAttributedString? = nil, views: [UIView?]? = nil, section: Int = 0, item: Int? = nil, itemTo: Int? = nil, bannerId: AnyHashable? = nil, border: CGFloat = 0, horizontalBorder: CGFloat? = nil, verticalBorder: CGFloat? = nil, radius: CGFloat = 8.0) {
+    init(text: (()->String)? = nil, attributedText: (()->NSAttributedString)? = nil, descriptor: NSAttributedString? = nil, views: [UIView?]? = nil, section: Int = 0, item: Int? = nil, itemTo: Int? = nil, bannerId: AnyHashable? = nil, border: CGFloat = 0, horizontalBorder: CGFloat? = nil, verticalBorder: CGFloat? = nil, radius: CGFloat = 8.0, shrink: Bool = false) {
         
         if let attributedText = attributedText {
             self.text = attributedText
@@ -50,6 +51,7 @@ class HelpViewElement {
         self.horizontalBorder = horizontalBorder ?? border
         self.verticalBorder = verticalBorder ?? border
         self.radius = radius
+        self.shrink = shrink
         
         assert(self.views?.count ?? 0 == 1 || itemFrom == nil, "items are only relevant for a single view")
         assert((self.views?.count ?? 1) >= 1 || bannerId != nil, "At least one view or banner ID must be specified")
@@ -57,13 +59,14 @@ class HelpViewElement {
 }
 
 fileprivate enum HelpViewSource {
+    case message
     case view
     case menu
     case banner
     
     var sort: Int {
         switch self {
-        case .view:
+        case .view, .message:
             return 0
         case .menu:
             return 1
@@ -116,6 +119,7 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
     private let buttonSpacing: CGFloat = 10
     private let border: CGFloat = 8
     private let arrowHeight: CGFloat = 40
+    private let minVisibleHeight: CGFloat = 20
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
@@ -151,14 +155,14 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
         self.elements = []
     }
     
-    public func add(_ text: @escaping @autoclosure ()->String, descriptor: String? = nil, views: [UIView?]? = nil, section: Int = 0, item: Int? = nil, itemTo: Int? = nil, bannerId: AnyHashable? = nil, border: CGFloat = 0, horizontalBorder: CGFloat? = nil, verticalBorder: CGFloat? = nil, radius: CGFloat = 8.0) {
+    public func add(_ text: @escaping @autoclosure ()->String, descriptor: String? = nil, views: [UIView?]? = nil, section: Int = 0, item: Int? = nil, itemTo: Int? = nil, bannerId: AnyHashable? = nil, border: CGFloat = 0, horizontalBorder: CGFloat? = nil, verticalBorder: CGFloat? = nil, radius: CGFloat = 8.0, shrink: Bool = false) {
         
-        self.elements.append(HelpViewElement(text: text, descriptor: (descriptor != nil ? NSAttributedString(markdown: descriptor!) : nil), views: views, section: section, item: item, itemTo: itemTo, bannerId: bannerId, border: border, horizontalBorder: horizontalBorder, verticalBorder: verticalBorder, radius: radius))
+        self.elements.append(HelpViewElement(text: text, descriptor: (descriptor != nil ? NSAttributedString(markdown: descriptor!) : nil), views: views, section: section, item: item, itemTo: itemTo, bannerId: bannerId, border: border, horizontalBorder: horizontalBorder, verticalBorder: verticalBorder, radius: radius, shrink: shrink))
     }
     
-    public func add(_ attributedText: @escaping @autoclosure ()->NSAttributedString, descriptor: NSAttributedString, views: [UIView?]? = nil, section: Int = 0, item: Int? = nil, itemTo: Int? = nil, bannerId: AnyHashable? = nil, border: CGFloat = 0, horizontalBorder: CGFloat? = nil, verticalBorder: CGFloat? = nil, radius: CGFloat = 8) {
+    public func add(_ attributedText: @escaping @autoclosure ()->NSAttributedString, descriptor: NSAttributedString, views: [UIView?]? = nil, section: Int = 0, item: Int? = nil, itemTo: Int? = nil, bannerId: AnyHashable? = nil, border: CGFloat = 0, horizontalBorder: CGFloat? = nil, verticalBorder: CGFloat? = nil, radius: CGFloat = 8, shrink: Bool = false) {
         
-        self.elements.append(HelpViewElement(attributedText: attributedText, descriptor: descriptor, views: views, section: section, item: item, itemTo: itemTo, bannerId: bannerId, border: border, horizontalBorder: horizontalBorder, verticalBorder: verticalBorder, radius: radius))
+        self.elements.append(HelpViewElement(attributedText: attributedText, descriptor: descriptor, views: views, section: section, item: item, itemTo: itemTo, bannerId: bannerId, border: border, horizontalBorder: horizontalBorder, verticalBorder: verticalBorder, radius: radius, shrink: shrink))
     }
     
     public func show(alwaysNext: Bool = false, completion: ((Bool)->())? = nil) {
@@ -233,7 +237,7 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
                 }
                 if !activeFrames.isEmpty {
                     let superFrame = self.superFrame(frames: activeFrames.map{$0.frame})
-                    if superFrame.height >= 20 {
+                    if superFrame.height >= self.minVisibleHeight {
                         self.activeElements.append(HelpViewActiveElement(element: element, frame: superFrame, views: activeFrames.map{$0.view}))
                     }
                 }
@@ -266,7 +270,7 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
             
             if (element.views?.count ?? 0) == 0 && element.bannerId == nil {
                 // Text is not related to a control - always include it
-                self.activeElements.append(HelpViewActiveElement(element: element))
+                self.activeElements.append(HelpViewActiveElement(element: element, source: .message))
             }
         }
         
@@ -323,6 +327,7 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
         let arrowHeight = (frame == nil ? 0 : self.arrowHeight)
         var direction = SpeechBubbleArrowDirection.up
         var point: CGPoint
+        var focusFrame: CGRect
         
         let text = element.text().mutableCopy() as! NSMutableAttributedString
         if let descriptor = activeElement.descriptor ?? element.descriptor {
@@ -342,47 +347,45 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
             frame = self.convert(frame!.grownBy(dx: element.horizontalBorder, dy: element.verticalBorder), from: superview!)
         }
 
-        // Check if positioning left/right or above/below - if left/right check available width
-        let aboveBelow = (ScorecardUI.portraitPhone() || (!ScorecardUI.phoneSize() && !(self.parentViewController.menuController?.isVisible ?? false)))
-        let overrideWidth = (frame == nil || aboveBelow ? nil : SpeechBubbleView.width(availableWidth: max(frame!.minX, self.parentViewController.screenWidth - frame!.maxX)))
+        // Check if positioning left/right or above/below
+        let forceAboveBelow = frame?.width ?? 0 > self.frame.width * 0.7 && !element.shrink
+        let aboveBelow = (forceAboveBelow || ScorecardUI.portraitPhone() || (!ScorecardUI.phoneSize() && !(self.parentViewController.menuController?.isVisible ?? false)))
+        
+        // Get required width
+        let requiredWidth = SpeechBubbleView.width(availableWidth: (frame == nil || aboveBelow ? nil : (max(frame!.minX, self.parentViewController.screenWidth - frame!.maxX))), minWidth: (element.shrink ? 290 : 190))
         
         // Get required height
-        let requiredHeight = self.speechBubble.height(text, arrowHeight: arrowHeight, width: overrideWidth) + self.buttonHeight + self.buttonSpacing + self.border
+        let requiredHeight = self.speechBubble.height(text, arrowHeight: arrowHeight, width: requiredWidth) + self.buttonHeight + self.buttonSpacing + self.border
         
-        if let frame = frame {
-            // Bubble mode - draw focus shape and work out connection point on frame for arrow
-            self.focus.set(around: frame, radius: (activeElement.source == .view ? element.radius : 8.0))
-            
+       if activeElement.source != .message {
+            // Bubble mode - Work out connection point on frame for arrow
             if aboveBelow {
-                direction = (requiredHeight + frame.maxY > self.parentViewController.screenHeight ? .down : .up)
-                point = CGPoint(x: frame.midX, y: (direction == .up ? frame.maxY : frame.minY))
+                direction = (requiredHeight + frame!.maxY > self.parentViewController.screenHeight ? .down : .up)
+                point = CGPoint(x: frame!.midX, y: (direction == .up ? frame!.maxY : frame!.minY))
             } else {
-                direction = (frame.maxX > self.parentViewController.screenWidth - 375 ? .right : .left)
-                point = CGPoint(x: (direction == .left ? frame.maxX : frame.minX), y: frame.midY)
+                direction = (frame!.maxX > self.parentViewController.screenWidth - 375 ? .right : .left)
+                point = CGPoint(x: (direction == .left ? frame!.maxX : frame!.minX), y: frame!.midY)
+                
             }
-            
+            focusFrame = frame!
         } else {
             // Just a message (no control) - draw focus shape covering entire screen
             point = self.convert(CGPoint(x: self.parentView.frame.midX, y: (self.parentView.frame.height - requiredHeight) / 2), from: nil)
-            self.focus.set(around: CGRect(origin: point, size: CGSize()), radius: 0)
+            focusFrame = CGRect(origin: point, size: CGSize())
         }
         
-        // Check if fits
-        var doesntFit = false
-        if direction == .up || direction == .down {
-            let extremity = direction.offset(point: point, by: -requiredHeight).y
-            doesntFit = (extremity < 0 || extremity > self.frame.height)
-        } else {
-            let extremity = direction.offset(point: point, by: -(SpeechBubbleView.width(availableWidth: overrideWidth))).x
-            doesntFit = (extremity < 0 || extremity > self.frame.width)
-        }
+        // Check if fits (and adjust if shrinking allowed)
+        let doesntFit = self.shrinkToFit(activeElement: activeElement, direction: direction, focusFrame: &focusFrame, point: &point, requiredHeight: requiredHeight, requiredWidth: requiredWidth)
             
         if doesntFit {
             // Doesn't fit - skip it
             self.nextPressed(self.nextButton)
         } else {
+            // Draw focus frame
+            self.focus.set(around: focusFrame, radius: (activeElement.source == .view ? element.radius : (activeElement.source == .message ? 0 : 8)))
+            
             // Show bubble
-            self.speechBubble.show(text, point: point, direction: direction, width: overrideWidth, arrowHeight: (frame == nil ? 0 : arrowHeight), arrowWidth: 0)
+            self.speechBubble.show(text, point: point, direction: direction, width: requiredWidth, arrowHeight: (activeElement.source == .message ? 0 : arrowHeight), arrowWidth: 0)
             
             // Show Next / Finish buttons
             var buttonsBelow: Bool
@@ -406,6 +409,60 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
         }
     }
 
+    private func shrinkToFit(activeElement: HelpViewActiveElement, direction: SpeechBubbleArrowDirection, focusFrame: inout CGRect, point: inout CGPoint, requiredHeight: CGFloat, requiredWidth: CGFloat) -> Bool {
+        
+        var doesntFit = false
+        let shrink = activeElement.element.shrink
+        
+        switch direction {
+        case .down:
+            let deficit = self.parentView.safeAreaInsets.top + requiredHeight - point.y
+            if deficit > 0 {
+                if shrink && focusFrame.height - deficit > self.minVisibleHeight {
+                    focusFrame = CGRect(x: focusFrame.minX, y: focusFrame.minY + deficit, width: focusFrame.width, height: focusFrame.height - deficit)
+                    point = CGPoint(x: focusFrame.midX, y: focusFrame.minY)
+                } else {
+                    doesntFit = true
+                }
+            }
+            
+        case .up:
+            let deficit = point.y - (self.frame.height - self.parentView.safeAreaInsets.bottom - requiredHeight)
+            if deficit > 0 {
+                if shrink && focusFrame.height - deficit > self.minVisibleHeight {
+                    focusFrame = CGRect(x: focusFrame.minX, y: focusFrame.minY, width: focusFrame.width, height: focusFrame.height - deficit)
+                    point = CGPoint(x: focusFrame.midX, y: focusFrame.maxY)
+                } else {
+                    doesntFit = true
+                }
+            }
+            
+        case .right:
+            let deficit = self.parentView.safeAreaInsets.left + requiredWidth - point.x
+            if deficit > 0 {
+                if shrink && focusFrame.width - deficit > self.minVisibleHeight {
+                    focusFrame = CGRect(x: focusFrame.minX + deficit, y: focusFrame.minY, width: focusFrame.width - deficit, height: focusFrame.height)
+                    point = CGPoint(x: focusFrame.minX, y: focusFrame.midY)
+                } else {
+                    doesntFit = true
+                }
+            }
+            
+        case .left:
+            let deficit = point.x - (self.frame.width - self.parentView.safeAreaInsets.right - requiredWidth)
+            if deficit > 0 {
+                if shrink && focusFrame.width - deficit > self.minVisibleHeight {
+                    focusFrame = CGRect(x: focusFrame.minX, y: focusFrame.minY, width: focusFrame.width - deficit, height: focusFrame.height)
+                    point = CGPoint(x: focusFrame.maxX, y: focusFrame.midY)
+                } else {
+                    doesntFit = true
+                }
+            }
+        }
+        
+        return doesntFit
+    }
+    
     private func menuCompletion(finishPressed: Bool) {
         if finishPressed {
             self.finished()

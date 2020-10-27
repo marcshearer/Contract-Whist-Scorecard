@@ -44,23 +44,6 @@
                                             <constraint firstAttribute="width" secondItem="jtX-GA-7ms" secondAttribute="height" multiplier="1:1" priority="1" id="Tt8-TI-dee"/>
                                         </constraints>
                                     </view>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SmT-70-IDi" customClass="ShadowButton" customModule="Whist" customModuleProvider="target">
-                                        <rect key="frame" x="10" y="306.5" width="28" height="28"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="28" id="EDa-eJ-rWI"/>
-                                            <constraint firstAttribute="width" secondItem="SmT-70-IDi" secondAttribute="height" multiplier="1:1" id="Elb-H0-aq5"/>
-                                        </constraints>
-                                        <color key="tintColor" red="1" green="0.99998801950000005" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                        <state key="normal" image="questionmark" catalog="system"/>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                <real key="value" value="14"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                        <connections>
-                                            <action selector="infoPressed:" destination="zGV-gf-a3n" eventType="touchUpInside" id="bJX-6x-A6f"/>
-                                        </connections>
-                                    </button>
                                 </subviews>
                                 <viewLayoutGuide key="safeArea" id="b9A-zT-1QY"/>
                                 <color key="backgroundColor" name="Clear"/>
@@ -71,8 +54,6 @@
                                     <constraint firstItem="jtX-GA-7ms" firstAttribute="height" secondItem="fMn-h0-pxo" secondAttribute="height" multiplier="315:375" id="IFR-bY-9Oh"/>
                                     <constraint firstItem="jtX-GA-7ms" firstAttribute="width" secondItem="fMn-h0-pxo" secondAttribute="width" multiplier="315:375" id="dcw-Cf-fDG"/>
                                     <constraint firstItem="jtX-GA-7ms" firstAttribute="top" secondItem="fMn-h0-pxo" secondAttribute="top" priority="1" constant="16" id="de2-gi-2za"/>
-                                    <constraint firstItem="SmT-70-IDi" firstAttribute="leading" secondItem="b9A-zT-1QY" secondAttribute="leading" constant="10" id="ekp-1Y-rxL"/>
-                                    <constraint firstAttribute="bottom" secondItem="SmT-70-IDi" secondAttribute="bottom" constant="10" id="tap-3n-kTk"/>
                                     <constraint firstItem="jtX-GA-7ms" firstAttribute="centerX" secondItem="fMn-h0-pxo" secondAttribute="centerX" id="z5e-0N-nq9"/>
                                 </constraints>
                             </view>
@@ -184,7 +165,6 @@
                         <outlet property="bottomSectionHeightConstraint" destination="aWA-CG-uRM" id="Qwc-V8-Ob1"/>
                         <outlet property="clearAllButton" destination="Eyy-DC-T6m" id="qqj-cw-TrH"/>
                         <outlet property="continueButton" destination="7SY-Bw-ahm" id="JM3-ek-6LL"/>
-                        <outlet property="infoButton" destination="SmT-70-IDi" id="bbc-jQ-fh7"/>
                         <outlet property="selectedPlayersView" destination="jtX-GA-7ms" id="pif-ug-DbZ"/>
                         <outlet property="topSectionView" destination="fMn-h0-pxo" id="VdW-Ke-7Vg"/>
                         <outlet property="unselectedCollectionView" destination="Tlx-l1-ig7" id="vRw-k0-8iE"/>
@@ -209,7 +189,6 @@
     </scenes>
     <resources>
         <image name="home" width="22" height="23"/>
-        <image name="questionmark" catalog="system" width="96" height="128"/>
         <namedColor name="Background">
             <color red="0.94117647058823528" green="0.93725490196078431" blue="0.92941176470588238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>

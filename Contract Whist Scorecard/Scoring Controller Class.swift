@@ -86,13 +86,13 @@ class ScoringController: ScorecardAppController, ScorecardAppPlayerDelegate, Gam
             viewController = self.showEntry(reeditMode: reeditMode)
             
         case .scorepad:
-            viewController = self.showScorepad(scorepadMode: .scoring)
+            viewController = self.showScorepad()
             
         case .roundSummary:
             viewController = self.showRoundSummary()
             
         case .gameSummary:
-            viewController = self.showGameSummary(mode: .scoring)
+            viewController = self.showGameSummary()
             
         case .confirmPlayed:
             viewController = self.showConfirmPlayed(context: context, completion: completion)

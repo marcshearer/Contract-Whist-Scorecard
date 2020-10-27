@@ -152,6 +152,7 @@ class ShadowButton: UIButton {
         self.titleOuterLabel?.accessibilityIdentifier = "outerLabel"
         self.addSubview(self.titleOuterLabel!)
         Constraint.anchor(view: self, control: self.titleOuterLabel!)
+        self.bringSubviewToFront(self.imageView!)
         
         self.titleInnerLabel = UILabel(frame: CGRect(x: 5, y: 1,
                     width: self.frame.width - 10, height: self.frame.height - 2))

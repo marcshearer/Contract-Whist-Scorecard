@@ -106,7 +106,7 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
     }
     
     internal func homePressed() {
-        Scorecard.shared.warnExitGame(from: self, mode: .scoring) {
+        Scorecard.shared.warnExitGame(from: self) {
             self.willDismiss()
             self.controllerDelegate?.didCancel(context: ["home" : true])
         }

@@ -377,11 +377,11 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
         return locationViewController
     }
     
-    internal func showScorepad(scorepadMode: ScorepadMode) -> ScorecardViewController? {
+    internal func showScorepad() -> ScorecardViewController? {
         let existingViewController = self.scorepadViewController != nil
         
         if let parentViewController = self.fromViewController() {
-            self.scorepadViewController = ScorepadViewController.show(from: parentViewController, appController: self, existing: self.scorepadViewController, scorepadMode: scorepadMode)
+            self.scorepadViewController = ScorepadViewController.show(from: parentViewController, appController: self, existing: self.scorepadViewController)
             if existingViewController {
                 self.scorepadViewController.reloadScorepad()
             }
@@ -397,7 +397,7 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
         return self.roundSummaryViewController
     }
     
-    internal func showGameSummary(mode: ScorepadMode) -> ScorecardViewController? {
+    internal func showGameSummary() -> ScorecardViewController? {
         var gameSummaryViewController: GameSummaryViewController?
         
         // Avoid resuming once game summary shown
@@ -405,7 +405,7 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
         Scorecard.recovery = Recovery(load: false)
         
         if let parentViewController = self.fromViewController() {
-            gameSummaryViewController = GameSummaryViewController.show(from: parentViewController, appController: self, gameSummaryMode: mode)
+            gameSummaryViewController = GameSummaryViewController.show(from: parentViewController, appController: self)
         }
         return gameSummaryViewController
     }
@@ -608,6 +608,18 @@ public enum Container {
     case mainRight
 }
 
+enum GameMode {
+    case scoring
+    case hostingOnline
+    case hostingNearby
+    case playingComputer
+    case joining
+    case viewing
+    
+    var isHosting: Bool { return self == .hostingOnline || self == .hostingNearby || self == .playingComputer}
+    
+}
+    
 class ScorecardViewController : UIViewController, UIAdaptivePresentationControllerDelegate, UIViewControllerTransitioningDelegate  {
     
     typealias RootViewController = ScorecardViewController & PanelContainer
@@ -629,10 +641,47 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
     internal weak var bannerClass: Banner!
     internal var gameDetailDelegate: GameDetailDelegate? { return self.appController?.gameDetailDelegate }
     
-    internal var screenBounds: CGRect { return self.rootViewController.view.bounds }
+    internal var screenBounds: CGRect {
+        if self.rootViewController.view.contains(self.view) {
+            return self.rootViewController.view.bounds
+        } else {
+            return self.view.bounds
+        }
+    }
     internal var screenWidth: CGFloat { return self.screenBounds.width}
     internal var screenHeight: CGFloat { return self.screenBounds.height}
 
+    internal var gameMode: GameMode! {
+        var result: GameMode?
+        switch self.appController?.controllerType {
+        case .host:
+            switch Scorecard.shared.commsDelegate?.connectionProximity {
+            case .nearby:
+                result = .hostingNearby
+            case .online:
+                result = .hostingOnline
+            case .loopback:
+                result = .playingComputer
+            default:
+                break
+            }
+        case .scoring:
+            result = .scoring
+        case .client:
+            switch Scorecard.shared.commsPurpose {
+            case .playing:
+                result = .joining
+            case .sharing:
+                result = .viewing
+            default:
+                break
+            }
+        default:
+            break
+        }
+        return result
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
                         
@@ -674,7 +723,7 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
             self.bannerClass?.layoutSubviews()
         }
     }
-    
+  
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         Scorecard.shared.reCenterPopup(self)

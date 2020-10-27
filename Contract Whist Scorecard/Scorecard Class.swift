@@ -354,8 +354,8 @@ class Scorecard {
         }
     }
     
-    public func warnExitGame(from viewController: ScorecardViewController, mode: ScorepadMode, completion: @escaping ()->()) {
-        if  mode == .hosting || mode == .scoring {
+    public func warnExitGame(from viewController: ScorecardViewController, completion: @escaping ()->()) {
+        if  viewController.gameMode.isHosting || viewController.gameMode == .scoring {
             viewController.alertDecision("Warning: This will clear the existing score card and start a new game.\n\n Are you sure you want to do this?", title: "Finish Game", okButtonText: "Confirm", okHandler: {
             
                 Scorecard.shared.exitScorecard(advanceDealer: false, resetOverrides: true) {
@@ -365,7 +365,7 @@ class Scorecard {
                 }
             })
         } else  {
-            viewController.alertDecision(if: mode == .joining, "Warning: This will mean you exit from the game.\n\nAre you sure you want to do this?", okButtonText: "Confirm",
+            viewController.alertDecision(if: viewController.gameMode == .joining, "Warning: This will mean you exit from the game.\n\nAre you sure you want to do this?", okButtonText: "Confirm",
                 okHandler: {
                     completion()
                 })

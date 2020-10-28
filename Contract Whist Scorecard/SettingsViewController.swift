@@ -108,8 +108,8 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     @IBOutlet private weak var thisPlayerThumbnailView: ThumbnailView!
     @IBOutlet private weak var thisPlayerChangeButton: RoundedButton!
     @IBOutlet private weak var thisPlayerChangeButtonContainer: UIView!
-    @IBOutlet private weak var infoButton: ShadowButton!
-    @IBOutlet private weak var infoButtonBottomConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var helpButton: HelpButton!
+    @IBOutlet private weak var helpButtonBottomConstraint: NSLayoutConstraint!
     @IBOutlet private weak var playerSelectionView: PlayerSelectionView!
     @IBOutlet private weak var tapGestureRecognizer: UITapGestureRecognizer!
     @IBOutlet private weak var topSectionView: UIView!
@@ -126,7 +126,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
         self.dismiss()
     }
     
-    @IBAction func infoPressed(_ sender: Any) {
+    @IBAction func helpPressed(_ sender: Any) {
         self.helpView.show()
     }
     
@@ -758,7 +758,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                         self.availableSpaceHeightConstraint.constant = 0.0
                         self.thisPlayerThumbnailView.isHidden = true
                         self.thisPlayerChangeButtonContainer.isHidden = true
-                        self.infoButtonBottomConstraint.constant = 8
+                        self.helpButtonBottomConstraint.constant = 8
                         self.topSectionHeightConstraint.isActive = true
                      }
                 } else if tableView.contentOffset.y < 10.0 && self.availableSpaceHeightConstraint.constant == 0.0 {
@@ -767,7 +767,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                         self.availableSpaceHeightConstraint.constant = 140
                         self.thisPlayerThumbnailView.isHidden = false
                         self.thisPlayerChangeButtonContainer.isHidden = false
-                        self.infoButtonBottomConstraint.constant = 16
+                        self.helpButtonBottomConstraint.constant = 16
                         if ScorecardUI.landscapePhone() {
                             self.topSectionLandscapePhoneProportionalHeightConstraint.isActive = true
                         } else {
@@ -1584,7 +1584,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
             self.topSectionLandscapePhoneProportionalHeightConstraint.isActive = !menuVisible && ScorecardUI.landscapePhone()
             self.thisPlayerThumbnailView.isHidden = menuVisible
             self.thisPlayerChangeButtonContainer.isHidden = menuVisible
-            self.infoButton.isHidden = menuVisible
+            self.helpButton.isHidden = menuVisible
             self.lastMenuVisible = menuVisible
         }
     }
@@ -1784,8 +1784,6 @@ extension SettingsViewController {
         self.thisPlayerChangeButton.setTitleColor(Palette.banner.text, for: .normal)
         self.thisPlayerThumbnailView.set(textColor: Palette.banner.text)
         self.thisPlayerThumbnailView.backgroundColor = Palette.banner.background
-        self.infoButton.setBackgroundColor(Palette.bannerShadow.background)
-        self.infoButton.tintColor = Palette.bannerShadow.text
     }
 
     private func defaultCellColors(cell: SettingsTableCell) {

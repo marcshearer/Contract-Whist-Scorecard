@@ -117,7 +117,7 @@
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hJD-RF-VuY" customClass="ShadowButton" customModule="Whist" customModuleProvider="target">
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hJD-RF-VuY" customClass="HelpButton" customModule="Whist" customModuleProvider="target">
                                                             <rect key="frame" x="718" y="0.0" width="28" height="28"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="28" id="ghq-c4-VhI"/>
@@ -144,7 +144,7 @@
                                                 </tableViewCellContentView>
                                                 <color key="backgroundColor" name="Clear"/>
                                                 <connections>
-                                                    <outlet property="infoButton" destination="hJD-RF-VuY" id="ysW-TA-m2F"/>
+                                                    <outlet property="helpButton" destination="hJD-RF-VuY" id="ysW-TA-m2F"/>
                                                     <outlet property="titleLabel" destination="njw-JR-F2N" id="4B4-om-TLC"/>
                                                     <outlet property="titleLabelTopConstraint" destination="sKr-rI-b2H" id="SQW-EM-hkq"/>
                                                 </connections>
@@ -188,7 +188,7 @@
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d1j-sg-4Sc" customClass="ShadowButton" customModule="Whist" customModuleProvider="target">
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d1j-sg-4Sc" customClass="HelpButton" customModule="Whist" customModuleProvider="target">
                                                             <rect key="frame" x="718" y="-1" width="28" height="28.5"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="28" id="A1b-zA-Zw7"/>
@@ -216,7 +216,7 @@
                                                 </tableViewCellContentView>
                                                 <color key="backgroundColor" name="Clear"/>
                                                 <connections>
-                                                    <outlet property="infoButton" destination="d1j-sg-4Sc" id="qyx-zB-gAj"/>
+                                                    <outlet property="helpButton" destination="d1j-sg-4Sc" id="qyx-zB-gAj"/>
                                                     <outlet property="titleLabel" destination="HpQ-kL-YL6" id="FIr-fd-cu4"/>
                                                     <outlet property="titleLabelTopConstraint" destination="J6L-jn-x1f" id="OuO-0Q-GDP"/>
                                                 </connections>

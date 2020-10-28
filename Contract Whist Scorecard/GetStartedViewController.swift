@@ -49,8 +49,8 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
     @IBOutlet private weak var thisPlayerChangeContainerView: UIView!
     @IBOutlet private weak var thisPlayerChangeButton: RoundedButton!
     @IBOutlet private weak var tapGestureRecognizer: UITapGestureRecognizer!
-    @IBOutlet private weak var infoButtonContainer: UIView!
-    @IBOutlet private weak var infoButton: RoundedButton!
+    @IBOutlet private weak var helpButtonContainer: UIView!
+    @IBOutlet private weak var helpButton: RoundedButton!
     @IBOutlet private weak var playerSelectionView: PlayerSelectionView!
     @IBOutlet private weak var playerSelectionViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var playerSelectionViewTopConstraint: NSLayoutConstraint!
@@ -456,8 +456,8 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
         self.titleLabel.textColor = Palette.banner.themeText
         self.getStartedLabel.textColor = Palette.banner.text
         
-        self.infoButton.backgroundColor = Palette.bannerShadow.background
-        self.infoButton.setTitleColor(Palette.banner.text, for: .normal)
+        self.helpButton.backgroundColor = Palette.bannerShadow.background
+        self.helpButton.setTitleColor(Palette.banner.text, for: .normal)
         
         self.thisPlayerThumbnailView.set(textColor: Palette.banner.text)
         self.thisPlayerThumbnailView.set(font: UIFont.systemFont(ofSize: 15, weight: .bold))
@@ -539,8 +539,8 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
             self.smallFormatHomeButton.isHidden = true
         }
        
-        self.infoButtonContainer.addShadow(shadowSize: CGSize(width: 4.0, height: 4.0))
-        self.infoButton.toCircle()
+        self.helpButtonContainer.addShadow(shadowSize: CGSize(width: 4.0, height: 4.0))
+        self.helpButton.toCircle()
 
         self.thisPlayerChangeContainerView.addShadow(shadowSize: CGSize(width: 4.0, height: 4.0))
         self.thisPlayerChangeButton.roundCorners(cornerRadius: self.thisPlayerChangeButton.frame.height / 2.0)

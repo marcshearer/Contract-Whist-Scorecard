@@ -32,8 +32,7 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
     private var instructionSection = true
     private var firstTime = true
     private var rotated = false
-    private var lastViewHeight: CGFloat = 0.0
-    private var lastViewWidth: CGFloat = 0.0
+    private var lastViewSize: CGSize!
     private var roundSummaryViewController: RoundSummaryViewController!
     private var smallScreen = false
     private var saveButton = 0
@@ -60,7 +59,8 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
     @IBOutlet private weak var bannerLogoView: BannerLogoView!
     @IBOutlet private weak var banner: Banner!
     @IBOutlet private weak var toolbarView: UIView!
-    @IBOutlet private weak var toolbarButtonViewGroup: ViewGroup!
+    @IBOutlet private weak var toolbarRightButtonViewGroup: ViewGroup!
+    @IBOutlet private weak var toolbarLeftButtonViewGroup: ViewGroup!
     @IBOutlet private weak var entryView: UIView!
     @IBOutlet private weak var playerTableView: UITableView!
     @IBOutlet private weak var playerTableViewHeightConstraint: NSLayoutConstraint!
@@ -71,10 +71,11 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
     @IBOutlet private weak var scoreButtonCollectionView: UICollectionView!
     @IBOutlet private weak var footerRoundTitle: UILabel!
     @IBOutlet private weak var undoButton: RoundedButton!
-    @IBOutlet private weak var toolbarFinishButton: RoundedButton!
-    @IBOutlet private weak var toolbarErrorsButton: RoundedButton!
-    @IBOutlet private weak var toolbarSummaryButton: RoundedButton!
-    @IBOutlet private var errorsButtons: [RoundedButton]!
+    @IBOutlet private weak var toolbarFinishButton: ClearButton!
+    @IBOutlet private weak var toolbarErrorsButton: ShadowButton!
+    @IBOutlet private weak var toolbarSummaryButton: ClearButton!
+    @IBOutlet private weak var toolbarHelpButton: HelpButton!
+    @IBOutlet private var errorsButtons: [ShadowButton]!
     
     // MARK: - IB Actions ============================================================================== -
     
@@ -112,6 +113,10 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
         }
     }
     
+    @IBAction func helpPressed(_ sender: UIButton) {
+        self.helpPressed()
+    }
+    
     @IBAction func rightSwipe(recognizer:UISwipeGestureRecognizer) {
         self.finishPressed()
     }
@@ -131,6 +136,10 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
         
         // Setup banner
         self.setupBanner()
+        
+        // Setup help
+        self.setupHelpView()
+
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -144,24 +153,31 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        self.playerTableView.layoutIfNeeded()
-        self.refreshScreen(firstTime: self.firstTime)
-        
+        let firstTime = self.firstTime
+        let lastViewSize = self.lastViewSize
+        self.lastViewSize = self.view.frame.size
         self.firstTime = false
+
+        self.refreshScreen(firstTime: firstTime, lastViewSize: lastViewSize)
+        
         self.rotated = false
     }
     
-    private func refreshScreen(firstTime: Bool) {
-        self.setupScreen()
-           
-        if firstTime {
+    private func refreshScreen(firstTime: Bool, lastViewSize: CGSize?) {
+        if firstTime || lastViewSize != self.view.frame.size {
+            self.view.layoutIfNeeded()
+            self.playerTableView.layoutIfNeeded()
+        
+            self.setupScreen()
+            
+            self.setupSize()
             self.bidOnlyMode = !Scorecard.game.roundBiddingComplete(Scorecard.game.selectedRound) ? true : false
             self.setupColumns()
             self.setupFlow()
             self.getInitialState()
+            
+            self.setForm(true)
         }
-        
-        self.setForm(true)
         
         for _ in 1...Scorecard.game.roundCards(Scorecard.game.selectedRound) + 1 {
             self.scoreCell.append(nil)
@@ -176,15 +192,11 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
         // Send state to watch
         Scorecard.shared.watchManager.updateScores()
         
-        self.view.layoutIfNeeded()
-        self.setupSize()
         self.scoreButtonCollectionView.reloadData()
         
-        if self.lastViewHeight != self.view.frame.height || lastViewWidth != self.view.frame.width || self.firstTime {
+        if firstTime || lastViewSize != self.view.frame.size {
             self.playerTableView.reloadData()
-            self.lastViewHeight = self.view.frame.height
-            self.lastViewWidth = self.view.frame.width
-        }
+         }
     }
     
     func setupSize() {
@@ -204,7 +216,7 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
         availableHeight -= self.toolbarView.frame.height // Subtract out toolbar
         
         if availableHeight < (90 + minTitleViewHeight) && !ScorecardUI.landscapePhone() {
-            self.instructionContainerViewHeightConstraint.constant = min(50, availableHeight - minTitleViewHeight)
+            self.instructionContainerViewHeightConstraint.constant = max(50, availableHeight - minTitleViewHeight)
         }
         self.instructionContainerView.layoutIfNeeded()
         self.instructionContainerView.roundCorners(cornerRadius: (ScorecardUI.landscapePhone() ? 0.0 : 12.0))
@@ -212,8 +224,10 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
         availableHeight -= self.instructionContainerViewHeightConstraint.constant // Subtract out (reduced) instruction
         if smallScreen {
             self.banner.set(normalOverrideHeight: 0)
+            self.bannerLogoView.isHidden = true
         } else {
             self.banner.set(normalOverrideHeight: min(80, max(minTitleViewHeight, availableHeight)), containerOverrideHeight: self.defaultBannerHeight - self.rowHeight + 8)
+            self.bannerLogoView.isHidden = false
         }
     }
     
@@ -265,9 +279,10 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
          
         let leftButtons = [
             BannerButton(image: UIImage(named: "back"), action: self.finishPressed, menuHide: true, menuText: "Show Scorepad", id: saveButton),
-            BannerButton(title: "i", action: self.finishPressed, type: .rounded, menuHide: true, menuText: "Fix Errors to Enable Exit!", menuTextColor: Palette.errorCondition, backgroundColor: .error, id: errorsButton)]
+            BannerButton(image: UIImage(systemName: "exclamationmark"), action: self.finishPressed, type: .rounded, menuHide: true, menuText: "Fix Errors to Enable Exit!", menuTextColor: Palette.errorCondition, backgroundColor: .error, id: errorsButton)]
         
         let rightButtons = [
+            BannerButton(action: self.helpPressed, type: .help),
             BannerButton(image: UIImage(named: "forward"), action: self.summaryClicked, menuHide: true, id: roundSummaryButton)]
         
         let nonBannerButtonsAfter = [
@@ -317,7 +332,7 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
         } else {
             self.smallScreen = false
         }
-        self.errorsButtons.forEach { ScorecardUI.veryRoundCorners($0, radius: $0.frame.width / 2.0) }
+        self.errorsButtons.forEach { $0.toCircle() }
         
         self.rowHeight = min(ScorecardUI.screenHeight / 7.0, 50.0)
         self.instructionContainerViewHeightConstraint.constant = (ScorecardUI.landscapePhone() ? self.rowHeight : 90)
@@ -346,10 +361,18 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
         }
     }
     
-    func enableMovementButtons() {
-        self.toolbarButtonViewGroup.isHidden(view: self.undoButton, (self.undo.first == nil))
-        self.banner.setButton(roundSummaryButton, isHidden: smallScreen || bidOnlyMode)
-        self.toolbarButtonViewGroup.isHidden(view: self.toolbarSummaryButton, (!smallScreen || bidOnlyMode))
+    func enableMovementButtons(tableLoaded: Bool = true) {
+        let errors = tableLoaded && self.checkErrors()
+
+        self.banner.setButton(saveButton, isHidden: smallScreen || errors)
+        self.banner.setButton(errorsButton, isHidden: smallScreen || !errors)
+        self.banner.setButton(roundSummaryButton, isHidden: smallScreen || bidOnlyMode || errors)
+
+        self.toolbarLeftButtonViewGroup.isHidden(view: self.toolbarFinishButton, !smallScreen || errors)
+        self.toolbarLeftButtonViewGroup.isHidden(view: self.toolbarErrorsButton, !smallScreen || !errors)
+        self.toolbarRightButtonViewGroup.isHidden(view: self.toolbarSummaryButton, (!smallScreen || bidOnlyMode || errors))
+
+        self.toolbarLeftButtonViewGroup.isHidden(view: self.undoButton, (self.undo.first == nil))
     }
     
     func setForm(_ tableLoaded: Bool) {
@@ -364,18 +387,9 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
             }
         }
         
-        self.enableMovementButtons()
+        self.enableMovementButtons(tableLoaded: tableLoaded)
+    }
         
-        self.hideFinishButtons(errors: tableLoaded && self.checkErrors())
-    }
-    
-    private func hideFinishButtons(errors: Bool) {
-        self.banner.setButton(saveButton, isHidden: smallScreen || errors)
-        self.banner.setButton(errorsButton, isHidden: smallScreen || !errors)
-        self.toolbarFinishButton.isHidden = (!smallScreen || errors)
-        self.toolbarErrorsButton.isHidden = (!smallScreen || !errors)
-    }
-    
     func errorHighlight(_ mode: Mode, _ highlight: Bool) -> Bool{
         var label: UILabel!
         
@@ -664,7 +678,8 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
             let storyboard = UIStoryboard(name: "EntryViewController", bundle: nil)
             entryViewController = storyboard.instantiateViewController(withIdentifier: "EntryViewController") as? EntryViewController
         } else {
-            entryViewController.refreshScreen(firstTime: true)
+            entryViewController.firstTime = true
+            entryViewController.view.setNeedsLayout()
         }
         
         entryViewController.reeditMode = reeditMode
@@ -1047,7 +1062,10 @@ extension EntryViewController {
         self.bannerLogoView.fillColor = Palette.bannerShadow.background
         self.bannerLogoView.strokeColor = Palette.banner.text
         self.entryView.backgroundColor = Palette.normal.background
-        self.errorsButtons.forEach { $0.backgroundColor = Palette.error.background }
+        self.errorsButtons.forEach { (button) in
+            button.setBackgroundColor(Palette.error.background)
+            button.tintColor = Palette.error.text
+        }
         self.toolbarView.backgroundColor = Palette.total.background
         self.instructionContainerView.backgroundColor = Palette.banner.background
         self.instructionLabel.textColor = Palette.banner.text
@@ -1073,4 +1091,30 @@ extension EntryViewController {
         }
     }
 
+}
+
+extension EntryViewController {
+    
+    internal func setupHelpView() {
+        
+        self.helpView.reset()
+                
+        self.helpView.add("This screen allows the bids and scores for a hand to be entered")
+        
+        self.helpView.add("This area shows the current \(self.bidOnlyMode ? "bids" : "bids and scores").\nThe cursor shows the value that will be input if you click the @*/Numeric Buttons@*/.\n\(Scorecard.game.scores.error(round: Scorecard.game.selectedRound) ? "Errors in the current round are highlighted. You must correct any errors before saving." : "")", views: [self.playerTableView])
+        
+        self.helpView.add("This area shows instructions on what to do next.", views: [self.instructionContainerView], radius: 12)
+        
+        self.helpView.add("This area contains the @*/Numeric Buttons@*/ which are used to enter bids and scores.", views: [self.scoreButtonCollectionView], border: 2)
+        
+        self.helpView.add("The {} saves the scores and takes you back to the @*/Scorepad@*/ screen.", descriptor: "@*/Back@*/ button", views: [self.toolbarFinishButton], bannerId: saveButton)
+        
+        self.helpView.add("The {} indicates that there are errors in the scores entered which must be corrected. Clicking it will show details of the errors.", descriptor: "@*/Error@*/ button", views: [self.toolbarErrorsButton], bannerId: errorsButton, radius: self.toolbarErrorsButton.frame.height / 2)
+
+        self.helpView.add("The @*/Undo @*/ button undoes the last entry made.\n\nYou can click it repeatedly to remove several entries.", views: [self.undoButton])
+        
+        self.helpView.add("This area shows the current round being played. The number shows the number of cards in the round and the suit shows the current trump suit.", views: [self.footerRoundTitle])
+                
+        self.helpView.add("The {} saves the scores entered and shows the @*/Round Summary@*/ screen.", descriptor: "@*/Forward@*/ button", views: [self.toolbarSummaryButton], bannerId: roundSummaryButton)
+    }
 }

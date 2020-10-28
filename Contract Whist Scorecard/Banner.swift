@@ -12,6 +12,7 @@ public enum BannerButtonType {
     case clear
     case shadow
     case rounded
+    case help
     case nonBanner
 }
 
@@ -46,15 +47,15 @@ public class BannerButton: NSObject {
     public static var defaultFont = UIFont.systemFont(ofSize: 18)
     
     /// Used for genuine banner buttons
-    init(title: String? = nil, attributedTitle: NSAttributedString? = nil, image: UIImage? = nil, asTemplate: Bool = true, width: CGFloat = 30.0, action: (()->())?, releaseAction: (()->())? = nil, type: BannerButtonType = .clear, menuHide: Bool = false, menuText: String? = nil, releaseMenuText: String? = nil, menuSpaceBefore: CGFloat = 0, menuTextColor: UIColor? = nil, gameDetailHide: Bool = false, backgroundColor: ThemeBackgroundColorName? = nil, textColorType: ThemeTextType? = .normal, specificTextColor: UIColor? = nil, font: UIFont = BannerButton.defaultFont, alignment: UIControl.ContentHorizontalAlignment? = .none, id: AnyHashable? = nil) {
+    init(title: String? = nil, attributedTitle: NSAttributedString? = nil, image: UIImage? = nil, asTemplate: Bool = true, width: CGFloat? = nil, action: (()->())?, releaseAction: (()->())? = nil, type: BannerButtonType = .clear, menuHide: Bool? = nil, menuText: String? = nil, releaseMenuText: String? = nil, menuSpaceBefore: CGFloat = 0, menuTextColor: UIColor? = nil, gameDetailHide: Bool = false, backgroundColor: ThemeBackgroundColorName? = nil, textColorType: ThemeTextType? = .normal, specificTextColor: UIColor? = nil, font: UIFont = BannerButton.defaultFont, alignment: UIControl.ContentHorizontalAlignment? = .none, id: AnyHashable? = nil) {
         self.title = title
         self.attributedTitle = attributedTitle
         self.image = (asTemplate ? image?.asTemplate() : image)
-        self.width = width
+        self.width = width ?? (type == .help ? 28 : 30)
         self.action = action
         self.releaseAction = releaseAction
         self.type = type
-        self.menuHide = menuHide
+        self.menuHide = menuHide ?? (type == .help ? true : false)
         self.menuText = menuText
         self.releaseMenuText = releaseMenuText
         self.menuTextColor = menuTextColor
@@ -65,7 +66,7 @@ public class BannerButton: NSObject {
         self.font = font
         self.alignment = alignment
         self.menuSpaceBefore = menuSpaceBefore
-        self.id = id ?? UUID().uuidString as AnyHashable
+        self.id = id ?? (type == .help ? Banner.helpButton : UUID().uuidString as AnyHashable)
         self.nonBanner = false
     }
     
@@ -115,6 +116,7 @@ class Banner : UIView {
     public static let heavyFont = UIFont(name: "Avenir-Heavy", size: 34)
     public static let panelFont = UIFont.systemFont(ofSize: 33, weight: .semibold)
     public static let finishButton = UUID().uuidString
+    public static let helpButton = UUID().uuidString
     public static let containerHeight: CGFloat = 150
     public static let normalHeight: CGFloat = 44
 
@@ -306,7 +308,7 @@ class Banner : UIView {
         self.setupMenuEntries()
     }
     
-    public func getButton(id: AnyHashable) -> (control: UIButton, title: NSAttributedString)? {
+    public func getButton(id: AnyHashable) -> (control: UIButton, title: NSAttributedString, type: BannerButtonType)? {
         var menuTitle = NSAttributedString()
         if let button = buttonIds[id], let control = button.control {
             if button.nonBanner {
@@ -321,7 +323,7 @@ class Banner : UIView {
                     image.addAttribute(NSAttributedString.Key.foregroundColor, value: Palette.normal.themeText, range: NSRange(0...image.length - 1))
                     menuTitle = image
                 }
-                return (control, " " + menuTitle + "  button")
+                return (control, " " + menuTitle + "  button", button.type)
             }
         } else {
             return nil
@@ -377,7 +379,7 @@ class Banner : UIView {
             var buttonControl: UIButton
             var alignment: UIControl.ContentHorizontalAlignment
             
-            let frame = CGRect(x: 0, y: 0, width: button.width!, height: self.buttonHeight)
+            let frame = CGRect(x: 0, y: 0, width: button.width!, height: (button.type == .help ? button.width! : self.buttonHeight))
             
             switch button.type {
             case .clear:
@@ -403,6 +405,10 @@ class Banner : UIView {
                 if button.type == .rounded {
                     shadowButton.toCircle()
                 }
+                
+            case .help:
+                buttonControl = HelpButton(frame: frame)
+                alignment = .center
                 
             case .nonBanner:
                 fatalError("Shouldn't use non-banner buttons in a banner group")

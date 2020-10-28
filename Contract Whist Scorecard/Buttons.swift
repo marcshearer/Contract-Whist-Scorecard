@@ -258,6 +258,33 @@ class ShadowButton: UIButton {
     
 }
 
+class HelpButton: ShadowButton {
+    
+    required init(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        self.setupHelpButton()
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.setupHelpButton()
+    }
+    
+    private func setupHelpButton() {
+        self.setImage(UIImage(systemName: "questionmark"), for: .normal)
+        self.setTitle("", for: .normal)
+        self.setBackgroundColor(Palette.bannerShadow.background)
+        self.tintColor = Palette.bannerShadow.text
+        self.imageView?.contentMode = .scaleAspectFit
+        self.imageEdgeInsets = UIEdgeInsets(top: 6, left: 6, bottom: 6, right: 6)
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.toCircle()
+    }
+}
+
 class LightRoundedButton: RoundedButton {
     
     required init(coder aDecoder: NSCoder) {

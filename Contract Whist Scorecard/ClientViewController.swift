@@ -127,7 +127,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     @IBOutlet private weak var thisPlayerContainerView: UIView!
     @IBOutlet private weak var thisPlayerOverlap: UIView!
     @IBOutlet internal weak var thisPlayerThumbnail: ThumbnailView!
-    @IBOutlet internal weak var infoButton: ShadowButton!
+    @IBOutlet internal weak var helpButton: HelpButton!
     @IBOutlet internal weak var hostTitleBar: TitleBar!
     @IBOutlet internal weak var hostCollectionContainerView: UIView!
     @IBOutlet internal var hostCollectionContainerInsets: [NSLayoutConstraint]!
@@ -167,7 +167,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         self.showActionMenu()
     }
     
-    @IBAction func infoPressed(_ sender: Any) {
+    @IBAction func helpPressed(_ sender: Any) {
         self.helpView?.show()
     }
     
@@ -1412,8 +1412,6 @@ extension ClientViewController {
             self.hostTitleBar.set(textColor: Palette.buttonFace.text)
             self.thisPlayerThumbnail.set(textColor: Palette.banner.text)
             self.thisPlayerThumbnail.set(font: UIFont.systemFont(ofSize: 15, weight: .bold))
-            self.infoButton.setBackgroundColor(Palette.bannerShadow.background)
-            self.infoButton.tintColor = Palette.bannerShadow.text
             self.hostCollectionView.backgroundColor = Palette.buttonFace.background
             self.peerTitleBar.set(faceColor: Palette.buttonFace.background)
             self.peerTitleBar.set(textColor: Palette.buttonFace.text)
@@ -1428,7 +1426,6 @@ extension ClientViewController {
     }
     
     private func layoutControls(firstTime: Bool) {
-        self.infoButton.toCircle()
         if self.hostRoundedContainer {
             self.hostCollectionContentView.roundCorners(cornerRadius: 8.0, topRounded: false, bottomRounded: true)
         } else {

@@ -125,8 +125,8 @@ Played</string>
                                                 <color key="backgroundColor" name="Clear"/>
                                                 <accessibility key="accessibilityConfiguration" identifier="thisPlayerOverlap"/>
                                             </view>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rhg-YK-v6u" customClass="ShadowButton" customModule="Whist" customModuleProvider="target">
-                                                <rect key="frame" x="366" y="103" width="28" height="28"/>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rhg-YK-v6u" customClass="HelpButton" customModule="Whist" customModuleProvider="target">
+                                                <rect key="frame" x="366" y="85" width="28" height="28"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="28" id="M3g-Di-BnU"/>
                                                     <constraint firstAttribute="width" secondItem="rhg-YK-v6u" secondAttribute="height" multiplier="1:1" id="QQQ-Gk-Tmr"/>
@@ -138,7 +138,7 @@ Played</string>
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                                 <connections>
-                                                    <action selector="infoPressed:" destination="iu4-6y-nl5" eventType="touchUpInside" id="ehI-ZP-4NV"/>
+                                                    <action selector="helpPressed:" destination="iu4-6y-nl5" eventType="touchUpInside" id="ehI-ZP-4NV"/>
                                                 </connections>
                                             </button>
                                         </subviews>
@@ -155,7 +155,7 @@ Played</string>
                                             <constraint firstAttribute="trailing" secondItem="XTv-6o-LLq" secondAttribute="trailing" id="a7q-9L-hle"/>
                                             <constraint firstItem="rhg-YK-v6u" firstAttribute="centerX" secondItem="baT-Lm-DyX" secondAttribute="centerX" id="b0M-Fp-ruV"/>
                                             <constraint firstItem="x7j-7w-yJj" firstAttribute="height" secondItem="baT-Lm-DyX" secondAttribute="height" multiplier="0.12" id="bsM-gr-gao"/>
-                                            <constraint firstAttribute="bottom" secondItem="rhg-YK-v6u" secondAttribute="bottom" constant="20" id="dt8-Hq-GNZ"/>
+                                            <constraint firstItem="XTv-6o-LLq" firstAttribute="bottom" secondItem="rhg-YK-v6u" secondAttribute="bottom" constant="8" id="dt8-Hq-GNZ"/>
                                             <constraint firstAttribute="trailing" secondItem="x7j-7w-yJj" secondAttribute="trailing" id="jmq-QI-Us8"/>
                                             <constraint firstAttribute="height" priority="1" id="l4b-QK-6GL"/>
                                             <constraint firstItem="XTv-6o-LLq" firstAttribute="bottom" secondItem="x7j-7w-yJj" secondAttribute="top" id="u1j-SS-ZBA"/>
@@ -889,12 +889,12 @@ Played</string>
                         <outlet property="bottomSectionBottomConstraint" destination="inc-aR-TRM" id="ggs-wg-usb"/>
                         <outlet property="bottomSectionTrailingConstraint" destination="Ibo-5M-oqI" id="Yin-EP-iJX"/>
                         <outlet property="flowLayout" destination="Aec-a3-Pfk" id="biv-IR-ARZ"/>
+                        <outlet property="helpButton" destination="rhg-YK-v6u" id="ciR-wp-2ns"/>
                         <outlet property="hostCollectionContainerView" destination="tZH-0W-X3K" id="N86-SF-zNr"/>
                         <outlet property="hostCollectionContentView" destination="FhF-F8-jiI" id="S4a-dM-8Sm"/>
                         <outlet property="hostCollectionView" destination="QLu-uS-rp7" id="Nrs-Zc-g7G"/>
                         <outlet property="hostCollectionViewLayout" destination="e6U-UB-5RB" id="YGd-cY-4fg"/>
                         <outlet property="hostTitleBar" destination="w0v-BL-Raf" id="5Wc-zV-ZDs"/>
-                        <outlet property="infoButton" destination="rhg-YK-v6u" id="ciR-wp-2ns"/>
                         <outlet property="leftContainer" destination="Zmp-Pb-RbJ" id="pWv-qD-aLJ"/>
                         <outlet property="leftPaddingView" destination="YSU-nf-o4R" id="OqB-1Z-KOH"/>
                         <outlet property="leftPanelTrailingConstraint" destination="2VJ-kS-vQV" id="w9i-pN-gHz"/>

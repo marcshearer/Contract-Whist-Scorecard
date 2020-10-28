@@ -83,10 +83,6 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
         finishAction()       
     }
     
-    internal func infoPressed() {
-        self.helpView?.show()
-    }
-    
     @IBAction func clearAllButtonPressed(_ sender: UIButton) {
         if selectedList.count > 0 {
             for (index, selected) in selectedList.enumerated() {
@@ -422,8 +418,8 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
     private func setupButtons() {
         
         self.banner.set(rightButtons: [
-                BannerButton(image: UIImage(systemName: "questionmark"), action: self.infoPressed, type: .rounded, menuHide: true, id: "info"),
-                BannerButton(title: "Continue", image: UIImage(named: "forward"), width: 100, action: self.continuePressed, menuHide: true, id: "continue")])
+            BannerButton(action: self.helpPressed, type: .help),
+            BannerButton(title: "Continue", image: UIImage(named: "forward"), width: 100, action: self.continuePressed, menuHide: true, id: "continue")])
         
         // Set cancel button and title
         self.continueButton.toCircle()

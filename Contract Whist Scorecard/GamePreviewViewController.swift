@@ -109,10 +109,6 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
         self.controllerDelegate?.didProceed()
     }
     
-    internal func infoPressed() {
-        self.helpView.show()
-    }
-        
     internal func overrideSettingsPressed() {
         self.controllerDelegate?.didInvoke(.overrideSettings)
     }
@@ -429,7 +425,7 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
         var nonBannerButtonsAfter: [BannerButton] = []
              
         var rightButtons = [
-            BannerButton(image: UIImage(systemName: "questionmark"), action: self.infoPressed, type: .rounded, menuHide: true, id: "info")]
+            BannerButton(action: self.helpPressed, type: .help)]
         if self.readOnly {
             self.continueButton.isHidden = true
             self.cutForDealerButton.isEnabled = false

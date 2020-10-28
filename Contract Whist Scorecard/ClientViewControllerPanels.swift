@@ -32,7 +32,7 @@ protocol PanelContainer {
     
     func selectAvailableDevice(deviceName: String)
     
-    func panelInfoPressed(alwaysNext: Bool, completion: ((Bool)->())?)
+    func panelhelpPressed(alwaysNext: Bool, completion: ((Bool)->())?)
 }
 
 extension PanelContainer {
@@ -84,7 +84,7 @@ extension ClientViewController : PanelContainer {
         // Show / hide controls
         self.hostTitleBar.set(transparent: menuVisible, alignment: .center)
         self.peerTitleBar.set(transparent: menuVisible, alignment: .center)
-        self.infoButton.isHidden = menuVisible
+        self.helpButton.isHidden = menuVisible
         
         // Setup behaviour for hosts collection view
         self.hostsAcross = (menuVisible ? 2 : 3)
@@ -263,7 +263,7 @@ extension ClientViewController : PanelContainer {
         self.selectAvailable(deviceName: deviceName)
     }
     
-    internal func panelInfoPressed(alwaysNext: Bool, completion: ((Bool)->())?) {
+    internal func panelhelpPressed(alwaysNext: Bool, completion: ((Bool)->())?) {
         let stack = self.viewControllerStack
         if stack.isEmpty {
             // Nothing displayed - call my own help function

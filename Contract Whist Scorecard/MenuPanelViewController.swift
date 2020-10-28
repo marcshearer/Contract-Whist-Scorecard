@@ -130,7 +130,7 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
         }
     }
     
-    @objc internal func infoPressed(_ sender: UIButton) {
+    @objc internal func menuPanelHelpPressed(_ sender: UIButton) {
         if currentOption == .playGame && self.rootViewController.viewControllerStack.isEmpty {
             // Show menu initial menu panel help followed by option help followed by final menu panel help
             
@@ -138,7 +138,7 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
             self.helpView.show(alwaysNext: true) { (finishPressed) in
                 self.view.superview?.insertSubview(self.view, at: 1)
                 if !finishPressed {
-                    self.rootViewController.panelInfoPressed(alwaysNext: false) { (finishPressed) in
+                    self.rootViewController.panelhelpPressed(alwaysNext: false) { (finishPressed) in
                         if !finishPressed {
                             self.view.superview?.bringSubviewToFront(self.view)
                             self.helpViewAfter.show(alwaysNext: false) { (finishPressed) in
@@ -150,7 +150,7 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
             }
         } else {
             // self.view.superview?.bringSubviewToFront(self.view)
-            self.rootViewController.panelInfoPressed(alwaysNext: false) { (finishPressed) in
+            self.rootViewController.panelhelpPressed(alwaysNext: false) { (finishPressed) in
             // self.view.superview?.insertSubview(self.view, at: 1)
             }
         }
@@ -361,10 +361,8 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
                 cell.titleLabel.text = (self.playingGame && self.gamePlayingTitle != nil ? self.gamePlayingTitle! : option.title)
                 cell.titleLabel.textColor = (option.menuOption == self.currentOption ? Palette.leftSidePanel.themeText : (disabled ? Palette.normal.faintText : Palette.leftSidePanel.text))
                 cell.titleLabel.font = UIFont.systemFont(ofSize: 24, weight: .semibold)
-                cell.infoButton.setBackgroundColor(Palette.normal.themeText)
-                cell.infoButton.tintColor = Palette.banner.text
-                cell.infoButton.isHidden = (option.menuOption != self.currentOption)
-                cell.infoButton.addTarget(self, action: #selector(MenuPanelViewController.infoPressed), for: .touchUpInside)
+                cell.helpButton.isHidden = (option.menuOption != self.currentOption)
+                cell.helpButton.addTarget(self, action: #selector(MenuPanelViewController.menuPanelHelpPressed), for: .touchUpInside)
                 if option.menuOption == .playGame {
                     self.setOther(isEnabled: !disabled)
                 }
@@ -373,7 +371,7 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
                 cell.titleLabel.text = "      \((option.pressed ? option.releaseTitle! : option.title))"
                 cell.titleLabel.textColor = option.titleColor ?? (self.suboptionHighlight == index ? Palette.leftSidePanel.themeText : (disabled ? Palette.normal.faintText : Palette.leftSidePanel.text))
                 cell.titleLabel.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
-                cell.infoButton.isHidden = true
+                cell.helpButton.isHidden = true
             }
             cell.titleLabelTopConstraint.constant = option.spaceBefore
             cell.titleLabel.setNeedsDisplay()
@@ -685,7 +683,7 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
 class MenuPanelTableCell: UITableViewCell {
     @IBOutlet fileprivate weak var titleLabel: UILabel!
     @IBOutlet fileprivate weak var titleLabelTopConstraint: NSLayoutConstraint!
-    @IBOutlet fileprivate weak var infoButton: ShadowButton!
+    @IBOutlet fileprivate weak var helpButton: HelpButton!
 }
 
 extension MenuPanelViewController {

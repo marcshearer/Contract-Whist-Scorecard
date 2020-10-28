@@ -81,7 +81,7 @@ class ViewGroup: UIView {
     public func isHidden(view: UIView, _ hidden: Bool) {
         if view.isHidden != hidden {
             view.isHidden = hidden
-            self.arrange()
+            self.arrange(layout: true)
         }
     }
     
@@ -155,6 +155,7 @@ class ViewGroup: UIView {
         
         if layout {
             self.contentView.setNeedsUpdateConstraints()
+            self.contentView.updateConstraintsIfNeeded()
             self.contentView.setNeedsLayout()
             self.contentView.layoutIfNeeded()
         }

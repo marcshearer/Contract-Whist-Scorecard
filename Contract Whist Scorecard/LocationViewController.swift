@@ -56,7 +56,7 @@ class LocationViewController: ScorecardViewController, UITableViewDataSource, UI
         }
     }
     
-    internal func infoPressed() {
+    override internal func helpPressed() {
         self.searchBar.resignFirstResponder()
         self.helpView?.show()
     }
@@ -346,7 +346,7 @@ class LocationViewController: ScorecardViewController, UITableViewDataSource, UI
         // Add banner continue button
         self.banner.set(
             rightButtons: [
-                BannerButton(image: UIImage(systemName: "questionmark"), action: self.infoPressed, type: .rounded, menuHide: true, id: "info"),
+                BannerButton(action: self.helpPressed, type: .help),
                 BannerButton(title: "Continue", image: UIImage(named: "forward"), width: 100, action: self.continuePressed, menuHide: true, id: "continue")])
         
         // Set continue button and title

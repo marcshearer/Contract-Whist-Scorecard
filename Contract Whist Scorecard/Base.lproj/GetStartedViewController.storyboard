@@ -3,7 +3,7 @@
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -608,8 +608,8 @@
                         <outlet property="downloadPlayersTitleBar" destination="F7d-oP-X1Z" id="fLy-tw-Okf"/>
                         <outlet property="downloadPlayersView" destination="Yxj-bF-zcW" id="Vya-rK-tQd"/>
                         <outlet property="getStartedLabel" destination="My8-Ve-qdn" id="uXP-pS-KGI"/>
-                        <outlet property="infoButton" destination="Min-RN-IWk" id="AjK-HE-P4S"/>
-                        <outlet property="infoButtonContainer" destination="H6T-vo-ms1" id="4V6-ZP-3pU"/>
+                        <outlet property="helpButton" destination="Min-RN-IWk" id="AjK-HE-P4S"/>
+                        <outlet property="helpButtonContainer" destination="H6T-vo-ms1" id="4V6-ZP-3pU"/>
                         <outlet property="inputClippingContainerHeightConstraint" destination="Sbk-AW-ZfM" id="t7f-5k-0l8"/>
                         <outlet property="inputClippingContainerView" destination="zUI-T7-Tua" id="Ojo-pu-9Rq"/>
                         <outlet property="playerSelectionView" destination="QFU-gO-Ca1" id="eFi-p4-9TP"/>

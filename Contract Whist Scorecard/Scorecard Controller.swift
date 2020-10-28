@@ -489,7 +489,7 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
     }
     
     internal func showGameDetailPanel() {
-        if self.gameDetailPanelViewController == nil {
+        if self.parentViewController.rootViewController.containers && self.gameDetailPanelViewController == nil {
             self.gameDetailPanelViewController = GameDetailPanelViewController.create()
             self.gameDetailPanelViewController.appController = self
             self.gameDetailPanelViewController.controllerDelegate = self
@@ -817,7 +817,6 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
             dismissImageView.frame = rootViewController.view.convert(rootViewController.view.frame, to: nil)
             rootViewController.view.bringSubviewToFront(dismissImageView)
             rootViewController.dismissImageViewStack.append(dismissImageView)
-            
         }
     }
     
@@ -1002,6 +1001,10 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
     
     internal func backButtonPressed() {
         fatalError("Must be overridden")
+    }
+    
+    internal func helpPressed() {
+        self.helpView?.show()
     }
     
     // MARK: - Utility routines ======================================================================== -

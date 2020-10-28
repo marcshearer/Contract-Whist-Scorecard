@@ -83,15 +83,17 @@ fileprivate struct HelpViewActiveElement {
     let source: HelpViewSource
     let descriptor: NSAttributedString?
     let sequence: Int
+    let radius: CGFloat
     
     static var nextSequence = 0
     
-    init(element: HelpViewElement, frame: CGRect? = nil, views: [UIView]? = nil, source: HelpViewSource = .view, descriptor: NSAttributedString? = nil) {
+    init(element: HelpViewElement, frame: CGRect? = nil, views: [UIView]? = nil, source: HelpViewSource = .view, descriptor: NSAttributedString? = nil, radius: CGFloat? = nil) {
         self.element = element
         self.frame = frame
         self.views = views
         self.source = source
         self.descriptor = descriptor
+        self.radius = radius ?? (source == .view ? element.radius : (source == .message ? 0 : 8))
         self.sequence = HelpViewActiveElement.nextSequence
         HelpViewActiveElement.nextSequence += 1
     }
@@ -251,7 +253,8 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
                     if let bannerButton = banner.getButton(id: id) {
                         let control = bannerButton.control
                         if !control.isHidden {
-                            self.activeElements.append(HelpViewActiveElement(element: element, frame: control.frame, views: [control], source: .banner, descriptor: bannerButton.title))
+                            let rounded = (bannerButton.type == .rounded || bannerButton.type == .help)
+                            self.activeElements.append(HelpViewActiveElement(element: element, frame: control.frame, views: [control], source: .banner, descriptor: bannerButton.title, radius: (rounded ? control.frame.height / 2 : nil)))
                         }
                     }
                 }
@@ -329,6 +332,7 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
         var point: CGPoint
         var focusFrame: CGRect
         
+        // Instantiate text and substitute for {} with descriptor
         let text = element.text().mutableCopy() as! NSMutableAttributedString
         if let descriptor = activeElement.descriptor ?? element.descriptor {
             while true {
@@ -347,14 +351,14 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
             frame = self.convert(frame!.grownBy(dx: element.horizontalBorder, dy: element.verticalBorder), from: superview!)
         }
 
-        // Check if positioning left/right or above/below
+        // Check if positioning bubble left/right or above/below
         let forceAboveBelow = frame?.width ?? 0 > self.frame.width * 0.7 && !element.shrink
         let aboveBelow = (forceAboveBelow || ScorecardUI.portraitPhone() || (!ScorecardUI.phoneSize() && !(self.parentViewController.menuController?.isVisible ?? false)))
         
-        // Get required width
+        // Get required width of bubble
         let requiredWidth = SpeechBubbleView.width(availableWidth: (frame == nil || aboveBelow ? nil : (max(frame!.minX, self.parentViewController.screenWidth - frame!.maxX))), minWidth: (element.shrink ? 290 : 190))
         
-        // Get required height
+        // Get required height of bubble
         let requiredHeight = self.speechBubble.height(text, arrowHeight: arrowHeight, width: requiredWidth) + self.buttonHeight + self.buttonSpacing + self.border
         
        if activeElement.source != .message {
@@ -382,7 +386,7 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
             self.nextPressed(self.nextButton)
         } else {
             // Draw focus frame
-            self.focus.set(around: focusFrame, radius: (activeElement.source == .view ? element.radius : (activeElement.source == .message ? 0 : 8)))
+            self.focus.set(around: focusFrame, radius: activeElement.radius)
             
             // Show bubble
             self.speechBubble.show(text, point: point, direction: direction, width: requiredWidth, arrowHeight: (activeElement.source == .message ? 0 : arrowHeight), arrowWidth: 0)

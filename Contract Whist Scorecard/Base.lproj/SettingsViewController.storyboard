@@ -116,7 +116,7 @@
                                     <outlet property="parentViewController" destination="btt-Xo-OBG" id="rhY-ZU-pJ6"/>
                                 </connections>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="njd-Nk-KYm" customClass="ShadowButton" customModule="Whist" customModuleProvider="target">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="njd-Nk-KYm" customClass="HelpButton" customModule="Whist" customModuleProvider="target">
                                 <rect key="frame" x="327" y="140.5" width="28" height="28"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="28" id="MmL-vl-meh"/>
@@ -129,7 +129,7 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
-                                    <action selector="infoPressed:" destination="btt-Xo-OBG" eventType="touchUpInside" id="FdD-TI-72K"/>
+                                    <action selector="helpPressed:" destination="btt-Xo-OBG" eventType="touchUpInside" id="FdD-TI-72K"/>
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xcm-t8-VA2" customClass="PlayerSelectionView" customModule="Whist" customModuleProvider="target">
@@ -940,8 +940,8 @@
                     <connections>
                         <outlet property="availableSpaceHeightConstraint" destination="MOv-tW-QMz" id="oQh-zQ-NAQ"/>
                         <outlet property="banner" destination="DW5-40-xyx" id="85a-8o-GFo"/>
-                        <outlet property="infoButton" destination="njd-Nk-KYm" id="FrT-LP-NMv"/>
-                        <outlet property="infoButtonBottomConstraint" destination="mHD-Pr-6LJ" id="CgJ-vH-JOt"/>
+                        <outlet property="helpButton" destination="njd-Nk-KYm" id="FrT-LP-NMv"/>
+                        <outlet property="helpButtonBottomConstraint" destination="mHD-Pr-6LJ" id="CgJ-vH-JOt"/>
                         <outlet property="playerSelectionView" destination="xcm-t8-VA2" id="r6B-pz-1YI"/>
                         <outlet property="playerSelectionViewHeightConstraint" destination="Nyr-k0-9C6" id="9RZ-kd-Xmf"/>
                         <outlet property="settingsTableView" destination="KFM-qF-ry7" id="i5B-i5-33b"/>

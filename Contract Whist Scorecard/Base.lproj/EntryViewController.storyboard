@@ -3,7 +3,7 @@
     <device id="retina5_9" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -13,12 +13,12 @@
         <!--Entry-->
         <scene sceneID="IEG-Cv-abN">
             <objects>
-                <viewController storyboardIdentifier="EntryViewController" title="Entry" useStoryboardIdentifierAsRestorationIdentifier="YES" id="mEi-hH-CUE" customClass="EntryViewController" customModule="Whist_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="EntryViewController" title="Entry" useStoryboardIdentifierAsRestorationIdentifier="YES" id="mEi-hH-CUE" customClass="EntryViewController" customModule="Whist" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="pS0-jq-6eE" userLabel="Scores View">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="otp-xs-7Jm" customClass="Banner" customModule="Whist_2" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="otp-xs-7Jm" customClass="Banner" customModule="Whist" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="124"/>
                                 <accessibility key="accessibilityConfiguration" identifier="BannerPaddingView"/>
                                 <userDefinedRuntimeAttributes>
@@ -35,7 +35,7 @@
                                     <outlet property="parentViewController" destination="mEi-hH-CUE" id="g5Y-4H-Kc3"/>
                                 </connections>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Weo-LM-Q3A" customClass="BannerLogoView" customModule="Whist_2" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Weo-LM-Q3A" customClass="BannerLogoView" customModule="Whist" customModuleProvider="target">
                                 <rect key="frame" x="112.66666666666667" y="0.0" width="149.66666666666663" height="88"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <accessibility key="accessibilityConfiguration" identifier="BannerLogoView"/>
@@ -62,7 +62,7 @@
                                 </constraints>
                                 <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Entry Player Table Cell" id="UqW-3T-hCt" customClass="EntryPlayerTableCell" customModule="Whist_2" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Entry Player Table Cell" id="UqW-3T-hCt" customClass="EntryPlayerTableCell" customModule="Whist" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="UqW-3T-hCt" id="aDd-6D-WWB" userLabel="TableCellContent">
@@ -82,8 +82,8 @@
                                                                 <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                             </collectionViewFlowLayout>
                                                             <cells>
-                                                                <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="Entry Player Cell" id="vqm-n4-fFy" customClass="EntryPlayerCell" customModule="Whist_2" customModuleProvider="target">
-                                                                    <rect key="frame" x="0.0" y="-1.3333333333333333" width="50" height="46"/>
+                                                                <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="Entry Player Cell" id="vqm-n4-fFy" customClass="EntryPlayerCell" customModule="Whist" customModuleProvider="target">
+                                                                    <rect key="frame" x="0.0" y="-1" width="50" height="46"/>
                                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                                     <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                                                         <rect key="frame" x="0.0" y="0.0" width="50" height="46"/>
@@ -224,14 +224,14 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Entry Score Cell" id="r3o-CE-YgR" customClass="EntryScoreCell" customModule="Whist_2" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Entry Score Cell" id="r3o-CE-YgR" customClass="EntryScoreCell" customModule="Whist" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pld-hq-Uro" customClass="BidButton" customModule="Whist_2" customModuleProvider="target">
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pld-hq-Uro" customClass="BidButton" customModule="Whist" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                                     <color key="backgroundColor" name="Bid Button"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="24"/>
@@ -260,31 +260,58 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rSw-DA-1Lg" userLabel="Toolbar View">
                                 <rect key="frame" x="0.0" y="734" width="375" height="78"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8rw-oz-v5h" userLabel="Finish Button" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
-                                        <rect key="frame" x="12" y="22" width="60" height="34"/>
+                                    <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LwO-vb-swg" userLabel="Toolbar Left Button View Group" customClass="ViewGroup" customModule="Whist" customModuleProvider="target">
+                                        <rect key="frame" x="12" y="17" width="80" height="44"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8rw-oz-v5h" userLabel="Finish Button" customClass="ClearButton" customModule="Whist" customModuleProvider="target">
+                                                <rect key="frame" x="25" y="7" width="30" height="30"/>
+                                                <color key="backgroundColor" name="Clear"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="34" id="6nJ-le-bkD"/>
+                                                    <constraint firstAttribute="width" constant="30" id="b8Z-ji-xBv"/>
+                                                </constraints>
+                                                <state key="normal" image="back"/>
+                                                <connections>
+                                                    <action selector="saveScorePressed:" destination="mEi-hH-CUE" eventType="touchUpInside" id="gKc-8X-Agj"/>
+                                                </connections>
+                                            </button>
+                                            <button autoresizesSubviews="NO" opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IVB-I0-IfC" userLabel="Errors Button" customClass="ShadowButton" customModule="Whist" customModuleProvider="target">
+                                                <rect key="frame" x="37" y="11" width="30" height="30"/>
+                                                <color key="backgroundColor" name="Error"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="30" id="7dS-LA-RAK"/>
+                                                    <constraint firstAttribute="width" constant="30" id="8n7-22-CIA"/>
+                                                </constraints>
+                                                <edgeInsets key="layoutMargins" top="0.0" left="0.0" bottom="0.0" right="0.0"/>
+                                                <state key="normal" image="exclamationmark" catalog="system"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                        <real key="value" value="15"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                                <connections>
+                                                    <action selector="saveScorePressed:" destination="mEi-hH-CUE" eventType="touchUpInside" id="5ki-0u-eNT"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Yq9-4F-fQq" userLabel="Undo Button" customClass="ClearButton" customModule="Whist" customModuleProvider="target">
+                                                <rect key="frame" x="25" y="0.0" width="30" height="44"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <state key="normal" image="undo"/>
+                                                <connections>
+                                                    <action selector="undoButtonClicked:" destination="mEi-hH-CUE" eventType="touchUpInside" id="iOb-gA-sLo"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
                                         <color key="backgroundColor" name="Clear"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="34" id="6nJ-le-bkD"/>
-                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="60" id="Kuj-6V-wtF"/>
-                                            <constraint firstAttribute="width" constant="60" id="b8Z-ji-xBv"/>
+                                            <constraint firstAttribute="height" constant="44" id="sTp-ra-4di"/>
                                         </constraints>
-                                        <state key="normal" image="back"/>
-                                        <connections>
-                                            <action selector="saveScorePressed:" destination="mEi-hH-CUE" eventType="touchUpInside" id="gKc-8X-Agj"/>
-                                        </connections>
-                                    </button>
-                                    <button autoresizesSubviews="NO" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="detailDisclosure" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IVB-I0-IfC" userLabel="Errors Button" customClass="ErrorRoundedButton" customModule="Whist_2" customModuleProvider="target">
-                                        <rect key="frame" x="12" y="24" width="30" height="30"/>
-                                        <color key="backgroundColor" name="Error"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="30" id="7dS-LA-RAK"/>
-                                            <constraint firstAttribute="width" constant="30" id="8n7-22-CIA"/>
-                                        </constraints>
-                                        <edgeInsets key="layoutMargins" top="0.0" left="0.0" bottom="0.0" right="0.0"/>
-                                        <connections>
-                                            <action selector="saveScorePressed:" destination="mEi-hH-CUE" eventType="touchUpInside" id="5ki-0u-eNT"/>
-                                        </connections>
-                                    </button>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="spacing">
+                                                <real key="value" value="10"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </view>
                                     <label opaque="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Round" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="mYF-x3-kAl">
                                         <rect key="frame" x="137.66666666666666" y="17" width="100" height="44"/>
                                         <color key="backgroundColor" name="Clear"/>
@@ -296,19 +323,21 @@
                                         <color key="textColor" name="Emphasis Text"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fNh-i9-9lH" customClass="ViewGroup" customModule="Whist_2" customModuleProvider="target">
+                                    <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fNh-i9-9lH" customClass="ViewGroup" customModule="Whist" customModuleProvider="target">
                                         <rect key="frame" x="283" y="17" width="80" height="44"/>
                                         <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Yq9-4F-fQq" userLabel="Undo Button" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
-                                                <rect key="frame" x="20" y="20" width="30" height="44"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <state key="normal" image="undo"/>
+                                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rsi-X3-BHk" customClass="HelpButton" customModule="Whist" customModuleProvider="target">
+                                                <rect key="frame" x="17" y="7" width="46" height="30"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="28" id="HOe-Mf-Arw"/>
+                                                    <constraint firstAttribute="width" secondItem="rsi-X3-BHk" secondAttribute="height" multiplier="1:1" id="WaA-Hu-VS7"/>
+                                                </constraints>
                                                 <connections>
-                                                    <action selector="undoButtonClicked:" destination="mEi-hH-CUE" eventType="touchUpInside" id="iOb-gA-sLo"/>
+                                                    <action selector="helpPressed:" destination="mEi-hH-CUE" eventType="touchUpInside" id="PlE-Rc-ECT"/>
                                                 </connections>
                                             </button>
-                                            <button opaque="NO" contentMode="scaleAspectFit" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Qsz-Bp-ie1" userLabel="Summary Button" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
-                                                <rect key="frame" x="54" y="25" width="30" height="34"/>
+                                            <button opaque="NO" contentMode="scaleAspectFit" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Qsz-Bp-ie1" userLabel="Summary Button" customClass="ClearButton" customModule="Whist" customModuleProvider="target">
+                                                <rect key="frame" x="25" y="5" width="30" height="34"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <state key="normal" image="forward"/>
                                                 <userDefinedRuntimeAttributes>
@@ -323,8 +352,12 @@
                                         <accessibility key="accessibilityConfiguration" identifier="ToolbarButton"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="44" id="M7f-Ri-2ky"/>
-                                            <constraint firstAttribute="width" priority="1" constant="80" id="VHB-Wk-UoV"/>
                                         </constraints>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="spacing">
+                                                <real key="value" value="10"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
                                     </view>
                                 </subviews>
                                 <viewLayoutGuide key="safeArea" id="MPT-Qn-B2G"/>
@@ -332,13 +365,11 @@
                                 <accessibility key="accessibilityConfiguration" identifier="Toolbar"/>
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="fNh-i9-9lH" secondAttribute="trailing" constant="12" id="1Q9-bl-XMy"/>
+                                    <constraint firstItem="LwO-vb-swg" firstAttribute="leading" secondItem="MPT-Qn-B2G" secondAttribute="leading" constant="12" id="20B-lH-e4i"/>
                                     <constraint firstItem="fNh-i9-9lH" firstAttribute="centerY" secondItem="rSw-DA-1Lg" secondAttribute="centerY" id="Axq-xG-6mV"/>
                                     <constraint firstItem="mYF-x3-kAl" firstAttribute="centerY" secondItem="rSw-DA-1Lg" secondAttribute="centerY" id="Q5p-9V-Irz"/>
-                                    <constraint firstItem="IVB-I0-IfC" firstAttribute="centerY" secondItem="rSw-DA-1Lg" secondAttribute="centerY" id="SWQ-To-i99"/>
+                                    <constraint firstItem="LwO-vb-swg" firstAttribute="centerY" secondItem="rSw-DA-1Lg" secondAttribute="centerY" id="Vu8-be-bLs"/>
                                     <constraint firstItem="mYF-x3-kAl" firstAttribute="centerX" secondItem="rSw-DA-1Lg" secondAttribute="centerX" id="ZYa-h8-L1U"/>
-                                    <constraint firstItem="8rw-oz-v5h" firstAttribute="centerY" secondItem="rSw-DA-1Lg" secondAttribute="centerY" id="dXF-gk-umW"/>
-                                    <constraint firstItem="8rw-oz-v5h" firstAttribute="leading" secondItem="rSw-DA-1Lg" secondAttribute="leading" constant="12" id="kq0-1N-DwH"/>
-                                    <constraint firstItem="IVB-I0-IfC" firstAttribute="leading" secondItem="MPT-Qn-B2G" secondAttribute="leading" constant="12" id="wKN-lR-fiO"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -431,9 +462,11 @@
                         <outlet property="playerTableViewHeightConstraint" destination="KVz-Wl-81w" id="bAj-Or-85p"/>
                         <outlet property="scoreButtonCollectionView" destination="AtG-Oq-mM4" id="4Rk-Uu-Ucf"/>
                         <outlet property="separatorView" destination="r5E-a9-sN5" id="USn-xq-Sky"/>
-                        <outlet property="toolbarButtonViewGroup" destination="fNh-i9-9lH" id="qZz-9y-2Gx"/>
                         <outlet property="toolbarErrorsButton" destination="IVB-I0-IfC" id="ueq-V1-9kL"/>
                         <outlet property="toolbarFinishButton" destination="8rw-oz-v5h" id="z6o-ap-TgV"/>
+                        <outlet property="toolbarHelpButton" destination="rsi-X3-BHk" id="TDX-lY-xSl"/>
+                        <outlet property="toolbarLeftButtonViewGroup" destination="LwO-vb-swg" id="eJa-4n-DYx"/>
+                        <outlet property="toolbarRightButtonViewGroup" destination="fNh-i9-9lH" id="qZz-9y-2Gx"/>
                         <outlet property="toolbarSummaryButton" destination="Qsz-Bp-ie1" id="NeN-Xq-H1o"/>
                         <outlet property="toolbarView" destination="rSw-DA-1Lg" id="Djg-re-Jt1"/>
                         <outlet property="undoButton" destination="Yq9-4F-fQq" id="Dns-Ua-n9a"/>
@@ -457,6 +490,7 @@
     </scenes>
     <resources>
         <image name="back" width="22" height="22"/>
+        <image name="exclamationmark" catalog="system" width="46" height="128"/>
         <image name="forward" width="22" height="22"/>
         <image name="undo" width="21.333333969116211" height="22"/>
         <namedColor name="Background">

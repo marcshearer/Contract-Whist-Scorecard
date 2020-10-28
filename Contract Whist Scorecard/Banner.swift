@@ -137,7 +137,10 @@ class Banner : UIView {
     private var containerOverrideHeight: CGFloat?
     private var attributedTitle: NSAttributedString?
     private var menuTitle: String?
-    
+    private var leftSpacing: CGFloat?
+    private var rightSpacing: CGFloat?
+    private var lowerSpacing: CGFloat?
+
     public var height: CGFloat { return self.bannerHeightConstraint?.constant ?? self.frame.height }
     public var titleWidth: CGFloat { self.titleLabel.frame.width }
     
@@ -233,7 +236,7 @@ class Banner : UIView {
         self.titleLabelInset.forEach{(constraint) in constraint.constant = inset}
     }
     
-    public func set(title: String? = nil, attributedTitle: NSAttributedString? = nil, menuTitle: String? = nil, leftButtons: [BannerButton]? = nil, rightButtons: [BannerButton]? = nil, lowerButtons: [BannerButton]? = nil, nonBannerButtonsBefore: [BannerButton]? = nil, nonBannerButtonsAfter: [BannerButton]? = nil, menuOption: MenuOption? = nil, backgroundColor: PaletteColor? = nil, titleFont: UIFont? = nil, titleColor: UIColor? = nil, titleAlignment: NSTextAlignment? = nil, disableOptions: Bool? = nil, updateMenuTitle: Bool = true, normalOverrideHeight: CGFloat? = nil, containerOverrideHeight: CGFloat? = nil, forceArrange: Bool = false) {
+    public func set(title: String? = nil, attributedTitle: NSAttributedString? = nil, menuTitle: String? = nil, leftButtons: [BannerButton]? = nil, leftSpacing: CGFloat? = nil, rightButtons: [BannerButton]? = nil, rightSpacing: CGFloat? = nil, lowerButtons: [BannerButton]? = nil, lowerSpacing: CGFloat? = nil, nonBannerButtonsBefore: [BannerButton]? = nil, nonBannerButtonsAfter: [BannerButton]? = nil, menuOption: MenuOption? = nil, backgroundColor: PaletteColor? = nil, titleFont: UIFont? = nil, titleColor: UIColor? = nil, titleAlignment: NSTextAlignment? = nil, disableOptions: Bool? = nil, updateMenuTitle: Bool = true, normalOverrideHeight: CGFloat? = nil, containerOverrideHeight: CGFloat? = nil, forceArrange: Bool = false) {
         var arrange = forceArrange
         var layout = false
         if let title = title {
@@ -251,8 +254,11 @@ class Banner : UIView {
             }
         }
         if let leftButtons = leftButtons           { self.leftButtons = leftButtons ; arrange = true }
+        if let leftSpacing = leftSpacing           { self.leftSpacing = leftSpacing ; arrange = true }
         if let rightButtons = rightButtons         { self.rightButtons = rightButtons ; arrange = true }
+        if let rightSpacing = rightSpacing         { self.rightSpacing = rightSpacing ; arrange = true }
         if let lowerButtons = lowerButtons         { self.lowerButtons = lowerButtons ; arrange = true }
+        if let lowerSpacing = lowerSpacing         { self.lowerSpacing = lowerSpacing ; arrange = true }
         if let nonBannerButtonsBefore = nonBannerButtonsBefore { self.nonBannerButtonsBefore = nonBannerButtonsBefore ; arrange = true }
         if let nonBannerButtonsAfter = nonBannerButtonsAfter { self.nonBannerButtonsAfter = nonBannerButtonsAfter ; arrange = true }
         if let menuOption = menuOption             { self.menuOption = menuOption ; arrange = true }
@@ -317,7 +323,7 @@ class Banner : UIView {
                 if let attributedTitle = button.attributedTitle {
                     menuTitle = NSAttributedString(attributedTitle.string, color: Palette.normal.themeText)
                 } else if let title = button.title {
-                    menuTitle = NSAttributedString(title, color: Palette.normal.themeText)
+                    menuTitle = NSAttributedString(markdown: "@*/\(title)@*/")
                 } else if let image = button.image {
                     let image = NSMutableAttributedString(attachment: NSTextAttachment(image: image.asTemplate()))
                     image.addAttribute(NSAttributedString.Key.foregroundColor, value: Palette.normal.themeText, range: NSRange(0...image.length - 1))
@@ -361,19 +367,22 @@ class Banner : UIView {
         self.titleLabel.font = self.titleFont
         
         self.buttonIds = [:]
-        self.createBannerButtons(buttons: &self.leftButtons, viewGroup: self.leftViewGroup, defaultAlignment: .left)
-        self.createBannerButtons(buttons: &self.rightButtons, viewGroup: self.rightViewGroup, defaultAlignment: .right)
-        self.createBannerButtons(buttons: &self.lowerButtons, viewGroup: self.lowerViewGroup, defaultAlignment: .center)
+        self.createBannerButtons(buttons: &self.leftButtons, viewGroup: self.leftViewGroup, defaultAlignment: .left, spacing: self.leftSpacing)
+        self.createBannerButtons(buttons: &self.rightButtons, viewGroup: self.rightViewGroup, defaultAlignment: .right, spacing: self.rightSpacing)
+        self.createBannerButtons(buttons: &self.lowerButtons, viewGroup: self.lowerViewGroup, defaultAlignment: .center, spacing: self.lowerSpacing)
         self.createNonBannerButtons(buttons: &self.nonBannerButtonsBefore)
         self.createNonBannerButtons(buttons: &self.nonBannerButtonsAfter)
         self.setupMenuEntries()
         self.layoutSubviews()
     }
     
-    private func createBannerButtons(buttons: inout [BannerButton], viewGroup: ViewGroup, defaultAlignment: UIControl.ContentHorizontalAlignment) {
+    private func createBannerButtons(buttons: inout [BannerButton], viewGroup: ViewGroup, defaultAlignment: UIControl.ContentHorizontalAlignment, spacing: CGFloat? = nil) {
         
         viewGroup.clear()
         var views: [UIView] = []
+        if let spacing = spacing {
+            viewGroup.spacing = spacing
+        }
         
         for (index, button) in buttons.enumerated() {
             var buttonControl: UIButton

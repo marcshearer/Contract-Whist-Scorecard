@@ -12,7 +12,7 @@ import UIKit
 
 class ViewGroup: UIView {
     
-    @IBInspectable private var spacing: CGFloat = 4.0
+    @IBInspectable internal var spacing: CGFloat = 4.0
     
     struct Item {
         let view: UIView

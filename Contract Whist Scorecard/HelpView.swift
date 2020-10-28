@@ -20,8 +20,9 @@ class HelpViewElement {
     let verticalBorder: CGFloat
     let radius: CGFloat
     let shrink: Bool
+    let direction: SpeechBubbleArrowDirection?
     
-    init(text: (()->String)? = nil, attributedText: (()->NSAttributedString)? = nil, descriptor: NSAttributedString? = nil, views: [UIView?]? = nil, section: Int = 0, item: Int? = nil, itemTo: Int? = nil, bannerId: AnyHashable? = nil, border: CGFloat = 0, horizontalBorder: CGFloat? = nil, verticalBorder: CGFloat? = nil, radius: CGFloat = 8.0, shrink: Bool = false) {
+    init(text: (()->String)? = nil, attributedText: (()->NSAttributedString)? = nil, descriptor: NSAttributedString? = nil, views: [UIView?]? = nil, section: Int = 0, item: Int? = nil, itemTo: Int? = nil, bannerId: AnyHashable? = nil, border: CGFloat = 0, horizontalBorder: CGFloat? = nil, verticalBorder: CGFloat? = nil, radius: CGFloat = 8.0, shrink: Bool = false, direction: SpeechBubbleArrowDirection? = nil) {
         
         if let attributedText = attributedText {
             self.text = attributedText
@@ -52,6 +53,7 @@ class HelpViewElement {
         self.verticalBorder = verticalBorder ?? border
         self.radius = radius
         self.shrink = shrink
+        self.direction = direction
         
         assert(self.views?.count ?? 0 == 1 || itemFrom == nil, "items are only relevant for a single view")
         assert((self.views?.count ?? 1) >= 1 || bannerId != nil, "At least one view or banner ID must be specified")
@@ -157,14 +159,14 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
         self.elements = []
     }
     
-    public func add(_ text: @escaping @autoclosure ()->String, descriptor: String? = nil, views: [UIView?]? = nil, section: Int = 0, item: Int? = nil, itemTo: Int? = nil, bannerId: AnyHashable? = nil, border: CGFloat = 0, horizontalBorder: CGFloat? = nil, verticalBorder: CGFloat? = nil, radius: CGFloat = 8.0, shrink: Bool = false) {
+    public func add(_ text: @escaping @autoclosure ()->String, descriptor: String? = nil, views: [UIView?]? = nil, section: Int = 0, item: Int? = nil, itemTo: Int? = nil, bannerId: AnyHashable? = nil, border: CGFloat = 0, horizontalBorder: CGFloat? = nil, verticalBorder: CGFloat? = nil, radius: CGFloat = 8.0, shrink: Bool = false, direction: SpeechBubbleArrowDirection? = nil) {
         
-        self.elements.append(HelpViewElement(text: text, descriptor: (descriptor != nil ? NSAttributedString(markdown: descriptor!) : nil), views: views, section: section, item: item, itemTo: itemTo, bannerId: bannerId, border: border, horizontalBorder: horizontalBorder, verticalBorder: verticalBorder, radius: radius, shrink: shrink))
+        self.elements.append(HelpViewElement(text: text, descriptor: (descriptor != nil ? NSAttributedString(markdown: descriptor!) : nil), views: views, section: section, item: item, itemTo: itemTo, bannerId: bannerId, border: border, horizontalBorder: horizontalBorder, verticalBorder: verticalBorder, radius: radius, shrink: shrink, direction: direction))
     }
     
-    public func add(_ attributedText: @escaping @autoclosure ()->NSAttributedString, descriptor: NSAttributedString, views: [UIView?]? = nil, section: Int = 0, item: Int? = nil, itemTo: Int? = nil, bannerId: AnyHashable? = nil, border: CGFloat = 0, horizontalBorder: CGFloat? = nil, verticalBorder: CGFloat? = nil, radius: CGFloat = 8, shrink: Bool = false) {
+    public func add(_ attributedText: @escaping @autoclosure ()->NSAttributedString, descriptor: NSAttributedString, views: [UIView?]? = nil, section: Int = 0, item: Int? = nil, itemTo: Int? = nil, bannerId: AnyHashable? = nil, border: CGFloat = 0, horizontalBorder: CGFloat? = nil, verticalBorder: CGFloat? = nil, radius: CGFloat = 8, shrink: Bool = false, direction: SpeechBubbleArrowDirection? = nil) {
         
-        self.elements.append(HelpViewElement(attributedText: attributedText, descriptor: descriptor, views: views, section: section, item: item, itemTo: itemTo, bannerId: bannerId, border: border, horizontalBorder: horizontalBorder, verticalBorder: verticalBorder, radius: radius, shrink: shrink))
+        self.elements.append(HelpViewElement(attributedText: attributedText, descriptor: descriptor, views: views, section: section, item: item, itemTo: itemTo, bannerId: bannerId, border: border, horizontalBorder: horizontalBorder, verticalBorder: verticalBorder, radius: radius, shrink: shrink, direction: direction))
     }
     
     public func show(alwaysNext: Bool = false, completion: ((Bool)->())? = nil) {
@@ -352,8 +354,14 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
         }
 
         // Check if positioning bubble left/right or above/below
-        let forceAboveBelow = frame?.width ?? 0 > self.frame.width * 0.7 && !element.shrink
-        let aboveBelow = (forceAboveBelow || ScorecardUI.portraitPhone() || (!ScorecardUI.phoneSize() && !(self.parentViewController.menuController?.isVisible ?? false)))
+        var aboveBelow: Bool
+        if let direction = element.direction?.rotated {
+            aboveBelow = (direction == .up || direction == .down)
+        } else if frame?.width ?? 0 > self.frame.width * 0.7 && !element.shrink {
+            aboveBelow = true
+        } else {
+            aboveBelow = (ScorecardUI.portraitPhone() || (!ScorecardUI.phoneSize() && !(self.parentViewController.menuController?.isVisible ?? false)))
+        }
         
         // Get required width of bubble
         let requiredWidth = SpeechBubbleView.width(availableWidth: (frame == nil || aboveBelow ? nil : (max(frame!.minX, self.parentViewController.screenWidth - frame!.maxX))), minWidth: (element.shrink ? 290 : 190))
@@ -364,10 +372,10 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
        if activeElement.source != .message {
             // Bubble mode - Work out connection point on frame for arrow
             if aboveBelow {
-                direction = (requiredHeight + frame!.maxY > self.parentViewController.screenHeight ? .down : .up)
+                direction = element.direction?.rotated ?? (requiredHeight + frame!.maxY > self.parentViewController.screenHeight ? .down : .up)
                 point = CGPoint(x: frame!.midX, y: (direction == .up ? frame!.maxY : frame!.minY))
             } else {
-                direction = (frame!.maxX > self.parentViewController.screenWidth - 375 ? .right : .left)
+                direction = element.direction?.rotated ?? (frame!.maxX > self.parentViewController.screenWidth - 375 ? .right : .left)
                 point = CGPoint(x: (direction == .left ? frame!.maxX : frame!.minX), y: frame!.midY)
                 
             }

@@ -3,7 +3,7 @@
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -13,12 +13,12 @@
         <!--Scorecard-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController storyboardIdentifier="ScorepadViewController" title="Scorecard" useStoryboardIdentifierAsRestorationIdentifier="YES" id="BYZ-38-t0r" customClass="ScorepadViewController" customModule="Whist_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ScorepadViewController" title="Scorecard" useStoryboardIdentifierAsRestorationIdentifier="YES" id="BYZ-38-t0r" customClass="ScorepadViewController" customModule="Whist" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC" userLabel="Scorepad View">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7Jo-C4-vPV" customClass="Banner" customModule="Whist_2" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7Jo-C4-vPV" customClass="Banner" customModule="Whist" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="88"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="menuHide" value="YES"/>
@@ -41,7 +41,7 @@
                                     <constraint firstAttribute="height" constant="2" id="7qe-jG-Dbk"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4mH-Ut-Ta9" userLabel="Left Padding View" customClass="InsetPaddingView" customModule="Whist_2" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4mH-Ut-Ta9" userLabel="Left Padding View" customClass="InsetPaddingView" customModule="Whist" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="44" width="0.0" height="852"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gJV-Ai-5A3" userLabel="Left Line">
@@ -63,7 +63,7 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2V4-Rn-jn9" userLabel="Right Padding View" customClass="InsetPaddingView" customModule="Whist_2" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2V4-Rn-jn9" userLabel="Right Padding View" customClass="InsetPaddingView" customModule="Whist" customModuleProvider="target">
                                 <rect key="frame" x="414" y="44" width="0.0" height="852"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SeV-1g-Tzl" userLabel="Right Line">
@@ -85,7 +85,7 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="b1q-d2-Dpc" userLabel="Banner Logo" customClass="BannerLogoView" customModule="Whist_2" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="b1q-d2-Dpc" userLabel="Banner Logo" customClass="BannerLogoView" customModule="Whist" customModuleProvider="target">
                                 <rect key="frame" x="132.5" y="0.0" width="149" height="88"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <constraints>
@@ -106,7 +106,7 @@
                                     <constraint firstAttribute="height" constant="88" id="Nae-oA-mIW"/>
                                 </constraints>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Header Table Cell" id="OOV-Fv-Tha" customClass="ScorepadTableViewCell" customModule="Whist_2" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Header Table Cell" id="OOV-Fv-Tha" customClass="ScorepadTableViewCell" customModule="Whist" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="OOV-Fv-Tha" id="O4n-LO-n5S">
@@ -123,7 +123,7 @@
                                                         <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                     </collectionViewFlowLayout>
                                                     <cells>
-                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Header Collection Cell" id="Suk-Th-w2h" userLabel="Header Collection View Cell" customClass="ScorepadCollectionViewCell" customModule="Whist_2" customModuleProvider="target">
+                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Header Collection Cell" id="Suk-Th-w2h" userLabel="Header Collection View Cell" customClass="ScorepadCollectionViewCell" customModule="Whist" customModuleProvider="target">
                                                             <rect key="frame" x="0.0" y="-3" width="50" height="50"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -182,7 +182,7 @@
                                                                 <outlet property="scorepadTopLineWeight" destination="7L0-wc-Lhi" id="c8m-7l-yMl"/>
                                                             </connections>
                                                         </collectionViewCell>
-                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Header Collection Image Cell" id="9ha-iA-Qeg" userLabel="Header Collection View Image Cell" customClass="ScorepadCollectionViewCell" customModule="Whist_2" customModuleProvider="target">
+                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Header Collection Image Cell" id="9ha-iA-Qeg" userLabel="Header Collection View Image Cell" customClass="ScorepadCollectionViewCell" customModule="Whist" customModuleProvider="target">
                                                             <rect key="frame" x="50" y="-3" width="50" height="50"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -332,7 +332,7 @@
                                 <rect key="frame" x="0.0" y="186" width="414" height="666"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Body Table Cell" id="5dl-Lb-15P" customClass="ScorepadTableViewCell" customModule="Whist_2" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Body Table Cell" id="5dl-Lb-15P" customClass="ScorepadTableViewCell" customModule="Whist" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="5dl-Lb-15P" id="AFT-1X-9g7">
@@ -349,7 +349,7 @@
                                                         <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                     </collectionViewFlowLayout>
                                                     <cells>
-                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Body Collection Text Cell" id="uiX-dn-eZa" userLabel="Body Collection Text Cell" customClass="ScorepadCollectionViewCell" customModule="Whist_2" customModuleProvider="target">
+                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Body Collection Text Cell" id="uiX-dn-eZa" userLabel="Body Collection Text Cell" customClass="ScorepadCollectionViewCell" customModule="Whist" customModuleProvider="target">
                                                             <rect key="frame" x="0.0" y="-3" width="50" height="50"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -455,7 +455,7 @@
                                                                 <outlet property="scorepadTopLineWeight" destination="0o7-g1-wJ8" id="dRq-7U-wFN"/>
                                                             </connections>
                                                         </collectionViewCell>
-                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Body Collection Image Cell" id="THo-F6-MFk" userLabel="Body Collection Image Cell" customClass="ScorepadCollectionViewCell" customModule="Whist_2" customModuleProvider="target">
+                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Body Collection Image Cell" id="THo-F6-MFk" userLabel="Body Collection Image Cell" customClass="ScorepadCollectionViewCell" customModule="Whist" customModuleProvider="target">
                                                             <rect key="frame" x="50" y="-3" width="50" height="50"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -579,7 +579,7 @@
                                     <constraint firstAttribute="height" constant="44" id="ANn-tw-pp4"/>
                                 </constraints>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Footer Table Cell" id="Bag-HD-1cL" userLabel="Footer Table Cell" customClass="ScorepadTableViewCell" customModule="Whist_2" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Footer Table Cell" id="Bag-HD-1cL" userLabel="Footer Table Cell" customClass="ScorepadTableViewCell" customModule="Whist" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Bag-HD-1cL" id="UO8-xf-1Cf">
@@ -595,7 +595,7 @@
                                                         <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                     </collectionViewFlowLayout>
                                                     <cells>
-                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Footer Collection Cell" id="gpe-5l-twx" userLabel="Footer Collection View Cell" customClass="ScorepadCollectionViewCell" customModule="Whist_2" customModuleProvider="target">
+                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Footer Collection Cell" id="gpe-5l-twx" userLabel="Footer Collection View Cell" customClass="ScorepadCollectionViewCell" customModule="Whist" customModuleProvider="target">
                                                             <rect key="frame" x="0.0" y="-3" width="50" height="50"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">

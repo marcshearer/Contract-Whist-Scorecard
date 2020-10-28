@@ -641,6 +641,6 @@ extension LocationViewController {
         
         self.helpView.add("\((self.canFinish ? "When you have specified a location the {} will be enabled. " : ""))Click the {} to start the game.", descriptor: "@*/Continue@*/ button", views: [self.continueButton], bannerId: "continue", radius: self.continueButton.frame.height / 2)
         
-        self.helpView.add("The {} will abandon the game and take you back to the home screen.", bannerId: Banner.finishButton)
+        self.helpView.add("The {} will abandon the game and take you back to the @*/Home@*/ screen.", bannerId: Banner.finishButton)
     }
 }

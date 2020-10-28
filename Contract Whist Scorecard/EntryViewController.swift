@@ -371,6 +371,7 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
         self.toolbarLeftButtonViewGroup.isHidden(view: self.toolbarFinishButton, !smallScreen || errors)
         self.toolbarLeftButtonViewGroup.isHidden(view: self.toolbarErrorsButton, !smallScreen || !errors)
         self.toolbarRightButtonViewGroup.isHidden(view: self.toolbarSummaryButton, (!smallScreen || bidOnlyMode || errors))
+        self.toolbarRightButtonViewGroup.isHidden(view: self.toolbarHelpButton, !smallScreen)
 
         self.toolbarLeftButtonViewGroup.isHidden(view: self.undoButton, (self.undo.first == nil))
     }
@@ -1101,11 +1102,11 @@ extension EntryViewController {
                 
         self.helpView.add("This screen allows the bids and scores for a hand to be entered")
         
-        self.helpView.add("This area shows the current \(self.bidOnlyMode ? "bids" : "bids and scores").\nThe cursor shows the value that will be input if you click the @*/Numeric Buttons@*/.\n\(Scorecard.game.scores.error(round: Scorecard.game.selectedRound) ? "Errors in the current round are highlighted. You must correct any errors before saving." : "")", views: [self.playerTableView])
+        self.helpView.add("This area shows the current \(self.bidOnlyMode ? "bids" : "bids and scores").\nThe cursor shows the value that will be input if you click the @*/Numeric Buttons@*/.\n\(Scorecard.game.scores.error(round: Scorecard.game.selectedRound) ? "Errors in the current round are highlighted. You must correct any errors before saving." : "")", views: [self.playerTableView], shrink: true)
         
         self.helpView.add("This area shows instructions on what to do next.", views: [self.instructionContainerView], radius: 12)
         
-        self.helpView.add("This area contains the @*/Numeric Buttons@*/ which are used to enter bids and scores.", views: [self.scoreButtonCollectionView], border: 2)
+        self.helpView.add("This area contains the @*/Numeric Buttons@*/ which are used to enter bids and scores.", views: [self.scoreButtonCollectionView], border: 2, shrink: true)
         
         self.helpView.add("The {} saves the scores and takes you back to the @*/Scorepad@*/ screen.", descriptor: "@*/Back@*/ button", views: [self.toolbarFinishButton], bannerId: saveButton)
         

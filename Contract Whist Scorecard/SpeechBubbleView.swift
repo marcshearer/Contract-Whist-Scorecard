@@ -14,6 +14,24 @@ enum SpeechBubbleArrowDirection {
     case left
     case right
     
+    var rotated: SpeechBubbleArrowDirection {
+        if ScorecardUI.landscapePhone() {
+            switch self {
+            case .up:
+                return .left
+            case .down:
+                return .right
+            case .left:
+                return .down
+            case .right:
+                return .up
+            }
+        } else {
+            return self
+        }
+    }
+
+    
     func offset(point: CGPoint, by: CGFloat) -> CGPoint {
         switch self {
         case .up:

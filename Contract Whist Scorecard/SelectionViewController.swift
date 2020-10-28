@@ -904,6 +904,6 @@ extension SelectionViewController {
         
         self.helpView.add("\((selectedList.count < 3 ? "When enough players have been added to the game, the {} will be enabled. ": ""))Click the {} to \(self.gameMode == .scoring ? "review the selected players and set the dealer prior to starting the game" : "send invitations to the other players and start the game").", descriptor: "@*/Continue@*/ button", views: [self.continueButton], bannerId: "continue", radius: self.continueButton.frame.height / 2)
         
-        self.helpView.add("The {} abandons the game and takes you back to the home screen.", bannerId: Banner.finishButton, horizontalBorder: 8, verticalBorder: 4)
+        self.helpView.add("The {} abandons the game and takes you back to the @*/Home@*/ screen.", bannerId: Banner.finishButton, horizontalBorder: 8, verticalBorder: 4)
     }
 }

@@ -136,6 +136,9 @@ class ScorepadViewController: ScorecardViewController,
         
         // Subscribe to score changes
         self.setupScoresSubscription()
+        
+        // Setup help
+        self.setupHelpView()
     }
     
     override internal func viewDidAppear(_ animated: Bool) {
@@ -169,7 +172,7 @@ class ScorepadViewController: ScorecardViewController,
     override internal func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        if self.lastBannerHeight != self.banner.height ||
+        if self.rotated || self.lastBannerHeight != self.banner.height ||
             self.lastViewHeight != self.view.frame.height ||
             self.lastViewWidth != self.view.frame.width {
 
@@ -184,6 +187,7 @@ class ScorepadViewController: ScorecardViewController,
             self.lastBannerHeight = self.banner.height
             self.lastViewHeight = self.view.frame.height
             self.lastViewWidth = self.view.frame.width
+            self.rotated = false
             self.setupBorders()
         }
     }
@@ -491,6 +495,10 @@ class ScorepadViewController: ScorecardViewController,
                         "Enter Score"))
         self.banner.set(
             menuTitle: "Scorepad",
+            leftButtons: [
+                BannerButton(image: UIImage(named: "home"), width: 22, action: self.finishPressed, menuHide: true, menuText: "Abandon game", id: Banner.finishButton),
+                BannerButton(action: self.helpPressed, type: .help)],
+            leftSpacing: 16,
             rightButtons: [
                 BannerButton(title: scoreEntryButtonTitle, width: scoreEntryButtonWidth, action: self.scorePressed, type: .shadow, menuHide: true, menuText: menuText, id: scoreEntryButton)],
             backgroundColor: Palette.banner,
@@ -1034,4 +1042,25 @@ extension ScorepadViewController {
         }
     }
 
+}
+
+extension ScorepadViewController {
+    
+    internal func setupHelpView() {
+        
+        self.helpView.reset()
+                
+        self.helpView.add("This screen shows you a summary of the current score in the game.\n\nYou can click on a row of the grid to \(self.gameMode == .scoring ? "see details of that round" : "review the hands for that round").")
+        
+        self.helpView.add("The players are shown at the top of the grid. The current dealer is highlighted with a darker background", views: [self.headerTableView], verticalBorder: -0.5, radius: 0)
+        
+        self.helpView.add("\(self.bodyColumns == 2 ? "The left hand column under each player shows the bid made by the player in each round. The right hand column" : "The value under each player") shows the score achieved for each round. The cell is shaded if the contract was made.\(false || Scorecard.activeSettings.bonus2 ? "\nIf the player won a trick with a 2 a card is shown beside the score." : "")", views: [self.bodyTableView], radius: 0, shrink: true, direction: .up)
+        
+        self.helpView.add("Totals for each player are shown at the bottom of the grid", views: [self.footerTableView], radius: 0)
+
+        self.helpView.add("The {} abandons the game and takes you back to the @*/Home@*/ screen", bannerId: Banner.finishButton, horizontalBorder: 8, verticalBorder: 4)
+
+        self.helpView.add("The {} takes you to \(Scorecard.game.gameComplete() ? "@*/Game Summary@*/" : (self.gameMode == .scoring || self.gameMode == .viewing ? "@*/Score Entry@*/" : "@*/Hand Playing@*/")) screen", bannerId: self.scoreEntryButton)
+        
+    }
 }

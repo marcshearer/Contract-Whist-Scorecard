@@ -879,7 +879,7 @@ extension GamePreviewViewController {
         
         self.helpView.add("The {} takes you back to the selection screen and allows you to change the players in the game", bannerId: "cancel", horizontalBorder: 8, verticalBorder: 4)
 
-        self.helpView.add("The {} abandons the game and takes you back to the home screen.", bannerId: "home", border: 4, horizontalBorder: 8, verticalBorder: 4)
+        self.helpView.add("The {} abandons the game and takes you back to the @*/Home@*/ screen.", bannerId: "home", horizontalBorder: 8, verticalBorder: 4)
         
     }
 }

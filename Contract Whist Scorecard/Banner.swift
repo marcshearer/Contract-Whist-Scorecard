@@ -314,7 +314,7 @@ class Banner : UIView {
         self.setupMenuEntries()
     }
     
-    public func getButton(id: AnyHashable) -> (control: UIButton, title: NSAttributedString, type: BannerButtonType)? {
+    public func getButton(id: AnyHashable) -> (control: UIButton, title: NSAttributedString, type: BannerButtonType, positionSort: CGFloat)? {
         var menuTitle = NSAttributedString()
         if let button = buttonIds[id], let control = button.control {
             if button.nonBanner {
@@ -329,7 +329,7 @@ class Banner : UIView {
                     image.addAttribute(NSAttributedString.Key.foregroundColor, value: Palette.normal.themeText, range: NSRange(0...image.length - 1))
                     menuTitle = image
                 }
-                return (control, " " + menuTitle + "  button", button.type)
+                return (control, " " + menuTitle + "  button", button.type, control.frame.midY * 1e6 + control.frame.minX)
             }
         } else {
             return nil

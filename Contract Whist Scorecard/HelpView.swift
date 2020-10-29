@@ -78,7 +78,8 @@ fileprivate enum HelpViewSource {
     }
 }
 
-fileprivate struct HelpViewActiveElement {
+fileprivate struct HelpViewActiveElement: Comparable {
+    
     let element: HelpViewElement
     let frame: CGRect?
     let views: [UIView]?
@@ -86,18 +87,28 @@ fileprivate struct HelpViewActiveElement {
     let descriptor: NSAttributedString?
     let sequence: Int
     let radius: CGFloat
+    let positionSort: CGFloat
     
     static var nextSequence = 0
     
-    init(element: HelpViewElement, frame: CGRect? = nil, views: [UIView]? = nil, source: HelpViewSource = .view, descriptor: NSAttributedString? = nil, radius: CGFloat? = nil) {
+    init(element: HelpViewElement, frame: CGRect? = nil, views: [UIView]? = nil, source: HelpViewSource = .view, descriptor: NSAttributedString? = nil, radius: CGFloat? = nil, positionSort: CGFloat = 0) {
         self.element = element
         self.frame = frame
         self.views = views
         self.source = source
         self.descriptor = descriptor
         self.radius = radius ?? (source == .view ? element.radius : (source == .message ? 0 : 8))
+        self.positionSort = positionSort
         self.sequence = HelpViewActiveElement.nextSequence
         HelpViewActiveElement.nextSequence += 1
+    }
+    
+    static func < (lhs: HelpViewActiveElement, rhs: HelpViewActiveElement) -> Bool {
+        return (lhs.source.sort, lhs.positionSort, lhs.sequence) < (rhs.source.sort, rhs.positionSort, rhs.sequence)
+    }
+        
+    static func == (lhs: HelpViewActiveElement, rhs: HelpViewActiveElement) -> Bool {
+        return (lhs.source.sort, lhs.positionSort, lhs.sequence) == (rhs.source.sort, rhs.positionSort, rhs.sequence)
     }
 }
 
@@ -256,7 +267,7 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
                         let control = bannerButton.control
                         if !control.isHidden {
                             let rounded = (bannerButton.type == .rounded || bannerButton.type == .help)
-                            self.activeElements.append(HelpViewActiveElement(element: element, frame: control.frame, views: [control], source: .banner, descriptor: bannerButton.title, radius: (rounded ? control.frame.height / 2 : nil)))
+                            self.activeElements.append(HelpViewActiveElement(element: element, frame: control.frame, views: [control], source: .banner, descriptor: bannerButton.title, radius: (rounded ? control.frame.height / 2 : nil), positionSort: bannerButton.positionSort))
                         }
                     }
                 }
@@ -266,7 +277,7 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
                     if menuController.isVisible {
                         if let menuOption = menuController.getSuboptionView(id: id) {
                             if let cell = menuOption.view.cellForRow(at: IndexPath(row: menuOption.item, section: 0)) {
-                                self.activeElements.append(HelpViewActiveElement(element: element, frame: cell.frame, views: [cell], source: .menu, descriptor: menuOption.title))
+                                self.activeElements.append(HelpViewActiveElement(element: element, frame: cell.frame, views: [cell], source: .menu, descriptor: menuOption.title, positionSort: menuOption.positionSort))
                             }
                         }
                     }
@@ -282,7 +293,7 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
         if self.activeElements.isEmpty {
             self.finished(false)
         } else {
-            self.activeElements.sort(by: {$0.source.sort < $1.source.sort || ($0.source.sort == $1.source.sort && $0.sequence < $1.sequence)})
+            self.activeElements.sort(by: { $0 < $1 })
             self.currentElement = 0
             self.showElement()
         }

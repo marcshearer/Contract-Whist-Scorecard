@@ -35,6 +35,12 @@ class RoundSummaryViewController: ScorecardViewController, BannerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Setup banner
+        self.setupBanner()
+        
+        // Setup help
+        self.setupHelpView()
+        
         // Setup default colors (previously done in StoryBoard)
         self.defaultViewColors()
     }
@@ -64,6 +70,15 @@ class RoundSummaryViewController: ScorecardViewController, BannerDelegate {
             setupOverUnder()
             setupBidText(bids: player1Bid, player2Bid, player3Bid, player4Bid)
         }
+    }
+    
+    private func setupBanner() {
+        self.banner.set(
+            leftButtons: [
+                BannerButton(image: UIImage(named: "back"), width: 22, action: self.finishPressed, id: Banner.finishButton)],
+            rightButtons: [
+                BannerButton(action: self.helpPressed, type: .help)]
+        )
     }
     
     // MARK: - Utility Routines ======================================================================== -
@@ -130,3 +145,24 @@ extension RoundSummaryViewController {
 
 }
 
+extension RoundSummaryViewController {
+    
+    internal func setupHelpView() {
+        
+        self.helpView.reset()
+                
+        self.helpView.add("This screen gives you a quick summary of the round currently being played.\n\nIt is designed to be set in the middle of the table as you play the cards.")
+        
+        self.helpView.add("This shows the @*/Trump Suit@*/ for the current round.", views: [self.trumpSuit])
+        
+        self.helpView.add("This shows the total of all bids compared to the number of cards in each hand in the round.", views: [self.overUnder])
+        
+        var bids = [self.player1Bid, self.player2Bid, self.player3Bid]
+        if Scorecard.game.currentPlayers >= 4 {
+            bids.append(self.player4Bid)
+        }
+        self.helpView.add("This area shows the bids for each player for this round.", views: bids )
+        
+        self.helpView.add("The {} takes you back to the @*/Score Entry@*/ screen", bannerId: Banner.finishButton)
+    }
+}

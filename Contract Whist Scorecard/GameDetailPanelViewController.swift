@@ -21,6 +21,10 @@ protocol GameDetailDelegate {
     func refresh(activeView: ScorecardView?, round: Int?)
     
     var invokeDelegate: GameDetailPanelInvokeDelegate? {get set}
+    
+    var gameDetailView: UIView {get}
+    
+    func showHelp(alwaysNext: Bool, completion: ((Bool)->())?)
 }
 
 extension GameDetailDelegate {
@@ -43,6 +47,7 @@ class GameDetailPanelViewController: ScorecardViewController, UITableViewDataSou
     private var gameComplete: Bool = false
     private var thisPlayer: Int?
     internal var invokeDelegate: GameDetailPanelInvokeDelegate?
+    internal var gameDetailView: UIView { return self.view }
     
     @IBOutlet private weak var roundLabel: UILabel!
     @IBOutlet private weak var overUnderLabel: UILabel!
@@ -70,26 +75,34 @@ class GameDetailPanelViewController: ScorecardViewController, UITableViewDataSou
         self.sortScores()
         self.refresh()
         self.setupScoresSubscription()
+        
+        // Setup help
+        self.setupHelpView()
     }
     
     override internal func didDismiss() {
         self.cancelScoresSubscription()
     }
     
-    // MARK: - Menu Delegates ===================================================================== -
+    // MARK: - Game Detail Delegates ===================================================================== -
     
     internal var isVisible: Bool {
         return self.view.frame.minX < self.rootViewController.view.frame.width
     }
     
-    // MARK: - Refresh routines =================================================================== -
+    internal func showHelp(alwaysNext: Bool, completion: ((Bool)->())?) {
+        self.helpView.show(alwaysNext: alwaysNext, completion: completion)
+    }
     
     internal func refresh(activeView: ScorecardView?, round: Int? = nil) {
         let leaderboard = Scorecard.game.gameComplete()
         let scorepadView = ((activeView ?? self.appController?.activeView) == .scorepad)
         let lastDeal = scorepadView && self.appController?.controllerType != .scoring
 
+        self.roundLabel.isHidden = lastDeal || leaderboard
+        self.overUnderLabel.isHidden = lastDeal || leaderboard
         self.scoresContainerView.isHidden = lastDeal || leaderboard
+        self.playerTableView.isHidden = lastDeal || leaderboard
         self.dealContainerView.isHidden = !lastDeal || leaderboard
         self.leaderboardContainerView.isHidden = !leaderboard
         
@@ -108,16 +121,17 @@ class GameDetailPanelViewController: ScorecardViewController, UITableViewDataSou
         if Scorecard.game.gameComplete() {
             self.roundLabelWidthConstraint.constant = self.scoresContainerView.frame.width
             self.roundLabel.text = "Game Complete"
-            self.overUnderLabel.text = ""
+            self.overUnderLabel.isHidden = true
         } else {
             self.roundLabelWidthConstraint.constant = 100
             self.roundLabel.attributedText = Scorecard.game.roundTitle(Scorecard.game.maxEnteredRound)
             if !Scorecard.game.roundStarted(Scorecard.game.maxEnteredRound) {
-                self.overUnderLabel.text = ""
+                self.overUnderLabel.isHidden = true
             } else {
                 let totalRemaining = Scorecard.game.remaining(playerNumber: 0, round: Scorecard.game.maxEnteredRound, mode: Mode.bid)
                 let overUnder = NSMutableAttributedString("     \(abs(Int64(totalRemaining))) \(totalRemaining >= 0 ? "under" : "over")", color: (totalRemaining == 0 ? Palette.contractEqual : (totalRemaining > 0 ? Palette.contractUnder : Palette.contractOver)))
                 self.overUnderLabel.attributedText = overUnder
+                self.overUnderLabel.isHidden = false
             }
         }
     }
@@ -248,5 +262,23 @@ class GameDetailPlayerCell: UITableViewCell {
         self.thumbnailView.set(playerMO: playerMO, nameHeight: 0)
         self.nameLabel.text = playerMO.name
         self.scoreLabel.text = (score == nil ? "-" : "\(score!)")
+    }
+}
+
+extension GameDetailPanelViewController {
+    
+    internal func setupHelpView() {
+        
+        self.helpView.reset()
+        
+        self.helpView.add("The @*/Number of Cards@*/ in the round and the @*/Trump Suit@*/ for the round are shown here.", views: [self.roundLabel], border: 4)
+        
+        self.helpView.add("The total of the bids made compared to the number of cards in each hand are shown here.", views: [self.overUnderLabel], border: 4)
+        
+        self.helpView.add("The current totals for each player are shown here.", views: [self.playerTableView], border: 8)
+        
+        self.helpView.add("The details of the \(self.lastHandLabel.text?.left(4) == "Last" ? "last" : "selected") hand are shown here.", views: [self.dealContainerView], border: 8)
+        
+        self.helpView.add("The @*/High Scores@*/ leaderboard shows the top 10 scores plus the scores for this game. The scores for this game are highlighted.", views: [self.leaderboardContainerView], border: 4)
     }
 }

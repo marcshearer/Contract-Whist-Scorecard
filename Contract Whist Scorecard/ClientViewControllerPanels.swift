@@ -279,8 +279,24 @@ extension ClientViewController : PanelContainer {
                     }
                 }
             }
-            if let helpView = mainViewController?.helpView {
-                helpView.show(alwaysNext: alwaysNext, completion: completion)
+            if let helpView = mainViewController?.helpView, let mainView = mainViewController?.view {
+                
+                let delegate = mainViewController?.gameDetailDelegate
+                
+                // Show the main panel screen help
+                helpView.show(alwaysNext: alwaysNext || delegate != nil) { (finishPressed) in
+                    if !finishPressed && delegate != nil {
+                        
+                        // Now show any help for the game detail panel
+                        self.view.bringSubviewToFront(delegate!.gameDetailView)
+                        delegate!.showHelp(alwaysNext: alwaysNext) { (finishPressed) in
+                            self.view.bringSubviewToFront(mainView)
+                            completion?(finishPressed)
+                        }
+                    } else {
+                        completion?(finishPressed)
+                    }
+                }
             } else {
                 completion?(false)
             }

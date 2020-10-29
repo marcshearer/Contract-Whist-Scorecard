@@ -3,7 +3,7 @@
     <device id="ipad11_0rounded" orientation="landscape" layout="fullscreen" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -13,7 +13,7 @@
         <!--Game Detail Panel View Controller-->
         <scene sceneID="nqV-tn-a7T">
             <objects>
-                <viewController storyboardIdentifier="GameDetailPanelViewController" id="Xyp-Qs-iCJ" customClass="GameDetailPanelViewController" customModule="Whist_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="GameDetailPanelViewController" id="Xyp-Qs-iCJ" customClass="GameDetailPanelViewController" customModule="Whist" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="cKH-Mg-dXO">
                         <rect key="frame" x="0.0" y="0.0" width="380" height="834"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -32,7 +32,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dYu-Ae-cKw" userLabel="Over Under Label">
-                                        <rect key="frame" x="100" y="0.0" width="216" height="40"/>
+                                        <rect key="frame" x="316" y="0.0" width="0.0" height="40"/>
                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="33"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
@@ -44,14 +44,14 @@
                                             <constraint firstAttribute="height" constant="240" id="qnp-kZ-5NI"/>
                                         </constraints>
                                         <prototypes>
-                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Player" id="0ij-E4-IiW" customClass="GameDetailPlayerCell" customModule="Whist_2" customModuleProvider="target">
+                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Player" id="0ij-E4-IiW" customClass="GameDetailPlayerCell" customModule="Whist" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="28" width="316" height="16"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="0ij-E4-IiW" id="BTU-Ic-c26">
                                                     <rect key="frame" x="0.0" y="0.0" width="316" height="16"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
-                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8iA-sN-9wF" customClass="ThumbnailView" customModule="Whist_2" customModuleProvider="target">
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8iA-sN-9wF" customClass="ThumbnailView" customModule="Whist" customModuleProvider="target">
                                                             <rect key="frame" x="32" y="-14" width="44" height="44"/>
                                                             <color key="backgroundColor" name="Clear"/>
                                                             <constraints>
@@ -113,7 +113,6 @@
                                     <constraint firstAttribute="trailing" secondItem="Tc4-nB-MUR" secondAttribute="trailing" id="aiT-y4-MhX"/>
                                     <constraint firstItem="2Qf-av-UH6" firstAttribute="top" secondItem="77V-Gk-8Tl" secondAttribute="top" id="pWT-gd-yVa"/>
                                     <constraint firstItem="dYu-Ae-cKw" firstAttribute="centerY" secondItem="2Qf-av-UH6" secondAttribute="centerY" id="rTB-XB-zqq"/>
-                                    <constraint firstItem="dYu-Ae-cKw" firstAttribute="leading" secondItem="2Qf-av-UH6" secondAttribute="trailing" id="rrp-g2-ctm"/>
                                     <constraint firstItem="dYu-Ae-cKw" firstAttribute="height" secondItem="2Qf-av-UH6" secondAttribute="height" multiplier="1:1" id="vDi-bG-KKI"/>
                                 </constraints>
                             </view>
@@ -129,7 +128,7 @@
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zE0-tN-ndX" customClass="DealView" customModule="Whist_2" customModuleProvider="target">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zE0-tN-ndX" customClass="DealView" customModule="Whist" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="70" width="316" height="474"/>
                                         <color key="backgroundColor" name="Clear"/>
                                         <constraints>
@@ -159,7 +158,7 @@
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WqK-Jr-g18" customClass="LeaderboardView" customModule="Whist_2" customModuleProvider="target">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WqK-Jr-g18" customClass="LeaderboardView" customModule="Whist" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="70" width="364" height="602"/>
                                         <color key="backgroundColor" name="Clear"/>
                                         <connections>

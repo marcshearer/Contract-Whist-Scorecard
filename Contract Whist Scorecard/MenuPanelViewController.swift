@@ -67,7 +67,7 @@ protocol MenuController {
     
     func set(gamePlayingTitle: String?)
     
-    func getSuboptionView(id: AnyHashable?) -> (view: UITableView, item: Int, title: NSAttributedString)?
+    func getSuboptionView(id: AnyHashable?) -> (view: UITableView, item: Int, title: NSAttributedString, positionSort: CGFloat)?
     
     func showHelp(helpElement: HelpViewElement, showNext: Bool, completion: @escaping (Bool)->())
 }
@@ -149,9 +149,7 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
                 }
             }
         } else {
-            // self.view.superview?.bringSubviewToFront(self.view)
             self.rootViewController.panelhelpPressed(alwaysNext: false) { (finishPressed) in
-            // self.view.superview?.insertSubview(self.view, at: 1)
             }
         }
     }
@@ -242,9 +240,9 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
         self.reloadData()
     }
     
-    func getSuboptionView(id: AnyHashable?) -> (view: UITableView, item: Int, title: NSAttributedString)? {
+    func getSuboptionView(id: AnyHashable?) -> (view: UITableView, item: Int, title: NSAttributedString, positionSort: CGFloat)? {
         if let item = self.optionMap.firstIndex(where: {$0.mainOption == false && self.suboptions[$0.index].id == id}) {
-            return (self.optionsTableView, item, NSAttributedString(markdown: "@*/\(self.suboptions[self.optionMap[item].index].title)@*/ menu option"))
+            return (self.optionsTableView, item, NSAttributedString(markdown: "@*/\(self.suboptions[self.optionMap[item].index].title)@*/ menu option"), CGFloat(item))
         } else {
             return nil
         }

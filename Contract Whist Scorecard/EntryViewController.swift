@@ -1117,5 +1117,7 @@ extension EntryViewController {
         self.helpView.add("This area shows the current round being played. The number shows the number of cards in the round and the suit shows the current trump suit.", views: [self.footerRoundTitle])
                 
         self.helpView.add("The {} saves the scores entered and shows the @*/Round Summary@*/ screen.", descriptor: "@*/Forward@*/ button", views: [self.toolbarSummaryButton], bannerId: roundSummaryButton)
+        
+        self.helpView.add("The {} abandons the game and returns to the @*/Home@*/ screen.", bannerId: homeButton, horizontalBorder: 8, verticalBorder: 4)
     }
 }

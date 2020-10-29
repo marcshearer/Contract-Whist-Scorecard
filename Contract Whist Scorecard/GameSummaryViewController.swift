@@ -21,8 +21,8 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
     private let sync = Sync()
         
     // Constants
-    private let stopPlayingTag = 1
-    private let playAgainTag = 2
+    private let playAgainTag = 1
+    private let stopPlayingTag = 2
     private let winnersTag = 1
     private let othersTag = 2
     private let awardsTag = 3
@@ -57,8 +57,6 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
     private let awards = Awards()
     private var awardList: [Award] = []
     private var startConfetti = true
-    private var playAgain = 1
-    private var stopPlaying = 2
     
     // Completion state
     private var completionMode: GameSummaryReturnMode = .resume
@@ -138,12 +136,15 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
         if self.gameMode != .scoring && !self.gameMode.isHosting {
             self.playAgainButton.isEnabled = false
             self.playAgainButton.alpha = 0.3
-            self.banner.setButton(playAgain, isHidden: true)
+            self.banner.setButton(playAgainTag, isHidden: true)
         }
                 
         // Work out who's won
         calculateWinner()
         
+        // Setup help
+        self.setupHelpView()
+
         var gameDetailDelegate = self.gameDetailDelegate
         gameDetailDelegate?.invokeDelegate = self
     }
@@ -383,9 +384,11 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
         
         self.banner.set(
             menuTitle: "Game Summary",
+            rightButtons: [
+                BannerButton(action: self.helpPressed, type: .help)],
             nonBannerButtonsAfter: [
-                BannerButton(action: playAgainPressed, menuText: "Play Again", menuSpaceBefore: 20, id: playAgain),
-                BannerButton(action: stopPlayingPressed, menuText: "Stop Playing", id: stopPlaying)],
+                BannerButton(action: playAgainPressed, menuText: "Play Again", menuSpaceBefore: 20, id: playAgainTag),
+                BannerButton(action: stopPlayingPressed, menuText: "Stop Playing", id: stopPlayingTag)],
             backgroundColor: Palette.roomInterior,
             titleFont: UIFont.systemFont(ofSize: 18),
             titleAlignment: .center,
@@ -749,5 +752,43 @@ extension GameSummaryViewController {
             break
         }
     }
+}
 
+extension GameSummaryViewController {
+    
+    internal func setupHelpView() {
+        
+        self.helpView.reset()
+                
+        self.helpView.add("This screen shows the results of the game.\n\nYou can see all the players' scores and any awards you have achieved during the game.")
+        
+        self.helpView.add("The @*/Winner\(self.winners == 1 ? "" : "s")@*/ \(self.winners == 1 ? "is" : "are") shown at the top of the screen", views: [self.winnerCollectionView], border: 8)
+        
+        self.helpView.add("The other players scores are shown below (in sequence)", views: [self.otherCollectionView], border: 8)
+        
+        self.helpView.add("If you have achieved any awards they are shown in this area.\(self.awardList.isEmpty ? "" : " Click on an award to see details.")", views: [self.awardsTitleBar])
+        
+        self.helpView.add("The {} takes you back to the @*/Scorepad@*/ screen where you can look at \(self.gameMode == .scoring || self.gameMode == .viewing ? "the scores for each round" : "the hands for each round")", bannerId: Banner.finishButton)
+        
+        self.actionButtons.forEach{ (button) in
+            var text = ""
+            var descriptor = ""
+            
+            switch button.tag {
+            case stopPlayingTag:
+                text = "The {} finishes the game and returns to the @*/Home@*/ screen."
+                descriptor = "@*/Stop playing@*/ button"
+                
+            case playAgainTag:
+                text = "The {} starts a new game with the same players"
+                descriptor = "@*/Play again@*/ button"
+                
+            default:
+                break
+            }
+            
+            self.helpView.add(text, descriptor: descriptor, views: [button])
+            self.helpView.add(text, bannerId: button.tag)
+        }
+    }
 }

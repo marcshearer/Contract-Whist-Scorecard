@@ -58,6 +58,7 @@ class ScorepadViewController: ScorecardViewController,
     private var lastViewHeight:CGFloat = 0.0
     private var lastViewWidth: CGFloat = 0.0
     private var rotated = false
+    private var firstTime = true
     private var observer: NSObjectProtocol?
     private var paddingGradientLayer: [CAGradientLayer] = []
     private var scoresSubscription: AnyCancellable?
@@ -172,7 +173,7 @@ class ScorepadViewController: ScorecardViewController,
     override internal func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        if self.rotated || self.lastBannerHeight != self.banner.height ||
+        if self.firstTime || self.rotated || self.lastBannerHeight != self.banner.height ||
             self.lastViewHeight != self.view.frame.height ||
             self.lastViewWidth != self.view.frame.width {
 
@@ -187,6 +188,7 @@ class ScorepadViewController: ScorecardViewController,
             self.lastBannerHeight = self.banner.height
             self.lastViewHeight = self.view.frame.height
             self.lastViewWidth = self.view.frame.width
+            self.firstTime = false
             self.rotated = false
             self.setupBorders()
         }
@@ -633,6 +635,9 @@ class ScorepadViewController: ScorecardViewController,
         if scorepadViewController == nil {
             let storyboard = UIStoryboard(name: "ScorepadViewController", bundle: nil)
             scorepadViewController = storyboard.instantiateViewController(withIdentifier: "ScorepadViewController") as? ScorepadViewController
+        } else {
+            scorepadViewController.firstTime = true
+            scorepadViewController.view.setNeedsLayout()
         }
         
         scorepadViewController.parentView = viewController.view
@@ -1058,9 +1063,9 @@ extension ScorepadViewController {
         
         self.helpView.add("Totals for each player are shown at the bottom of the grid", views: [self.footerTableView], radius: 0)
 
-        self.helpView.add("The {} abandons the game and takes you back to the @*/Home@*/ screen", bannerId: Banner.finishButton, horizontalBorder: 8, verticalBorder: 4)
-
         self.helpView.add("The {} takes you to \(Scorecard.game.gameComplete() ? "@*/Game Summary@*/" : (self.gameMode == .scoring || self.gameMode == .viewing ? "@*/Score Entry@*/" : "@*/Hand Playing@*/")) screen", bannerId: self.scoreEntryButton)
+
+        self.helpView.add("The {} abandons the game and takes you back to the @*/Home@*/ screen", bannerId: Banner.finishButton, horizontalBorder: 8, verticalBorder: 4)
         
     }
 }

@@ -59,6 +59,7 @@ class StatisticsViewer : NSObject, DataTableViewerDelegate {
         
         // Call the data table viewer
         dataTableViewController = DataTableViewController.show(from: viewController, delegate: self, recordList: recordList)
+        dataTableViewController.rootViewController = viewController.rootViewController
     }
     
     internal func didSelect(record: DataTableViewerDataSource, field: String) {

@@ -8,8 +8,10 @@
 
 import UIKit
 
-class HighScoreTileView: UIView, DashboardTileDelegate, UITableViewDataSource, UITableViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+class HighScoreTileView: DashboardTileView, UITableViewDataSource, UITableViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
         
+    internal override var helpId: String { "highScore" }
+    
     struct RowInfo {
         var type: HighScoreType
         var occurrence: Int
@@ -20,7 +22,6 @@ class HighScoreTileView: UIView, DashboardTileDelegate, UITableViewDataSource, U
         var participantMO: ParticipantMO?
     }
     
-    private var detailType: DashboardDetailType = .highScores
     private var collectionViewNib: UINib!
     private var titleHeight: CGFloat = 26.5
     private var captionHeight: CGFloat = 0.0
@@ -33,34 +34,16 @@ class HighScoreTileView: UIView, DashboardTileDelegate, UITableViewDataSource, U
     private var rowInfo: [RowInfo] = []
     private var captionAbove: Bool = false
     
-    @IBInspectable private var detail: Int {
-        get {
-            return self.detailType.rawValue
-        }
-        set(detail) {
-            self.detailType = DashboardDetailType(rawValue: detail) ?? .history
-        }
-    }
-    @IBInspectable private var personal: Bool = true
     @IBInspectable private var totalScore: Bool = true
     @IBInspectable private var handsMade: Bool = true
     @IBInspectable private var winStreak: Bool = true
     @IBInspectable private var twosMade: Bool = false
     @IBInspectable private var count: Int = 1
-    @IBInspectable private var title: String = ""
     @IBInspectable private var titleRows: Int = 1
     @IBInspectable private var showTypeButton: Bool = true
     @IBInspectable private var detailDrill: Bool = false
 
-    @IBOutlet private weak var dashboardDelegate: DashboardActionDelegate?
-    @IBOutlet private weak var parentDashboardView: DashboardView?
-
-    @IBOutlet private weak var contentView: UIView!
-    @IBOutlet private weak var tileView: UIView!
-    
-    @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var titleLabelHeightConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var typeButton: ClearButton!
     @IBOutlet private weak var typeButtonWidthConstraint: NSLayoutConstraint!
     @IBOutlet private weak var tableView: UITableView!
 
@@ -136,8 +119,13 @@ class HighScoreTileView: UIView, DashboardTileDelegate, UITableViewDataSource, U
         self.tileView.roundCorners(cornerRadius: 8.0)
     }
     
-    // MARK: - Tile Delegate ================================================================= -
-    
+    // MARK: - Dashboard Tile delegates ================================================= -
+
+    internal func addHelp(to helpView: HelpView) {
+        
+        helpView.add("The @*/\(self.title)@*/ tile shows \(self.personal ? "your" : "the") highest scores\(self.personal ? "" : " for the players on this device").\n\nClick on the tile to show more high score details.", views: [self], shrink: true)
+    }
+
     internal func reloadData() {
         self.getValues()
         self.tableView.reloadData()

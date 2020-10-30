@@ -108,8 +108,6 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     @IBOutlet private weak var thisPlayerThumbnailView: ThumbnailView!
     @IBOutlet private weak var thisPlayerChangeButton: RoundedButton!
     @IBOutlet private weak var thisPlayerChangeButtonContainer: UIView!
-    @IBOutlet private weak var helpButton: HelpButton!
-    @IBOutlet private weak var helpButtonBottomConstraint: NSLayoutConstraint!
     @IBOutlet private weak var playerSelectionView: PlayerSelectionView!
     @IBOutlet private weak var tapGestureRecognizer: UITapGestureRecognizer!
     @IBOutlet private weak var topSectionView: UIView!
@@ -127,7 +125,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     }
     
     @IBAction func helpPressed(_ sender: Any) {
-        self.helpView.show()
+        self.helpPressed()
     }
     
     @IBAction private func tapGesture(recognizer: UITapGestureRecognizer) {
@@ -154,12 +152,18 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
         
         // Set observer for entering foreground
         NotificationCenter.default.addObserver(self, selector: #selector(willEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
-        
+            
+        // Setup color themes
         self.setupThemes()
         
+        // Setup help
         self.setupHelpView()
-        
+
+        // Setup banner
+        self.setupBanner()
+
         self.checkReceiveNotifications()
+        
         
         if Scorecard.settings.saveLocation {
             self.checkUseLocation(message: "You have blocked access to the current location for this app. Therefore the save location setting has been reset. To change this please allow location access 'While Using the App' in the Whist section of the main Settings App", prompt: false)
@@ -758,7 +762,6 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                         self.availableSpaceHeightConstraint.constant = 0.0
                         self.thisPlayerThumbnailView.isHidden = true
                         self.thisPlayerChangeButtonContainer.isHidden = true
-                        self.helpButtonBottomConstraint.constant = 8
                         self.topSectionHeightConstraint.isActive = true
                      }
                 } else if tableView.contentOffset.y < 10.0 && self.availableSpaceHeightConstraint.constant == 0.0 {
@@ -767,7 +770,6 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                         self.availableSpaceHeightConstraint.constant = 140
                         self.thisPlayerThumbnailView.isHidden = false
                         self.thisPlayerChangeButtonContainer.isHidden = false
-                        self.helpButtonBottomConstraint.constant = 16
                         if ScorecardUI.landscapePhone() {
                             self.topSectionLandscapePhoneProportionalHeightConstraint.isActive = true
                         } else {
@@ -1398,6 +1400,12 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     
     // MARK: - Utility Routines ======================================================================== -
     
+    private func setupBanner() {
+        self.banner.set(rightButtons: [
+            BannerButton(action: self.helpPressed, type: .help),
+        ])
+    }
+    
     private func checkReceiveNotifications() {
         Notifications.checkNotifications(refused: { (requested) in
             self.notificationsRefused = true
@@ -1584,7 +1592,6 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
             self.topSectionLandscapePhoneProportionalHeightConstraint.isActive = !menuVisible && ScorecardUI.landscapePhone()
             self.thisPlayerThumbnailView.isHidden = menuVisible
             self.thisPlayerChangeButtonContainer.isHidden = menuVisible
-            self.helpButton.isHidden = menuVisible
             self.lastMenuVisible = menuVisible
         }
     }

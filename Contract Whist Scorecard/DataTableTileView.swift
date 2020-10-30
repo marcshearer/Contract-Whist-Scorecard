@@ -16,9 +16,10 @@ import UIKit
     
 }
 
-class DataTableTileView: UIView, DashboardTileDelegate, UITableViewDataSource, UITableViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+class DataTableTileView: DashboardTileView, UITableViewDataSource, UITableViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
-    private var detailType: DashboardDetailType = .history
+    internal override var helpId: String { "dataTable" }
+    
     private var highScoreType: HighScoreType = .totalScore
     private var displayedFields: [DataTableField] = []
     private var records: [DataTableViewerDataSource]!
@@ -29,14 +30,6 @@ class DataTableTileView: UIView, DashboardTileDelegate, UITableViewDataSource, U
     private var rowHeight: CGFloat = 0.0
     private var minRowHeight: CGFloat = 30.0
     
-    @IBInspectable private var detail: Int {
-        get {
-            return self.detailType.rawValue
-        }
-        set(detail) {
-            self.detailType = DashboardDetailType(rawValue: detail) ?? .history
-        }
-    }
     @IBInspectable private var highScore: Int {
         get {
             return self.highScoreType.rawValue
@@ -45,8 +38,6 @@ class DataTableTileView: UIView, DashboardTileDelegate, UITableViewDataSource, U
             self.highScoreType = HighScoreType(rawValue: highScore) ?? .totalScore
         }
     }
-    @IBInspectable private var personal: Bool = true
-    @IBInspectable private var title: String = ""
     @IBInspectable private var headings: Bool = false
     @IBInspectable private var maxRows: Int = 0
     @IBInspectable private var separator: Bool = true
@@ -55,15 +46,7 @@ class DataTableTileView: UIView, DashboardTileDelegate, UITableViewDataSource, U
     @IBInspectable private var maxRowHeight: CGFloat = 50.0
     @IBInspectable private var detailDrill: Bool = false
 
-    @IBOutlet private weak var dashboardDelegate: DashboardActionDelegate?
-    @IBOutlet private weak var parentDashboardView: DashboardView?
-    
-    @IBOutlet private weak var contentView: UIView!
-    @IBOutlet private weak var tileView: UIView!
-
     @IBOutlet private weak var titleContainerHeightConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var titleLabel: UILabel!
-    @IBOutlet private weak var typeButton: ClearButton!
     @IBOutlet private weak var typeButtonTrailingConstraint: NSLayoutConstraint!
     @IBOutlet private weak var tableView: UITableView!
     @IBOutlet private weak var tableViewTopConstraint: NSLayoutConstraint!
@@ -185,9 +168,14 @@ class DataTableTileView: UIView, DashboardTileDelegate, UITableViewDataSource, U
             self.tableView.reloadData()
         }
     }
+         
+    // MARK: - Dashboard Tile delegates ================================================= -
+
+    internal func addHelp(to helpView: HelpView) {
+        
+        helpView.add("The @*/\(self.title)@*/ tile shows \(self.personal ? "your" : "the") \(self.detailType.description.lowercased()) \(self.personal ? "" : " for the players with the highest win% on this device").\n\n\(detailDrill ? "Click on a row to see detail" : "Click on the tile to see more details").", views: [self], shrink: true)
+    }
     
-    // MARK: - Dashboard Tile View Delegates ========================================================== -
-     
     internal func reloadData() {
         self.setNeedsLayout()
         self.layoutIfNeeded()

@@ -244,6 +244,7 @@
 		B2F7281B1F6D74F9006F0941 /* Invite.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F7281A1F6D74F9006F0941 /* Invite.swift */; };
 		B2F7281D1F7199AE006F0941 /* RabbitMQ Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F7281C1F7199AE006F0941 /* RabbitMQ Class.swift */; };
 		B2FA298E1EA9E215002A5D03 /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2FA298D1EA9E215002A5D03 /* Alert.swift */; };
+		B2FBDEFC254C12C700D766F8 /* DashboardTileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2FBDEFB254C12C700D766F8 /* DashboardTileView.swift */; };
 		B2FFB631253DBC4200D1DCCA /* SpeechBubbleView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2FFB630253DBC4200D1DCCA /* SpeechBubbleView.xib */; };
 		B2FFB637253DBC7700D1DCCA /* SpeechBubbleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2FFB636253DBC7700D1DCCA /* SpeechBubbleView.swift */; };
 		CC395F4D1E064EC500165D1C /* Card Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC395F4C1E064EC500165D1C /* Card Class.swift */; };
@@ -549,6 +550,7 @@
 		B2F7281A1F6D74F9006F0941 /* Invite.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Invite.swift; sourceTree = "<group>"; };
 		B2F7281C1F7199AE006F0941 /* RabbitMQ Class.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RabbitMQ Class.swift"; sourceTree = "<group>"; };
 		B2FA298D1EA9E215002A5D03 /* Alert.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
+		B2FBDEFB254C12C700D766F8 /* DashboardTileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardTileView.swift; sourceTree = "<group>"; };
 		B2FFB630253DBC4200D1DCCA /* SpeechBubbleView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SpeechBubbleView.xib; sourceTree = "<group>"; };
 		B2FFB636253DBC7700D1DCCA /* SpeechBubbleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechBubbleView.swift; sourceTree = "<group>"; };
 		B7B86B9863661F115CFF4BBC /* Pods-Contract Whist Scorecard.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Contract Whist Scorecard.release.xcconfig"; path = "Pods/Target Support Files/Pods-Contract Whist Scorecard/Pods-Contract Whist Scorecard.release.xcconfig"; sourceTree = "<group>"; };
@@ -939,7 +941,6 @@
 			children = (
 				B23970D524AF76E500E3C2A9 /* High Scores Dashboards */,
 				B23970D424AF76CC00E3C2A9 /* Results Dashboards */,
-				B228E3BD24A10284006D91CE /* DashboardView.swift */,
 			);
 			name = "Dashboard Views";
 			sourceTree = "<group>";
@@ -947,6 +948,7 @@
 		B22E38D824A05F5400D61BBA /* Tile Views */ = {
 			isa = PBXGroup;
 			children = (
+				B2FBDEFB254C12C700D766F8 /* DashboardTileView.swift */,
 				B24C5A4F24C316470069759A /* Awards Tile */,
 				B2A9096A24A1C64200B35B69 /* Count Tile */,
 				B2A9096B24A1C65500B35B69 /* Data Table Tile */,
@@ -989,6 +991,7 @@
 		B23970D424AF76CC00E3C2A9 /* Results Dashboards */ = {
 			isa = PBXGroup;
 			children = (
+				B228E3BD24A10284006D91CE /* DashboardView.swift */,
 				B216268B251B892200BDEE70 /* EveryoneDashboardContainerView.xib */,
 				B228E3C124A10F36006D91CE /* EveryoneDashboardPortraitView.xib */,
 				B20CF54624A7D74500F27A9C /* EveryoneDashboardLandscapeView.xib */,
@@ -2071,6 +2074,7 @@
 				B2021D7E247FEA1900A82EBB /* LaunchScreenView.swift in Sources */,
 				49075FFC1E0E578E008E06FA /* PlayersViewController.swift in Sources */,
 				B250610020CD7F480030EE8F /* Recovery.swift in Sources */,
+				B2FBDEFC254C12C700D766F8 /* DashboardTileView.swift in Sources */,
 				B2BBCCAA2327ECD0005678B2 /* HexagonView.swift in Sources */,
 				B2FFB637253DBC7700D1DCCA /* SpeechBubbleView.swift in Sources */,
 				B2A44F262500DBB50071F899 /* AwardDetailViewController.swift in Sources */,

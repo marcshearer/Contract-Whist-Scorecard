@@ -14,10 +14,13 @@ protocol AwardDetail {
     
 }
 
-class AwardDetailViewController: ScorecardViewController, AwardDetail {
+class AwardDetailViewController: ScorecardViewController, AwardDetail, DetailDelegate {
+    
+    var isVisible: Bool { return true }
+    var detailView: UIView { return self.view }
     
     @IBOutlet private weak var awardDetailView: AwardDetailView!
-    
+        
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         self.view.setNeedsLayout()
@@ -34,8 +37,10 @@ class AwardDetailViewController: ScorecardViewController, AwardDetail {
     
     class func create() -> AwardDetailViewController {
         let storyboard = UIStoryboard(name: "AwardDetailViewController", bundle: nil)
-        let historyDetailViewController = storyboard.instantiateViewController(withIdentifier: "AwardDetailViewController") as! AwardDetailViewController
-        return historyDetailViewController
+        let awardDetailViewController = storyboard.instantiateViewController(withIdentifier: "AwardDetailViewController") as! AwardDetailViewController
+
+        return awardDetailViewController
     }
     
 }
+

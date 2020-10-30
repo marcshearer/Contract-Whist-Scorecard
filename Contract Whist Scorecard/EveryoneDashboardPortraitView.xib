@@ -3,13 +3,13 @@
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DashboardView" customModule="Whist_2" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DashboardView" customModule="Whist" customModuleProvider="target">
             <connections>
                 <outlet property="contentView" destination="iN0-l3-epB" id="C8J-gG-YGA"/>
             </connections>
@@ -19,7 +19,7 @@
             <rect key="frame" x="0.0" y="0.0" width="414" height="700"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rDT-oS-tCg" userLabel="Activity Tile" customClass="CountTileView" customModule="Whist_2" customModuleProvider="target">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rDT-oS-tCg" userLabel="Activity Tile" customClass="CountTileView" customModule="Whist" customModuleProvider="target">
                     <rect key="frame" x="16" y="8" width="183" height="190"/>
                     <color key="backgroundColor" name="Clear"/>
                     <userDefinedRuntimeAttributes>
@@ -37,7 +37,7 @@
                         <outlet property="parentDashboardView" destination="-1" id="02h-SE-5LX"/>
                     </connections>
                 </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NHt-cp-ido" userLabel="History Tile" customClass="DataTableTileView" customModule="Whist_2" customModuleProvider="target">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NHt-cp-ido" userLabel="History Tile" customClass="DataTableTileView" customModule="Whist" customModuleProvider="target">
                     <rect key="frame" x="16" y="214" width="183" height="230"/>
                     <color key="backgroundColor" name="Clear"/>
                     <userDefinedRuntimeAttributes>
@@ -60,7 +60,26 @@
                         <outlet property="parentDashboardView" destination="-1" id="cK6-bL-pSE"/>
                     </connections>
                 </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jqS-Vg-wOa" userLabel="Statistics Tile" customClass="DataTableTileView" customModule="Whist_2" customModuleProvider="target">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kVP-Fk-6a5" userLabel="High Scores Tile" customClass="HighScoreTileView" customModule="Whist" customModuleProvider="target">
+                    <rect key="frame" x="215" y="8" width="183" height="436"/>
+                    <color key="backgroundColor" name="Clear"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="detail">
+                            <integer key="value" value="3"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="personal" value="NO"/>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="totalScore" value="YES"/>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="handsMade" value="YES"/>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="winStreak" value="YES"/>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="twosMade" value="NO"/>
+                        <userDefinedRuntimeAttribute type="string" keyPath="title" value="Records"/>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <outlet property="dashboardDelegate" destination="-1" id="kbS-Om-3LE"/>
+                        <outlet property="parentDashboardView" destination="-1" id="ejm-Fj-Ro7"/>
+                    </connections>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jqS-Vg-wOa" userLabel="Statistics Tile" customClass="DataTableTileView" customModule="Whist" customModuleProvider="target">
                     <rect key="frame" x="16" y="460" width="382" height="240"/>
                     <color key="backgroundColor" name="Clear"/>
                     <userDefinedRuntimeAttributes>
@@ -78,25 +97,6 @@
                     <connections>
                         <outlet property="dashboardDelegate" destination="-1" id="H3y-9I-2hv"/>
                         <outlet property="parentDashboardView" destination="-1" id="hog-oh-Rh5"/>
-                    </connections>
-                </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kVP-Fk-6a5" userLabel="High Scores Tile" customClass="HighScoreTileView" customModule="Whist_2" customModuleProvider="target">
-                    <rect key="frame" x="215" y="8" width="183" height="436"/>
-                    <color key="backgroundColor" name="Clear"/>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="number" keyPath="detail">
-                            <integer key="value" value="3"/>
-                        </userDefinedRuntimeAttribute>
-                        <userDefinedRuntimeAttribute type="boolean" keyPath="personal" value="NO"/>
-                        <userDefinedRuntimeAttribute type="boolean" keyPath="totalScore" value="YES"/>
-                        <userDefinedRuntimeAttribute type="boolean" keyPath="handsMade" value="YES"/>
-                        <userDefinedRuntimeAttribute type="boolean" keyPath="winStreak" value="YES"/>
-                        <userDefinedRuntimeAttribute type="boolean" keyPath="twosMade" value="NO"/>
-                        <userDefinedRuntimeAttribute type="string" keyPath="title" value="Records"/>
-                    </userDefinedRuntimeAttributes>
-                    <connections>
-                        <outlet property="dashboardDelegate" destination="-1" id="kbS-Om-3LE"/>
-                        <outlet property="parentDashboardView" destination="-1" id="ejm-Fj-Ro7"/>
                     </connections>
                 </view>
             </subviews>

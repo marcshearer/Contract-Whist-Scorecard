@@ -18,7 +18,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="414" height="48"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="Gc8-LU-Y2q">
-                            <rect key="frame" x="16" y="0.0" width="382" height="48"/>
+                            <rect key="frame" x="16" y="0.0" width="49.5" height="48"/>
                             <fontDescription key="fontDescription" type="boldSystem" pointSize="19"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
@@ -60,7 +60,6 @@
                         <constraint firstItem="pN8-7F-lZB" firstAttribute="leading" secondItem="lOb-NV-OjZ" secondAttribute="leading" id="04N-o9-2PG"/>
                         <constraint firstItem="Gc8-LU-Y2q" firstAttribute="leading" secondItem="lOb-NV-OjZ" secondAttribute="leading" constant="16" id="0uy-DK-Ksw"/>
                         <constraint firstItem="Gc8-LU-Y2q" firstAttribute="bottom" secondItem="pN8-7F-lZB" secondAttribute="top" id="GY4-5m-8fr"/>
-                        <constraint firstAttribute="trailing" secondItem="Gc8-LU-Y2q" secondAttribute="trailing" constant="16" id="Puk-PM-CIj"/>
                         <constraint firstItem="Zlw-s1-L1e" firstAttribute="centerY" secondItem="Gc8-LU-Y2q" secondAttribute="centerY" id="di7-2w-S9N"/>
                         <constraint firstAttribute="trailing" secondItem="Zlw-s1-L1e" secondAttribute="trailing" constant="16" id="prA-Bw-0fJ"/>
                         <constraint firstItem="7PS-UA-ua4" firstAttribute="centerY" secondItem="Gc8-LU-Y2q" secondAttribute="centerY" id="t4p-oX-1dc"/>

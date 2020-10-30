@@ -3,12 +3,12 @@
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="CountTileView" customModule="Whist_2" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="CountTileView" customModule="Whist" customModuleProvider="target">
             <connections>
                 <outlet property="captionLabel" destination="6lk-aN-v1a" id="hWo-Yn-FBc"/>
                 <outlet property="contentView" destination="iN0-l3-epB" id="Qmj-gb-P2K"/>
@@ -26,7 +26,7 @@
                 <view userInteractionEnabled="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1kY-yG-xbp" userLabel="Tile View">
                     <rect key="frame" x="0.0" y="0.0" width="160" height="160"/>
                     <subviews>
-                        <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="right" contentVerticalAlignment="top" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ks1-vg-NcQ" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
+                        <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="right" contentVerticalAlignment="top" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ks1-vg-NcQ" customClass="ClearButton" customModule="Whist" customModuleProvider="target">
                             <rect key="frame" x="130" y="16" width="22" height="22"/>
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="ks1-vg-NcQ" secondAttribute="height" multiplier="1:1" id="P9u-wT-iOl"/>

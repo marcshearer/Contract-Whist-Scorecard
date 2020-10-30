@@ -41,8 +41,7 @@ TODO
 TODO Need to switch off MallocStackLogging variables in Edit Scheme
 Looks like it is still in recovery mode even when play game and override warning
 Implement Facetime calls
-
-Change launch screen to a view rather than a view controller
+When menu reappears due to multi-tasking not defaulting to correct item (get locked in)
 
 Jack
 ----

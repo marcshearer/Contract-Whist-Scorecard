@@ -34,7 +34,7 @@ class GraphViewController: ScorecardViewController, GraphDetailDelegate, BannerD
         graphViewController.modalPresentationStyle = .fullScreen
         
         graphViewController.playerDetail = playerDetail
-        sourceViewController.present(graphViewController, animated: true, completion: nil)
+        sourceViewController.present(graphViewController, animated: true, container: nil, completion: nil)
     }
     
     private func dismiss() {

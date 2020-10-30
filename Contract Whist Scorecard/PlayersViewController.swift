@@ -98,6 +98,9 @@ class PlayersViewController: ScorecardViewController, PlayersViewDelegate, UICol
         
         // Update from cloud
         self.updatePlayersFromCloud()
+        
+        // Setup help
+        self.setupHelpView()
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -202,6 +205,7 @@ class PlayersViewController: ScorecardViewController, PlayersViewDelegate, UICol
     }
     
     func amendPlayer(at indexPath: IndexPath) {
+        self.rootViewController.rightPanelDefaultScreenColors(rightInsetColor: Palette.normal.background)
         let playerDetail = self.playerDetailList[indexPath.row]
         if let playerDetailView = self.playerDetailView {
             self.setRightPanel(title: playerDetail.name, caption: "")
@@ -299,6 +303,8 @@ class PlayersViewController: ScorecardViewController, PlayersViewDelegate, UICol
     private func setupButtons() {
         let font = UIFont.systemFont(ofSize: 16)
         self.banner.set(
+            rightButtons: [
+                BannerButton(action: self.helpPressed, type: .help)],
             lowerButtons: [
                 BannerButton(title: "Add", width: 140, action: self.addPlayerPressed, type: .shadow, menuHide: true, menuText: "Add Players", font: font, id: "add"),
                 BannerButton(title: "Remove", width: 140, action: self.removePlayerPressed, type: .shadow, menuHide: true, menuText: "Remove Players", font: font, id: "remove"),
@@ -328,6 +334,7 @@ class PlayersViewController: ScorecardViewController, PlayersViewDelegate, UICol
     private func hideDetail() {
         self.playerDetailView?.hide()
         self.setRightPanel(title: "", caption: "")
+        self.rootViewController.rightPanelDefaultScreenColors(rightInsetColor: Palette.banner.background)
     }
     
     private func forEachCell(_ action: (String, PlayerCell)->()) {
@@ -415,5 +422,25 @@ extension PlayersViewController {
 
     private func defaultViewColors() {
         self.view.backgroundColor = Palette.normal.background
+    }
+}
+
+extension PlayersViewController {
+    
+    internal func setupHelpView() {
+        
+        self.helpView.reset()
+                
+        self.helpView.add("This screen allows you to add, remove or change the players on this device.")
+        
+        self.helpView.add("This area shows the photo and name of all the players on this device. Click on a player to see their details.", views: [self.collectionView], item: 0, itemTo: 999, border: 8, shrink: true)
+        
+        self.helpView.add("The {} allows you to add new players. These can either be completely new players, or existing players created on another device, but not yet downloaded from the cloud to this device.", bannerId: "add")
+        
+        self.helpView.add("The {} allows you to remove players from this device. Note that if they have been synced to the cloud they will still exist there and can be downloaded again in future.", bannerId: "remove")
+        
+        self.helpView.add("The {} takes you out of remove mode.", bannerId: "cancel")
+        
+        self.helpView.add("The {} exits the @*/Profiles@*/ screen and returns you to the @*/Home@*/ screen.", bannerId: Banner.finishButton)
     }
 }

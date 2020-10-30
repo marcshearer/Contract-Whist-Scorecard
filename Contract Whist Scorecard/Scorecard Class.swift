@@ -430,8 +430,10 @@ class Scorecard {
         }
     }
     
-    func reCenterPopup(_ viewController: UIViewController) {
-        viewController.popoverPresentationController?.sourceRect = CGRect(origin: CGPoint(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY), size: CGSize())
+    func reCenterPopup(_ viewController: ScorecardViewController) {
+        let sourceRect = CGRect(origin: CGPoint(x: viewController.screenBounds.midX, y: viewController.screenBounds.midY), size: CGSize())
+        
+        viewController.popoverPresentationController?.sourceRect = viewController.popoverPresentationController!.sourceView!.convert(sourceRect, from: nil)
     }
     
     func showSummaryImage(_ summaryButton: UIButton) {

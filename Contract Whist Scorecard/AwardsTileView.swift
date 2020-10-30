@@ -8,8 +8,10 @@
 
 import UIKit
 
-class AwardsTileView: UIView, DashboardTileDelegate, AwardCollectionDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
-            
+class AwardsTileView: DashboardTileView, AwardCollectionDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+    
+    internal override var helpId: String { "awards" }
+    
     private var achieved: [Award] = []
     private var toAchieve: [Award] = []
     private var awardsTotal: Int = 0
@@ -38,11 +40,6 @@ class AwardsTileView: UIView, DashboardTileDelegate, AwardCollectionDelegate, UI
     @IBInspectable private var notAwarded: Bool = true
     @IBInspectable private var headings: Bool = true
     @IBInspectable private var styleChoice: Bool = true
-
-    @IBOutlet private weak var parentDashboardView: DashboardView?
-
-    @IBOutlet private weak var contentView: UIView!
-    @IBOutlet private weak var tileView: UIView!
     
     @IBOutlet private weak var collectionView: UICollectionView!
     @IBOutlet private weak var collectionViewFlowLayout: UICollectionViewFlowLayout!
@@ -130,6 +127,65 @@ class AwardsTileView: UIView, DashboardTileDelegate, AwardCollectionDelegate, UI
     internal func willDisappear() {
         self.awardDetailView?.hide()
         self.awardDetailView = nil
+    }
+    
+    // MARK: - Dashboard Tile delegates ================================================= -
+    
+    private var gridHelpContext: String? // Used to avoid repeating the same message
+    private var listHelpContext: String? // Used to avoid repeating the same message
+    
+    internal func addHelp(to helpView: HelpView) {
+        
+        helpView.add("The @*/Awarded@*/ section shows awards you have already achieved. The title shows the number of awards you have achieved compared to the number still to achieve", views: [self.collectionView], callback: self.title, section: achievedSection, item: -1, horizontalBorder: 8)
+        
+        self.addButtons(helpView: helpView, section: achievedSection)
+        
+        helpView.add("The @*/For the Future@*/ section  shows awards you can still achieve in the future", views: [self.collectionView], callback: self.title, section: toAchieveSection, item: -1, horizontalBorder: 8)
+        
+        self.addButtons(helpView: helpView, section: toAchieveSection)
+    }
+    
+    private func addButtons(helpView: HelpView, section: Int) {
+        
+        helpView.add("The @*/Grid Mode@*/ button switches the output to show the awards as a grid. This will allow more awards to be displayed.", views: [self.collectionView], callback: self.gridButton, section: section, item: -1, horizontalBorder: 4)
+        
+        helpView.add("The @*/List Mode@*/ button switches the output to show the awards as a list. This will display more information about each award", views: [self.collectionView], callback: self.listButton, section: section, item: -1, horizontalBorder: 4)
+    }
+    
+    internal func title(item: Int, view: UIView) -> CGRect? {
+        if let cell = view as? AwardCollectionHeader {
+            return cell.titleLabel.frame
+        } else {
+            return nil
+        }
+    }
+    
+    internal func gridButton(item: Int, view: UIView) -> CGRect? {
+        let helpContext = HelpView.helpContext
+        if helpContext != self.gridHelpContext {
+            if let cell = view as? AwardCollectionHeader {
+                self.gridHelpContext = helpContext
+                return cell.gridButton.frame
+            } else {
+                return nil
+            }
+        } else {
+            return nil
+        }
+    }
+    
+    internal func listButton(item: Int, view: UIView) -> CGRect? {
+        let helpContext = HelpView.helpContext
+        if helpContext != self.listHelpContext {
+            if let cell = view as? AwardCollectionHeader {
+                self.listHelpContext = helpContext
+                return cell.listButton.frame
+            } else {
+                return nil
+            }
+        } else {
+            return nil
+        }
     }
     
     // MARK: - Award collection delegate ================================================================== -

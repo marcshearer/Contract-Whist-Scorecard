@@ -8,7 +8,9 @@
 
 import UIKit
 
-class CountTileView: UIView, DashboardTileDelegate {
+class CountTileView: DashboardTileView {
+    
+    internal override var helpId: String { "count" }
     
     private enum Period: Int, CaseIterable {
         case day = 0
@@ -19,19 +21,17 @@ class CountTileView: UIView, DashboardTileDelegate {
     
     @objc public enum CountValue: Int {
         case gamesInPeriod = 1
+        
+        var description: String {
+            switch self {
+            case .gamesInPeriod:
+                return "games played recently"
+            }
+        }
     }
-    
-    private var detailType: DashboardDetailType = .history
+        
     private var value: CountValue = .gamesInPeriod
     
-    @IBInspectable private var detail: Int {
-        get {
-            return self.detailType.rawValue
-        }
-        set(detail) {
-            self.detailType = DashboardDetailType(rawValue: detail) ?? .history
-        }
-    }
     @IBInspectable private var countValue: Int {
         get {
             return self.value.rawValue
@@ -40,20 +40,10 @@ class CountTileView: UIView, DashboardTileDelegate {
             self.value = CountValue(rawValue: value) ?? .gamesInPeriod
         }
     }
-    @IBInspectable private var personal: Bool = true
-    @IBInspectable private var title: String = ""
     @IBInspectable private var caption: String = ""
-       
-    @IBOutlet private weak var dashboardDelegate: DashboardActionDelegate?
-    @IBOutlet private weak var parentDashboardView: DashboardView?
-
-    @IBOutlet private weak var contentView: UIView!
-    @IBOutlet private weak var tileView: UIView!
-    
-    @IBOutlet private weak var titleLabel: UILabel!
+          
     @IBOutlet private weak var countLabel: UITextField!
     @IBOutlet private weak var captionLabel: UILabel!
-    @IBOutlet private weak var typeButton: ClearButton!
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -106,6 +96,12 @@ class CountTileView: UIView, DashboardTileDelegate {
                 
         self.tileView.roundCorners(cornerRadius: 8.0)
         self.contentView.addShadow(shadowSize: CGSize(width: 4.0, height: 4.0))
+    }
+    
+    // MARK: - Dashboard Tile delegates ================================================= -
+
+    internal func addHelp(to helpView: HelpView) {
+        helpView.add("The @*/\(self.title)@*/ tile shows the number of \(self.value.description) by \(self.personal ? "you" : "the players on this device").\n\nClick on it to display the games \(self.personal ? "you" : "players on this device") have played in.", views: [self], shrink: true)
     }
     
     internal func reloadData() {

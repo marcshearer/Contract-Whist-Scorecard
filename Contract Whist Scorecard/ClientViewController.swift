@@ -53,6 +53,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     private var displayingPeer = 0
     public var dismissImageViewStack: [UIImageView] = []
     internal var viewControllerStack: [(uniqueID: String, viewController: ScorecardViewController)] = []
+    internal var detailDelegate: DetailDelegate?
 
     // Observers
     private var observer: NSObjectProtocol?
@@ -108,6 +109,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     @IBOutlet internal weak var mainContainer: UIView!
     @IBOutlet internal weak var rightContainer: UIView!
     @IBOutlet internal weak var rightInsetContainer: UIView!
+    @IBOutlet internal weak var rightInsetRoundedView: UIView!
     @IBOutlet internal weak var mainRightContainer: UIView!
     @IBOutlet internal weak var leftPanelTrailingConstraint: NSLayoutConstraint!
     @IBOutlet internal weak var leftPanelWidthConstraint: NSLayoutConstraint!
@@ -168,7 +170,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     }
     
     @IBAction func helpPressed(_ sender: Any) {
-        self.helpView?.show()
+        self.helpPressed()
     }
     
     @IBAction func settingsBadgePressed(_ sender: UIButton) {
@@ -431,9 +433,10 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     
     private func showDashboard() {
         DashboardViewController.show(from: self,
-            dashboardNames: [(title: "Awards",  fileName: "AwardsDashboard",  imageName: "award"),
-                             (title: "Personal", fileName: "PersonalDashboard", imageName: "personal"),
-                             (title: "Everyone", fileName: "EveryoneDashboard", imageName: "everyone")],
+             dashboardNames: [
+                DashboardName(title: "Awards",  fileName: "AwardsDashboard",  imageName: "award", helpId: "awards"),
+                DashboardName(title: "Personal", fileName: "PersonalDashboard", imageName: "personal", helpId: "personalResults"),
+                DashboardName(title: "Everyone", fileName: "EveryoneDashboard", imageName: "everyone", helpId: "everyoneResults")],
             container: .mainRight)
     }
     

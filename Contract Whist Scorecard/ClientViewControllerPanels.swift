@@ -17,8 +17,8 @@ protocol PanelContainer {
     
     var dismissImageViewStack: [UIImageView] {get set}
     var viewControllerStack: [(uniqueID: String, viewController: ScorecardViewController)] {get set}
-
     var containers: Bool {get}
+    var detailDelegate: DetailDelegate? {get set}
     
     func isVisible(container: Container) -> Bool
     
@@ -28,7 +28,7 @@ protocol PanelContainer {
         
     @discardableResult func invokeOption(_ option: MenuOption, completion: (()->())?) -> ScorecardViewController?
     
-    func rightPanelDefaultScreenColors()
+    func rightPanelDefaultScreenColors(rightInsetColor: UIColor)
     
     func selectAvailableDevice(deviceName: String)
     
@@ -39,6 +39,20 @@ extension PanelContainer {
     func presentInContainers(_ items: [PanelContainerItem], animated: Bool, completion: (() -> ())?) {
         presentInContainers(items, rightPanelTitle: nil, animated: animated, completion: completion)
     }
+    
+    func rightPanelDefaultScreenColors() {
+        rightPanelDefaultScreenColors(rightInsetColor: Palette.banner.background)
+    }
+}
+
+protocol DetailDelegate {
+    
+    var isVisible: Bool {get}
+    var detailView: UIView {get}
+    var helpView: HelpView! {get}
+
+    func helpPressed(alwaysNext: Bool, completion: ((Bool)->())?)
+
 }
 
 extension ClientViewController : PanelContainer {
@@ -160,10 +174,11 @@ extension ClientViewController : PanelContainer {
         }
     }
     
-    internal func rightPanelDefaultScreenColors() {
+    internal func rightPanelDefaultScreenColors(rightInsetColor: UIColor) {
         self.rightContainer.backgroundColor = Palette.banner.background
         self.rightPanelTitleLabel.textColor = Palette.banner.text
         self.rightPanelCaptionLabel.textColor = Palette.banner.text
+        self.rightInsetRoundedView.backgroundColor = rightInsetColor
     }
         
     public func invokeOption(_ option: MenuOption, completion: (()->())?) -> ScorecardViewController? {
@@ -225,7 +240,7 @@ extension ClientViewController : PanelContainer {
                         view.translatesAutoresizingMaskIntoConstraints = false
                         Constraint.anchor(view: rootView, control: containerView, to: view)
                         if container == .rightInset {
-                            view.roundCorners(cornerRadius: 12.0)
+                            self.rightInsetRoundedView.roundCorners(cornerRadius: 12.0)
                         }
                         if animated {
                             view.alpha = 0.0
@@ -281,16 +296,23 @@ extension ClientViewController : PanelContainer {
             }
             if let helpView = mainViewController?.helpView, let mainView = mainViewController?.view {
                 
-                let delegate = mainViewController?.gameDetailDelegate
+                let delegate = mainViewController?.rootViewController.detailDelegate
+                let delegateHelp = (delegate?.detailView.superview != nil && !(delegate?.helpView?.isEmpty ?? true))
                 
                 // Show the main panel screen help
-                helpView.show(alwaysNext: alwaysNext || delegate != nil) { (finishPressed) in
-                    if !finishPressed && delegate != nil {
+                mainView.superview!.bringSubviewToFront(mainView)
+                helpView.show(alwaysNext: alwaysNext || delegateHelp) { (finishPressed) in
+                   
+                    if !finishPressed && delegateHelp {
+                   
+                        // Need to keep the previous helpView around to stop click throughs
+                        helpView.isHidden = false
                         
                         // Now show any help for the game detail panel
-                        self.view.bringSubviewToFront(delegate!.gameDetailView)
-                        delegate!.showHelp(alwaysNext: alwaysNext) { (finishPressed) in
-                            self.view.bringSubviewToFront(mainView)
+                        delegate!.detailView.superview!.bringSubviewToFront(delegate!.detailView)
+                        delegate!.helpPressed(alwaysNext: alwaysNext) { (finishPressed) in
+                            mainView.superview!.bringSubviewToFront(mainView)
+                            helpView.isHidden = true
                             completion?(finishPressed)
                         }
                     } else {

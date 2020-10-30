@@ -21,9 +21,14 @@ protocol PlayerDetailViewDelegate {
     func refresh(playerDetail: PlayerDetail, mode: DetailMode)
 }
 
-class PlayerDetailViewController: ScorecardViewController, PlayerDetailViewDelegate, UITableViewDataSource, UITableViewDelegate, SyncDelegate, PlayerViewImagePickerDelegate, BannerDelegate {
+class PlayerDetailViewController: ScorecardViewController, PlayerDetailViewDelegate, UITableViewDataSource, UITableViewDelegate, SyncDelegate, PlayerViewImagePickerDelegate, BannerDelegate, DetailDelegate {
+    
     
     // MARK: - Class Properties ======================================================================== -
+    
+    internal var isVisible: Bool { return true }
+    
+    var detailView: UIView { return self.view }
     
     private enum NameOptions: Int, CaseIterable {
         case name = 0
@@ -88,6 +93,7 @@ class PlayerDetailViewController: ScorecardViewController, PlayerDetailViewDeleg
     private var mode: DetailMode!
     private var sourceView: UIView!
     private var dismissOnSave = true
+    private var returnTo: String = ""
     
     // Local class variables
     private var actionSheet: ActionSheet!
@@ -128,7 +134,7 @@ class PlayerDetailViewController: ScorecardViewController, PlayerDetailViewDeleg
 
         // Setup player header fields and sections
         self.setupSections()
-        self.setupHeaderFields()
+        self.setupBanner()
                
         // Setup table view
         self.tableView.contentInset = UIEdgeInsets(top: (ScorecardUI.landscapePhone() ? 0 : 10.0), left: 0.0, bottom: 0.0, right: 0.0)
@@ -143,6 +149,7 @@ class PlayerDetailViewController: ScorecardViewController, PlayerDetailViewDeleg
         // Hide banner if in a right-hand container
         if self.container == .rightInset {
             self.banner.set(normalOverrideHeight: 0)
+            self.banner.isHidden = true
             self.tableViewLeadingConstraint.constant = 10
             self.tableViewTrailingConstraint.constant = 10
             self.labelFontSize = 10
@@ -152,6 +159,9 @@ class PlayerDetailViewController: ScorecardViewController, PlayerDetailViewDeleg
         
         // Enable buttons
         self.enableButtons()
+        
+        // Setup help
+        self.setupHelpView()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -164,7 +174,7 @@ class PlayerDetailViewController: ScorecardViewController, PlayerDetailViewDeleg
         Scorecard.shared.reCenterPopup(self)
         self.view.setNeedsLayout()
     }
-    
+        
     // MARK: - Player Detail View Delegate ============================================================= -
     
     internal func hide() {
@@ -175,7 +185,7 @@ class PlayerDetailViewController: ScorecardViewController, PlayerDetailViewDeleg
         self.playerDetail = playerDetail
         self.mode = mode
         self.view.isHidden = false
-        self.setupHeaderFields()
+        self.setupBanner()
         self.tableView.reloadData()
     }
 
@@ -711,8 +721,12 @@ class PlayerDetailViewController: ScorecardViewController, PlayerDetailViewDeleg
         }
     }
     
-    func setupHeaderFields() {
-        self.banner.set(title: playerDetail.name)
+    func setupBanner() {
+        self.banner.set(title: playerDetail.name,
+            leftButtons:
+                [BannerButton(image: UIImage(named: "back"), action: self.finishPressed, menuHide: true, menuText: self.returnTo, id: Banner.finishButton)],
+            rightButtons:
+                [BannerButton(action: self.helpPressed, type: .help)])
     }
     
     func setupImagePickerPlayerView(cell: PlayerDetailCell) {
@@ -780,7 +794,7 @@ class PlayerDetailViewController: ScorecardViewController, PlayerDetailViewDeleg
     
     // MARK: - method to show this view controller ============================================================================== -
     
-    static public func create(playerDetail: PlayerDetail, mode: DetailMode, playersViewDelegate: PlayersViewDelegate? = nil, dismissOnSave: Bool = true) -> PlayerDetailViewController {
+    static public func create(playerDetail: PlayerDetail, mode: DetailMode, playersViewDelegate: PlayersViewDelegate? = nil, dismissOnSave: Bool = true, returnTo: String = "Results") -> PlayerDetailViewController {
         
         let storyboard = UIStoryboard(name: "PlayerDetailViewController", bundle: nil)
         let playerDetailViewController = storyboard.instantiateViewController(withIdentifier: "PlayerDetailViewController") as! PlayerDetailViewController
@@ -790,18 +804,24 @@ class PlayerDetailViewController: ScorecardViewController, PlayerDetailViewDeleg
         playerDetailViewController.mode = mode
         playerDetailViewController.playersViewDelegate = playersViewDelegate
         playerDetailViewController.dismissOnSave = dismissOnSave
+        playerDetailViewController.returnTo = returnTo
         
         return playerDetailViewController
     }
         
-    static public func show(from sourceViewController: ScorecardViewController, playerDetail: PlayerDetail, mode: DetailMode, sourceView: UIView, playersViewDelegate: PlayersViewDelegate? = nil, dismissOnSave: Bool = true) {
+    static public func show(from sourceViewController: ScorecardViewController, playerDetail: PlayerDetail, mode: DetailMode, sourceView: UIView, playersViewDelegate: PlayersViewDelegate? = nil, dismissOnSave: Bool = true, returnTo: String = "Results", container: Container? = nil) {
         
-        let playerDetailViewController = PlayerDetailViewController.create(playerDetail: playerDetail, mode: mode, playersViewDelegate: playersViewDelegate, dismissOnSave: dismissOnSave)
+        let playerDetailViewController = PlayerDetailViewController.create(playerDetail: playerDetail, mode: mode, playersViewDelegate: playersViewDelegate, dismissOnSave: dismissOnSave, returnTo: returnTo)
                 
-        let popoverSize = (ScorecardUI.phoneSize() ? nil : ScorecardUI.defaultSize)
-        let sourceView = (ScorecardUI.phoneSize() ? nil : sourceView)
+        var container = container
+        if container == nil {
+            container = sourceViewController.container
+        }
         
-        sourceViewController.present(playerDetailViewController, popoverSize: popoverSize, sourceView: sourceView, animated: true, completion: nil)
+        let popoverSize = (ScorecardUI.phoneSize() || container != nil ? nil : ScorecardUI.defaultSize)
+        let sourceView = (ScorecardUI.phoneSize() || container != nil  ? nil : sourceView)
+                        
+        sourceViewController.present(playerDetailViewController, popoverSize: popoverSize, sourceView: sourceView, animated: true, container: container, completion: nil)
     }
     
 }
@@ -871,12 +891,10 @@ extension PlayerDetailViewController {
 
     private func defaultViewColors() {
 
-        self.view.backgroundColor = Palette.normal.background
-        self.tableView.backgroundColor = Palette.normal.background
+        self.view.backgroundColor = (self.container == .rightInset ? UIColor.clear :  Palette.normal.background)
     }
 
     private func defaultCellColors(cell: PlayerDetailCell) {
-        cell.backgroundColor = Palette.normal.background
         switch cell.reuseIdentifier {
         case "Action Button":
             cell.actionButton.setTitleColor(Palette.buttonFace.text, for: .normal)
@@ -918,4 +936,28 @@ extension PlayerDetailViewController {
         }
     }
 
+}
+
+extension PlayerDetailViewController {
+    
+    internal func setupHelpView() {
+        
+        self.helpView.reset()
+                
+        self.helpView.add("This is the player's name on this device. \(self.mode == .display ? "" : "You can change the name for this player on your device\(self.mode == .amend ? " when in edit mode" : "").")", views: [self.tableView], section: self.nameSection, item: -1, itemTo: 0, horizontalBorder: 8)
+        
+        self.helpView.add("This is the player's photo. \(self.mode == .display ? "" : self.playerDetail.thumbnail == nil ? "You can add a photo by tapping the camera button\(self.mode == .amend ? " when in edit mode" : "")." : "You can change or remove the photo by tapping it\(self.mode == .amend ? " when in edit mode" : "").")", views: [self.tableView], section: self.thumbnailSection, item: -1, itemTo: 0, horizontalBorder: 8)
+        
+        self.helpView.add("\(self.mode != .amending ? "Click the edit button to edit the name and/or photo. " : (self.changed ? "Click the @*/Save@*/ button to save changes or the @*/Cancel@*/ button to cancel any changes." : "Click the @*/Cancel@*/ button to leave edit mode."))", views: [self.tableView], section: editSection, item: 0, horizontalBorder: 8)
+        
+        self.helpView.add("This section shows the date when the player last played a game of Whist.", views: [self.tableView], section: self.lastPlayedSection, item: -1, itemTo: 999, horizontalBorder: 8)
+
+        self.helpView.add("This section shows the player's high score, most bids made //etc//.", views: [self.tableView], section: self.recordsSection, item: -1, itemTo: 999, horizontalBorder: 8)
+
+        self.helpView.add("This section shows the players statistics including games played, percentage of games won //etc//.", views: [self.tableView], section: self.statsSection, item: -1, itemTo: 999, horizontalBorder: 8)
+        
+        self.helpView.add("Click the @*/Remove Player@*/ button to remove the player from this device. Note that if this player has been synced to the cloud they will still exist there and can be downloaded again in future.", views: [self.tableView], section: self.deleteSection, item: 0, horizontalBorder: 8)
+
+        self.helpView.add("Click the {} to close @*/Player Details@*/.", bannerId: Banner.finishButton)
+    }
 }

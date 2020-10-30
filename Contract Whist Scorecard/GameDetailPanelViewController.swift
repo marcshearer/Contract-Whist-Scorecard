@@ -14,17 +14,11 @@ protocol GameDetailPanelInvokeDelegate {
     func invoke(_ view: ScorecardView)    
 }
 
-protocol GameDetailDelegate {
-    
-    var isVisible: Bool {get}
-    
-    func refresh(activeView: ScorecardView?, round: Int?)
+protocol GameDetailDelegate : DetailDelegate {
     
     var invokeDelegate: GameDetailPanelInvokeDelegate? {get set}
-    
-    var gameDetailView: UIView {get}
-    
-    func showHelp(alwaysNext: Bool, completion: ((Bool)->())?)
+
+    func refresh(activeView: ScorecardView?, round: Int?)
 }
 
 extension GameDetailDelegate {
@@ -47,7 +41,7 @@ class GameDetailPanelViewController: ScorecardViewController, UITableViewDataSou
     private var gameComplete: Bool = false
     private var thisPlayer: Int?
     internal var invokeDelegate: GameDetailPanelInvokeDelegate?
-    internal var gameDetailView: UIView { return self.view }
+    internal var detailView: UIView { return self.view }
     
     @IBOutlet private weak var roundLabel: UILabel!
     @IBOutlet private weak var overUnderLabel: UILabel!
@@ -89,11 +83,7 @@ class GameDetailPanelViewController: ScorecardViewController, UITableViewDataSou
     internal var isVisible: Bool {
         return self.view.frame.minX < self.rootViewController.view.frame.width
     }
-    
-    internal func showHelp(alwaysNext: Bool, completion: ((Bool)->())?) {
-        self.helpView.show(alwaysNext: alwaysNext, completion: completion)
-    }
-    
+        
     internal func refresh(activeView: ScorecardView?, round: Int? = nil) {
         let leaderboard = Scorecard.game.gameComplete()
         let scorepadView = ((activeView ?? self.appController?.activeView) == .scorepad)
@@ -241,6 +231,7 @@ class GameDetailPanelViewController: ScorecardViewController, UITableViewDataSou
         
         let storyboard = UIStoryboard(name: "GameDetailPanelViewController", bundle: nil)
         let gameDetailPanelViewController = storyboard.instantiateViewController(withIdentifier: "GameDetailPanelViewController") as! GameDetailPanelViewController
+        
         return gameDetailPanelViewController
     }
     

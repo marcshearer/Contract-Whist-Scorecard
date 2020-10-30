@@ -12,6 +12,17 @@ import UIKit
     case history = 1
     case statistics = 2
     case highScores = 3
+    
+    var description: String {
+        switch self {
+        case .history:
+            return "Recent Game History"
+        case .statistics:
+            return "Key Stats"
+        case .highScores:
+            return "High Scores"
+        }
+    }
 }
 
 public enum Orientation: String, CaseIterable {
@@ -28,20 +39,27 @@ public enum Orientation: String, CaseIterable {
 
 }
 
-@objc protocol DashboardTileDelegate : class {
+struct DashboardName {
+    let title: String
+    let fileName: String
+    let imageName: String?
+    let helpId: AnyHashable?
+    let returnTo: String
     
-    @objc optional func reloadData()
-    
-    @objc optional func didRotate()
-    
-    @objc optional func willDisappear()
-    
+    init(title: String, returnTo: String? = nil, fileName: String, imageName: String? = nil, helpId: AnyHashable? = nil) {
+        self.title = title
+        self.fileName = fileName
+        self.imageName = imageName
+        self.helpId = helpId
+        self.returnTo = returnTo ?? title
+    }
 }
 
 class DashboardViewController: ScorecardViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, CustomCollectionViewLayoutDelegate, DashboardActionDelegate, BannerDelegate {
  
     struct DashboardViewInfo {
         var title: String
+        var returnTo: String
         var imageName: String?
         var nibNames: [Orientation:String]
         var views: [Orientation:DashboardView]
@@ -55,7 +73,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     private var currentPage = -1
     
     private var dashboardViewInfo: [Int:DashboardViewInfo] = [:]
-    private var dashboardInfo: [(title: String, fileName: String, imageName: String?)] = []
+    private var dashboardInfo: [DashboardName] = []
     private var currentOrientation: Orientation!
     
     private var backImage: String!
@@ -197,7 +215,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
             }
         }
     }
-    
+        
     private func didRotate() {
         Utility.mainThread {
             for (_, orientationViews) in self.dashboardViewInfo {
@@ -302,6 +320,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
             if changed || forceScroll == true {
                 let oldView = self.getView(page: self.currentPage)
                 let newView = self.getView(page: itemAtCenter)
+                self.setupHelpView(view: newView)
                 newView.isHidden = false
                 Utility.animate(duration: self.firstTime ? 0.0 : 0.5,
                     completion: {
@@ -356,6 +375,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
             }
             self.dashboardViewInfo[page] = DashboardViewInfo(
                 title: dashboardInfo.title,
+                returnTo: dashboardInfo.returnTo,
                 imageName: dashboardInfo.imageName,
                 nibNames: nibNames,
                 views: [:])
@@ -401,7 +421,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
             view = viewInfo.views[self.currentOrientation]
             if view == nil {
                 if let nibName = viewInfo.nibNames[self.currentOrientation] {
-                    view = DashboardView(withNibName: nibName, frame: self.dashboardContainerView.frame, parent: self, delegate: self)
+                    view = DashboardView(withNibName: nibName, frame: self.dashboardContainerView.frame, parent: self, title: viewInfo.title, returnTo: viewInfo.returnTo, delegate: self)
                     view!.alpha = 0.0
                     self.dashboardViewInfo[page]!.views[self.currentOrientation] = view
                     self.dashboardContainerView.addSubview(view!)
@@ -472,12 +492,13 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
         var leftButtons: [BannerButton]?
         if let menuFinishText = self.menuFinishText {
             leftButtons = [
-                BannerButton(title: self.backText, image: UIImage(named: self.backImage ?? "back"), action: finishPressed, menuHide: true, menuText: menuFinishText)]
+                BannerButton(title: self.backText, image: UIImage(named: self.backImage ?? "back"), action: finishPressed, menuHide: true, menuText: menuFinishText, id: Banner.finishButton)]
         }
         
         self.banner.set(
             leftButtons: leftButtons,
             rightButtons: [
+                BannerButton(action: self.helpPressed, type: .help),
                 BannerButton(title: title, image: image, width: 60, action: self.syncPressed, type: type, menuHide: false, font: UIFont.systemFont(ofSize: 14), id: "sync")],
             disableOptions: (leftButtons != nil))
     }
@@ -493,7 +514,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     
     // MARK: - Function to present and dismiss this view ================================================= -
     
-    @discardableResult class public func show(from viewController: ScorecardViewController, title: String? = nil, dashboardNames: [(title: String, fileName: String, imageName: String?)], allowSync: Bool = true, backImage: String = "home", backText: String = "", backgroundColor: PaletteColor = Palette.dark, container: Container? = .main, bottomInset: CGFloat? = nil, menuFinishText: String? = nil, completion: (()->())? = nil) -> ScorecardViewController {
+    @discardableResult class public func show(from viewController: ScorecardViewController, title: String? = nil, dashboardNames: [DashboardName], allowSync: Bool = true, backImage: String = "home", backText: String = "", backgroundColor: PaletteColor = Palette.dark, container: Container? = .main, bottomInset: CGFloat? = nil, menuFinishText: String? = nil, completion: (()->())? = nil) -> ScorecardViewController {
         
         let dashboardViewController = DashboardViewController.create(title: title, dashboardNames: dashboardNames, allowSync: allowSync, backImage: backImage, backText: backText, backgroundColor: backgroundColor, bottomInset: bottomInset, menuFinishText: menuFinishText, completion: completion)
         
@@ -502,7 +523,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
         return dashboardViewController
     }
     
-    class public func create(title: String? = nil, dashboardNames: [(title: String, fileName: String, imageName: String?)], allowSync: Bool = true, backImage: String = "home", backText: String = "", backgroundColor: PaletteColor = Palette.dark, bottomInset: CGFloat? = nil, menuFinishText: String? = nil, completion: (()->())? = nil) -> DashboardViewController {
+    class public func create(title: String? = nil, dashboardNames: [DashboardName], allowSync: Bool = true, backImage: String = "home", backText: String = "", backgroundColor: PaletteColor = Palette.dark, bottomInset: CGFloat? = nil, menuFinishText: String? = nil, completion: (()->())? = nil) -> DashboardViewController {
         
         let storyboard = UIStoryboard(name: "DashboardViewController", bundle: nil)
         let dashboardViewController: DashboardViewController = storyboard.instantiateViewController(withIdentifier: "DashboardViewController") as! DashboardViewController
@@ -584,6 +605,47 @@ class Dashboard {
             return UIImage(named: "stats")!
         case .highScores:
             return UIImage(named: "high score")!
+        }
+    }
+}
+
+extension DashboardViewController {
+    
+    internal func setupHelpView(view: DashboardView) {
+        
+        self.helpView.reset()
+        
+        var text = ""
+        if self.dashboardInfo.count > 1 {
+            text = "This Dashboard view contains \(self.dashboardInfo.count) dashboards which you can switch between using the carousel at the top of the screen.\n\n"
+        }
+        self.helpView.add("\(text)\(self.dashboardHelp())")
+        
+        self.helpView.add("The @*/Carousel@*/ allows you to switch between the different dashboard views.", views: [self.carouselCollectionView], verticalBorder: 8, radius: 0)
+        
+        self.helpView.add("The {} is used to synchronise the local database with the iCloud database", bannerId: "sync")
+        
+        self.helpView.add("The {} will take you back to the previous view.", bannerId: Banner.finishButton)
+        
+        self.helpView.add(dashboardView: view)
+    }
+    
+    private func dashboardHelp() -> String {
+        if let id = self.dashboardInfo[currentPage].helpId as? String {
+            switch id {
+            case "personalResults":
+                return "The @*/Personal@*/ dashboard shows you your own personal results and statistics.\n\nYou can click on any specific tile to see more details."
+            case "everyoneResults":
+                return "The @*/Everyone@*/ dashboard shows you the aggregated results and statistics for all players on this device.\n\nYou can click on any specific tile to see more details."
+            case "awards":
+                return "The @*/Awards@*/ dashboard shows you the Awards that you have achieved so far plus the Awards that are still available to be achieved in the future.\n\nYou can click on an award tile to see details."
+            case "highScores":
+                return "The @*/High Scores@*/ dashboard shows you the highest scores for each category.\n\nClick on a specific high score to see the detail."
+            default:
+                return ""
+            }
+        } else {
+            return ""
         }
     }
 }

@@ -8,7 +8,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DashboardView" customModule="Whist_2" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DashboardView" customModule="Whist" customModuleProvider="target">
             <connections>
                 <outlet property="contentView" destination="iN0-l3-epB" id="nYZ-EA-jWy"/>
             </connections>
@@ -18,7 +18,7 @@
             <rect key="frame" x="0.0" y="0.0" width="414" height="700"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pl0-f3-t82" customClass="CountTileView" customModule="Whist_2" customModuleProvider="target">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pl0-f3-t82" customClass="CountTileView" customModule="Whist" customModuleProvider="target">
                     <rect key="frame" x="16" y="8" width="183" height="190"/>
                     <color key="backgroundColor" name="Clear"/>
                     <userDefinedRuntimeAttributes>
@@ -37,7 +37,7 @@
                         <outlet property="parentDashboardView" destination="-1" id="UuD-Dr-FZw"/>
                     </connections>
                 </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vcm-lb-pqY" customClass="DataTableTileView" customModule="Whist_2" customModuleProvider="target">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vcm-lb-pqY" customClass="DataTableTileView" customModule="Whist" customModuleProvider="target">
                     <rect key="frame" x="16" y="214" width="183" height="281"/>
                     <color key="backgroundColor" name="Clear"/>
                     <userDefinedRuntimeAttributes>
@@ -59,26 +59,7 @@
                         <outlet property="parentDashboardView" destination="-1" id="aqf-Ua-mBp"/>
                     </connections>
                 </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aE4-O4-rLp" customClass="DataTableTileView" customModule="Whist_2" customModuleProvider="target">
-                    <rect key="frame" x="215" y="418" width="183" height="282"/>
-                    <color key="backgroundColor" name="Clear"/>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="boolean" keyPath="personal" value="YES"/>
-                        <userDefinedRuntimeAttribute type="string" keyPath="title" value="Statistics"/>
-                        <userDefinedRuntimeAttribute type="number" keyPath="detail">
-                            <integer key="value" value="2"/>
-                        </userDefinedRuntimeAttribute>
-                        <userDefinedRuntimeAttribute type="boolean" keyPath="headings" value="NO"/>
-                        <userDefinedRuntimeAttribute type="number" keyPath="maxRows">
-                            <integer key="value" value="4"/>
-                        </userDefinedRuntimeAttribute>
-                    </userDefinedRuntimeAttributes>
-                    <connections>
-                        <outlet property="dashboardDelegate" destination="-1" id="nFJ-zl-qkx"/>
-                        <outlet property="parentDashboardView" destination="-1" id="9Rg-s4-G0t"/>
-                    </connections>
-                </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qK4-5E-vDg" customClass="TrendTileView" customModule="Whist_2" customModuleProvider="target">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qK4-5E-vDg" customClass="TrendTileView" customModule="Whist" customModuleProvider="target">
                     <rect key="frame" x="16" y="511" width="183" height="189"/>
                     <color key="backgroundColor" name="Clear"/>
                     <userDefinedRuntimeAttributes>
@@ -86,13 +67,14 @@
                             <integer key="value" value="2"/>
                         </userDefinedRuntimeAttribute>
                         <userDefinedRuntimeAttribute type="string" keyPath="title" value="Trend"/>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="personal" value="NO"/>
                     </userDefinedRuntimeAttributes>
                     <connections>
                         <outlet property="dashboardDelegate" destination="-1" id="XGO-PT-6cd"/>
                         <outlet property="parentDashboardView" destination="-1" id="yNP-Im-jyJ"/>
                     </connections>
                 </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kHZ-oJ-m2Q" customClass="HighScoreTileView" customModule="Whist_2" customModuleProvider="target">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kHZ-oJ-m2Q" customClass="HighScoreTileView" customModule="Whist" customModuleProvider="target">
                     <rect key="frame" x="215" y="8" width="183" height="394"/>
                     <color key="backgroundColor" name="Clear"/>
                     <userDefinedRuntimeAttributes>
@@ -109,6 +91,25 @@
                     <connections>
                         <outlet property="dashboardDelegate" destination="-1" id="QQO-gK-RoD"/>
                         <outlet property="parentDashboardView" destination="-1" id="3kP-pv-qKs"/>
+                    </connections>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aE4-O4-rLp" customClass="DataTableTileView" customModule="Whist" customModuleProvider="target">
+                    <rect key="frame" x="215" y="418" width="183" height="282"/>
+                    <color key="backgroundColor" name="Clear"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="personal" value="YES"/>
+                        <userDefinedRuntimeAttribute type="string" keyPath="title" value="Statistics"/>
+                        <userDefinedRuntimeAttribute type="number" keyPath="detail">
+                            <integer key="value" value="2"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="headings" value="NO"/>
+                        <userDefinedRuntimeAttribute type="number" keyPath="maxRows">
+                            <integer key="value" value="4"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <outlet property="dashboardDelegate" destination="-1" id="nFJ-zl-qkx"/>
+                        <outlet property="parentDashboardView" destination="-1" id="9Rg-s4-G0t"/>
                     </connections>
                 </view>
             </subviews>

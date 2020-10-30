@@ -8,30 +8,12 @@
 
 import UIKit
 
-class TrendTileView: UIView, DashboardTileDelegate {
+class TrendTileView: DashboardTileView {
     
-    private var detailType: DashboardDetailType = .history
+    internal override var helpId: String { "trend" }
     
-    @IBInspectable private var detail: Int {
-        get {
-            return self.detailType.rawValue
-        }
-        set(detail) {
-            self.detailType = DashboardDetailType(rawValue: detail) ?? .history
-        }
-    }
     @IBInspectable var maxPoints = 5
 
-    @IBInspectable private var title: String = ""
-       
-    @IBOutlet private weak var dashboardDelegate: DashboardActionDelegate?
-    @IBOutlet private weak var parentDashboardView: DashboardView?
-
-    @IBOutlet private weak var contentView: UIView!
-    @IBOutlet private weak var tileView: UIView!
-    
-    @IBOutlet private weak var titleLabel: UILabel!
-    @IBOutlet private weak var typeButton: ClearButton!
     @IBOutlet private weak var graphView: GraphView!
     
     override init(frame: CGRect) {
@@ -56,7 +38,7 @@ class TrendTileView: UIView, DashboardTileDelegate {
     }
     
     @objc private func tapSelector(_ sender: UIView) {
-        self.dashboardDelegate?.action(view: detailType, personal: true)
+        self.dashboardDelegate?.action(view: detailType, personal: false)
     }
     
     override func awakeFromNib() {
@@ -83,6 +65,13 @@ class TrendTileView: UIView, DashboardTileDelegate {
         
     }
     
+    // MARK: - Dashboard Tile delegates ================================================= -
+
+    internal func addHelp(to helpView: HelpView) {
+        
+        helpView.add("The @*/\(self.title)@*/ tile shows the trend for your total score in the last \(self.maxPoints) games.\n\nClick on the tile to show Stats for all players on this device.", views: [self], shrink: true)
+    }
+
     internal func reloadData() {
         Utility.mainThread {
             self.drawGraph()
@@ -90,10 +79,12 @@ class TrendTileView: UIView, DashboardTileDelegate {
         }
     }
     
+      // MARK: - Graph draw routine ===================================================== -
+    
     func drawGraph() {
         var values: [CGFloat] = []
         let showLimit = 6
-        let participantList = History.getParticipantRecordsForPlayer(playerUUID: Scorecard.settings.thisPlayerUUID, limit: showLimit)
+        let participantList = History.getParticipantRecordsForPlayer(playerUUID: Scorecard.settings.thisPlayerUUID, sortDirection: .descending, limit: showLimit)
         let playerMO = Scorecard.shared.findPlayerByPlayerUUID(Scorecard.settings.thisPlayerUUID)!
         
         // Initialise the view
@@ -101,7 +92,7 @@ class TrendTileView: UIView, DashboardTileDelegate {
         
         if participantList.count > 0 {
             // Build data
-            for participant in participantList {
+            for participant in participantList.reversed() {
                 values.append(CGFloat(participant.totalScore))
             }
             

@@ -56,10 +56,6 @@ class FocusView : UIView {
     }
     
     private func createShapeLayers() {
-        let maxDistance = max(self.aroundFrame.minX, self.aroundFrame.minY, self.parentViewController.screenWidth - self.aroundFrame.maxX, self.parentViewController.screenHeight - self.aroundFrame.maxY)
-        
-        _ = CGRect(x: self.aroundFrame.minX - maxDistance, y: self.aroundFrame.minY - maxDistance, width: self.aroundFrame.width + (2 * maxDistance), height: self.aroundFrame.height + (2 * maxDistance))
-        
         let path = UIBezierPath()
         self.draw(frame: parentViewController.screenBounds, in: path, radius: 0)
         self.draw(frame: self.aroundFrame, in: path, radius: self.radius)

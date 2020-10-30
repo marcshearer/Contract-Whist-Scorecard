@@ -63,6 +63,8 @@ class DashboardView : UIView, DashboardActionDelegate {
     
     private var historyViewer: HistoryViewer!
     private var statisticsViewer: StatisticsViewer!
+    private var title: String?
+    private var returnTo: String?
 
     @IBOutlet public weak var delegate: DashboardActionDelegate?
     @IBOutlet public weak var parentViewController: DashboardViewController?
@@ -76,10 +78,12 @@ class DashboardView : UIView, DashboardActionDelegate {
         super.init(coder: aDecoder)
     }
     
-    convenience init(withNibName nibName: String, frame: CGRect, parent: DashboardViewController?, delegate: DashboardActionDelegate?) {
+    convenience init(withNibName nibName: String, frame: CGRect, parent: DashboardViewController?, title: String? = nil, returnTo: String? = nil, delegate: DashboardActionDelegate?) {
         self.init(frame: frame)
         self.parentViewController = parent
         self.delegate = delegate
+        self.title = title
+        self.returnTo = returnTo ?? title
         self.loadDashboardView(withNibName: nibName)
     }
             
@@ -100,9 +104,17 @@ class DashboardView : UIView, DashboardActionDelegate {
                 self.delegate?.reloadData?()
             }
         case .statistics:
-            self.statisticsViewer = StatisticsViewer(from: self.parentViewController!) {
-                self.statisticsViewer = nil
-                self.delegate?.reloadData?()
+            if personal {
+                if let playerMO = Scorecard.shared.findPlayerByPlayerUUID(Scorecard.activeSettings.thisPlayerUUID) {
+                    let playerDetail = PlayerDetail()
+                    playerDetail.fromManagedObject(playerMO: playerMO)
+                    PlayerDetailViewController.show(from: self.parentViewController!, playerDetail: playerDetail, mode: .display, sourceView: self.parentViewController!.view, returnTo: "Back to \(self.title!)")
+                }
+            } else {
+                self.statisticsViewer = StatisticsViewer(from: self.parentViewController!) {
+                    self.statisticsViewer = nil
+                    self.delegate?.reloadData?()
+                }
             }
         case .highScores:
             self.showHighScores()
@@ -199,14 +211,14 @@ class DashboardView : UIView, DashboardActionDelegate {
     // MARK: - Functions to present other views ========================================================== -
     
     private func showHighScores(allowSync: Bool = true) {
-        DashboardView.showHighScores(from: self.parentViewController!, allowSync: allowSync) {
+        DashboardView.showHighScores(from: self.parentViewController!, allowSync: allowSync, returnTo: self.returnTo) {
             self.delegate?.reloadData?()
         }
     }
     
-    public static func showHighScores(from parentViewController: ScorecardViewController, allowSync: Bool = false, completion: (()->())? = nil) {
+    public static func showHighScores(from parentViewController: ScorecardViewController, allowSync: Bool = false, returnTo: String? = nil, completion: (()->())? = nil) {
         DashboardViewController.show(from: parentViewController,
-                                     dashboardNames: [(title: "High Scores",  fileName: "HighScoresDashboard",  imageName: nil)], allowSync: allowSync, backImage: "cross white", backgroundColor: Palette.banner, container: parentViewController.container, menuFinishText: "Back to Results") {
+                                     dashboardNames: [DashboardName(title: "High Scores",  fileName: "HighScoresDashboard", helpId: "highScores")], allowSync: allowSync, backImage: "cross white", backgroundColor: Palette.banner, container: parentViewController.container, menuFinishText: "Back to \(returnTo ?? "Results")") {
             completion?()
         }
     }

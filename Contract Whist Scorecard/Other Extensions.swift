@@ -82,8 +82,19 @@ extension CGRect {
         return CGRect(x: self.minX + dx, y: self.minY + dy, width: self.width, height: self.height)
     }
     
+    func offsetBy(offset: CGPoint) -> CGRect {
+        return CGRect(x: self.minX + offset.x, y: self.minY + offset.y, width: self.width, height: self.height)
+    }
+    
     func grownBy(dx: CGFloat, dy: CGFloat) -> CGRect {
         return CGRect(x: self.minX - dx, y: self.minY - dy, width: self.width + (2 * dx), height: self.height + (2 * dy))
+    }
+}
+
+extension CGPoint {
+    
+    static prefix func - (point: CGPoint) -> CGPoint {
+        return CGPoint(x: -point.x, y: -point.y)
     }
 }
 

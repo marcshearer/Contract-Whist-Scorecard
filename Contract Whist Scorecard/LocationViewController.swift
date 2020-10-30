@@ -56,9 +56,9 @@ class LocationViewController: ScorecardViewController, UITableViewDataSource, UI
         }
     }
     
-    override internal func helpPressed() {
+    internal override func helpPressed(alwaysNext: Bool = false, completion: ((Bool)->())? = nil) {
         self.searchBar.resignFirstResponder()
-        self.helpView?.show()
+        self.helpView.show(alwaysNext: alwaysNext, completion: completion)
     }
     
     @IBAction func continuePressed(_ sender: UIButton) {

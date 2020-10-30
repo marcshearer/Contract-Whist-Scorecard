@@ -531,6 +531,9 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
         if changeOption {
             self.setCurrentOption(option: option)
         }
+
+        self.rootViewController.rightPanelDefaultScreenColors(rightInsetColor: (option == .profiles ? Palette.normal.background : Palette.banner.background))
+
         if lastOption != .playGame {
             // Show a screenshot and dismiss current view to leave the screenshot showing before showing new screens on top of it
             if let items = self.currentContainerItems {
@@ -588,6 +591,7 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
     }
     
     public func invokeOption(_ option: MenuOption, completion: (()->())?) {
+        
         switch option {
         case .playGame:
             break
@@ -596,34 +600,40 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
             let title = (option == .personalResults ? "Personal" : "Everyone")
             let filename = "\(title)Dashboard"
             let viewController = DashboardViewController.create(
-                dashboardNames: [(title: title, fileName: filename, imageName: nil)])
+                dashboardNames: [DashboardName(title: title, returnTo: title, fileName: filename, helpId: "\(title.lowercased())Results")])
             self.presentInContainers([PanelContainerItem(viewController: viewController, container: .mainRight)], animated: true, completion: completion)
             
         case .highScores:
             let viewController = DashboardViewController.create(
-                dashboardNames: [(title: "High Scores",  fileName: "HighScoresDashboard",  imageName: nil)])
+                dashboardNames: [DashboardName(title: "High Scores", fileName: "HighScoresDashboard", helpId: "highScores")])
             self.presentInContainers([PanelContainerItem(viewController: viewController, container: .mainRight)], animated: true, completion: completion)
             
         case .awards:
             let viewController = DashboardViewController.create( title: "Awards",
-                 dashboardNames: [(title: "Awards",  fileName: "AwardsDashboard",  imageName: nil)],
+                 dashboardNames: [DashboardName(title: "Awards",  fileName: "AwardsDashboard",  helpId: "awards")],
                  allowSync: false, backgroundColor: Palette.normal, bottomInset: 0)
             let detailViewController = AwardDetailViewController.create()
+            detailViewController.rootViewController = self.rootViewController
+            detailViewController.rootViewController.detailDelegate = detailViewController
             viewController.awardDetail = detailViewController
-            self.presentInContainers([PanelContainerItem(viewController: viewController, container: .main),
-                                      PanelContainerItem(viewController: detailViewController, container: .rightInset)],
-                                     rightPanelTitle: "", animated: true, completion: completion)
+            self.presentInContainers([                                       PanelContainerItem(viewController: viewController, container: .main),
+                PanelContainerItem(viewController: detailViewController, container: .rightInset)],
+                rightPanelTitle: "", animated: true, completion: completion)
             
         case .profiles:
             let viewController = PlayersViewController.create(completion: nil)
             let playerMO = Scorecard.shared.findPlayerByPlayerUUID(Scorecard.settings.thisPlayerUUID)!
             let playerDetail = PlayerDetail()
             playerDetail.fromManagedObject(playerMO: playerMO)
-            let detailViewController = PlayerDetailViewController.create(playerDetail: playerDetail, mode: .amend, playersViewDelegate: viewController, dismissOnSave: false)
+            self.rootViewController.rightPanelDefaultScreenColors(rightInsetColor: Palette.normal.background)
+           let detailViewController = PlayerDetailViewController.create(playerDetail: playerDetail, mode: .amend, playersViewDelegate: viewController, dismissOnSave: false)
+            detailViewController.rootViewController = self.rootViewController
+            detailViewController.rootViewController.detailDelegate = detailViewController
             viewController.playerDetailView = detailViewController
-            self.presentInContainers([PanelContainerItem(viewController: viewController, container: .main),
-                                      PanelContainerItem(viewController: detailViewController, container: .rightInset)],
-                                     rightPanelTitle: playerDetail.name, animated: true, completion: completion)
+            self.presentInContainers([
+                PanelContainerItem(viewController: viewController, container: .main),
+                PanelContainerItem(viewController: detailViewController, container: .rightInset)],
+                rightPanelTitle: playerDetail.name, animated: true, completion: completion)
             
         case .settings:
             // Need to invoke settings from root view controller

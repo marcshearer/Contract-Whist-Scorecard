@@ -12,6 +12,7 @@ class HelpViewElement {
     let text: ()->NSAttributedString
     let descriptor: NSAttributedString?
     let views: [UIView]?
+    let callback: ((Int, UIView)->CGRect?)?
     let section: Int
     let itemFrom: Int?
     let itemTo: Int?
@@ -22,7 +23,7 @@ class HelpViewElement {
     let shrink: Bool
     let direction: SpeechBubbleArrowDirection?
     
-    init(text: (()->String)? = nil, attributedText: (()->NSAttributedString)? = nil, descriptor: NSAttributedString? = nil, views: [UIView?]? = nil, section: Int = 0, item: Int? = nil, itemTo: Int? = nil, bannerId: AnyHashable? = nil, border: CGFloat = 0, horizontalBorder: CGFloat? = nil, verticalBorder: CGFloat? = nil, radius: CGFloat = 8.0, shrink: Bool = false, direction: SpeechBubbleArrowDirection? = nil) {
+    init(text: (()->String)? = nil, attributedText: (()->NSAttributedString)? = nil, descriptor: NSAttributedString? = nil, views: [UIView?]? = nil, callback: ((Int, UIView)->CGRect?)? = nil, section: Int = 0, item: Int? = nil, itemTo: Int? = nil, bannerId: AnyHashable? = nil, border: CGFloat = 0, horizontalBorder: CGFloat? = nil, verticalBorder: CGFloat? = nil, radius: CGFloat = 8.0, shrink: Bool = false, direction: SpeechBubbleArrowDirection? = nil) {
         
         if let attributedText = attributedText {
             self.text = attributedText
@@ -44,6 +45,7 @@ class HelpViewElement {
             self.views = nil
         }
         
+        self.callback = callback
         self.descriptor = descriptor
         self.section = section
         self.itemFrom = item
@@ -68,12 +70,14 @@ fileprivate enum HelpViewSource {
     
     var sort: Int {
         switch self {
-        case .view, .message:
+        case .message:
             return 0
         case .menu:
             return 1
-        case .banner:
+        case .view:
             return 2
+        case .banner:
+            return 3
         }
     }
 }
@@ -136,6 +140,11 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
     private let arrowHeight: CGFloat = 40
     private let minVisibleHeight: CGFloat = 20
     
+    private static var _helpContext: String?
+    public static var helpContext: String? { _helpContext }
+    
+    public var isEmpty: Bool { return self.elements.isEmpty }
+    
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         fatalError("Not implemented")
@@ -163,28 +172,33 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
     
     internal override func layoutSubviews() {
         super.layoutSubviews()
-        self.frame = self.parentViewController.view.convert(self.parentViewController.screenBounds, from: nil)
+        self.frame = self.parentView.convert(self.parentViewController.screenBounds, from: nil)
+        self.parentView.bringSubviewToFront(self)
     }
     
     public func reset() {
         self.elements = []
     }
     
-    public func add(_ text: @escaping @autoclosure ()->String, descriptor: String? = nil, views: [UIView?]? = nil, section: Int = 0, item: Int? = nil, itemTo: Int? = nil, bannerId: AnyHashable? = nil, border: CGFloat = 0, horizontalBorder: CGFloat? = nil, verticalBorder: CGFloat? = nil, radius: CGFloat = 8.0, shrink: Bool = false, direction: SpeechBubbleArrowDirection? = nil) {
+    public func add(_ text: @escaping @autoclosure ()->String, descriptor: String? = nil, views: [UIView?]? = nil, callback: ((Int, UIView)->CGRect?)? = nil, section: Int = 0, item: Int? = nil, itemTo: Int? = nil, bannerId: AnyHashable? = nil, border: CGFloat = 0, horizontalBorder: CGFloat? = nil, verticalBorder: CGFloat? = nil, radius: CGFloat = 8.0, shrink: Bool = false, direction: SpeechBubbleArrowDirection? = nil) {
         
-        self.elements.append(HelpViewElement(text: text, descriptor: (descriptor != nil ? NSAttributedString(markdown: descriptor!) : nil), views: views, section: section, item: item, itemTo: itemTo, bannerId: bannerId, border: border, horizontalBorder: horizontalBorder, verticalBorder: verticalBorder, radius: radius, shrink: shrink, direction: direction))
+        self.elements.append(HelpViewElement(text: text, descriptor: (descriptor != nil ? NSAttributedString(markdown: descriptor!) : nil), views: views, callback: callback, section: section, item: item, itemTo: itemTo, bannerId: bannerId, border: border, horizontalBorder: horizontalBorder, verticalBorder: verticalBorder, radius: radius, shrink: shrink, direction: direction))
     }
     
-    public func add(_ attributedText: @escaping @autoclosure ()->NSAttributedString, descriptor: NSAttributedString, views: [UIView?]? = nil, section: Int = 0, item: Int? = nil, itemTo: Int? = nil, bannerId: AnyHashable? = nil, border: CGFloat = 0, horizontalBorder: CGFloat? = nil, verticalBorder: CGFloat? = nil, radius: CGFloat = 8, shrink: Bool = false, direction: SpeechBubbleArrowDirection? = nil) {
+    public func add(_ attributedText: @escaping @autoclosure ()->NSAttributedString, descriptor: NSAttributedString, views: [UIView?]? = nil, callback: ((Int, UIView)->CGRect?)? = nil, section: Int = 0, item: Int? = nil, itemTo: Int? = nil, bannerId: AnyHashable? = nil, border: CGFloat = 0, horizontalBorder: CGFloat? = nil, verticalBorder: CGFloat? = nil, radius: CGFloat = 8, shrink: Bool = false, direction: SpeechBubbleArrowDirection? = nil) {
         
-        self.elements.append(HelpViewElement(attributedText: attributedText, descriptor: descriptor, views: views, section: section, item: item, itemTo: itemTo, bannerId: bannerId, border: border, horizontalBorder: horizontalBorder, verticalBorder: verticalBorder, radius: radius, shrink: shrink, direction: direction))
+        self.elements.append(HelpViewElement(attributedText: attributedText, descriptor: descriptor, views: views, callback: callback, section: section, item: item, itemTo: itemTo, bannerId: bannerId, border: border, horizontalBorder: horizontalBorder, verticalBorder: verticalBorder, radius: radius, shrink: shrink, direction: direction))
     }
     
     public func show(alwaysNext: Bool = false, completion: ((Bool)->())? = nil) {
         self.alwaysNext = alwaysNext
         self.completion = completion
-
+        
+        HelpView._helpContext = UUID().uuidString
+        self.layoutSubviews()
+        
         self.isHidden = false
+        self.isHidden(false)
         self.addTapGesture()
         
         // Build a list of currently active elements and calculate their containing frame
@@ -196,20 +210,36 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
             if let views = element.views {
                 for view in views {
                     var cell: UIView?
+                    var frame: CGRect?
                     if let from = element.itemFrom, let to = element.itemTo {
                         for item in from...to {
                             let indexPath = IndexPath(item: item, section: element.section)
                             if let collectionView = view as? UICollectionView {
-                                if item > collectionView.numberOfItems(inSection: indexPath.section) {
+                                if indexPath.section < 0 || item > collectionView.numberOfItems(inSection: indexPath.section) {
                                     break
                                 }
-                                if let item = collectionView.cellForItem(at: indexPath) {
-                                    let flowLayout = collectionView.collectionViewLayout
-                                    if let attributes = flowLayout.layoutAttributesForItem(at: indexPath) {
-                                        let frame = attributes.frame
-                                        if collectionView.bounds.intersects(frame) {
-                                            if !item.isHidden {
-                                                cell = item
+                                let flowLayout = collectionView.collectionViewLayout
+                                if indexPath.item < 0 {
+                                    let kind = UICollectionView.elementKindSectionHeader
+                                    let indexPath = IndexPath(item: 0, section: indexPath.section)
+                                    if let item = collectionView.supplementaryView(forElementKind: kind, at: indexPath) {
+                                        if let attributes = flowLayout.layoutAttributesForSupplementaryView(ofKind: kind, at: indexPath) {
+                                            frame = attributes.frame
+                                            if collectionView.bounds.intersects(frame!) {
+                                                if !item.isHidden {
+                                                    cell = item
+                                                }
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    if let item = collectionView.cellForItem(at: indexPath) {
+                                        if let attributes = flowLayout.layoutAttributesForItem(at: indexPath) {
+                                            frame = attributes.frame
+                                            if collectionView.bounds.intersects(frame!) {
+                                                if !item.isHidden {
+                                                    cell = item
+                                                }
                                             }
                                         }
                                     }
@@ -225,7 +255,7 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
                                         }
                                     }
                                 } else {
-                                    if item > tableView.numberOfRows(inSection: indexPath.section) {
+                                    if indexPath.section < 0 || item > tableView.numberOfRows(inSection: indexPath.section) {
                                         break
                                     }
                                     let frame = tableView.rectForRow(at: indexPath)
@@ -237,16 +267,36 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
                                         }
                                     }
                                 }
+                                frame = cell?.frame
                             }
                             if let cell = cell {
                                 // Intersect the cell with the original collection / table to allow for partially hidden cells
-                                let cellFrame = view.convert(cell.frame, to: view.superview!)
-                                activeFrames.append((frame: cellFrame.intersection(view.frame), view: view))
+                                if let callback = element.callback {
+                                    if let callbackFrame = callback(item, cell) {
+                                        frame = cell.superview!.convert(callbackFrame, from: cell)
+                                    } else {
+                                        frame = nil
+                                    }
+                                }
+                                if let frame = frame {
+                                    let cellFrame = view.convert(frame, to: view.superview!)
+                                    activeFrames.append((frame: cellFrame.intersection(view.frame), view: view))
+                                }
                             }
                         }
                     } else {
                         if !view.isHidden {
-                            activeFrames.append((frame: view.frame, view: view))
+                            var frame: CGRect? = view.frame
+                            if let callback = element.callback {
+                                if let callbackFrame = callback(0, view) {
+                                    frame = view.superview!.convert(callbackFrame, from: view)
+                                } else {
+                                    frame = nil
+                                }
+                            }
+                            if let frame = frame {
+                                activeFrames.append((frame: frame, view: view))
+                            }
                         }
                     }
                 }
@@ -310,7 +360,7 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
                 let menuElement = HelpViewElement(attributedText: sourceElement.text, descriptor: activeElement.descriptor, views: activeElement.views, horizontalBorder: sourceElement.horizontalBorder, verticalBorder: sourceElement.verticalBorder)
                 
                 self.removeTapGesture()
-                self.isHidden = true
+                self.isHidden(true)
                 self.parentViewController.menuController?.showHelp(helpElement: menuElement, showNext: showNext, completion: self.menuCompletion)
             } else {
                 self.next()
@@ -326,10 +376,12 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
         self.completion = { (finishPressed) in
             self.removeTapGesture()
             self.isHidden = true
+            self.isHidden(true)
             completion(finishPressed)
         }
         self.addTapGesture()
         self.isHidden = false
+        self.isHidden(false)
         if let view = element.views?.first {
             self.activeElements = [HelpViewActiveElement(element: element, frame: view.frame, views: [view], source: .menu)]
             self.currentElement = 0
@@ -491,7 +543,8 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
             self.finished()
         } else {
             self.addTapGesture()
-            self.isHidden = false
+            self.isHidden(false)
+
             self.next()
         }
     }
@@ -567,6 +620,7 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
     public func finished(_ finishPressed: Bool = true) {
         self.removeTapGesture()
         self.isHidden = true
+        self.isHidden(true)
         self.completion?(finishPressed)
     }
     
@@ -574,17 +628,36 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
         self.finished(true)
     }
     
-      // MARK: - Gesture Recognizer Delegates ============================================================ -
+    private func isHidden(_ isHidden: Bool) {
+        self.speechBubble.isHidden = isHidden
+        self.focus.isHidden = isHidden
+        self.nextButton.isHidden = isHidden
+        self.finishButton.isHidden = isHidden
+    }
+    
+    // MARK: - Dashboard Help ===================================================== -
+    
+    public func add(dashboardView: DashboardView) {
+        self.addHelpView(view: dashboardView)
+    }
+    
+    private func addHelpView(view: UIView) {
+        if let view = view as? DashboardTileDelegate {
+            view.addHelp?(to: self)
+        } else {
+            for view in view.subviews {
+                self.addHelpView(view: view)
+            }
+        }
+    }
+    
+    // MARK: - Gesture Recognizer Delegates ============================================================ -
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
             return gestureRecognizer == self.tapGesture
     }
     
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        return true
-    }
-    
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true
     }
 }

@@ -463,7 +463,7 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
         if let parentViewController = self.fromViewController() {
             highScoresViewController = DashboardViewController.show(
                 from: parentViewController, title: "High Scores",
-                dashboardNames: [(title: "High Scores",  fileName: "HighScoresDashboard",  imageName: nil)],
+                dashboardNames: [DashboardName(title: "High Scores",  fileName: "HighScoresDashboard", helpId: "highScores")],
                 allowSync: false, backImage: "cross white", backgroundColor: Palette.banner,
                 container: .mainRight,  menuFinishText: "Return to Game Summary")
         }
@@ -493,6 +493,8 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
             self.gameDetailPanelViewController = GameDetailPanelViewController.create()
             self.gameDetailPanelViewController.appController = self
             self.gameDetailPanelViewController.controllerDelegate = self
+            self.gameDetailPanelViewController.rootViewController = parentViewController.rootViewController
+            self.gameDetailPanelViewController.rootViewController.detailDelegate = gameDetailPanelViewController
             self.parentViewController?.rootViewController.presentInContainers([PanelContainerItem(viewController: gameDetailPanelViewController, container: .right)], animated: true, completion: nil)
             self.gameDetailDelegate = self.gameDetailPanelViewController
         }
@@ -642,10 +644,14 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
     internal var gameDetailDelegate: GameDetailDelegate? { return self.appController?.gameDetailDelegate }
     
     internal var screenBounds: CGRect {
-        if self.rootViewController.view.contains(self.view) {
-            return self.rootViewController.view.bounds
+        if let rootView = self.rootViewController?.view {
+            if rootView.contains(self.view) {
+                return self.rootViewController.view.bounds
+            } else {
+                return self.view.bounds
+            }
         } else {
-            return self.view.bounds
+            return UIScreen.main.bounds
         }
     }
     internal var screenWidth: CGFloat { return self.screenBounds.width}
@@ -788,7 +794,7 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
                 viewControllerToPresent.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
                 viewControllerToPresent.preferredContentSize = popoverSize!
                 viewControllerToPresent.popoverPresentationController?.sourceView = sourceView
-                viewControllerToPresent.popoverPresentationController?.sourceRect = sourceRect ?? CGRect()
+                viewControllerToPresent.popoverPresentationController?.sourceRect = sourceRect ?? sourceView?.frame ?? CGRect()
                 viewControllerToPresent.popoverPresentationController?.delegate = popoverDelegate
                 viewControllerToPresent.isModalInPopover = true
                 if let delegate = self as? UIPopoverPresentationControllerDelegate {
@@ -1003,8 +1009,12 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
         fatalError("Must be overridden")
     }
     
+    internal func helpPressed(alwaysNext: Bool = false, completion: ((Bool)->())? = nil) {
+        self.helpView?.show(alwaysNext: alwaysNext, completion: completion)
+    }
+    
     internal func helpPressed() {
-        self.helpView?.show()
+        self.helpPressed(alwaysNext: false, completion: nil)
     }
     
     // MARK: - Utility routines ======================================================================== -

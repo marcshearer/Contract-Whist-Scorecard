@@ -161,6 +161,7 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
         self.focus = FocusView(from: parentViewController, in: self)
         self.nextButton = self.addButton(title: "Next", target: #selector(HelpView.nextPressed))
         self.finishButton = self.addButton(title: "Exit", target: #selector(HelpView.self.finishPressed))
+        self.accessibilityIdentifier = "helpView"
         self.isHidden = true
         self.elements = []
         self.parentView = parentViewController.view
@@ -185,7 +186,7 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
         self.elements.append(HelpViewElement(text: text, descriptor: (descriptor != nil ? NSAttributedString(markdown: descriptor!) : nil), views: views, callback: callback, section: section, item: item, itemTo: itemTo, bannerId: bannerId, border: border, horizontalBorder: horizontalBorder, verticalBorder: verticalBorder, radius: radius, shrink: shrink, direction: direction))
     }
     
-    public func add(_ attributedText: @escaping @autoclosure ()->NSAttributedString, descriptor: NSAttributedString, views: [UIView?]? = nil, callback: ((Int, UIView)->CGRect?)? = nil, section: Int = 0, item: Int? = nil, itemTo: Int? = nil, bannerId: AnyHashable? = nil, border: CGFloat = 0, horizontalBorder: CGFloat? = nil, verticalBorder: CGFloat? = nil, radius: CGFloat = 8, shrink: Bool = false, direction: SpeechBubbleArrowDirection? = nil) {
+    public func add(_ attributedText: @escaping @autoclosure ()->NSAttributedString, descriptor: NSAttributedString? = nil, views: [UIView?]? = nil, callback: ((Int, UIView)->CGRect?)? = nil, section: Int = 0, item: Int? = nil, itemTo: Int? = nil, bannerId: AnyHashable? = nil, border: CGFloat = 0, horizontalBorder: CGFloat? = nil, verticalBorder: CGFloat? = nil, radius: CGFloat = 8, shrink: Bool = false, direction: SpeechBubbleArrowDirection? = nil) {
         
         self.elements.append(HelpViewElement(attributedText: attributedText, descriptor: descriptor, views: views, callback: callback, section: section, item: item, itemTo: itemTo, bannerId: bannerId, border: border, horizontalBorder: horizontalBorder, verticalBorder: verticalBorder, radius: radius, shrink: shrink, direction: direction))
     }
@@ -581,7 +582,7 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
     }
     
     private func addTapGesture() {
-        if self.parentViewController.rootViewController.containers {
+        if self.parentViewController.rootViewController.containers && self.parentViewController.container != nil {
             self.parentViewController.rootViewController.view.addGestureRecognizer(self.tapGesture)
         } else {
             self.addGestureRecognizer(self.tapGesture)
@@ -589,7 +590,7 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
     }
     
     private func removeTapGesture() {
-        if self.parentViewController.rootViewController.containers {
+        if self.parentViewController.rootViewController.containers && self.parentViewController.container != nil {
             self.parentViewController.rootViewController.view.removeGestureRecognizer(self.tapGesture)
         } else {
             self.removeGestureRecognizer(self.tapGesture)

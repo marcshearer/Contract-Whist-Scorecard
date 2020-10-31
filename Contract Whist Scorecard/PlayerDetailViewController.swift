@@ -328,7 +328,7 @@ class PlayerDetailViewController: ScorecardViewController, PlayerDetailViewDeleg
                 cell.playerView.set(data: self.playerDetail.thumbnail)
                 cell.playerView.isEnabled = (self.mode == .amending)
                 if cell.playerView.isEnabled {
-                    cell.thumbnailMessageLabel.text = (self.playerDetail.thumbnail == nil ? "Click camera to add a photo" : "Click photo to remove or change it")
+                    cell.thumbnailMessageLabel.text = (self.playerDetail.thumbnail == nil ? "Tap the camera to add a photo" : "Tap photo to remove or change it")
                 } else {
                    cell.thumbnailMessageLabel.text = ""
                 }
@@ -948,7 +948,7 @@ extension PlayerDetailViewController {
         
         self.helpView.add("This is the player's photo. \(self.mode == .display ? "" : self.playerDetail.thumbnail == nil ? "You can add a photo by tapping the camera button\(self.mode == .amend ? " when in edit mode" : "")." : "You can change or remove the photo by tapping it\(self.mode == .amend ? " when in edit mode" : "").")", views: [self.tableView], section: self.thumbnailSection, item: -1, itemTo: 0, horizontalBorder: 8)
         
-        self.helpView.add("\(self.mode != .amending ? "Click the edit button to edit the name and/or photo. " : (self.changed ? "Click the @*/Save@*/ button to save changes or the @*/Cancel@*/ button to cancel any changes." : "Click the @*/Cancel@*/ button to leave edit mode."))", views: [self.tableView], section: editSection, item: 0, horizontalBorder: 8)
+        self.helpView.add("\(self.mode != .amending ? "Tap the edit button to edit the name and/or photo. " : (self.changed ? "Tap the @*/Save@*/ button to save changes or the @*/Cancel@*/ button to cancel any changes." : "Tap the @*/Cancel@*/ button to leave edit mode."))", views: [self.tableView], section: editSection, item: 0, horizontalBorder: 8)
         
         self.helpView.add("This section shows the date when the player last played a game of Whist.", views: [self.tableView], section: self.lastPlayedSection, item: -1, itemTo: 999, horizontalBorder: 8)
 
@@ -956,8 +956,8 @@ extension PlayerDetailViewController {
 
         self.helpView.add("This section shows the players statistics including games played, percentage of games won //etc//.", views: [self.tableView], section: self.statsSection, item: -1, itemTo: 999, horizontalBorder: 8)
         
-        self.helpView.add("Click the @*/Remove Player@*/ button to remove the player from this device. Note that if this player has been synced to the cloud they will still exist there and can be downloaded again in future.", views: [self.tableView], section: self.deleteSection, item: 0, horizontalBorder: 8)
+        self.helpView.add("Tap the @*/Remove Player@*/ button to remove the player from this device. Note that if this player has been synced to the cloud they will still exist there and can be downloaded again in future.", views: [self.tableView], section: self.deleteSection, item: 0, horizontalBorder: 8)
 
-        self.helpView.add("Click the {} to close @*/Player Details@*/.", bannerId: Banner.finishButton)
+        self.helpView.add("Tap the {} to close @*/Player Details@*/.", bannerId: Banner.finishButton)
     }
 }

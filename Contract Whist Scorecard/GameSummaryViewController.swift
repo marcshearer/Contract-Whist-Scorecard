@@ -766,7 +766,7 @@ extension GameSummaryViewController {
         
         self.helpView.add("The other players scores are shown below (in sequence)", views: [self.otherCollectionView], border: 8)
         
-        self.helpView.add("If you have achieved any awards they are shown in this area.\(self.awardList.isEmpty ? "" : " Click on an award to see details.")", views: [self.awardsTitleBar])
+        self.helpView.add("If you have achieved any awards they are shown in this area.\(self.awardList.isEmpty ? "" : " Tap on an award to see details.")", views: [self.awardsTitleBar])
         
         self.helpView.add("The {} takes you back to the @*/Scorepad@*/ screen where you can look at \(self.gameMode == .scoring || self.gameMode == .viewing ? "the scores for each round" : "the hands for each round")", bannerId: Banner.finishButton)
         

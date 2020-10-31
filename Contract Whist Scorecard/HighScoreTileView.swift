@@ -123,7 +123,7 @@ class HighScoreTileView: DashboardTileView, UITableViewDataSource, UITableViewDe
 
     internal func addHelp(to helpView: HelpView) {
         
-        helpView.add("The @*/\(self.title)@*/ tile shows \(self.personal ? "your" : "the") highest scores\(self.personal ? "" : " for the players on this device").\n\nClick on the tile to show more high score details.", views: [self], shrink: true)
+        helpView.add("The @*/\(self.title)@*/ tile shows \(self.personal ? "your" : "the") highest scores\(self.personal ? "" : " for the players on this device").\n\nTap on the tile to show more high score details.", views: [self], shrink: true)
     }
 
     internal func reloadData() {

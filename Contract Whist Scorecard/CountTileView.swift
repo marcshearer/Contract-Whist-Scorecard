@@ -101,7 +101,7 @@ class CountTileView: DashboardTileView {
     // MARK: - Dashboard Tile delegates ================================================= -
 
     internal func addHelp(to helpView: HelpView) {
-        helpView.add("The @*/\(self.title)@*/ tile shows the number of \(self.value.description) by \(self.personal ? "you" : "the players on this device").\n\nClick on it to display the games \(self.personal ? "you" : "players on this device") have played in.", views: [self], shrink: true)
+        helpView.add("The @*/\(self.title)@*/ tile shows the number of \(self.value.description) by \(self.personal ? "you" : "the players on this device").\n\nTap on it to display the games \(self.personal ? "you" : "players on this device") have played in.", views: [self], shrink: true)
     }
     
     internal func reloadData() {

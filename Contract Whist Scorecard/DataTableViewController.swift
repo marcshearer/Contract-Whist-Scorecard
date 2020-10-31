@@ -17,7 +17,7 @@ import CoreData
 
 }
 
-@objc public protocol DataTableViewerDelegate : class {
+@objc internal protocol DataTableViewerDelegate : class {
     
     var availableFields: [DataTableField] { get }
     @objc optional var allowSync: Bool { get }
@@ -34,6 +34,8 @@ import CoreData
 
     @objc optional func setupCustomButton(id: AnyHashable?) -> BannerButton?
     
+    @objc optional func setupCustomControls(completion: ()->())
+    
     @objc optional func didSelect(record: DataTableViewerDataSource, field: String)
         
     @objc optional func refreshData(recordList: [DataTableViewerDataSource]) -> [DataTableViewerDataSource]
@@ -48,13 +50,15 @@ import CoreData
     
     @objc optional func syncButtons(enabled: Bool)
     
+    @objc optional func addHelp(to helpView: HelpView, header: UITableView, body: UITableView)
+
 }
 
 class DataTableViewController: ScorecardViewController, UITableViewDataSource, UITableViewDelegate {
     
     // MARK: - Class Properties ======================================================================== -
     
-    private var displayedFields: [DataTableField] = []
+    internal var displayedFields: [DataTableField] = []
     private var firstTime = true
     private var lastSortColumn = -1
     private var lastSortField = ""
@@ -113,8 +117,20 @@ class DataTableViewController: ScorecardViewController, UITableViewDataSource, U
         // Check for network / iCloud login
         self.networkEnableSyncButton()
         
+        if let setupCustomControls = self.delegate?.setupCustomControls {
+            setupCustomControls(self.viewDidLoadContinued)
+        } else {
+            self.viewDidLoadContinued()
+        }
+    }
+        
+    private func viewDidLoadContinued() {
+        
         // Format finish button
         self.setupBanner()
+        
+        // Setup help
+        self.setupHelpView()
         
         // Set initial sort (if any)
         self.lastSortField = self.delegate?.initialSortField ?? ""
@@ -126,28 +142,29 @@ class DataTableViewController: ScorecardViewController, UITableViewDataSource, U
     
     private func setupBanner() {
         let finishImage = UIImage(named: self.delegate?.backImage ?? "home")
-        let finishTitle = self.delegate?.backText ?? ""
-        let finishTextWidth = finishTitle.labelWidth(font: BannerButton.defaultFont)
-        let finishWidth = finishTextWidth + (finishImage != nil ? 30 : 0) + 8
-        
-        let leftBannerButtons = [
-            BannerButton(title: finishTitle, image: finishImage, width: finishWidth, action: self.finishPressed, menuHide: true, id: finishButton)]
+        let finishTitle = self.delegate?.backText
+        let finishTextWidth = (finishTitle == nil ? 0 : finishTitle!.labelWidth(font: BannerButton.defaultFont) + 8)
+        let finishWidth = finishTextWidth + (finishImage != nil ? 22 : 0)
         
         let syncType: BannerButtonType = (ScorecardUI.smallPhoneSize() ? .clear : .shadow)
         let syncTitle = (ScorecardUI.smallPhoneSize() ? nil : "Sync")
         let syncImage = (ScorecardUI.smallPhoneSize() ? UIImage(named: "cloud") : nil)
-        let syncWidth = (ScorecardUI.smallPhoneSize() ? 40 : max(syncTitle!.labelWidth(font: BannerButton.defaultFont) + 16, 80))
+        let syncWidth = (ScorecardUI.smallPhoneSize() ? 30 : max(syncTitle!.labelWidth(font: BannerButton.defaultFont) + 16, 60))
         
-        var rightBannerButtons = [
-            BannerButton(title: syncTitle, image: syncImage, width: syncWidth, action: self.syncPressed, type: syncType, id: syncButton)]
+        var leftBannerButtons = [
+            BannerButton(title: finishTitle, image: finishImage, width: finishWidth, action: self.finishPressed, menuHide: true, id: finishButton)]
         
         if let customBannerButton = self.delegate?.setupCustomButton?(id: customButton) {
-            rightBannerButtons.append(customBannerButton)
+            leftBannerButtons.append(customBannerButton)
         }
+
+        let rightBannerButtons = [
+            BannerButton(action: self.helpPressed, type: .help),
+            BannerButton(title: syncTitle, image: syncImage, width: syncWidth, action: self.syncPressed, type: syncType, id: syncButton)]
         
         self.banner.set(
             title: (self.delegate?.viewTitle ?? ""),
-            leftButtons: leftBannerButtons,
+            leftButtons: leftBannerButtons, leftSpacing: 8,
             rightButtons: rightBannerButtons)
         
      }
@@ -271,18 +288,23 @@ class DataTableViewController: ScorecardViewController, UITableViewDataSource, U
     
     // MARK: - methods to show/dismiss this view controller ======================================================= -
     
-    static public func show(from sourceViewController: ScorecardViewController, delegate: DataTableViewerDelegate, recordList: [DataTableViewerDataSource], completion: (()->())? = nil) -> DataTableViewController {
+    static public func create(delegate: DataTableViewerDelegate, recordList: [DataTableViewerDataSource], completion: (()->())? = nil) -> DataTableViewController {
         
         let storyboard = UIStoryboard(name: "DataTableViewController", bundle: nil)
-        let dataTableviewController = storyboard.instantiateViewController(withIdentifier: "DataTableViewController") as! DataTableViewController
+        let dataTableViewController = storyboard.instantiateViewController(withIdentifier: "DataTableViewController") as! DataTableViewController
         
-        dataTableviewController.recordList = recordList
-        dataTableviewController.delegate = delegate
-        dataTableviewController.modalPresentationStyle = .fullScreen
-        sourceViewController.present(dataTableviewController, animated: true, container: .none, completion: nil)
+        dataTableViewController.recordList = recordList
+        dataTableViewController.delegate = delegate
         
-        return dataTableviewController
+        return dataTableViewController
     }
+     
+    static public func show(_ dataTableViewController: DataTableViewController, from sourceViewController: ScorecardViewController) {
+
+        dataTableViewController.modalPresentationStyle = .fullScreen
+        
+        sourceViewController.present(dataTableViewController, animated: true, container: .none, completion: nil)
+     }
     
     private func dismiss() {
         if self.observer != nil {
@@ -376,7 +398,17 @@ extension DataTableViewController: UICollectionViewDelegate, UICollectionViewDat
                 cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Data Table Body Button Cell", for: indexPath) as! DataTableCollectionCell
                 cell.bodyButton.tag = (collectionView.tag * 1000) + indexPath.row
                 cell.bodyButton.addTarget(self, action: #selector(DataTableViewController.buttonPressed(_:)), for: UIControl.Event.touchUpInside)
-                cell.bodyButton.setImage(UIImage(named: column.field), for: .normal)
+                var name = column.field
+                var image: UIImage?
+                if name.left(7) == "system." {
+                    name = name.right(name.length - 7)
+                    image = UIImage(systemName: name)
+                    cell.bodyButton.tintColor = Palette.banner.background
+                } else {
+                    image = UIImage(named: name)
+                    cell.bodyButton.tintColor = nil
+                }
+                cell.bodyButton.setImage(image, for: .normal)
                 cell.bodyButton.contentMode = .scaleAspectFill
                 cell.bodyButton.isEnabled = self.delegate?.isEnabled?(button: column.field, record: recordList[collectionView.tag]) ?? true
             case .thumbnail:
@@ -795,5 +827,19 @@ class DataTableFormatter {
                 return ""
             }
         }
+    }
+}
+
+extension DataTableViewController {
+    
+    internal func setupHelpView() {
+        
+        self.helpView.reset()
+                
+        self.delegate?.addHelp?(to: self.helpView, header: self.headerView, body: self.bodyView)
+        
+        helpView.add("Tap the @*/Sync@*/ button allows you to synchronize the data on this device with the data in iCloud.", bannerId: syncButton)
+        
+        helpView.add("Tap the {} to exit from @*/\((self.delegate?.viewTitle)!)@*/ and return to the previous view.", bannerId: self.finishButton, horizontalBorder: 8, verticalBorder: 4)
     }
 }

@@ -173,7 +173,7 @@ class DataTableTileView: DashboardTileView, UITableViewDataSource, UITableViewDe
 
     internal func addHelp(to helpView: HelpView) {
         
-        helpView.add("The @*/\(self.title)@*/ tile shows \(self.personal ? "your" : "the") \(self.detailType.description.lowercased()) \(self.personal ? "" : " for the players with the highest win% on this device").\n\n\(detailDrill ? "Click on a row to see detail" : "Click on the tile to see more details").", views: [self], shrink: true)
+        helpView.add("The @*/\(self.title)@*/ tile shows \(self.personal ? "your" : "the") \(self.detailType.description.lowercased()) \(self.personal ? "" : " for the players with the highest win% on this device").\n\n\(detailDrill ? "Tap on a row to see detail" : "Tap on the tile to see more details").", views: [self], shrink: true)
     }
     
     internal func reloadData() {

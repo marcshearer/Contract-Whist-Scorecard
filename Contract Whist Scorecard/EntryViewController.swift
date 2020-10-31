@@ -1102,7 +1102,7 @@ extension EntryViewController {
                 
         self.helpView.add("This screen allows the bids and scores for a hand to be entered")
         
-        self.helpView.add("This area shows the current \(self.bidOnlyMode ? "bids" : "bids and scores").\nThe cursor shows the value that will be input if you click the @*/Numeric Buttons@*/.\n\(Scorecard.game.scores.error(round: Scorecard.game.selectedRound) ? "Errors in the current round are highlighted. You must correct any errors before saving." : "")", views: [self.playerTableView], shrink: true)
+        self.helpView.add("This area shows the current \(self.bidOnlyMode ? "bids" : "bids and scores").\nThe cursor shows the value that will be input if you tap the @*/Numeric Buttons@*/.\n\(Scorecard.game.scores.error(round: Scorecard.game.selectedRound) ? "Errors in the current round are highlighted. You must correct any errors before saving." : "")", views: [self.playerTableView], shrink: true)
         
         self.helpView.add("This area shows instructions on what to do next.", views: [self.instructionContainerView], radius: 12)
         
@@ -1110,9 +1110,9 @@ extension EntryViewController {
         
         self.helpView.add("The {} saves the scores and takes you back to the @*/Scorepad@*/ screen.", descriptor: "@*/Back@*/ button", views: [self.toolbarFinishButton], bannerId: saveButton)
         
-        self.helpView.add("The {} indicates that there are errors in the scores entered which must be corrected. Clicking it will show details of the errors.", descriptor: "@*/Error@*/ button", views: [self.toolbarErrorsButton], bannerId: errorsButton, radius: self.toolbarErrorsButton.frame.height / 2)
+        self.helpView.add("The {} indicates that there are errors in the scores entered which must be corrected. Tapping it will show details of the errors.", descriptor: "@*/Error@*/ button", views: [self.toolbarErrorsButton], bannerId: errorsButton, radius: self.toolbarErrorsButton.frame.height / 2)
 
-        self.helpView.add("The @*/Undo @*/ button undoes the last entry made.\n\nYou can click it repeatedly to remove several entries.", views: [self.undoButton])
+        self.helpView.add("The @*/Undo @*/ button undoes the last entry made.\n\nYou can tap it repeatedly to remove several entries.", views: [self.undoButton])
         
         self.helpView.add("This area shows the current round being played. The number shows the number of cards in the round and the suit shows the current trump suit.", views: [self.footerRoundTitle])
                 

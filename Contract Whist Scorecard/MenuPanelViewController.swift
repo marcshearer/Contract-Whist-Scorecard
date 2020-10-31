@@ -134,6 +134,11 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
         if currentOption == .playGame && self.rootViewController.viewControllerStack.isEmpty {
             // Show menu initial menu panel help followed by option help followed by final menu panel help
             
+            func rootHelpView(isHidden: Bool) {
+                self.rootViewController.helpView.isHidden = isHidden
+            }
+            
+            rootHelpView(isHidden: false) // Show the root help view to mask out any tap gestures below
             self.view.superview?.bringSubviewToFront(self.view)
             self.helpView.show(alwaysNext: true) { (finishPressed) in
                 self.view.superview?.insertSubview(self.view, at: 1)
@@ -141,11 +146,17 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
                     self.rootViewController.panelhelpPressed(alwaysNext: false) { (finishPressed) in
                         if !finishPressed {
                             self.view.superview?.bringSubviewToFront(self.view)
+                            rootHelpView(isHidden: false)
                             self.helpViewAfter.show(alwaysNext: false) { (finishPressed) in
                                 self.view.superview?.insertSubview(self.view, at: 1)
+                                rootHelpView(isHidden: true)
                             }
+                        } else {
+                            rootHelpView(isHidden: true)
                         }
                     }
+                } else {
+                    rootHelpView(isHidden: true)
                 }
             }
         } else {

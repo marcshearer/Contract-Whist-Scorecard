@@ -69,7 +69,7 @@ class TrendTileView: DashboardTileView {
 
     internal func addHelp(to helpView: HelpView) {
         
-        helpView.add("The @*/\(self.title)@*/ tile shows the trend for your total score in the last \(self.maxPoints) games.\n\nClick on the tile to show Stats for all players on this device.", views: [self], shrink: true)
+        helpView.add("The @*/\(self.title)@*/ tile shows the trend for your total score in the last \(self.maxPoints) games.\n\nTap on the tile to show Stats for all players on this device.", views: [self], shrink: true)
     }
 
     internal func reloadData() {

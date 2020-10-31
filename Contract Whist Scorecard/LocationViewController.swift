@@ -639,7 +639,7 @@ extension LocationViewController {
         
         self.helpView.add("The selected location will be shown on the map by a pin. You can zoom in and out using pinch gestures or swipe to move the map.\n\nYou **cannot** select a location from the map", views: [self.locationMapView], radius: 0, shrink: true)
         
-        self.helpView.add("\((self.canFinish ? "When you have specified a location the {} will be enabled. " : ""))Click the {} to start the game.", descriptor: "@*/Continue@*/ button", views: [self.continueButton], bannerId: "continue", radius: self.continueButton.frame.height / 2)
+        self.helpView.add("\((self.canFinish ? "When you have specified a location the {} will be enabled. " : ""))Tap the {} to start the game.", descriptor: "@*/Continue@*/ button", views: [self.continueButton], bannerId: "continue", radius: self.continueButton.frame.height / 2)
         
         self.helpView.add("The {} will abandon the game and take you back to the @*/Home@*/ screen.", bannerId: Banner.finishButton)
     }

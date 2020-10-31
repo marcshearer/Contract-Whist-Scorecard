@@ -25,6 +25,7 @@ class FocusView : UIView {
     
     convenience init(from parentViewController:ScorecardViewController, in parentView: UIView, around aroundFrame: CGRect? = nil) {
         self.init(frame: parentView.frame)
+        self.accessibilityIdentifier = "focusView"
         self.parentViewController = parentViewController
         self.parentView = parentView
         parentView.addSubview(self)

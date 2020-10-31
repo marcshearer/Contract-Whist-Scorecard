@@ -873,7 +873,7 @@ extension GamePreviewViewController {
             self.helpView.add("The @*/Next Dealer@*/ button allows you to move the dealer manually around the players (clockwise). You can also do this by using a rotate gesture with 2 fingers.", views: [self.nextDealerButton])
             
             let canStartGame = self.controllerDelegate?.canProceed ?? true || self.gameMode == .playingComputer
-            self.helpView.add("\(canStartGame ? "" : "When all the players have joined the {} will be enabled.") Click the {} to \((self.gameMode == .scoring || self.gameMode == .hostingNearby) && Scorecard.activeSettings.saveLocation ? "enter the current location and " : "")start the game.", descriptor: "@*/Continue@*/ button", views: [self.continueButton], bannerId: "continue", radius: self.continueButton.frame.height / 2)
+            self.helpView.add("\(canStartGame ? "" : "When all the players have joined the {} will be enabled.") Tap the {} to \((self.gameMode == .scoring || self.gameMode == .hostingNearby) && Scorecard.activeSettings.saveLocation ? "enter the current location and " : "")start the game.", descriptor: "@*/Continue@*/ button", views: [self.continueButton], bannerId: "continue", radius: self.continueButton.frame.height / 2)
 
         }
         

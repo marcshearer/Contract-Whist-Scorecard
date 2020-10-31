@@ -939,6 +939,7 @@
 		B228E3BA24A10243006D91CE /* Dashboard Views */ = {
 			isa = PBXGroup;
 			children = (
+				B228E3BD24A10284006D91CE /* DashboardView.swift */,
 				B23970D524AF76E500E3C2A9 /* High Scores Dashboards */,
 				B23970D424AF76CC00E3C2A9 /* Results Dashboards */,
 			);
@@ -991,7 +992,6 @@
 		B23970D424AF76CC00E3C2A9 /* Results Dashboards */ = {
 			isa = PBXGroup;
 			children = (
-				B228E3BD24A10284006D91CE /* DashboardView.swift */,
 				B216268B251B892200BDEE70 /* EveryoneDashboardContainerView.xib */,
 				B228E3C124A10F36006D91CE /* EveryoneDashboardPortraitView.xib */,
 				B20CF54624A7D74500F27A9C /* EveryoneDashboardLandscapeView.xib */,

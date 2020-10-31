@@ -481,12 +481,15 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
         var type: BannerButtonType
         var title: String?
         var image: UIImage?
+        var width: CGFloat
         if ScorecardUI.smallPhoneSize() {
             image = UIImage(named: "cloud")
             type = .clear
+            width = 30
         } else {
             title = "Sync"
             type = .shadow
+            width = 60
         }
         
         var leftButtons: [BannerButton]?
@@ -499,7 +502,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
             leftButtons: leftButtons,
             rightButtons: [
                 BannerButton(action: self.helpPressed, type: .help),
-                BannerButton(title: title, image: image, width: 60, action: self.syncPressed, type: type, menuHide: false, font: UIFont.systemFont(ofSize: 14), id: "sync")],
+                BannerButton(title: title, image: image, width: width, action: self.syncPressed, type: type, menuHide: false, font: UIFont.systemFont(ofSize: 14), id: "sync")],
             disableOptions: (leftButtons != nil))
     }
 
@@ -634,13 +637,13 @@ extension DashboardViewController {
         if let id = self.dashboardInfo[currentPage].helpId as? String {
             switch id {
             case "personalResults":
-                return "The @*/Personal@*/ dashboard shows you your own personal results and statistics.\n\nYou can click on any specific tile to see more details."
+                return "The @*/Personal@*/ dashboard shows you your own personal results and statistics.\n\nYou can tap on any specific tile to see more details."
             case "everyoneResults":
-                return "The @*/Everyone@*/ dashboard shows you the aggregated results and statistics for all players on this device.\n\nYou can click on any specific tile to see more details."
+                return "The @*/Everyone@*/ dashboard shows you the aggregated results and statistics for all players on this device.\n\nYou can tap on any specific tile to see more details."
             case "awards":
-                return "The @*/Awards@*/ dashboard shows you the Awards that you have achieved so far plus the Awards that are still available to be achieved in the future.\n\nYou can click on an award tile to see details."
+                return "The @*/Awards@*/ dashboard shows you the Awards that you have achieved so far plus the Awards that are still available to be achieved in the future.\n\nYou can tap on an award tile to see details."
             case "highScores":
-                return "The @*/High Scores@*/ dashboard shows you the highest scores for each category.\n\nClick on a specific high score to see the detail."
+                return "The @*/High Scores@*/ dashboard shows you the highest scores for each category.\n\nTap on a specific high score to see the detail."
             default:
                 return ""
             }

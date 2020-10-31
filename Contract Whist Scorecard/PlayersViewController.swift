@@ -433,7 +433,7 @@ extension PlayersViewController {
                 
         self.helpView.add("This screen allows you to add, remove or change the players on this device.")
         
-        self.helpView.add("This area shows the photo and name of all the players on this device. Click on a player to see their details.", views: [self.collectionView], item: 0, itemTo: 999, border: 8, shrink: true)
+        self.helpView.add("This area shows the photo and name of all the players on this device. Tap on a player to see their details.", views: [self.collectionView], item: 0, itemTo: 999, border: 8, shrink: true)
         
         self.helpView.add("The {} allows you to add new players. These can either be completely new players, or existing players created on another device, but not yet downloaded from the cloud to this device.", bannerId: "add")
         

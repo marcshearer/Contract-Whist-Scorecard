@@ -121,7 +121,7 @@ class Notifications {
                 let subscription = CKQuerySubscription(recordType: "Invites", predicate: predicate, options: [.firesOnRecordCreation])
                 
                 let notification = CKSubscription.NotificationInfo()
-                notification.alertLocalizationKey = "%1$@ has invited you to play online. Click this notification to accept, or start the Whist app and go to 'Online Game' and select 'Join a Game' to see the invitation"
+                notification.alertLocalizationKey = "%1$@ has invited you to play online. Tap this notification to accept, or start the Whist app and go to 'Online Game' and select 'Join a Game' to see the invitation"
                 notification.alertLocalizationArgs = ["hostName", "hostPlayerUUID", "hostDeviceName", "invitePlayerUUID"]
                 notification.category = category
                 subscription.notificationInfo = notification

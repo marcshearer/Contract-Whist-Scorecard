@@ -1055,7 +1055,7 @@ extension ScorepadViewController {
         
         self.helpView.reset()
                 
-        self.helpView.add("This screen shows you a summary of the current score in the game.\n\nYou can click on a row of the grid to \(self.gameMode == .scoring ? "see details of that round" : "review the hands for that round").")
+        self.helpView.add("This screen shows you a summary of the current score in the game.\n\nYou can tap on a row of the grid to \(self.gameMode == .scoring ? "see details of that round" : "review the hands for that round").")
         
         self.helpView.add("The players are shown at the top of the grid. The current dealer is highlighted with a darker background", views: [self.headerTableView], verticalBorder: -0.5, radius: 0)
         

@@ -156,7 +156,7 @@ class SpeechBubbleView : UIView {
         let font = font ?? self.font ?? UIFont.systemFont(ofSize: 17)
         let width = (width == nil ? SpeechBubbleView.width() : min(375, width!) - (SpeechBubbleView.spacing * 2))
         
-        let textHeight = text.labelHeight(width: width - (self.textInset - 2), font: font)
+        let textHeight = text.labelHeight(width: width - (self.textInset * 2), font: font)
         
         return textHeight + (arrowHeight ?? self.arrowHeight) + (2 * textInset)
     }

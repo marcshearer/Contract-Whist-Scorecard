@@ -46,6 +46,7 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
     private var filterPlayerMO: PlayerMO!
     private var bannerFilterButton: UIButton!
     private var syncButton: ShadowButton!
+    private var customButtonId: AnyHashable?
     private var landscape = false
     
     // Local class variables
@@ -89,8 +90,12 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
         self.callerCompletion = completion
         
         // Call the data table viewer
-        self.dataTableViewController = DataTableViewController.show(from: viewController, delegate: self, recordList: history.games)
+        self.dataTableViewController = DataTableViewController.create(delegate: self, recordList: history.games)
         
+        DataTableViewController.show(self.dataTableViewController, from: viewController)
+    }
+    
+    func setupCustomControls(completion: ()->()) {
         // Setup the custom (filter) view
         if self.winStreakPlayer == nil {
             self.customView = self.dataTableViewController.customHeaderView
@@ -98,6 +103,7 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
             self.customView.layoutIfNeeded()
             self.filterStateChange()
         }
+        completion()
     }
     
     internal func layoutSubviews() {
@@ -110,8 +116,9 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
        
     internal func setupCustomButton(id: AnyHashable?) -> BannerButton? {
         var result: BannerButton?
+        self.customButtonId = id
         if self.winStreakPlayer == nil && ScorecardUI.smallPhoneSize() {
-            result = BannerButton(image: UIImage(named: "filter"), action: self.filterButtonPressed, id: id)
+            result = BannerButton(image: UIImage(named: "filter"), action: self.filterButtonPressed, alignment: .center, id: id)
         }
         return result
     }
@@ -164,6 +171,24 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
     
     internal func syncButtons(enabled: Bool) {
         self.syncButton?.isEnabled = enabled
+    }
+    
+    internal func addHelp(to helpView: HelpView, header: UITableView, body: UITableView) {
+        
+        helpView.add("The @*/\(self.viewTitle)@*/ screen allows you to review the game history for all players on this device, or for a single player.")
+        
+        helpView.add("The @*/Filter@*/ button allows you to select a specific player to filter the game history for.\n\n\(self.filterState == .notFiltered ? "If you tap it you will see a list of players.\n\nTap a player to show only their history" : (self.filterState == .selecting ? "When you are filtering the filter button becomes a cancel button.\n\nTap it to return to showing all players' history" : "When you are filtering the player's name will appear on the filter button with a cross beside it.\n\nTap it to stop filtering and return to all players' history")).", views: [self.filterButton], bannerId: self.customButtonId)
+        
+        if let syncButton = self.syncButton {
+            helpView.add("The @*/Sync@*/ button allows you to synchronize the data on this device with the data in iCloud.", views: [syncButton])
+        }
+        
+        helpView.add("As you have tapped the filter button you have a list of current players on the device to select from to start filtering.\n\nTap the cancel button to return to showing all players' history", views: [self.filterSelectionView])
+        
+        helpView.add("The header row contains the column titles.\n\nTap on a column title to sort the data by that column's value.\n\nTap the same column again to reverse the order of the sort.\n\nThe up/down arrow shows the order of the sort.", views: [header])
+        
+        helpView.add("The body of the screen contains the data.\n\nTap on a row to show the game detail and, if required, update the location of the game.", views: [body], item: 0, itemTo: 999, shrink: true, direction: .up)
+        
     }
     
     // MARK: - Load data ================================================================= -

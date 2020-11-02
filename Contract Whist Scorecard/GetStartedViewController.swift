@@ -9,9 +9,9 @@
 import UIKit
 import CoreData
 
-class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerSelectionViewDelegate, CreatePlayerViewDelegate, RelatedPlayersDelegate {
+class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerSelectionViewDelegate, CreatePlayerViewDelegate, RelatedPlayersDelegate, UIGestureRecognizerDelegate {
 
-    private enum Section: CGFloat {
+    private enum Section: Int {
         case downloadPlayers = 0
         case createPlayer = 1
         case createPlayerSettings = 2
@@ -24,6 +24,7 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
     private var firstTime = true
     private var imageObserver: NSObjectProtocol?
     private var bubbleView = BubbleView()
+    private var selectingPlayer = false
     
     private let separatorHeight: CGFloat = 20.0
     private let titleOverlap: CGFloat = 25.0
@@ -49,8 +50,6 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
     @IBOutlet private weak var thisPlayerChangeContainerView: UIView!
     @IBOutlet private weak var thisPlayerChangeButton: RoundedButton!
     @IBOutlet private weak var tapGestureRecognizer: UITapGestureRecognizer!
-    @IBOutlet private weak var helpButtonContainer: UIView!
-    @IBOutlet private weak var helpButton: RoundedButton!
     @IBOutlet private weak var playerSelectionView: PlayerSelectionView!
     @IBOutlet private weak var playerSelectionViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var playerSelectionViewTopConstraint: NSLayoutConstraint!
@@ -81,7 +80,9 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
     @IBOutlet private var actionButton: [ShadowButton]!
     @IBOutlet private var formLabel: [UILabel]!
     @IBOutlet private var settingsOnLineGamesEnabledSwitch: [UISwitch]!
+    @IBOutlet private var settingsOnlineGamesEnabledLabel: [UILabel]!
     @IBOutlet private var settingsSaveLocationSwitch: [UISwitch]!
+    @IBOutlet private var settingsSaveLocationLabel: [UILabel]!
 
     // MARK: - IB Actions ============================================================================== -
         
@@ -92,9 +93,13 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
     @IBAction func homeButtonPressed(_ sender: UIButton) {
         self.dismiss()
     }
+    
+    @IBAction func helpPressed(_ sender: UIButton) {
+        self.helpPressed()
+    }
 
     @IBAction func thisPlayerChangeButtonPressed(_ sender: UIButton) {
-        if self.playerSelectionViewTopConstraint.constant != 0 {
+        if !self.selectingPlayer {
             self.showPlayerSelection()
         } else {
             self.hidePlayerSelection()
@@ -114,12 +119,16 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
         self.setupDefaultColors()
         self.showThisPlayer()
         
+        // Setup help
+        self.setupHelpView()
+        
         // Look out for images arriving
         imageObserver = setPlayerDownloadNotification(name: .playerImageDownloaded)
                 
         // Dismiss keyboard on tapping elsewhere
         let tapGesture = UITapGestureRecognizer(target: self.view, action: #selector(UIView.endEditing(_:)))
         tapGesture.cancelsTouchesInView = false
+        tapGesture.delegate = self
         self.view.addGestureRecognizer(tapGesture)
     }
     
@@ -132,33 +141,30 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-
-        if self.firstTime || self.rotated {
+        let firstTime = self.firstTime
+        let rotated = self.rotated
+        self.firstTime = false
+        self.rotated = false
+        
+        if firstTime || rotated {
             self.contentViewHeightConstraint.constant =
                 (ScorecardUI.landscapePhone() ? ScorecardUI.screenWidth
                     : self.view.frame.height - self.view.safeAreaInsets.top)
             self.contentView.layoutIfNeeded()
             self.setupSizes()
             self.setupControls()
-            if self.firstTime {
+            if firstTime {
                 self.change(section: .downloadPlayers)
             }
             self.roundCorners()
         }
         
-        if self.rotated && self.playerSelectionViewTopConstraint.constant == 0 {
+        if rotated && self.playerSelectionViewTopConstraint.constant == 0 {
             // Resize player selection
             self.showPlayerSelection()
         }
-                
-        self.rotated = false
     }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        self.firstTime = false
-    }
-    
+        
     // MARK: - Form handling ===================================================================== -
     
     private func initialise() {
@@ -273,7 +279,7 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
                 self.createPlayerContainerTopConstraint.constant = 0
             }, animations: {
                 // Slide up/down to the right view
-                self.downloadPlayersContainerTopConstraint.constant = -(min(1,section.rawValue) * self.containerHeight)
+                self.downloadPlayersContainerTopConstraint.constant = -(min(1, CGFloat(section.rawValue)) * self.containerHeight)
             })
             
         } else {
@@ -285,7 +291,7 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
                 }
             }, animations: {
                 // Slide up/down to the right view
-                self.createPlayerContainerTopConstraint.constant = -(min(1,section.rawValue - 1) * (self.containerHeight))
+                self.createPlayerContainerTopConstraint.constant = -(min(1, CGFloat(section.rawValue) - 1) * (self.containerHeight))
                 self.createPlayerSettingsContainerTopConstraint.constant = (section == .createPlayerSettings ? -self.titleOverlap : self.separatorHeight)
                 // Sort out rounding of title bar corners
                 self.createPlayerTitleBar.set(topRounded: true, bottomRounded: section != .createPlayer)
@@ -385,6 +391,7 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
     // MARK: - Player Selection View Delegate Handlers ======================================================= -
     
     private func showPlayerSelection() {
+        self.selectingPlayer = true
         self.thisPlayerChangeButton.setTitle("Cancel")
         Utility.animate(view: self.view, duration: 0.5) {
             self.playerSelectionViewTopConstraint.constant = 0
@@ -396,6 +403,7 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
     }
     
     private func hidePlayerSelection() {
+        self.selectingPlayer = false
         self.thisPlayerChangeButton.setTitle("Change")
         Utility.animate(view: self.view, duration: 0.5, completion: {
         }, animations: {
@@ -425,7 +433,7 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
     // MARK: - Show select players view and delegate view ================================================ -
     
     private func showRelatedPlayers() {
-        RelatedPlayersViewController.show(from: self, email: self.downloadIdentifierTextField.text!, descriptionMode: .lastPlayed)
+        RelatedPlayersViewController.show(from: self, email: self.downloadIdentifierTextField.text!, descriptionMode: .lastPlayed, previousScreen: "@*/Get Started@*/ screen")
     }
     
     internal func didDownloadPlayers(playerDetailList: [PlayerDetail], emailPlayerUUID: String?) {
@@ -446,6 +454,12 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
         self.enableControls()
     }
     
+    // MARK: - Tap gesture delegates ========================================================= -
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        return self.helpView.isHidden
+    }
+    
     // MARK: - View defaults ============================================================================ -
     
     private func setupDefaultColors() {
@@ -455,9 +469,6 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
         self.topSection.backgroundColor = Palette.banner.background
         self.titleLabel.textColor = Palette.banner.themeText
         self.getStartedLabel.textColor = Palette.banner.text
-        
-        self.helpButton.backgroundColor = Palette.bannerShadow.background
-        self.helpButton.setTitleColor(Palette.banner.text, for: .normal)
         
         self.thisPlayerThumbnailView.set(textColor: Palette.banner.text)
         self.thisPlayerThumbnailView.set(font: UIFont.systemFont(ofSize: 15, weight: .bold))
@@ -473,7 +484,7 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
         self.createPlayerTitleBar.set(textColor: Palette.buttonFace.text)
         
         self.downloadPlayersView.backgroundColor = Palette.buttonFace.background
-        self.createPlayerView.backgroundColor = Palette.buttonFace.background
+        self.createPlayerContainerView.backgroundColor = Palette.buttonFace.background
         self.createPlayerSettingsView.backgroundColor = Palette.buttonFace.background
         
         self.downloadButton.setBackgroundColor(Palette.banner.background)
@@ -526,7 +537,7 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
         self.createPlayerSettingsView.layoutIfNeeded()
         self.playerSelectionView.layoutIfNeeded()
         self.downloadPlayersView.roundCorners(cornerRadius: 8.0, topRounded: false, bottomRounded: true)
-        self.createPlayerView.roundCorners(cornerRadius: 8.0, topRounded: false, bottomRounded: true)
+        self.createPlayerContainerView.roundCorners(cornerRadius: 8.0, topRounded: false, bottomRounded: true)
         self.createPlayerSettingsView.roundCorners(cornerRadius: 8.0, topRounded: true, bottomRounded: true)
         self.playerSelectionView.roundCorners(cornerRadius: 8.0)
     }
@@ -539,9 +550,6 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
             self.smallFormatHomeButton.isHidden = true
         }
        
-        self.helpButtonContainer.addShadow(shadowSize: CGSize(width: 4.0, height: 4.0))
-        self.helpButton.toCircle()
-
         self.thisPlayerChangeContainerView.addShadow(shadowSize: CGSize(width: 4.0, height: 4.0))
         self.thisPlayerChangeButton.roundCorners(cornerRadius: self.thisPlayerChangeButton.frame.height / 2.0)
        
@@ -590,6 +598,100 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
         Scorecard.settings.saveToICloud()
         
         self.dismiss(animated: true, completion: self.completion)
+    }
+    
+}
+
+extension GetStartedViewController {
+    
+    internal func setupHelpView() {
+        
+        self.helpView.reset()
+                
+        self.helpView.add(NSAttributedString(markdown: "@*/Welcome to the Whist app!@*/\n\nTo get started you need to create some players.\n\nIf you have played before on another device, you can download players from iCloud by entering one of the players' Unique Ids.\n\nIf you have not played before tap the @*/Create New Player@*/ button to create a new player from scratch.\n\nOn nearly every screen in the @*/Whist app@*/ you will find an ") + NSAttributedString(imageName: "system.info.circle.fill", color: Palette.bannerShadow.background) + " button. Clicking it will display help for the screen you are on.")
+        
+        self.helpView.add("Once you have created some players the @*/Home@*/ button will become enabled.\n\nTap it to start playing Whist.", views: [self.smallFormatHomeButton], horizontalBorder: 8, verticalBorder: 4)
+        
+        self.helpView.add("The first player you create becomes the default player for this device and is displayed here. This will normally be the owner of the device.", views: [self.thisPlayerThumbnailView], border: 4)
+        
+        self.helpView.add("You have chosen to change the default player for this device. Tap on a player to select them.", views: [self.playerSelectionView], condition: { self.selectingPlayer }, border: 4)
+        
+        self.helpView.add("\(!self.selectingPlayer ? "When you have created 2 or more players you are able to change the default player. Tap the @*/Change@*/ button to change the default player for this device to another player." : "Tap the @*/Cancel@*/ button to keep the current default player.")", views: [self.thisPlayerChangeButton], radius: self.thisPlayerChangeButton.frame.height / 2)
+        
+        self.helpView.add("To download players who have played before on another device enter one of their Unique Ids here.", views: [self.downloadIdentifierTextField], condition: { self.section == .downloadPlayers && !self.selectingPlayer })
+        
+        self.helpView.add("Once you have entered a player's Unique Id tap the @*/Download Players from iCloud@*/ to choose the players to download.", views: [self.downloadButton], condition: { self.section == .downloadPlayers && !self.selectingPlayer })
+        
+        self.addOnlineGamesSwitchHelp(section: .downloadPlayers)
+        
+        self.addSaveLocationHelp(section: .downloadPlayers)
+        
+        self.addHomeButtonHelp(section: .downloadPlayers)
+        
+        self.helpView.add("Tap the @*/Download Players@*/ button to download existing players from iCloud", views: [self.downloadPlayersTitleBar], condition: {self.section != .downloadPlayers && !self.selectingPlayer})
+        
+        self.helpView.add("Tap the @*/Create New Player@*/ button to create a new player who has not already been created on another device.", views: [self.createPlayerTitleBar], condition: { self.section != .createPlayer && !self.selectingPlayer})
+        
+        self.createPlayerView.addHelp(to: self.helpView, condition: { self.section == .createPlayer  && !self.selectingPlayer})
+        
+        self.addOnlineGamesSwitchHelp(section: .createPlayerSettings)
+        
+        self.addSaveLocationHelp(section: .createPlayerSettings)
+
+        self.addHomeButtonHelp(section: .createPlayerSettings)
+
+    }
+    
+    private func addOnlineGamesSwitchHelp(section: Section) {
+        var helpLabel: UILabel?
+        var helpSwitch: UISwitch?
+        
+        self.settingsOnlineGamesEnabledLabel.forEach { (label) in
+            if label.tag == section.rawValue {
+                helpLabel = label
+            }
+        }
+        self.settingsOnLineGamesEnabledSwitch.forEach { (switchControl) in
+            if switchControl.tag == section.rawValue {
+                helpSwitch = switchControl
+            }
+        }
+        
+        self.helpView.add("If you want to play Whist with players on other devices (as opposed to simply scoring a game played with cards) you need to enable online games.\n\nFor this to work the App needs to send notifications between the devices so you will be asked to confirm that you are happy with this if you switch this option on.", views: [helpLabel, helpSwitch], condition: { self.section == section && !self.selectingPlayer }, horizontalBorder: 8)
+        
+    }
+    
+    private func addSaveLocationHelp(section: Section) {
+        var helpLabel: UILabel?
+        var helpSwitch: UISwitch?
+        
+        self.settingsSaveLocationLabel.forEach { (label) in
+            if label.tag == section.rawValue {
+                helpLabel = label
+            }
+        }
+        self.settingsSaveLocationSwitch.forEach { (switchControl) in
+            if switchControl.tag == section.rawValue {
+                helpSwitch = switchControl
+            }
+        }
+        
+        self.helpView.add("It is great to save the location of each game you play so that you can look back and see all the amazing places you've played @*/Whist@*/.\n\nFor this to work the App needs access to your current location when the app is running and you will be asked to confirm that you are happy with this if you switch this option on.", views: [helpLabel, helpSwitch], condition: { self.section == section && !self.selectingPlayer }, horizontalBorder: 8)
+        
+    }
+    
+    private func addHomeButtonHelp(section: Section) {
+        var helpButton: UIButton?
+        
+        self.actionButton.forEach { (button) in
+            if button.tag == section.rawValue {
+                helpButton = button
+            }
+        }
+        
+        if let helpButton = helpButton {
+            self.helpView.add("Once you have created some players the @*/Home@*/ button will become enabled.\n\nTap it to start playing Whist.", views: [helpButton], condition: { self.section == section && !self.selectingPlayer }, radius: helpButton.frame.height / 2)
+        }
     }
     
 }

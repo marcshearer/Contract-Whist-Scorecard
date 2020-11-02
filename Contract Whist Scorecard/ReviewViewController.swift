@@ -61,7 +61,8 @@ class ReviewViewController: ScorecardViewController, ScorecardAlertDelegate, Ban
         
         self.banner.set(
             attributedTitle: roundTitle, menuTitle: "Review Hand",
-            rightButtons: [BannerButton(attributedTitle: overUnder, width: overUnderWidth, action: finishPressed, font: Banner.defaultFont)])
+            rightButtons: [
+                BannerButton(attributedTitle: overUnder, width: overUnderWidth, action: finishPressed, font: Banner.defaultFont)])
     }
     
     

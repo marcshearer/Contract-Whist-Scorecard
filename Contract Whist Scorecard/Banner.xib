@@ -28,7 +28,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="Rat-5l-zqR" userLabel="Title Label">
-                    <rect key="frame" x="64" y="0.0" width="330" height="44"/>
+                    <rect key="frame" x="72" y="0.0" width="314" height="44"/>
                     <color key="backgroundColor" name="Clear"/>
                     <accessibility key="accessibilityConfiguration" identifier="titleLabel"/>
                     <constraints>
@@ -83,8 +83,8 @@
                 <constraint firstItem="7vQ-Tb-bGS" firstAttribute="top" secondItem="27E-De-fIC" secondAttribute="top" id="90s-MM-qa7"/>
                 <constraint firstItem="Rat-5l-zqR" firstAttribute="top" secondItem="27E-De-fIC" secondAttribute="top" id="A3g-P1-1bP"/>
                 <constraint firstItem="Rat-5l-zqR" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="H2A-Sa-d7R"/>
-                <constraint firstItem="7vQ-Tb-bGS" firstAttribute="trailing" secondItem="Rat-5l-zqR" secondAttribute="trailing" id="X6r-jd-uz0"/>
-                <constraint firstItem="Rat-5l-zqR" firstAttribute="leading" secondItem="27E-De-fIC" secondAttribute="leading" id="m6o-oV-h4M"/>
+                <constraint firstItem="7vQ-Tb-bGS" firstAttribute="trailing" secondItem="Rat-5l-zqR" secondAttribute="trailing" constant="8" id="X6r-jd-uz0"/>
+                <constraint firstItem="Rat-5l-zqR" firstAttribute="leading" secondItem="27E-De-fIC" secondAttribute="leading" constant="8" id="m6o-oV-h4M"/>
                 <constraint firstAttribute="bottom" secondItem="Hhl-Cx-Vdj" secondAttribute="bottom" id="uld-sT-cEj"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

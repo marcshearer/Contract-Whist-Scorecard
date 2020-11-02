@@ -69,6 +69,7 @@ class DataTableViewController: ScorecardViewController, UITableViewDataSource, U
     private var finishButton = Banner.finishButton
     private var syncButton = 1
     private var customButton = 2
+    internal static var infoImageName = "system.info.circle.fill"
     
     // Cell sizes
     let paddingWidth: CGFloat = 6.0
@@ -398,17 +399,8 @@ extension DataTableViewController: UICollectionViewDelegate, UICollectionViewDat
                 cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Data Table Body Button Cell", for: indexPath) as! DataTableCollectionCell
                 cell.bodyButton.tag = (collectionView.tag * 1000) + indexPath.row
                 cell.bodyButton.addTarget(self, action: #selector(DataTableViewController.buttonPressed(_:)), for: UIControl.Event.touchUpInside)
-                var name = column.field
-                var image: UIImage?
-                if name.left(7) == "system." {
-                    name = name.right(name.length - 7)
-                    image = UIImage(systemName: name)
-                    cell.bodyButton.tintColor = Palette.banner.background
-                } else {
-                    image = UIImage(named: name)
-                    cell.bodyButton.tintColor = nil
-                }
-                cell.bodyButton.setImage(image, for: .normal)
+                cell.bodyButton.tintColor = Palette.otherButton.background
+                cell.bodyButton.setImage(UIImage(prefixed: column.field), for: .normal)
                 cell.bodyButton.contentMode = .scaleAspectFill
                 cell.bodyButton.isEnabled = self.delegate?.isEnabled?(button: column.field, record: recordList[collectionView.tag]) ?? true
             case .thumbnail:

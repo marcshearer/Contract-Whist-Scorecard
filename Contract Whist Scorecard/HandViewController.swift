@@ -50,6 +50,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
     private let playedCardStats: CGFloat = (3 * 21.0) + 4.0
     private let playedCardSpacing: CGFloat = 4.0
     private let bidButtonSpacing: CGFloat = 10.0
+    private let bidButtonVerticalSpace: CGFloat = 8.0
     private var horizontalMargins: CGFloat = 8.0
     private var handTableViewVerticalMargins: CGFloat = 8.0
     private var maxBidButton: Int!
@@ -63,8 +64,9 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
     private var bidCollectionTag: Int!
     private var playedCardCollectionTag: Int!
     private var lastTitle: String?
+    private var firstSuitLength: Int!
     
-    private let finishButton = 0
+    private let finishButton = Banner.finishButton
     private let homeButton = 1
     private let lastHandButton = 2
     private let roundSummaryButton = 3
@@ -102,6 +104,9 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
     @IBOutlet private weak var titleBarLongPress: UILongPressGestureRecognizer!
     @IBOutlet private weak var tableTopLongPress: UILongPressGestureRecognizer!
     @IBOutlet private var viewInsets: [NSLayoutConstraint]!
+    @IBOutlet private weak var helpButton: ShadowButton!
+    @IBOutlet private weak var helpButtonTopConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var helpButtonBottomConstraint: NSLayoutConstraint!
     
     // MARK: - IB Actions ============================================================================== -
     
@@ -111,6 +116,10 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
     
     internal func homePressed() {
         self.cancel()
+    }
+    
+    @IBAction func helpPressed(_ sender: UIButton) {
+        self.helpPressed()
     }
     
     internal func showScorepadPressed() {
@@ -163,6 +172,9 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
         // Setup banner and buttons
         self.setupBanner()
         
+        // Setup help
+        self.setupHelpView()
+        
         // Setup grid tags
         bidCollectionTag = bidCollectionView.tag
         playedCardCollectionTag = playedCardCollectionView.tag
@@ -172,6 +184,9 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
         
         // Setup over under
         setupOverUnder()
+        
+        // Fix postion of help button on portrait phone
+        self.firstSuitLength = (Scorecard.game.handState.hand.handSuits.first?.cards.count ?? 0)
         
         // Subscribe to score changes
         self.setupBidSubscriptions()
@@ -207,7 +222,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
         self.viewInsets.forEach{ (constraint) in constraint.constant = horizontalMargins}
         self.separatorHeightConstraint.constant = self.separatorHeight
         self.statusTitleHeightConstraint.constant = (self.containerBanner ? 0 : 50)
-        self.setButtonFormat()
+        self.setBidButtonFormat()
         self.setupSizes()
         self.handTableView.reloadData()
         if self.resizing {
@@ -638,6 +653,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
                             BannerButton(image: UIImage(named: "back"), action: self.finishPressed, menuHide: true, menuText: "Show Scorepad", id: finishButton),
                             BannerButton(image: UIImage(named: "two"), asTemplate: false, action: self.lastHandPressed, releaseAction: self.lastHandReleased, menuHide: true, menuText: "Show last trick", releaseMenuText: "Hide last trick", id: lastHandButton)],
                         rightButtons: [
+                            BannerButton(action: self.helpPressed, type: .help),
                             BannerButton(width: 60, action: self.showScorepadPressed, gameDetailHide: true, font: Banner.defaultFont, id: overUnderButton),
                             BannerButton(attributedTitle: roundSuit, width: roundWidth, action: self.showScorepadPressed, gameDetailHide: true, font: Banner.defaultFont, id: roundSummaryButton)],
                         nonBannerButtonsAfter: [
@@ -657,7 +673,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
         self.stateController()
     }
     
-    func setButtonFormat() {
+    func setBidButtonFormat() {
         // Work out how many buttons across and down and how large buttons must be
         var bidWidthProportion: CGFloat
         var bidHeightProportion: CGFloat
@@ -698,7 +714,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
             bidViewHeight = bidHeightMax
         } else {
             // Calculate so that buttons only just fit in
-            bidViewHeight = ((bidButtonSize + 10.0) * CGFloat(buttonsDown)) + 12.0
+            bidViewHeight = ((bidButtonSize + self.bidButtonSpacing) * CGFloat(buttonsDown)) - self.bidButtonSpacing + (self.bidButtonVerticalSpace * 2)
         }
         
         // Hide vertical separator if there are3 rows of buttons across and hid both separators in container mode
@@ -730,6 +746,19 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
         self.setupBidSize()
         self.setupTabletopSize()
         self.setupHandSize()
+    }
+    
+    private func setupHelpButton() {
+        if ScorecardUI.portraitPhone() {
+            self.helpButton.isHidden = false
+            let fullSuit = (self.firstSuitLength >= self.handCardsPerRow)
+            Constraint.setActive([self.helpButtonTopConstraint], to: !fullSuit)
+            Constraint.setActive([self.helpButtonBottomConstraint], to: fullSuit)
+            self.banner.setButton(Banner.helpButton, isHidden: true)
+        } else {
+            self.helpButton.isHidden = true
+            self.banner.setButton(Banner.helpButton, isHidden: false)
+        }
     }
 
     func bidMode(_ mode: Bool!) {
@@ -830,7 +859,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
         var maxSuitCards = 0
         let handTableViewHeight = handViewHeight - (2 * self.handTableViewVerticalMargins)
         let handTableViewWidth = handViewWidth! - (2 * self.horizontalMargins)
-        handCardsPerRow = (handTableViewWidth >= 350 ? 6 : 5)
+        self.handCardsPerRow = (handTableViewWidth >= 350 ? 6 : 5)
         // Set hand height
         self.handHeightConstraint.constant = handViewHeight
         
@@ -844,21 +873,22 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
             
             var handRows = 0
             for suit in Scorecard.game.handState.hand.handSuits {
-                handRows += Int((suit.cards.count - 1) / handCardsPerRow) + 1
+                handRows += Int((suit.cards.count - 1) / self.handCardsPerRow) + 1
             }
             handRows = max(4, handRows)
             
             self.handCardHeight = CGFloat(Int(handTableViewHeight / CGFloat(handRows))+1)
-            self.handCardWidth = min(self.handCardHeight * CGFloat(2.0/3.0), handTableViewWidth / CGFloat(handCardsPerRow))
+            self.handCardWidth = min(self.handCardHeight * CGFloat(2.0/3.0), handTableViewWidth / CGFloat(self.handCardsPerRow))
                         
             // Possibly see if more cards would fit on line
-            if maxSuitCards <= handCardsPerRow || (CGFloat(handCardsPerRow) * handCardWidth) > handTableViewWidth {
+            if maxSuitCards <= self.handCardsPerRow || (CGFloat(self.handCardsPerRow) * handCardWidth) > handTableViewWidth {
                 break
             }
             
-            handCardsPerRow = Int(handTableViewWidth / handCardWidth)
+            self.handCardsPerRow = Int(handTableViewWidth / handCardWidth)
         }
         self.handCardFontSize = self.handCardWidth / 2.5
+        self.setupHelpButton()
     }
     
     func setupBidSize() {
@@ -1033,7 +1063,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
         let totalRemaining = Scorecard.game.remaining(playerNumber: 0, round: Scorecard.game.selectedRound, mode: Mode.bid)
 
         let overUnder = NSAttributedString("\(totalRemaining >= 0 ? "-" : "+")\(abs(Int64(totalRemaining)))", color: (totalRemaining >= 0 ? Palette.contractUnder : Palette.contractOver))
-        self.banner.setButton(overUnderButton, attributedTitle: overUnder)
+        self.banner.setButton(overUnderButton, attributedTitle: overUnder, width: overUnder.labelWidth(font: Banner.defaultFont))
 
         if !Scorecard.game.roundStarted(Scorecard.game.selectedRound) {
             statusOverUnderLabel.text = ""
@@ -1321,4 +1351,36 @@ extension HandViewController {
         }
     }
 
+}
+
+extension HandViewController {
+    
+    internal func setupHelpView() {
+        
+        self.helpView.reset()
+                
+        self.helpView.add("This screen allows you to play a hand of Whist. It operates in 2 modes.\n\n \(self.bidMode ? "You are currently in" : "In" ) @*/Bid@*/ mode \(self.bidMode ? "where " : "")each player enters their bid in turn.\n\n\(!self.bidMode ? "You are currently in" : "In" ) @*/Play@*/ mode \(!self.bidMode ? "where " : "")you play the cards.\n\nIf the network hangs for any reason during bid or play you can shake your device to reset the connection.")
+        
+        self.helpView.add("Tap the {} to go to the @*/Scorepad@*/ screen where you can check the score in detail or review previous hands.", bannerId: Banner.finishButton)
+        
+        self.helpView.add("During play the {} will appear if you have not yet played to the current trick.\n\nPressing and holding it will show you the last trick.\n\nAlternatively, when this button is visible, you can press and hold anywhere on the current trick to see the last trick.", bannerId: self.lastHandButton, horizontalBorder: 8, verticalBorder: 4)
+        
+        self.helpView.add("The top of the screen will tell you who's turn it is to bid or play.\n\n\(Scorecard.activeSettings.alertVibrate ? "Your" : "You can turn on a setting so that your") device will vibrate and the banner will flash when it is your turn to bid or play.", bannerId: Banner.titleControl)
+        
+        self.helpView.add("During play you can see how the total of all players' bids compares to the number of cards in this round.\n\nFor example " + NSAttributedString("-1", color: Palette.contractUnder) + " means that the total of all bids is 1 less that the number of tricks in the round.\n\nIn this case players will probably be trying to lose tricks, whereas when the total is more than the number of cards, players will be trying to win tricks.", bannerId: self.overUnderButton, horizontalBorder: 8, verticalBorder: 4)
+        
+        self.helpView.add("The @*/Trump Suit@*/ for the current round is displayed here.", bannerId: roundSummaryButton, horizontalBorder: 8, verticalBorder: 4)
+        
+        self.helpView.add("During bidding the current number of cards in the round and the trump suit are displayed here.", views: [self.statusRoundLabel], condition: { self.bidMode }, horizontalBorder: 4)
+        
+        self.helpView.add("Once bids have been made you can see how the total of all bids compares to the number of cards in this round.\n\nFor example " + NSAttributedString("1 Under", color: Palette.contractUnder) + " means that the total of all bids is 1 less that the number of tricks in the round.\n\nIn this case players will probably be trying to lose tricks, whereas when the total is more than the number of cards, players will be trying to win tricks.", views: [self.statusOverUnderLabel], condition: { Scorecard.game.roundStarted(Scorecard.game.selectedRound) && self.bidMode }, horizontalBorder: 4)
+        
+        self.helpView.add("The players' names in the order they should bid are displayed here.\n\nAs they bid their bids are displayed alongside their name.", views: [self.statusPlayer1BidLabel, self.statusPlayer2BidLabel, self.statusPlayer3BidLabel, self.statusPlayer4BidLabel], condition: { self.bidMode }, horizontalBorder: 4)
+        
+        self.helpView.add("When it is your turn to bid, tap on a bid button and then tap the confirm button to make your bid.\n\nIf not all bids are shown, then the '>' button can be used to show higher bid values.\n\nIf you are the last person to bid, then you cannot make the total of the bids equal the number of tricks and one of the buttons will be disabled.", views: [self.bidCollectionView], condition: { self.bidMode }, border: 4)
+        
+        self.helpView.add("During play the current trick will be displayed here.\n\nUnderneath each card will be the name of the player who played it. Underneath their name is their bid for this round and, if they have won any tricks, the number of tricks they have won.\n\nThe winner of the current trick is highlighted.", views: [self.tabletopView])
+        
+        self.helpView.add("Your hand is displayed here.\n\nWhen it is your turn to play, tap on a card and then tap the confirm button to play the card.\n\nAt that point the card will move into the current trick.", views: [self.handTableView], border: 8, shrink: true)
+    }
 }

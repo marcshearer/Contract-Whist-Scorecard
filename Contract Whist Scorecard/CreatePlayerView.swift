@@ -88,6 +88,17 @@ class CreatePlayerView : UIView, UITextFieldDelegate, PlayerViewImagePickerDeleg
         self.parent?.alertDecision(if: (self.playerDetail.name != "" || self.playerDetail.name != "" || self.playerDetail.thumbnail != nil), "You have not created this player yet.\nIf you continue you may lose the details you have entered.\nUse the 'Create New Player' button to create this player.\n\nAre you sure you want to leave this option?", title: "Warning", okButtonText: "Confirm", okHandler: action, cancelButtonText: "Cancel")
     }
         
+    public func addHelp(to helpView: HelpView, condition: (()->Bool)?) {
+        
+        helpView.add("To create a new player give them a name.\n\nIt should be unique on this device, but can be quite simple. E.g. just their forename.", views: [self.createPlayerNameTextField], condition: condition)
+        
+        helpView.add("Each player requires a unique ID.\n\nIt needs to be unique across all devices and they will need to remember it to access their history from another device.\n\nAn email address or mobile phone number for example.", views: [self.createPlayerIDTextField], condition: condition)
+        
+        helpView.add("You can add a photo (or other image) for the player by tapping the camera button.", views: [self.createPlayerImagePickerPlayerView.thumbnailView], condition: condition, radius: self.createPlayerImagePickerPlayerView.thumbnailView.frame.height / 2)
+        
+        helpView.add("Tap the @*/Create New Player@*/ button when you are ready to create the player.\n\nYou can modify or remove players you create later through the @*/Profiles@*/ screen.", views: [self.createPlayerButton], condition: condition)
+    }
+    
     private func playerNameValid(allowBlank: Bool = false) -> Bool {
         (allowBlank || self.playerDetail.name != "") && !Scorecard.shared.isDuplicateName(self.playerDetail)
     }
@@ -128,7 +139,7 @@ class CreatePlayerView : UIView, UITextFieldDelegate, PlayerViewImagePickerDeleg
     }
     
     private func setupImagePickerPlayerView() {
-        self.createPlayerImagePickerPlayerView = PlayerView(type: .imagePicker, parentViewController: self.parent, parentView: self.createPlayerImageContainerView, width: self.createPlayerImageContainerView.frame.width, height: self.createPlayerImageContainerView.frame.height)
+        self.createPlayerImagePickerPlayerView = PlayerView(type: .imagePicker, parentViewController: self.parent, parentView: self.createPlayerImageContainerView, width: self.createPlayerImageContainerView.frame.width, height: self.createPlayerImageContainerView.frame.height, cameraTintColor: Palette.thumbnailDisc.text)
         self.createPlayerImagePickerPlayerView.imagePickerDelegate = self
         self.createPlayerImagePickerPlayerView.set(data: nil)
     }

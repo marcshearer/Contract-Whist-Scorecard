@@ -140,6 +140,27 @@ class RelatedPlayersView : UIView, UITableViewDelegate, UITableViewDataSource, S
         }
     }
     
+    public func addHelp(to helpView: HelpView, previousScreen: String? = nil, condition: (()->Bool)? = nil) {
+        
+        helpView.add(NSAttributedString(markdown: "To download a player who has **played a game with a player on this device** simply tap the player to select them in this list.\n\nPlayers with a ") + NSAttributedString(imageName: "on", color: Palette.confirmButton.background) + " beside them have been selected.", views: [self.tableView], condition: condition, border: 8, shrink: true)
+                
+        helpView.add("To see details of a player before you download them, click on the " + NSAttributedString(imageName: "system.info.circle.fill", color: Palette.otherButton.background) + " button beside them.\n\nNote that their photo will not be shown.", views: [self.tableView], callback: self.infoButton(item:view:), condition: condition, item: 0, border: 8)
+        
+        helpView.add("The @*/Cancel@*/ button cancels the download and returns to the \(previousScreen ?? "previous screen")", views: [self.cancelButton], condition: condition)
+        
+        helpView.add("The @*/Select All@*/ button selects all players.\n\nYou can then tap players to deselect them.\n\nWhen some players are selected this button becomes a @*/Clear All@*/ button.\n\nTap it to deselect all players.", views: [self.changeAllButton], condition: condition)
+        
+        helpView.add("The @*/Confirm@*/ button initiates the download for all selected players.\n\nIt only becomes enabled when some players have been selected.", views: [self.confirmButton], condition: condition)
+    }
+    
+    private func infoButton(item: Int, view: UIView) -> CGRect? {
+        var result: CGRect?
+        if let cell = view as? RelatedPlayersTableViewCell {
+            result = cell.playerDetail.frame
+        }
+        return result
+    }
+    
     // MARK: - Load view from xib file ================================================================== -
     
     private func loadRelatedPlayersView() {
@@ -282,7 +303,7 @@ class RelatedPlayersView : UIView, UITableViewDelegate, UITableViewDataSource, S
         
     }
     
-    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+    internal func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         if scrollView == tableView {
             let cellHeight = CGFloat(self.rowHeight)
             let y          = targetContentOffset.pointee.y + scrollView.contentInset.top + (cellHeight / 2)

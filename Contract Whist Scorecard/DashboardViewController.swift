@@ -385,8 +385,8 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
             // No carousel required
             self.carouselCollectionView.isHidden = true
             self.scrollCollectionView.isHidden = true
-            self.topSectionProportionalHeightConstraint.forEach{$0.priority = UILayoutPriority(rawValue: 1)}
-            self.topSectionHeightConstraint.forEach{$0.priority = UILayoutPriority.required}
+            Constraint.setActive(self.topSectionProportionalHeightConstraint, to: false)
+            Constraint.setActive(self.topSectionHeightConstraint, to: true)
         }
     }
     
@@ -620,15 +620,15 @@ extension DashboardViewController {
         
         var text = ""
         if self.dashboardInfo.count > 1 {
-            text = "This Dashboard view contains \(self.dashboardInfo.count) dashboards which you can switch between using the carousel at the top of the screen.\n\n"
+            text = "The @*/\(self.banner.title ?? "Dashboard")@*/ screen contains \(self.dashboardInfo.count) dashboards.\n\nYou can switch between them using the carousel at the top of the screen or by swiping left or right.\n\n"
         }
         self.helpView.add("\(text)\(self.dashboardHelp())")
         
-        self.helpView.add("The @*/Carousel@*/ allows you to switch between the different dashboard views.", views: [self.carouselCollectionView], verticalBorder: 8, radius: 0)
+        self.helpView.add("The @*/Carousel@*/ allows you to switch between the different dashboard views. Either swipe it or click on one of the tiles to navigate.", views: [self.carouselCollectionView, self.scrollCollectionView], verticalBorder: 4, radius: 0)
         
         self.helpView.add("The {} is used to synchronise the local database with the iCloud database", bannerId: "sync")
         
-        self.helpView.add("The {} will take you back to the previous view.", bannerId: Banner.finishButton)
+        self.helpView.add("The {} will take you back to the previous view.", bannerId: Banner.finishButton, horizontalBorder: 8, verticalBorder: 4)
         
         self.helpView.add(dashboardView: view)
     }

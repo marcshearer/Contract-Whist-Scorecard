@@ -9,21 +9,22 @@
 import UIKit
 
 class HelpViewElement {
-    let text: ()->NSAttributedString
-    let descriptor: NSAttributedString?
-    let views: [UIView]?
-    let callback: ((Int, UIView)->CGRect?)?
-    let section: Int
-    let itemFrom: Int?
-    let itemTo: Int?
-    let bannerId: AnyHashable?
-    let horizontalBorder: CGFloat
-    let verticalBorder: CGFloat
-    let radius: CGFloat
-    let shrink: Bool
-    let direction: SpeechBubbleArrowDirection?
+    fileprivate let text: ()->NSAttributedString
+    fileprivate let descriptor: NSAttributedString?
+    fileprivate let views: [UIView]?
+    fileprivate let callback: ((Int, UIView)->CGRect?)?
+    fileprivate let condition: (()->Bool)?
+    fileprivate let section: Int
+    fileprivate let itemFrom: Int?
+    fileprivate let itemTo: Int?
+    fileprivate let bannerId: AnyHashable?
+    fileprivate let horizontalBorder: CGFloat
+    fileprivate let verticalBorder: CGFloat
+    fileprivate let radius: CGFloat
+    fileprivate let shrink: Bool
+    fileprivate let direction: SpeechBubbleArrowDirection?
     
-    init(text: (()->String)? = nil, attributedText: (()->NSAttributedString)? = nil, descriptor: NSAttributedString? = nil, views: [UIView?]? = nil, callback: ((Int, UIView)->CGRect?)? = nil, section: Int = 0, item: Int? = nil, itemTo: Int? = nil, bannerId: AnyHashable? = nil, border: CGFloat = 0, horizontalBorder: CGFloat? = nil, verticalBorder: CGFloat? = nil, radius: CGFloat = 8.0, shrink: Bool = false, direction: SpeechBubbleArrowDirection? = nil) {
+    init(text: (()->String)? = nil, attributedText: (()->NSAttributedString)? = nil, descriptor: NSAttributedString? = nil, views: [UIView?]? = nil, callback: ((Int, UIView)->CGRect?)? = nil, condition: (()->Bool)? = nil, section: Int = 0, item: Int? = nil, itemTo: Int? = nil, bannerId: AnyHashable? = nil, border: CGFloat = 0, horizontalBorder: CGFloat? = nil, verticalBorder: CGFloat? = nil, radius: CGFloat = 8.0, shrink: Bool = false, direction: SpeechBubbleArrowDirection? = nil) {
         
         if let attributedText = attributedText {
             self.text = attributedText
@@ -47,6 +48,7 @@ class HelpViewElement {
         
         self.callback = callback
         self.descriptor = descriptor
+        self.condition = condition
         self.section = section
         self.itemFrom = item
         self.itemTo = itemTo ?? item
@@ -74,9 +76,9 @@ fileprivate enum HelpViewSource {
             return 0
         case .menu:
             return 1
-        case .view:
-            return 2
         case .banner:
+            return 2
+        case .view:
             return 3
         }
     }
@@ -168,7 +170,7 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
         self.tapGesture = UITapGestureRecognizer(target: self, action: #selector(HelpView.wasTapped))
         self.tapGesture.delegate = self
         parentView.addSubview(self)
-        parentViewController.rootViewController.view.bringSubviewToFront(self)
+        parentViewController.rootViewController?.view.bringSubviewToFront(self)
     }
     
     internal override func layoutSubviews() {
@@ -181,14 +183,14 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
         self.elements = []
     }
     
-    public func add(_ text: @escaping @autoclosure ()->String, descriptor: String? = nil, views: [UIView?]? = nil, callback: ((Int, UIView)->CGRect?)? = nil, section: Int = 0, item: Int? = nil, itemTo: Int? = nil, bannerId: AnyHashable? = nil, border: CGFloat = 0, horizontalBorder: CGFloat? = nil, verticalBorder: CGFloat? = nil, radius: CGFloat = 8.0, shrink: Bool = false, direction: SpeechBubbleArrowDirection? = nil) {
+    public func add(_ text: @escaping @autoclosure ()->String, descriptor: String? = nil, views: [UIView?]? = nil, callback: ((Int, UIView)->CGRect?)? = nil, condition: (()->Bool)? = nil, section: Int = 0, item: Int? = nil, itemTo: Int? = nil, bannerId: AnyHashable? = nil, border: CGFloat = 0, horizontalBorder: CGFloat? = nil, verticalBorder: CGFloat? = nil, radius: CGFloat = 8.0, shrink: Bool = false, direction: SpeechBubbleArrowDirection? = nil) {
         
-        self.elements.append(HelpViewElement(text: text, descriptor: (descriptor != nil ? NSAttributedString(markdown: descriptor!) : nil), views: views, callback: callback, section: section, item: item, itemTo: itemTo, bannerId: bannerId, border: border, horizontalBorder: horizontalBorder, verticalBorder: verticalBorder, radius: radius, shrink: shrink, direction: direction))
+        self.elements.append(HelpViewElement(text: text, descriptor: (descriptor != nil ? NSAttributedString(markdown: descriptor!) : nil), views: views, callback: callback, condition: condition, section: section, item: item, itemTo: itemTo, bannerId: bannerId, border: border, horizontalBorder: horizontalBorder, verticalBorder: verticalBorder, radius: radius, shrink: shrink, direction: direction))
     }
     
-    public func add(_ attributedText: @escaping @autoclosure ()->NSAttributedString, descriptor: NSAttributedString? = nil, views: [UIView?]? = nil, callback: ((Int, UIView)->CGRect?)? = nil, section: Int = 0, item: Int? = nil, itemTo: Int? = nil, bannerId: AnyHashable? = nil, border: CGFloat = 0, horizontalBorder: CGFloat? = nil, verticalBorder: CGFloat? = nil, radius: CGFloat = 8, shrink: Bool = false, direction: SpeechBubbleArrowDirection? = nil) {
+    public func add(_ attributedText: @escaping @autoclosure ()->NSAttributedString, descriptor: NSAttributedString? = nil, views: [UIView?]? = nil, callback: ((Int, UIView)->CGRect?)? = nil, condition: (()->Bool)? = nil, section: Int = 0, item: Int? = nil, itemTo: Int? = nil, bannerId: AnyHashable? = nil, border: CGFloat = 0, horizontalBorder: CGFloat? = nil, verticalBorder: CGFloat? = nil, radius: CGFloat = 8, shrink: Bool = false, direction: SpeechBubbleArrowDirection? = nil) {
         
-        self.elements.append(HelpViewElement(attributedText: attributedText, descriptor: descriptor, views: views, callback: callback, section: section, item: item, itemTo: itemTo, bannerId: bannerId, border: border, horizontalBorder: horizontalBorder, verticalBorder: verticalBorder, radius: radius, shrink: shrink, direction: direction))
+        self.elements.append(HelpViewElement(attributedText: attributedText, descriptor: descriptor, views: views, callback: callback, condition: condition, section: section, item: item, itemTo: itemTo, bannerId: bannerId, border: border, horizontalBorder: horizontalBorder, verticalBorder: verticalBorder, radius: radius, shrink: shrink, direction: direction))
     }
     
     public func show(alwaysNext: Bool = false, completion: ((Bool)->())? = nil) {
@@ -207,137 +209,150 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
         for element in self.elements {
             var activeFrames: [(frame: CGRect, view: UIView)] = []
             
-            // Check views
-            if let views = element.views {
-                for view in views {
-                    var cell: UIView?
-                    var frame: CGRect?
-                    if let from = element.itemFrom, let to = element.itemTo {
-                        for item in from...to {
-                            let indexPath = IndexPath(item: item, section: element.section)
-                            if let collectionView = view as? UICollectionView {
-                                if indexPath.section < 0 || item > collectionView.numberOfItems(inSection: indexPath.section) {
-                                    break
-                                }
-                                let flowLayout = collectionView.collectionViewLayout
-                                if indexPath.item < 0 {
-                                    let kind = UICollectionView.elementKindSectionHeader
-                                    let indexPath = IndexPath(item: 0, section: indexPath.section)
-                                    if let item = collectionView.supplementaryView(forElementKind: kind, at: indexPath) {
-                                        if let attributes = flowLayout.layoutAttributesForSupplementaryView(ofKind: kind, at: indexPath) {
-                                            frame = attributes.frame
-                                            if collectionView.bounds.intersects(frame!) {
-                                                if !item.isHidden {
-                                                    cell = item
-                                                }
-                                            }
-                                        }
-                                    }
-                                } else {
-                                    if let item = collectionView.cellForItem(at: indexPath) {
-                                        if let attributes = flowLayout.layoutAttributesForItem(at: indexPath) {
-                                            frame = attributes.frame
-                                            if collectionView.bounds.intersects(frame!) {
-                                                if !item.isHidden {
-                                                    cell = item
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            } else if let tableView = view as? UITableView {
-                                if indexPath.row < 0 {
-                                    let frame = tableView.rectForHeader(inSection: indexPath.section)
-                                    if tableView.bounds.intersects(frame) {
-                                        if let row = tableView.headerView(forSection: indexPath.section) {
-                                            if !row.isHidden {
-                                                cell = row
-                                            }
-                                        }
-                                    }
-                                } else {
-                                    if indexPath.section < 0 || item > tableView.numberOfRows(inSection: indexPath.section) {
+            // Check condition
+            if element.condition?() ?? true {
+                
+                // Check views
+                if let views = element.views {
+                    for view in views {
+                        var cell: UIView?
+                        var frame: CGRect?
+                        if let from = element.itemFrom, let to = element.itemTo {
+                            for item in from...to {
+                                let indexPath = IndexPath(item: item, section: element.section)
+                                if let collectionView = view as? UICollectionView {
+                                    if indexPath.section < 0 || item > collectionView.numberOfItems(inSection: indexPath.section) {
                                         break
                                     }
-                                    let frame = tableView.rectForRow(at: indexPath)
-                                    if tableView.bounds.intersects(frame) {
-                                        if let row = tableView.cellForRow(at: indexPath) {
-                                            if !row.isHidden {
-                                                cell = row
+                                    let flowLayout = collectionView.collectionViewLayout
+                                    if indexPath.item < 0 {
+                                        let kind = UICollectionView.elementKindSectionHeader
+                                        let indexPath = IndexPath(item: 0, section: indexPath.section)
+                                        if let item = collectionView.supplementaryView(forElementKind: kind, at: indexPath) {
+                                            if let attributes = flowLayout.layoutAttributesForSupplementaryView(ofKind: kind, at: indexPath) {
+                                                frame = attributes.frame
+                                                if collectionView.bounds.intersects(frame!) {
+                                                    if !item.isHidden {
+                                                        cell = item
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    } else {
+                                        if let item = collectionView.cellForItem(at: indexPath) {
+                                            if let attributes = flowLayout.layoutAttributesForItem(at: indexPath) {
+                                                frame = attributes.frame
+                                                if collectionView.bounds.intersects(frame!) {
+                                                    if !item.isHidden {
+                                                        cell = item
+                                                    }
+                                                }
                                             }
                                         }
                                     }
+                                } else if let tableView = view as? UITableView {
+                                    if indexPath.row < 0 {
+                                        let frame = tableView.rectForHeader(inSection: indexPath.section)
+                                        if tableView.bounds.intersects(frame) {
+                                            if let row = tableView.headerView(forSection: indexPath.section) {
+                                                if !row.isHidden {
+                                                    cell = row
+                                                }
+                                            }
+                                        }
+                                    } else {
+                                        if indexPath.section < 0 || item > tableView.numberOfRows(inSection: indexPath.section) {
+                                            break
+                                        }
+                                        let frame = tableView.rectForRow(at: indexPath)
+                                        if tableView.bounds.intersects(frame) {
+                                            if let row = tableView.cellForRow(at: indexPath) {
+                                                if !row.isHidden {
+                                                    cell = row
+                                                }
+                                            }
+                                        }
+                                    }
+                                    frame = cell?.frame
                                 }
-                                frame = cell?.frame
+                                if let cell = cell {
+                                    // Intersect the cell with the original collection / table to allow for partially hidden cells
+                                    if let callback = element.callback {
+                                        if let callbackFrame = callback(item, cell) {
+                                            frame = cell.superview!.convert(callbackFrame, from: cell)
+                                        } else {
+                                            frame = nil
+                                        }
+                                    }
+                                    if let frame = frame {
+                                        let cellFrame = view.convert(frame, to: view.superview!)
+                                        activeFrames.append((frame: cellFrame.intersection(view.frame), view: view))
+                                    }
+                                }
                             }
-                            if let cell = cell {
-                                // Intersect the cell with the original collection / table to allow for partially hidden cells
+                        } else {
+                            if !view.isHidden {
+                                var frame: CGRect? = view.frame
                                 if let callback = element.callback {
-                                    if let callbackFrame = callback(item, cell) {
-                                        frame = cell.superview!.convert(callbackFrame, from: cell)
+                                    if let callbackFrame = callback(0, view) {
+                                        frame = view.superview!.convert(callbackFrame, from: view)
                                     } else {
                                         frame = nil
                                     }
                                 }
                                 if let frame = frame {
-                                    let cellFrame = view.convert(frame, to: view.superview!)
-                                    activeFrames.append((frame: cellFrame.intersection(view.frame), view: view))
+                                    activeFrames.append((frame: frame, view: view))
                                 }
                             }
                         }
-                    } else {
-                        if !view.isHidden {
-                            var frame: CGRect? = view.frame
-                            if let callback = element.callback {
-                                if let callbackFrame = callback(0, view) {
-                                    frame = view.superview!.convert(callbackFrame, from: view)
-                                } else {
-                                    frame = nil
-                                }
-                            }
-                            if let frame = frame {
-                                activeFrames.append((frame: frame, view: view))
-                            }
-                        }
                     }
-                }
-                if !activeFrames.isEmpty {
-                    let superFrame = self.superFrame(frames: activeFrames.map{$0.frame})
-                    if superFrame.height >= self.minVisibleHeight {
-                        self.activeElements.append(HelpViewActiveElement(element: element, frame: superFrame, views: activeFrames.map{$0.view}))
-                    }
-                }
-            }
-            
-            // Check banner ID
-            if let id = element.bannerId {
-                
-                if let banner = self.parentViewController.bannerClass {
-                    // Get banner button
-                    if let bannerButton = banner.getButton(id: id) {
-                        let control = bannerButton.control
-                        if !control.isHidden {
-                            let rounded = (bannerButton.type == .rounded || bannerButton.type == .help)
-                            self.activeElements.append(HelpViewActiveElement(element: element, frame: control.frame, views: [control], source: .banner, descriptor: bannerButton.title, radius: (rounded ? control.frame.height / 2 : nil), positionSort: bannerButton.positionSort))
+                    if !activeFrames.isEmpty {
+                        let superFrame = self.superFrame(frames: activeFrames.map{$0.frame})
+                        if superFrame.height >= self.minVisibleHeight {
+                            self.activeElements.append(HelpViewActiveElement(element: element, frame: superFrame, views: activeFrames.map{$0.view}))
                         }
                     }
                 }
                 
-                if let menuController = self.parentViewController.menuController {
-                    // And get menu sub-option in container mode
-                    if menuController.isVisible {
-                        if let menuOption = menuController.getSuboptionView(id: id) {
-                            if let cell = menuOption.view.cellForRow(at: IndexPath(row: menuOption.item, section: 0)) {
-                                self.activeElements.append(HelpViewActiveElement(element: element, frame: cell.frame, views: [cell], source: .menu, descriptor: menuOption.title, positionSort: menuOption.positionSort))
+                // Check banner ID
+                if let id = element.bannerId {
+                    
+                    if let banner = self.parentViewController.bannerClass {
+                        if (id as? String) == Banner.titleControl {
+                            // Get title
+                            let bannerTitle = banner.getTitle()
+                            let control = bannerTitle.control
+                            if !control.isHidden {
+                                self.activeElements.append(HelpViewActiveElement(element: element, frame: control.frame, views: [control], source: .banner, descriptor: NSAttributedString(markdown: bannerTitle.title ?? "@*/Title@*/"), positionSort: bannerTitle.positionSort))
+                            }
+                        } else {
+                            // Get banner button
+                            if let bannerButton = banner.getButton(id: id) {
+                                let control = bannerButton.control
+                                if !control.isHidden {
+                                    let rounded = (bannerButton.type == .rounded || bannerButton.type == .help)
+                                    self.activeElements.append(HelpViewActiveElement(element: element, frame: control.frame, views: [control], source: .banner, descriptor: bannerButton.title, radius: (rounded ? control.frame.height / 2 : nil), positionSort: bannerButton.positionSort))
+                                }
+                            }
+                        }
+                    }
+                    
+                    if let menuController = self.parentViewController.menuController {
+                        // And get menu sub-option in container mode
+                        if menuController.isVisible {
+                            if let menuOption = menuController.getSuboptionView(id: id) {
+                                if let cell = menuOption.view.cellForRow(at: IndexPath(row: menuOption.item, section: 0)) {
+                                    self.activeElements.append(HelpViewActiveElement(element: element, frame: cell.frame, views: [cell], source: .menu, descriptor: menuOption.title, positionSort: menuOption.positionSort))
+                                }
                             }
                         }
                     }
                 }
-            }
-            
-            if (element.views?.count ?? 0) == 0 && element.bannerId == nil {
-                // Text is not related to a control - always include it
-                self.activeElements.append(HelpViewActiveElement(element: element, source: .message))
+                
+                if (element.views?.count ?? 0) == 0 && element.bannerId == nil {
+                    // Text is not related to a control - always include it
+                    self.activeElements.append(HelpViewActiveElement(element: element, source: .message))
+                }
             }
         }
         
@@ -436,10 +451,10 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
        if activeElement.source != .message {
             // Bubble mode - Work out connection point on frame for arrow
             if aboveBelow {
-                direction = element.direction?.rotated ?? (requiredHeight + frame!.maxY > self.parentViewController.screenHeight ? .down : .up)
+                direction = element.direction?.rotated ?? (requiredHeight + frame!.maxY > self.frame.height - self.parentView.safeAreaInsets.bottom ? .down : .up)
                 point = CGPoint(x: frame!.midX, y: (direction == .up ? frame!.maxY : frame!.minY))
             } else {
-                direction = element.direction?.rotated ?? (frame!.maxX > self.parentViewController.screenWidth - 375 ? .right : .left)
+                direction = element.direction?.rotated ?? (requiredWidth + frame!.maxX > self.frame.width - self.parentView.safeAreaInsets.right ? .right : .left)
                 point = CGPoint(x: (direction == .left ? frame!.maxX : frame!.minX), y: frame!.midY)
                 
             }
@@ -582,7 +597,7 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
     }
     
     private func addTapGesture() {
-        if self.parentViewController.rootViewController.containers && self.parentViewController.container != nil {
+        if (self.parentViewController.rootViewController?.containers ?? false) && self.parentViewController.container != nil {
             self.parentViewController.rootViewController.view.addGestureRecognizer(self.tapGesture)
         } else {
             self.addGestureRecognizer(self.tapGesture)
@@ -590,7 +605,7 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
     }
     
     private func removeTapGesture() {
-        if self.parentViewController.rootViewController.containers && self.parentViewController.container != nil {
+        if (self.parentViewController.rootViewController?.containers ?? false) && self.parentViewController.container != nil {
             self.parentViewController.rootViewController.view.removeGestureRecognizer(self.tapGesture)
         } else {
             self.removeGestureRecognizer(self.tapGesture)
@@ -655,7 +670,7 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
     // MARK: - Gesture Recognizer Delegates ============================================================ -
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-            return gestureRecognizer == self.tapGesture
+            return true
     }
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {

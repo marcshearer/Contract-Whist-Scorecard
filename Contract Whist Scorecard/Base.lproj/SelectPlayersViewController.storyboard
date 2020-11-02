@@ -3,7 +3,7 @@
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -13,12 +13,12 @@
         <!--Select Players-->
         <scene sceneID="mtf-Vh-4qJ">
             <objects>
-                <viewController storyboardIdentifier="SelectPlayersViewController" title="Select Players" useStoryboardIdentifierAsRestorationIdentifier="YES" id="FdF-BR-2d1" customClass="SelectPlayersViewController" customModule="Whist_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SelectPlayersViewController" title="Select Players" useStoryboardIdentifierAsRestorationIdentifier="YES" id="FdF-BR-2d1" customClass="SelectPlayersViewController" customModule="Whist" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8Be-gQ-047" userLabel="Select Players View">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kDy-p2-Y7X" customClass="Banner" customModule="Whist_2" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kDy-p2-Y7X" customClass="Banner" customModule="Whist" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="88"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <userDefinedRuntimeAttributes>
@@ -43,7 +43,7 @@
                                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gn8-wt-d0L" userLabel="Bottom Section">
                                                 <rect key="frame" x="0.0" y="0.0" width="414" height="667"/>
                                                 <subviews>
-                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ejQ-cw-pgS" userLabel="Download Players Title Bar" customClass="TitleBar" customModule="Whist_2" customModuleProvider="target">
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ejQ-cw-pgS" userLabel="Download Players Title Bar" customClass="TitleBar" customModule="Whist" customModuleProvider="target">
                                                         <rect key="frame" x="20" y="20" width="374" height="90"/>
                                                         <color key="backgroundColor" name="Clear"/>
                                                         <accessibility key="accessibilityConfiguration" identifier="downloadPlayersTitleBar"/>
@@ -90,7 +90,7 @@
                                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fkE-As-Xe8">
                                                                                 <rect key="frame" x="30" y="23" width="222" height="34"/>
                                                                                 <subviews>
-                                                                                    <textField opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Enter identifier" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="h2T-Xr-Sk7" customClass="TextField" customModule="Whist_2" customModuleProvider="target">
+                                                                                    <textField opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Enter identifier" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="h2T-Xr-Sk7" customClass="TextField" customModule="Whist" customModuleProvider="target">
                                                                                         <rect key="frame" x="8" y="0.0" width="206" height="34"/>
                                                                                         <color key="backgroundColor" name="Clear"/>
                                                                                         <constraints>
@@ -110,7 +110,7 @@
                                                                                     <constraint firstItem="h2T-Xr-Sk7" firstAttribute="leading" secondItem="fkE-As-Xe8" secondAttribute="leading" constant="8" id="wSz-PG-ctR"/>
                                                                                 </constraints>
                                                                             </view>
-                                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="le8-8z-48n" userLabel="Download Players From Cloud" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
+                                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="le8-8z-48n" userLabel="Download Players From Cloud" customClass="ShadowButton" customModule="Whist" customModuleProvider="target">
                                                                                 <rect key="frame" x="264" y="23" width="80" height="34"/>
                                                                                 <constraints>
                                                                                     <constraint firstAttribute="height" constant="34" id="8KU-ML-psG"/>
@@ -162,7 +162,7 @@ players on this device</string>
                                                                                 <nil key="textColor"/>
                                                                                 <nil key="highlightedColor"/>
                                                                             </label>
-                                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7wS-YP-qSg" customClass="RelatedPlayersView" customModule="Whist_2" customModuleProvider="target">
+                                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7wS-YP-qSg" customClass="RelatedPlayersView" customModule="Whist" customModuleProvider="target">
                                                                                 <rect key="frame" x="20" y="116.5" width="334" height="175.5"/>
                                                                                 <color key="backgroundColor" name="Clear"/>
                                                                                 <accessibility key="accessibilityConfiguration" identifier="downloadRelatedPlayers"/>
@@ -209,7 +209,7 @@ players on this device</string>
                                                                     <constraint firstItem="hxv-qR-621" firstAttribute="top" secondItem="D6b-P4-tOh" secondAttribute="top" id="oBg-NL-bcc"/>
                                                                 </constraints>
                                                             </view>
-                                                            <view tag="1" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qH5-CD-lIa" userLabel="Create Player Title Bar" customClass="TitleBar" customModule="Whist_2" customModuleProvider="target">
+                                                            <view tag="1" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qH5-CD-lIa" userLabel="Create Player Title Bar" customClass="TitleBar" customModule="Whist" customModuleProvider="target">
                                                                 <rect key="frame" x="20" y="320" width="374" height="90"/>
                                                                 <color key="backgroundColor" name="Clear"/>
                                                                 <accessibility key="accessibilityConfiguration" identifier="createPlayerTitleBar"/>
@@ -238,7 +238,7 @@ players on this device</string>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1BG-a0-xEE" userLabel="Create Player Container View">
                                                                 <rect key="frame" x="20" y="430" width="374" height="180"/>
                                                                 <subviews>
-                                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3A7-MH-gLr" userLabel="Create Player View" customClass="CreatePlayerView" customModule="Whist_2" customModuleProvider="target">
+                                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3A7-MH-gLr" userLabel="Create Player View" customClass="CreatePlayerView" customModule="Whist" customModuleProvider="target">
                                                                         <rect key="frame" x="0.0" y="0.0" width="374" height="180"/>
                                                                         <color key="backgroundColor" name="Clear"/>
                                                                         <accessibility key="accessibilityConfiguration" identifier="createPlayer"/>

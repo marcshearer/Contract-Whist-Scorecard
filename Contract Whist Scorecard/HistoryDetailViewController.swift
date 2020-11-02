@@ -31,8 +31,6 @@ class HistoryDetailViewController: ScorecardViewController, UITableViewDataSourc
     @IBOutlet private weak var locationText: UILabel!
     @IBOutlet private weak var locationBackground: UIView!
     @IBOutlet private weak var locationBackgroundHeightConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var locationBackgroundLeadingConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var locationBackgroundTrailingConstraint: NSLayoutConstraint!
     @IBOutlet private weak var mapView: MKMapView!
     @IBOutlet private weak var participantTableViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var updateButton: ShadowButton!
@@ -69,6 +67,9 @@ class HistoryDetailViewController: ScorecardViewController, UITableViewDataSourc
         
         // Setup banner
         self.setupBanner()
+        
+        // Setup help
+        self.setupHelpView()
 
         if !Scorecard.activeSettings.saveLocation {
             locationBackgroundHeightConstraint.constant = 0
@@ -109,8 +110,6 @@ class HistoryDetailViewController: ScorecardViewController, UITableViewDataSourc
         super.viewWillLayoutSubviews()
         
         // Allow for safe area in layout indents
-        locationBackgroundLeadingConstraint.constant = view.safeAreaInsets.left + 88
-        locationBackgroundTrailingConstraint.constant = view.safeAreaInsets.right + 8
         self.participantTableView.reloadData()
     }
     
@@ -194,6 +193,7 @@ class HistoryDetailViewController: ScorecardViewController, UITableViewDataSourc
         let shareImage = UIImage(systemName: "square.and.arrow.up", withConfiguration: UIImage.SymbolConfiguration(pointSize: Banner.defaultFont.fontDescriptor.pointSize, weight: .semibold))
         self.banner.set(
             rightButtons: [
+                BannerButton(action: self.helpPressed, type: .help),
                 BannerButton(image: shareImage, action: self.actionPressed, id: shareButton)])
     }
     
@@ -455,5 +455,28 @@ extension HistoryDetailViewController {
             break
         }
     }
+}
 
+extension HistoryDetailViewController {
+    
+    internal func setupHelpView() {
+        
+        self.helpView.reset()
+                
+        self.helpView.add("This screen allows you to see the details of a game in your history.")
+        
+        self.helpView.add("The {} closes the @*/Game Detail@*/ screen and takes you back to the list of games.", bannerId: Banner.finishButton, horizontalBorder: 4, verticalBorder: 4)
+        
+        self.helpView.add("The date and time for the game are displayed here.", bannerId: Banner.titleControl, horizontalBorder: 8)
+        
+        self.helpView.add("Tap the {} to share details of the game on Social Media.", bannerId: self.shareButton, horizontalBorder: 8, verticalBorder: 4)
+        
+        self.helpView.add("The participants in the game and their scores are shown here.", views: [self.participantTableView], radius: 0)
+        
+        self.helpView.add("The location of the game is shown here.", views: [self.locationText], condition: { Scorecard.activeSettings.saveLocation }, horizontalBorder: 8, verticalBorder: -4)
+        
+        self.helpView.add("You can update the location if it is incorrect by clicking the @*/Update@*/ button", views: [self.updateButton], condition: { Scorecard.activeSettings.saveLocation })
+        
+        self.helpView.add("A map of the game location is displayed here.", views: [self.mapView], radius: 0)
+    }
 }

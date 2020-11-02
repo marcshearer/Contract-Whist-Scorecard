@@ -3,7 +3,7 @@
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -12,12 +12,12 @@
         <!--History Detail-->
         <scene sceneID="lnl-WN-6N4">
             <objects>
-                <viewController storyboardIdentifier="HistoryDetailViewController" title="History Detail" useStoryboardIdentifierAsRestorationIdentifier="YES" id="2Wg-gN-UgP" customClass="HistoryDetailViewController" customModule="Whist_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="HistoryDetailViewController" title="History Detail" useStoryboardIdentifierAsRestorationIdentifier="YES" id="2Wg-gN-UgP" customClass="HistoryDetailViewController" customModule="Whist" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="BER-xO-Vlg">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hEU-UB-5K2" customClass="Banner" customModule="Whist_2" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hEU-UB-5K2" customClass="Banner" customModule="Whist" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="image" keyPath="finishImage" value="back"/>
@@ -36,16 +36,16 @@
                                         <rect key="frame" x="0.0" y="310" width="375" height="40"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OnX-jC-bPu">
-                                                <rect key="frame" x="88" y="0.0" width="199" height="40"/>
+                                                <rect key="frame" x="163.5" y="0.0" width="48" height="40"/>
                                                 <color key="backgroundColor" name="Clear"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                                 <color key="textColor" name="Dark Highlight Text"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="250" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xcz-H4-UE0" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
+                                            <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="250" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xcz-H4-UE0" customClass="ShadowButton" customModule="Whist" customModuleProvider="target">
                                                 <rect key="frame" x="287" y="7" width="80" height="26"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" relation="lessThanOrEqual" constant="80" id="4Qd-AT-98q"/>
+                                                    <constraint firstAttribute="width" constant="80" id="4Qd-AT-98q"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                 <state key="normal" title="Update">
@@ -70,10 +70,9 @@
                                             <constraint firstAttribute="bottom" secondItem="Xcz-H4-UE0" secondAttribute="bottom" constant="7" id="4Cd-o6-LNJ"/>
                                             <constraint firstAttribute="bottom" secondItem="OnX-jC-bPu" secondAttribute="bottom" id="8Rk-0c-G3h"/>
                                             <constraint firstItem="OnX-jC-bPu" firstAttribute="top" secondItem="nDe-x0-Zfu" secondAttribute="top" id="JfI-sU-97s"/>
-                                            <constraint firstItem="Xcz-H4-UE0" firstAttribute="leading" secondItem="OnX-jC-bPu" secondAttribute="trailing" id="Tud-Dh-GJk"/>
                                             <constraint firstItem="Xcz-H4-UE0" firstAttribute="top" secondItem="nDe-x0-Zfu" secondAttribute="top" constant="7" id="i9I-Na-1w2"/>
-                                            <constraint firstItem="OnX-jC-bPu" firstAttribute="leading" secondItem="nDe-x0-Zfu" secondAttribute="leading" constant="88" id="pif-S3-Bjn"/>
                                             <constraint firstAttribute="height" constant="40" id="rej-tX-Fpk"/>
+                                            <constraint firstItem="OnX-jC-bPu" firstAttribute="centerX" secondItem="nDe-x0-Zfu" secondAttribute="centerX" id="zAH-wc-SQg"/>
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PPI-r2-8QP">
@@ -104,7 +103,7 @@
                                         </constraints>
                                         <color key="separatorColor" name="Separator"/>
                                         <prototypes>
-                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="History Detail Cell" id="OGZ-Fq-UC4" customClass="HistoryDetailTableCell" customModule="Whist_2" customModuleProvider="target">
+                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="History Detail Cell" id="OGZ-Fq-UC4" customClass="HistoryDetailTableCell" customModule="Whist" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="OGZ-Fq-UC4" id="e1k-jI-vlO">
@@ -221,8 +220,6 @@
                         <outlet property="excludeStatsView" destination="PPI-r2-8QP" id="gVH-uG-O6C"/>
                         <outlet property="locationBackground" destination="nDe-x0-Zfu" id="cTQ-uU-jKk"/>
                         <outlet property="locationBackgroundHeightConstraint" destination="rej-tX-Fpk" id="INR-iY-IA2"/>
-                        <outlet property="locationBackgroundLeadingConstraint" destination="pif-S3-Bjn" id="rc8-mq-Xws"/>
-                        <outlet property="locationBackgroundTrailingConstraint" destination="2sw-Zh-vCa" id="Kif-FC-b3f"/>
                         <outlet property="locationText" destination="OnX-jC-bPu" id="qFA-Od-Ohm"/>
                         <outlet property="mapView" destination="e7x-Iq-giA" id="bfl-gf-Id1"/>
                         <outlet property="participantTableView" destination="f3E-iU-lrl" id="W2x-Y7-mP5"/>

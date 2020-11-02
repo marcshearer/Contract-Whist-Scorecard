@@ -51,20 +51,20 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
     
     // Local class variables
     let availableFields: [DataTableField] = [
-        DataTableField("",              "",          sequence: 0,   width: 16,  type: .string),
-        DataTableField("=location",     "Location",  sequence: 2,   width: 100, type: .string,      align: NSTextAlignment.left, pad: true),
-        DataTableField("info",          "",          sequence: 14,  width: 40,  type: .button),
-        DataTableField("cross red",     "",          sequence: 13,  width: 40,  type: .button),
-        DataTableField("datePlayed",    "Date",      sequence: 3,   width: 100, type: .date),
-        DataTableField("=player1",      "Winner",    sequence: 5,   width: 80,  type: .string),
-        DataTableField("=score1",       "Score",     sequence: 6,   width: 50,  type: .int),
-        DataTableField("=player2",      "Second",    sequence: 7,   width: 80,  type: .string),
-        DataTableField("=score2",       "Score",     sequence: 8,   width: 50,  type: .int),
-        DataTableField("=player3",      "Third",     sequence: 9,   width: 80,  type: .string),
-        DataTableField("=score3",       "Score",     sequence: 10,  width: 50,  type: .int),
-        DataTableField("=player4",      "Fourth",    sequence: 11,  width: 80,  type: .string),
-        DataTableField("=score4",       "Score",     sequence: 12,  width: 50,  type: .int),
-        DataTableField("datePlayed",    "",          sequence: 4,   width: 60,  type: .time,        combineHeading: "Date")
+        DataTableField("",              "",                 sequence: 0,   width: 16,  type: .string),
+        DataTableField("=location",     "Location",         sequence: 2,   width: 100, type: .string,      align: NSTextAlignment.left, pad: true),
+        DataTableField(DataTableViewController.infoImageName, "",  sequence: 14,  width: 40,  type: .button),
+        DataTableField("cross red",     "",                 sequence: 13,  width: 40,  type: .button),
+        DataTableField("datePlayed",    "Date",             sequence: 3,   width: 100, type: .date),
+        DataTableField("=player1",      "Winner",           sequence: 5,   width: 80,  type: .string),
+        DataTableField("=score1",       "Score",            sequence: 6,   width: 50,  type: .int),
+        DataTableField("=player2",      "Second",           sequence: 7,   width: 80,  type: .string),
+        DataTableField("=score2",       "Score",            sequence: 8,   width: 50,  type: .int),
+        DataTableField("=player3",      "Third",            sequence: 9,   width: 80,  type: .string),
+        DataTableField("=score3",       "Score",            sequence: 10,  width: 50,  type: .int),
+        DataTableField("=player4",      "Fourth",           sequence: 11,  width: 80,  type: .string),
+        DataTableField("=score4",       "Score",            sequence: 12,  width: 50,  type: .int),
+        DataTableField("datePlayed",    "",                 sequence: 4,   width: 60,  type: .time,        combineHeading: "Date")
     ]
     
     init(from viewController: ScorecardViewController, playerUUID: String? = nil, winStreak: Bool = false, completion: (()->())? = nil) {

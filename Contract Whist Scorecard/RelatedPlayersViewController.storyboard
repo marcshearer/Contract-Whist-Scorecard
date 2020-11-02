@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--Related Players View Controller-->
         <scene sceneID="fXq-3Q-QA2">
             <objects>
-                <viewController storyboardIdentifier="RelatedPlayersViewController" id="r6O-3T-jOz" customClass="RelatedPlayersViewController" customModule="Whist_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="RelatedPlayersViewController" id="r6O-3T-jOz" customClass="RelatedPlayersViewController" customModule="Whist" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="aPv-i3-KYZ">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -19,23 +21,11 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CF9-i6-yED" userLabel="Top Section">
                                 <rect key="frame" x="0.0" y="44" width="414" height="141.5"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0ar-Qp-lQ9" userLabel="Banner">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0ar-Qp-lQ9" userLabel="Banner" customClass="Banner" customModule="Whist" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="22" width="414" height="44"/>
-                                        <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="W H I S T" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="D4v-1y-y7Y">
-                                                <rect key="frame" x="142" y="0.0" width="130" height="44"/>
-                                                <color key="backgroundColor" name="Clear"/>
-                                                <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="30"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                        </subviews>
                                         <color key="backgroundColor" name="Clear"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="44" id="CAc-Z8-tjv"/>
-                                            <constraint firstItem="D4v-1y-y7Y" firstAttribute="centerX" secondItem="0ar-Qp-lQ9" secondAttribute="centerX" id="boK-nm-lA5"/>
-                                            <constraint firstItem="D4v-1y-y7Y" firstAttribute="top" secondItem="0ar-Qp-lQ9" secondAttribute="top" id="eSD-Cg-tab"/>
-                                            <constraint firstAttribute="bottom" secondItem="D4v-1y-y7Y" secondAttribute="bottom" id="uBu-6Q-ZxJ"/>
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dpu-II-Uca" userLabel="Available space">
@@ -71,10 +61,10 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1vj-LQ-ZFG" userLabel="Bottom Section">
                                 <rect key="frame" x="0.0" y="185.5" width="414" height="676.5"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RvN-TJ-ssE" userLabel="Container View" customClass="ShadowView" customModule="Whist_2" customModuleProvider="target">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RvN-TJ-ssE" userLabel="Container View" customClass="ShadowView" customModule="Whist" customModuleProvider="target">
                                         <rect key="frame" x="16" y="16" width="382" height="644.5"/>
                                         <subviews>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Hah-bS-ay7" userLabel="Related Players View" customClass="RelatedPlayersView" customModule="Whist_2" customModuleProvider="target">
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Hah-bS-ay7" userLabel="Related Players View" customClass="RelatedPlayersView" customModule="Whist" customModuleProvider="target">
                                                 <rect key="frame" x="10" y="0.0" width="362" height="636.5"/>
                                                 <color key="backgroundColor" name="Clear"/>
                                                 <connections>
@@ -101,7 +91,8 @@
                                 </constraints>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <viewLayoutGuide key="safeArea" id="lJE-WD-Acd"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="1vj-LQ-ZFG" firstAttribute="leading" secondItem="lJE-WD-Acd" secondAttribute="leading" id="5pw-Xe-Yfo"/>
                             <constraint firstItem="lJE-WD-Acd" firstAttribute="trailing" secondItem="CF9-i6-yED" secondAttribute="trailing" id="8GS-03-JsW"/>
@@ -112,13 +103,12 @@
                             <constraint firstItem="CF9-i6-yED" firstAttribute="height" secondItem="aPv-i3-KYZ" secondAttribute="height" multiplier="6:38" id="bJh-kE-f8t"/>
                             <constraint firstItem="lJE-WD-Acd" firstAttribute="bottom" secondItem="1vj-LQ-ZFG" secondAttribute="bottom" id="hcA-B1-auI"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="lJE-WD-Acd"/>
                     </view>
                     <connections>
+                        <outlet property="banner" destination="0ar-Qp-lQ9" id="lTj-oa-QWl"/>
                         <outlet property="captionLabel" destination="YGl-rI-8X1" id="4AD-qg-yhm"/>
                         <outlet property="relatedPlayersContainerView" destination="RvN-TJ-ssE" id="0nA-bP-MvX"/>
                         <outlet property="relatedPlayersView" destination="Hah-bS-ay7" id="BLC-2J-Fsr"/>
-                        <outlet property="titleLabel" destination="D4v-1y-y7Y" id="SjU-D9-4ps"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="I93-Xh-sTi" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -130,5 +120,8 @@
         <namedColor name="Clear">
             <color red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
     </resources>
 </document>

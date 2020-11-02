@@ -82,6 +82,12 @@ class SelectPlayersViewController: ScorecardViewController, SyncDelegate, Button
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Setup banner
+        self.setupBanner()
+        
+        // Setup help
+        self.setupHelpView()
                 
         self.setupDefaultColors()
         self.downloadRelatedPlayersView.set(email: nil, playerDetailView: playerDetailView)
@@ -121,6 +127,12 @@ class SelectPlayersViewController: ScorecardViewController, SyncDelegate, Button
     
     private func enableControls() {
         self.downloadDownloadButton.isEnabled = (self.downloadIdentifierTextField.text != "")
+    }
+    
+    private func setupBanner() {
+        self.banner.set(
+            rightButtons: [
+                BannerButton(action: self.helpPressed, type: .help)])
     }
     
     // MARK: - Change section ==================================================================== -
@@ -409,4 +421,27 @@ class SelectPlayersViewController: ScorecardViewController, SyncDelegate, Button
         // Abandon any sync in progress
         self.sync?.stop()
     }
+}
+
+extension SelectPlayersViewController {
+    
+    internal func setupHelpView() {
+        
+        self.helpView.reset()
+                
+        self.helpView.add("The @*/\(self.banner.title ?? "Select Players")@*/ screen allows you to add players to your device.\n\nYou can either download existing players from iCloud or create new players.\n\n\(self.section == .downloadPlayers ? "To create new players tap the @*/Create New Player@*/ button.\n\nYou can download players in two way\n- either by entering the player's **Unique ID**\n- or by selecting from a list of players who have **played a game with a player on this device**." : "To download players from iCloud tap the @*/Download Players@*/ button.")")
+        
+        self.helpView.add("To download a player using their **Unique ID**, enter it in the identifier box and then tap the @*/Download@*/ button.", views: [self.downloadIdentifierView, self.downloadDownloadButton], condition: {self.section == .downloadPlayers }, border: 4)
+        
+        self.downloadRelatedPlayersView.addHelp(to: self.helpView, condition: { self.section == .downloadPlayers })
+        
+        self.helpView.add("Tap the @*/Create Player@*/ button to create a new player who has not already been created on another device.", views: [self.createPlayerTitleBar], condition: { self.section == .downloadPlayers })
+        
+        self.helpView.add("Tap the @*/Download Players@*/ button to download existing players from iCloud", views: [self.downloadPlayersTitleBar], condition: {self.section == .createPlayer })
+        
+        self.createPlayerView.addHelp(to: self.helpView, condition: { self.section == .createPlayer })
+        
+    }
+    
+
 }

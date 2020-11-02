@@ -146,6 +146,14 @@ extension UIImage {
         self.init(data: image.pngData()!)!
     }
     
+    convenience init?(prefixed name: String) {
+        if name.left(7) == "system." {
+            self.init(systemName: name.right(name.length-7))
+        } else {
+            self.init(named: name)
+        }
+    }
+    
     func asTemplate() -> UIImage {
         return self.withRenderingMode(UIImage.RenderingMode.alwaysTemplate)
     }
@@ -258,6 +266,15 @@ extension NSAttributedString {
              NSAttributedString.Key.font: UIFont.systemFont(ofSize: pointSize, weight: .bold)]
         ]
         self.init(attributedString: NSAttributedString.replace(in: string, tokens: tokens, with: attributes))
+    }
+    
+    convenience init(imageName: String, color: UIColor? = nil) {
+        let image = UIImage(prefixed: imageName)!
+        let imageString = NSMutableAttributedString(attachment: NSTextAttachment(image: (color == nil ? image : image.asTemplate())))
+        if let color = color {
+            imageString.addAttribute(NSAttributedString.Key.foregroundColor, value: color, range: NSRange(0...imageString.length - 1))
+        }
+        self.init(attributedString: imageString)
     }
     
     private static func replace(in string: String, tokens: [String], with attributes: [[NSAttributedString.Key : Any]], level: Int = 0) -> NSAttributedString {

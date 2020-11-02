@@ -25,7 +25,6 @@ class StatisticsViewer : NSObject, DataTableViewerDelegate {
     private var callerCompletion: (()->())?
     private var observer: NSObjectProtocol?
     public var backImage = "back"
-    private static var infoImageName = "system.info.circle.fill"
     
     // Local class variables
     
@@ -34,7 +33,7 @@ class StatisticsViewer : NSObject, DataTableViewerDelegate {
     public let availableFields: [DataTableField] = [
         DataTableField("",             "",                 sequence: 0,     width: 16,    type: .string),
         DataTableField("name",         "Player\nName",     sequence: 2,     width: 80,    type: .string,    align: .left,   pad: true),
-        DataTableField(StatisticsViewer.infoImageName, "", sequence: 14,    width: 40.0,  type: .button),
+        DataTableField(DataTableViewController.infoImageName, "", sequence: 14,    width: 40.0,  type: .button),
         DataTableField("=gamesWon%",   "Games Won %",      sequence: 5,     width: 75.0,  type: .double),
         DataTableField("=averageScore","Average Score",    sequence: 7,     width: 75.0,  type: .double),
         DataTableField("=handsMade%",  "Hands Made %",     sequence: 10,    width: 75.0,  type: .double),
@@ -67,7 +66,7 @@ class StatisticsViewer : NSObject, DataTableViewerDelegate {
     internal func didSelect(record: DataTableViewerDataSource, field: String) {
         let record = record as! PlayerDetail
         switch field {
-        case StatisticsViewer.infoImageName:
+        case DataTableViewController.infoImageName:
             self.showDetail(playerDetail: record)
         default:
             self.drawGraph(playerDetail: record)
@@ -116,18 +115,18 @@ class StatisticsViewer : NSObject, DataTableViewerDelegate {
         helpView.add("The body of the screen contains the data.\n\nTap on a row to show a graph of the player's recent game scores.", views: [body], item: 0, itemTo: 999, shrink: true, direction: .up)
         
         let image = NSMutableAttributedString(attachment: NSTextAttachment(image: UIImage(systemName: "info.circle.fill")!))
-        image.addAttribute(NSAttributedString.Key.foregroundColor, value: Palette.banner.background, range: NSRange(0...image.length - 1))
+        image.addAttribute(NSAttributedString.Key.foregroundColor, value: Palette.otherButton.background, range: NSRange(0...image.length - 1))
         let text = NSAttributedString("Tap on the ") + image + NSAttributedString(" button in a row to show that player's details.")
         helpView.add(text, views: [body], callback: self.infoButton, item: 0)
     }
     
     private func infoButton(item: Int, view: UIView) -> CGRect? {
         var result: CGRect?
-        if let cell = view as? DataTableCell {
-            if let collectionView = cell.dataTableCollection {
-                if let item = self.dataTableViewController.displayedFields.firstIndex(where: {$0.field == StatisticsViewer.infoImageName}) {
-                    if let cell = collectionView.cellForItem(at: IndexPath(item: item, section: 0)) as? DataTableCollectionCell {
-                        result = collectionView.convert(cell.bodyButton.frame, from: cell)
+        if let tableCell = view as? DataTableCell {
+            if let collectionView = tableCell.dataTableCollection {
+                if let item = self.dataTableViewController.displayedFields.firstIndex(where: {$0.field == DataTableViewController.infoImageName}) {
+                    if let collectionCell = collectionView.cellForItem(at: IndexPath(item: item, section: 0)) as? DataTableCollectionCell {
+                        result = tableCell.convert(collectionCell.bodyButton.frame, from: collectionCell)
                     }
                 }
             }

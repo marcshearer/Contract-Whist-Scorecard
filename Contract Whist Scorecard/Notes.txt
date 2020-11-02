@@ -42,6 +42,7 @@ TODO Need to switch off MallocStackLogging variables in Edit Scheme
 Looks like it is still in recovery mode even when play game and override warning
 Implement Facetime calls
 When menu reappears due to multi-tasking not defaulting to correct item (get locked in)
+Can't tap anywher but buttons in help in Get Started.
 
 Jack
 ----
@@ -52,7 +53,3 @@ Medium-term
 Long-term
 ---------
 Sort out constraints when in landscape mode
-
-Swift Gotchas / hints
----------------------
-Now in OneNote

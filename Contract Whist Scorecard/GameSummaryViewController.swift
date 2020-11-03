@@ -15,7 +15,7 @@ enum GameSummaryReturnMode {
     case newGame
 }
 
-class GameSummaryViewController: ScorecardViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, SyncDelegate, UIPopoverControllerDelegate, ButtonDelegate, BannerDelegate, GameDetailPanelInvokeDelegate {
+class GameSummaryViewController: ScorecardViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, SyncDelegate, ButtonDelegate, BannerDelegate, GameDetailPanelInvokeDelegate {
 
     // Main state properties
     private let sync = Sync()
@@ -165,7 +165,6 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         self.rotated = true
-        Scorecard.shared.reCenterPopup(self)
         self.view.setNeedsLayout()
     }
     

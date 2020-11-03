@@ -177,7 +177,6 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        Scorecard.shared.reCenterPopup(self)
         self.reload = true
         self.view.setNeedsLayout()
     }

@@ -146,7 +146,6 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
         super.viewWillTransition(to: size, with: coordinator)
         
         self.rotated = true
-        Scorecard.shared.reCenterPopup(self)
         self.view.setNeedsLayout()
     }
 

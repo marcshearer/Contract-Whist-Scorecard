@@ -461,6 +461,7 @@
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" name="Hand"/>
+                                <accessibility key="accessibilityConfiguration" identifier="handView"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="500" id="5qd-B2-R8P"/>
                                     <constraint firstItem="bGt-JH-4so" firstAttribute="top" secondItem="DJP-w2-bXe" secondAttribute="top" constant="8" id="BN0-Zp-w5J"/>
@@ -485,10 +486,12 @@
                             <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OBj-ch-rRU" userLabel="Hand Source View">
                                 <rect key="frame" x="0.0" y="362" width="414" height="534"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <accessibility key="accessibilityConfiguration" identifier="handSourceView"/>
                             </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Nrt-LH-Xin"/>
                         <color key="backgroundColor" name="Hand"/>
+                        <accessibility key="accessibilityConfiguration" identifier="handMainView"/>
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="wNn-Ll-ZaQ" firstAttribute="bottom" secondItem="Nrt-LH-Xin" secondAttribute="top" constant="44" id="5HV-mH-nyc"/>
@@ -543,14 +546,14 @@
                                 <exclude reference="tKS-wg-Yzy"/>
                                 <exclude reference="5cp-aR-TTh"/>
                                 <exclude reference="mrd-1t-4jp"/>
-                                <exclude reference="6Ps-Xs-ghH"/>
-                                <exclude reference="Bdh-zo-vtN"/>
-                                <exclude reference="Ptw-uC-5Cb"/>
-                                <exclude reference="g7I-B6-Iv6"/>
                                 <exclude reference="YDD-zF-FSK"/>
                                 <exclude reference="aQR-aa-ye0"/>
                                 <exclude reference="eqq-9j-fgs"/>
                                 <exclude reference="xKn-0t-L7j"/>
+                                <exclude reference="6Ps-Xs-ghH"/>
+                                <exclude reference="Bdh-zo-vtN"/>
+                                <exclude reference="Ptw-uC-5Cb"/>
+                                <exclude reference="g7I-B6-Iv6"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=compact">
@@ -562,12 +565,12 @@
                                 <include reference="d3Q-Jj-Ygi"/>
                                 <include reference="tKS-wg-Yzy"/>
                                 <include reference="5cp-aR-TTh"/>
+                                <include reference="aQR-aa-ye0"/>
+                                <include reference="eqq-9j-fgs"/>
                                 <include reference="6Ps-Xs-ghH"/>
                                 <include reference="Bdh-zo-vtN"/>
                                 <include reference="Ptw-uC-5Cb"/>
                                 <include reference="g7I-B6-Iv6"/>
-                                <include reference="aQR-aa-ye0"/>
-                                <include reference="eqq-9j-fgs"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular">

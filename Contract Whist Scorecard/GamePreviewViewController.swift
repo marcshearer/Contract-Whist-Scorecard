@@ -193,8 +193,6 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
     override internal func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
-        Scorecard.shared.reCenterPopup(self)
-        
         if !exiting {
             
             let rotated = self.rotated

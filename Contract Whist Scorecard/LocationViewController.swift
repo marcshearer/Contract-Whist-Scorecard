@@ -142,13 +142,6 @@ class LocationViewController: ScorecardViewController, UITableViewDataSource, UI
         self.setupHelpView()
     }
     
-    override internal func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
-        Scorecard.shared.reCenterPopup(self)
-        
-        self.view.setNeedsLayout()
-    }
-    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         

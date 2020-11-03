@@ -145,7 +145,7 @@ extension HandViewController {
     
     public func startAutoPlay() {
         // Automatically play the game
-        Scorecard.shared.getAutoPlayCount(from: self, completion: {
+        Scorecard.shared.getAutoPlayCount(from: self, sourceView: self.handSourceView, verticalOffset: 0.2, completion: {
             if self.bidMode {
                 self.autoBid()
             } else {
@@ -321,12 +321,12 @@ extension GameSummaryViewController {
 
 extension Scorecard {
     
-    public func getAutoPlayCount(from viewController: ScorecardViewController, completion: (()->())? = nil) {
-        ConfirmCountViewController.show(from: viewController, title: "Auto-play", message: "Enter the number of games you want to simulate", minimumValue: 1, wraps: false, handler: { (value) in
+    public func getAutoPlayCount(from viewController: ScorecardViewController, sourceView: UIView? = nil, verticalOffset: CGFloat = 0.5, completion: (()->())? = nil) {
+        ConfirmCountViewController.show(from: viewController, sourceView: sourceView, verticalOffset: verticalOffset, title: "Auto-play", message: "Enter the number of games you want to simulate", minimumValue: 1, wraps: false, handler: { (value) in
             self.autoPlayGames = value
             let round = (self.autoPlayGames == 1 ? Scorecard.game.maxEnteredRound : 1)
             let defaultValue = (self.autoPlayGames == 1 ? round : Scorecard.game.rounds)
-            ConfirmCountViewController.show(from: viewController, title: "Auto-play", message: "Enter the number of hands you want to complete in the \(self.autoPlayGames > 1 ? "final " : "")game", defaultValue: defaultValue, minimumValue: round, maximumValue: Scorecard.game.rounds, handler: { (value) in
+            ConfirmCountViewController.show(from: viewController, sourceView: sourceView, verticalOffset: verticalOffset, title: "Auto-play", message: "Enter the number of hands you want to complete in the \(self.autoPlayGames > 1 ? "final " : "")game", defaultValue: defaultValue, minimumValue: round, maximumValue: Scorecard.game.rounds, handler: { (value) in
                 self.autoPlayHands = value
                     self.sendAutoPlay()
                     completion?()

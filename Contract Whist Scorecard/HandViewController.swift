@@ -82,7 +82,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
     @IBOutlet private weak var separator: UIView!
     @IBOutlet private weak var handTableView: UITableView!
     @IBOutlet private weak var handHeightConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var handSourceView: UIView!
+    @IBOutlet internal weak var handSourceView: UIView!
     @IBOutlet private weak var tabletopView: UIView!
     @IBOutlet private weak var statusWidthConstraint: NSLayoutConstraint!
     @IBOutlet private weak var bidView: UIView!
@@ -207,7 +207,6 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        Scorecard.shared.reCenterPopup(self)
         resizing = true
         // Release last trick if pressed
         self.menuController?.didDisappear()
@@ -942,7 +941,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
         label.textAlignment = .center
         ScorecardUI.roundCorners(label)
         
-        self.confirmPlayed(title: "Confirm Card", content: label, sourceView: self.handSourceView, confirmText: "Play card", cancelText: "Change card", titleOffset: 8.0, backgroundColor: Palette.tableTop.background, bannerColor: Palette.tableTop.background, bannerTextColor: Palette.tableTop.text, buttonColor: Palette.roomInterior.background, buttonTextColor: Palette.roomInterior.text, confirmHandler: { self.playCard(card: card) }, cancelHandler: { Scorecard.shared.restartReminder(remindAfter: timeLeft) })
+        self.confirmPlayed(title: "Confirm Card", content: label, sourceView: self.handSourceView, verticalOffset: 0.2, confirmText: "Play card", cancelText: "Change card", titleOffset: 8.0, backgroundColor: Palette.tableTop.background, bannerColor: Palette.tableTop.background, bannerTextColor: Palette.tableTop.text, buttonColor: Palette.roomInterior.background, buttonTextColor: Palette.roomInterior.text, confirmHandler: { self.playCard(card: card) }, cancelHandler: { Scorecard.shared.restartReminder(remindAfter: timeLeft) })
     }
     
     func playCard(card: Card) {
@@ -991,7 +990,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
         label.textAlignment = .center
         ScorecardUI.roundCorners(label)
         
-        self.confirmPlayed(title: "Confirm Bid", content: label, sourceView: self.handSourceView, confirmText: "Confirm Bid", cancelText: "Change Bid", titleOffset: 15.0, backgroundColor: Palette.normal.background, bannerColor: Palette.normal.background, bannerTextColor: Palette.roomInterior.background, buttonColor: Palette.roomInterior.background, buttonTextColor: Palette.roomInterior.text, confirmHandler: { self.makeBid(bid) }, cancelHandler: { Scorecard.shared.restartReminder(remindAfter: timeLeft) })
+        self.confirmPlayed(title: "Confirm Bid", content: label, sourceView: self.handSourceView, verticalOffset: 0.2, confirmText: "Confirm Bid", cancelText: "Change Bid", titleOffset: 15.0, backgroundColor: Palette.normal.background, bannerColor: Palette.normal.background, bannerTextColor: Palette.roomInterior.background, buttonColor: Palette.roomInterior.background, buttonTextColor: Palette.roomInterior.text, confirmHandler: { self.makeBid(bid) }, cancelHandler: { Scorecard.shared.restartReminder(remindAfter: timeLeft) })
     }
     
     func makeBid(_ bid: Int) {
@@ -1007,12 +1006,13 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
         self.stateController()
     }
     
-    private func confirmPlayed(title: String, content: UIView, sourceView: UIView, confirmText: String, cancelText: String, offsets: (CGFloat?, CGFloat?)? = (0.5, nil), titleOffset: CGFloat = 5.0, contentOffset: CGPoint? = nil, backgroundColor: UIColor, bannerColor: UIColor, bannerTextColor: UIColor, buttonColor: UIColor, buttonTextColor: UIColor, confirmHandler: (()->())? = nil, cancelHandler: (()->())? = nil) {
+    private func confirmPlayed(title: String, content: UIView, sourceView: UIView, verticalOffset: CGFloat? = 0.5, confirmText: String, cancelText: String, offsets: (CGFloat?, CGFloat?)? = (0.5, nil), titleOffset: CGFloat = 5.0, contentOffset: CGPoint? = nil, backgroundColor: UIColor, bannerColor: UIColor, bannerTextColor: UIColor, buttonColor: UIColor, buttonTextColor: UIColor, confirmHandler: (()->())? = nil, cancelHandler: (()->())? = nil) {
      
         let context: [String : Any?] =
             ["title" : title,
              "label" : content,
              "sourceView" : sourceView,
+             "verticalOffset": verticalOffset,
              "confirmText" : confirmText,
              "cancelText" : cancelText,
              "backgroundColor" : backgroundColor,
@@ -1020,7 +1020,6 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
              "buttonTextColor": buttonTextColor,
              "bannerColor": bannerColor,
              "bannerTextColor": bannerTextColor,
-             "offsets": offsets,
              "contentOffset": contentOffset,
              "titleOffset": titleOffset
         ]
@@ -1033,11 +1032,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
             }
         })
     }
-    
-    func resetPopover() {
-        self.isModalInPopover = true
-    }
-    
+        
     func playerMadeText(_ playerNumber: Int) -> String {
         var result: String
         let made = Scorecard.game.handState.made[playerNumber - 1]

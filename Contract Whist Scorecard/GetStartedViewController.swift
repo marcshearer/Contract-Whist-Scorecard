@@ -134,10 +134,9 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        self.rotated = true
-        Scorecard.shared.reCenterPopup(self)
         self.view.setNeedsLayout()
-    }
+        self.rotated = true
+   }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -586,7 +585,7 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
         
         getStartedViewController.completion = completion
         
-        viewController.present(getStartedViewController, animated: true, container: nil, completion: nil)
+        viewController.present(getStartedViewController, animated: true, container: .none, completion: nil)
     }
     
     private func dismiss() {

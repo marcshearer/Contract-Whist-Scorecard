@@ -34,13 +34,7 @@ class ReviewViewController: ScorecardViewController, ScorecardAlertDelegate, Ban
         self.setupBanner()
         self.dealView.show(round: self.round, thisPlayer: self.thisPlayer)
     }
-    
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
-        Scorecard.shared.reCenterPopup(self)
-        view.setNeedsLayout()
-    }
-    
+        
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         Scorecard.shared.alertDelegate = nil

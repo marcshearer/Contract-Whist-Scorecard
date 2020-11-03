@@ -51,13 +51,7 @@ class GraphViewController: ScorecardViewController, GraphDetailDelegate, BannerD
 
         drawGraph()
     }
-    
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
-        Scorecard.shared.reCenterPopup(self)
-        view.setNeedsLayout()
-    }
-    
+        
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         self.drawGraph(frame: graphView.frame)

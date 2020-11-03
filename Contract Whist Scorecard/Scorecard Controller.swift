@@ -432,6 +432,7 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
             if let title = context?["title"] as? String,
                 let label = context?["label"] as? UIView,
                 let sourceView = context?["sourceView"] as? UIView,
+                let verticalOffset = context?["verticalOffset"] as? CGFloat,
                 let confirmText = context?["confirmText"] as? String,
                 let cancelText = context?["cancelText"] as? String,
                 let backgroundColor = context?["backgroundColor"] as? UIColor,
@@ -439,11 +440,10 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
                 let bannerTextColor = context?["bannerTextColor"] as? UIColor,
                 let buttonColor = context?["buttonColor"] as? UIColor,
                 let buttonTextColor = context?["buttonTextColor"] as? UIColor,
-                let offsets = context?["offsets"] as? (CGFloat?, CGFloat?),
                 let titleOffset = context?["titleOffset"] as? CGFloat,
                 let contentOffset = context?["contentOffset"] as? CGPoint? {
                 
-                confirmPlayedViewController = ConfirmPlayedViewController.show(from: parentViewController, appController: self, title: title, content: label, sourceView: sourceView, confirmText: confirmText, cancelText: cancelText, offsets: offsets, titleOffset: titleOffset, contentOffset: contentOffset, backgroundColor: backgroundColor, bannerColor: bannerColor, bannerTextColor: bannerTextColor, buttonColor: buttonColor, buttonTextColor: buttonTextColor,
+                confirmPlayedViewController = ConfirmPlayedViewController.show(from: parentViewController, appController: self, title: title, content: label, sourceView: sourceView, verticalOffset: verticalOffset, confirmText: confirmText, cancelText: cancelText, titleOffset: titleOffset, contentOffset: contentOffset, backgroundColor: backgroundColor, bannerColor: bannerColor, bannerTextColor: bannerTextColor, buttonColor: buttonColor, buttonTextColor: buttonTextColor,
                     confirmHandler: {
                         completion?(["confirm" : true])
                     },
@@ -622,7 +622,7 @@ enum GameMode {
     
 }
     
-class ScorecardViewController : UIViewController, UIAdaptivePresentationControllerDelegate, UIViewControllerTransitioningDelegate  {
+class ScorecardViewController : UIViewController, UIAdaptivePresentationControllerDelegate, UIViewControllerTransitioningDelegate {
     
     typealias RootViewController = ScorecardViewController & PanelContainer
     
@@ -638,6 +638,10 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
     internal var rightTitleLabel: UILabel!
     internal var rightCaptionLabel: UILabel!
     internal var helpView: HelpView!
+    internal var popoverSourceView: UIView!
+    internal var popoverVerticalOffset: CGFloat!
+    private var baseFirstTime = true
+    private var baseRotated = false
     
     internal var uniqueID: String!
     internal weak var bannerClass: Banner!
@@ -716,10 +720,19 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         self.helpView?.finished()
+        self.baseRotated = true
+        self.view.setNeedsLayout()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        
+        if true || self.baseFirstTime || self.baseRotated {
+            self.baseFirstTime = false
+            self.baseRotated = false
+            self.popoverPresentationController?.sourceView?.layoutIfNeeded()
+            ScorecardViewController.recenterPopup(self)
+        }
         
         var useGameColor = Scorecard.shared.trueUseGameColor
         if self is RootViewController {
@@ -732,7 +745,7 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
   
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        Scorecard.shared.reCenterPopup(self)
+        self.baseRotated = true
         self.view.setNeedsLayout()
     }
     
@@ -758,7 +771,7 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
         
     // MARK: - View tweaks ========================================================================== -
     
-    internal func present(_ viewControllerToPresent: ScorecardViewController, appController: ScorecardAppController? = nil, popoverSize: CGSize? = nil, sourceView: UIView? = nil, sourceRect: CGRect? = nil, popoverDelegate: UIPopoverPresentationControllerDelegate? = nil, animated: Bool, container: Container? = .main, completion: (() -> Void)? = nil) {
+    internal func present(_ viewControllerToPresent: ScorecardViewController, appController: ScorecardAppController? = nil, popoverSize: CGSize? = nil, sourceView: UIView? = nil, verticalOffset: CGFloat = 0.5, animated: Bool, container: Container? = .main, completion: (() -> Void)? = nil) {
 
         func hideAndComplete() {
             completion?()
@@ -788,18 +801,19 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
             // Use custom animation
             viewControllerToPresent.transitioningDelegate = self
             
-            if popoverSize != nil {
+            if  let popoverSize = popoverSize {
                 // Show as popup
                 viewControllerToPresent.modalPresentationStyle = UIModalPresentationStyle.popover
-                viewControllerToPresent.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-                viewControllerToPresent.preferredContentSize = popoverSize!
-                viewControllerToPresent.popoverPresentationController?.sourceView = sourceView
-                viewControllerToPresent.popoverPresentationController?.sourceRect = sourceRect ?? sourceView?.frame ?? CGRect()
-                viewControllerToPresent.popoverPresentationController?.delegate = popoverDelegate
-                viewControllerToPresent.isModalInPopover = true
-                if let delegate = self as? UIPopoverPresentationControllerDelegate {
-                    viewControllerToPresent.popoverPresentationController?.delegate = delegate
-                }
+                let popover = viewControllerToPresent.popoverPresentationController!
+                popover.permittedArrowDirections = []
+                viewControllerToPresent.preferredContentSize = popoverSize
+                let actualSourceView = self.popoverPresentationController?.sourceView ?? self.rootViewController.view
+                popover.sourceView = actualSourceView
+
+                viewControllerToPresent.popoverSourceView = sourceView ?? actualSourceView
+                viewControllerToPresent.popoverVerticalOffset = verticalOffset
+                
+                ScorecardViewController.recenterPopup(viewControllerToPresent)
             } else {
                 // Make full screen
                 viewControllerToPresent.modalPresentationStyle = .fullScreen
@@ -978,6 +992,21 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
             return nil
         }
         
+    }
+    
+    // MARK: - Popover presentation controller delegate ================================================= -
+    
+    internal static func recenterPopup(_ viewController: ScorecardViewController) {
+        if let actualSourceView = viewController.popoverPresentationController?.sourceView, let sourceView = viewController.popoverSourceView {
+            let sourceViewHeight = sourceView.frame.height
+            let viewHeight = viewController.preferredContentSize.height
+            let center = CGPoint(x: sourceView.bounds.midX, y: sourceView.bounds.minY + (viewController.popoverVerticalOffset * (sourceViewHeight - viewHeight)) + (viewHeight / 2))
+            let adjustedCenter = actualSourceView.convert(center, from: sourceView)
+            let sourceRect = CGRect(origin: adjustedCenter, size: CGSize())
+            if viewController.popoverPresentationController?.sourceRect != sourceRect {
+                viewController.popoverPresentationController?.sourceRect = sourceRect
+            }
+        }
     }
     
     // MARK: - Launch screen ============================================================================ -

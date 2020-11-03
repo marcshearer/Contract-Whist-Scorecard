@@ -164,17 +164,6 @@ class PlayerDetailViewController: ScorecardViewController, PlayerDetailViewDeleg
         self.setupHelpView()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-    }
-    
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
-        
-        Scorecard.shared.reCenterPopup(self)
-        self.view.setNeedsLayout()
-    }
-        
     // MARK: - Player Detail View Delegate ============================================================= -
     
     internal func hide() {

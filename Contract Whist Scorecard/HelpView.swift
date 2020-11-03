@@ -175,7 +175,12 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
     
     internal override func layoutSubviews() {
         super.layoutSubviews()
-        self.frame = self.parentView.convert(self.parentViewController.screenBounds, from: nil)
+        
+        if self.parentViewController.container == .none {
+            self.frame = self.parentView.bounds
+        } else {
+            self.frame = self.parentView.convert(self.parentViewController.screenBounds, from: nil)
+        }
         self.parentView.bringSubviewToFront(self)
     }
     

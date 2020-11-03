@@ -39,7 +39,7 @@ class RelatedPlayersViewController : ScorecardViewController, RelatedPlayersDele
         // Setup help
         self.setupHelpView()
     }
-    
+        
     internal override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         self.relatedPlayersContainerView.layoutIfNeeded()
@@ -87,7 +87,7 @@ class RelatedPlayersViewController : ScorecardViewController, RelatedPlayersDele
         relatedPlayersViewController.completion = completion
         relatedPlayersViewController.delegate = viewController
         
-        viewController.present(relatedPlayersViewController, animated: true, container: .none, completion: nil)
+        viewController.present(relatedPlayersViewController, popoverSize: ScorecardUI.defaultSize, sourceView: viewController.view, animated: true, container: .none, completion: nil)
     }
 }
 

@@ -52,11 +52,6 @@ class RoundSummaryViewController: ScorecardViewController, BannerDelegate {
         
     }
     
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
-        Scorecard.shared.reCenterPopup(self)
-    }
-
     // MARK: - Gesture Action Handlers ================================================================= -
 
     func finishPressed() {

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class OverrideViewController : ScorecardViewController, UITableViewDelegate, UITableViewDataSource, UIPopoverPresentationControllerDelegate, BannerDelegate {
+class OverrideViewController : ScorecardViewController, UITableViewDelegate, UITableViewDataSource, BannerDelegate {
     
     private enum Options: Int, CaseIterable {
         case saveHistory = 0
@@ -82,12 +82,6 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
         self.confirmButton.setTitleColor(Palette.continueButton.text, for: .normal)
 
         self.setupButtons()
-    }
-    
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
-        Scorecard.shared.reCenterPopup(self)
-        self.view.setNeedsLayout()
     }
     
     override func viewWillLayoutSubviews() {

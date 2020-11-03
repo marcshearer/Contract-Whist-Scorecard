@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ActionSheetViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UIPopoverPresentationControllerDelegate, UIGestureRecognizerDelegate {
+class ActionSheetViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate {
     
     private let titleHeight: CGFloat = 60
     private let messageHeight: CGFloat = 30

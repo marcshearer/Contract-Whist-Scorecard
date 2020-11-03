@@ -96,7 +96,6 @@ class SelectPlayersViewController: ScorecardViewController, SyncDelegate, Button
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         self.rotated = true
-        Scorecard.shared.reCenterPopup(self)
         self.view.setNeedsLayout()
     }
 

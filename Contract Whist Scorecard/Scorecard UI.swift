@@ -58,10 +58,6 @@ class ScorecardUI {
         }
     }
     
-    class func keepPopupPosition(viewController: ScorecardViewController) -> CGRect {
-        return (viewController.popoverPresentationController?.sourceRect)!
-    }
-    
     class func selectBackground(size: CGSize, backgroundImage: UIImageView) {
         if size.height > size.width {
             backgroundImage.image = UIImage(named: "background portrait")

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ConfirmPlayedViewController : ScorecardViewController, UIPopoverPresentationControllerDelegate {
+class ConfirmPlayedViewController : ScorecardViewController {
     
     private var message: String!
     private var formTitle: String!
@@ -25,10 +25,11 @@ class ConfirmPlayedViewController : ScorecardViewController, UIPopoverPresentati
     private var confirmHandler: (()->())?
     private var cancelHandler: (()->())?
     private var blurredBackgroundView: UIView!
-    static private var parentViewController: ScorecardViewController!
-    static private var sourceView: UIView!
-    static private var preferredHeight: CGFloat!
-    static private var offsets: (portrait: CGFloat?, landscape: CGFloat?) = (0.0, 0.0)
+    private var blurredConstraints: [NSLayoutConstraint]!
+    private var sourceView: UIView!
+    private var parentView: UIView!
+    private var preferredHeight: CGFloat!
+    private var offsets: (portrait: CGFloat?, landscape: CGFloat?) = (0.0, 0.0)
 
     @IBOutlet private weak var titleView: UIView!
     @IBOutlet private weak var labelTitle: UILabel!
@@ -54,6 +55,8 @@ class ConfirmPlayedViewController : ScorecardViewController, UIPopoverPresentati
         self.labelTitle.text = self.formTitle
         self.contentView.subviews.forEach( { $0.removeFromSuperview() } )
         self.contentView.addSubview(content)
+        Constraint.anchor(view: self.contentView, control: content, constant: contentOffset?.x ?? 0.0, attributes: .centerX)
+        Constraint.anchor(view: self.contentView, control: content, constant: contentOffset?.y ?? 0.0, attributes: .centerY)
         if let confirmText = self.confirmText {
             self.confirmButton.setTitle(confirmText, for: .normal)
         }
@@ -61,23 +64,21 @@ class ConfirmPlayedViewController : ScorecardViewController, UIPopoverPresentati
             self.cancelButton.setTitle(cancelText, for: .normal)
         }
         ScorecardUI.roundCorners(view)
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        Utility.mainThread {
-            // Have to wrap this in main thread for it to work!! Apparently fixed in iOS 13
-            self.contentView.backgroundColor = self.backgroundColor ?? Palette.normal.background
-            self.titleView.backgroundColor = self.bannerColor ?? Palette.roomInterior.background
-            self.labelTitle.textColor = self.bannerTextColor ?? Palette.roomInterior.text
-            self.confirmButton.backgroundColor = self.buttonColor ?? Palette.roomInterior.background
-            self.confirmButton.setTitleColor(self.buttonTextColor ?? Palette.roomInterior.text, for: .normal)
-            self.cancelButton.backgroundColor = self.buttonColor ?? Palette.roomInterior.background
-            self.cancelButton.setTitleColor(self.buttonTextColor ?? Palette.roomInterior.text, for: .normal)
-            self.horizontalSeparatorView.backgroundColor = self.backgroundColor ?? Palette.normal.background
-            self.verticalSeparatorView.backgroundColor = self.backgroundColor ?? Palette.normal.background
-        }
-        self.view.setNeedsLayout()
+        self.contentView.backgroundColor = self.backgroundColor ?? Palette.normal.background
+        self.titleView.backgroundColor = self.bannerColor ?? Palette.roomInterior.background
+        self.labelTitle.textColor = self.bannerTextColor ?? Palette.roomInterior.text
+        self.confirmButton.backgroundColor = self.buttonColor ?? Palette.roomInterior.background
+        self.confirmButton.setTitleColor(self.buttonTextColor ?? Palette.roomInterior.text, for: .normal)
+        self.cancelButton.backgroundColor = self.buttonColor ?? Palette.roomInterior.background
+        self.cancelButton.setTitleColor(self.buttonTextColor ?? Palette.roomInterior.text, for: .normal)
+        self.horizontalSeparatorView.backgroundColor = self.backgroundColor ?? Palette.normal.background
+        self.verticalSeparatorView.backgroundColor = self.backgroundColor ?? Palette.normal.background
+        self.overlayBackgroundViews()
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -93,59 +94,39 @@ class ConfirmPlayedViewController : ScorecardViewController, UIPopoverPresentati
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        self.removeBackgroundView()
-        ConfirmPlayedViewController.parentViewController.view.layoutIfNeeded()
-        ConfirmPlayedViewController.sourceView.layoutIfNeeded()
-        self.overlayBackgroundViews()
-        self.reCenterPopup()
-        Constraint.anchor(view: self.contentView, control: content, constant: contentOffset?.x ?? 0.0, attributes: .centerX)
-        Constraint.anchor(view: self.contentView, control: content, constant: contentOffset?.y ?? 0.0, attributes: .centerY)
         self.labelTitleHeightOffset.constant = self.titleOffset
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        self.removeBackgroundView()
     }
     
     func overlayBackgroundViews() {
         
-        self.blurredBackgroundView = UIView(frame: CGRect(origin: CGPoint(), size: ConfirmPlayedViewController.sourceView.frame.size))
+        self.blurredBackgroundView = UIView()
         self.blurredBackgroundView.backgroundColor = UIColor.black.withAlphaComponent(0.5)
-        ConfirmPlayedViewController.sourceView.addSubview(blurredBackgroundView)
+        self.sourceView.addSubview(self.blurredBackgroundView)
+        self.blurredConstraints = Constraint.anchor(view: self.sourceView, control: self.blurredBackgroundView)
     }
     
     func removeBackgroundView() {
         
+        if let constraints = self.blurredConstraints {
+            self.sourceView.removeConstraints(constraints)
+        }
         self.blurredBackgroundView?.removeFromSuperview()
     }
-    
-    class private func yOffset() -> CGFloat {
-        var yOffset: CGFloat = 0.0
-        if let sourceView = ConfirmPlayedViewController.sourceView {
-            let topSpace = (sourceView.frame.height - self.preferredHeight) / 2.0
-            if let offset = (ScorecardUI.landscapePhone() ? offsets.landscape : offsets.portrait) {
-                yOffset = topSpace * offset
-            }
-        }
-        return yOffset
-    }
-    
-    func reCenterPopup() {
-
-        if let sourceView = ConfirmPlayedViewController.sourceView {
-            
-            let verticalCenter: CGFloat = sourceView.bounds.midY - ConfirmPlayedViewController.yOffset()
-            self.popoverPresentationController?.sourceView = sourceView
-            self.popoverPresentationController?.sourceRect = CGRect(origin: CGPoint(x: sourceView.bounds.midX, y: verticalCenter), size: CGSize())
-        }
-    }
-    
     
     func adaptivePresentationStyle(for controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {
         return UIModalPresentationStyle.none
     }
     
-    class func show(from parentViewController: ScorecardViewController, appController: ScorecardAppController? = nil, title: String, content: UIView, sourceView: UIView? = nil, confirmText: String? = nil, cancelText: String? = nil, minWidth: CGFloat = 240, minHeight: CGFloat = 200.0, offsets: (portrait: CGFloat?, landscape: CGFloat?) = (0.0, nil), titleOffset: CGFloat = 0.0, contentOffset: CGPoint? = nil, backgroundColor: UIColor? = nil, bannerColor: UIColor? = nil, bannerTextColor: UIColor? = nil, buttonColor: UIColor? = nil, buttonTextColor: UIColor? = nil, confirmHandler: (()->())? = nil, cancelHandler: (()->())? = nil) -> ConfirmPlayedViewController {
+    class func show(from parentViewController: ScorecardViewController, appController: ScorecardAppController? = nil, title: String, content: UIView, sourceView: UIView? = nil, verticalOffset: CGFloat = 0.5, confirmText: String? = nil, cancelText: String? = nil, minWidth: CGFloat = 240, minHeight: CGFloat = 200.0, titleOffset: CGFloat = 0.0, contentOffset: CGPoint? = nil, backgroundColor: UIColor? = nil, bannerColor: UIColor? = nil, bannerTextColor: UIColor? = nil, buttonColor: UIColor? = nil, buttonTextColor: UIColor? = nil, confirmHandler: (()->())? = nil, cancelHandler: (()->())? = nil) -> ConfirmPlayedViewController {
         let storyboard = UIStoryboard(name: "ConfirmPlayedViewController", bundle: nil)
         let viewController = storyboard.instantiateViewController(withIdentifier: "ConfirmPlayedViewController") as! ConfirmPlayedViewController
         
-        ConfirmPlayedViewController.parentViewController = parentViewController
+        viewController.parentView = parentViewController.view
         viewController.formTitle = title
         viewController.content = content
         viewController.confirmText = confirmText
@@ -160,14 +141,13 @@ class ConfirmPlayedViewController : ScorecardViewController, UIPopoverPresentati
         viewController.confirmHandler = confirmHandler
         viewController.cancelHandler = cancelHandler
         let sourceView = sourceView ?? parentViewController.view
-        ConfirmPlayedViewController.sourceView = sourceView
-        ConfirmPlayedViewController.offsets = offsets
-        ConfirmPlayedViewController.preferredHeight = max(minHeight, content.frame.height + 100.0)
+        viewController.sourceView = sourceView
+        viewController.preferredHeight = max(minHeight, content.frame.height + 100.0)
+        viewController.isModalInPopover = true
             
-        let popoverSize = CGSize(width: max(minWidth, content.frame.width), height: ConfirmPlayedViewController.preferredHeight)
-        let sourceRect = CGRect(origin: CGPoint(x: sourceView!.bounds.midX, y: sourceView!.bounds.midY - self.yOffset()), size: CGSize())
+        let popoverSize = CGSize(width: max(minWidth, content.frame.width), height: viewController.preferredHeight)
         
-        parentViewController.present(viewController, appController: appController, popoverSize: popoverSize, sourceView: sourceView, sourceRect: sourceRect, popoverDelegate: viewController, animated: true)
+        parentViewController.present(viewController, appController: appController, popoverSize: popoverSize, sourceView: sourceView, verticalOffset: verticalOffset, animated: true)
         
         return viewController
     }

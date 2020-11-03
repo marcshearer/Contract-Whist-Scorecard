@@ -366,6 +366,8 @@ class HistoryDetailViewController: ScorecardViewController, UITableViewDataSourc
         
         // Share on Facebook etc
         let activityController = UIActivityViewController(activityItems: [message, image], applicationActivities: nil)
+        activityController.popoverPresentationController?.sourceView = self.view
+        activityController.popoverPresentationController?.permittedArrowDirections = []
         self.present(activityController, animated: true, completion: nil)
         
     }

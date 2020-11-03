@@ -60,7 +60,6 @@ class HelpViewElement {
         self.direction = direction
         
         assert(self.views?.count ?? 0 == 1 || itemFrom == nil, "items are only relevant for a single view")
-        assert((self.views?.count ?? 1) >= 1 || bannerId != nil, "At least one view or banner ID must be specified")
     }
 }
 
@@ -190,12 +189,18 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
     
     public func add(_ text: @escaping @autoclosure ()->String, descriptor: String? = nil, views: [UIView?]? = nil, callback: ((Int, UIView)->CGRect?)? = nil, condition: (()->Bool)? = nil, section: Int = 0, item: Int? = nil, itemTo: Int? = nil, bannerId: AnyHashable? = nil, border: CGFloat = 0, horizontalBorder: CGFloat? = nil, verticalBorder: CGFloat? = nil, radius: CGFloat = 8.0, shrink: Bool = false, direction: SpeechBubbleArrowDirection? = nil) {
         
-        self.elements.append(HelpViewElement(text: text, descriptor: (descriptor != nil ? NSAttributedString(markdown: descriptor!) : nil), views: views, callback: callback, condition: condition, section: section, item: item, itemTo: itemTo, bannerId: bannerId, border: border, horizontalBorder: horizontalBorder, verticalBorder: verticalBorder, radius: radius, shrink: shrink, direction: direction))
+        self.add(HelpViewElement(text: text, descriptor: (descriptor != nil ? NSAttributedString(markdown: descriptor!) : nil), views: views, callback: callback, condition: condition, section: section, item: item, itemTo: itemTo, bannerId: bannerId, border: border, horizontalBorder: horizontalBorder, verticalBorder: verticalBorder, radius: radius, shrink: shrink, direction: direction))
     }
     
     public func add(_ attributedText: @escaping @autoclosure ()->NSAttributedString, descriptor: NSAttributedString? = nil, views: [UIView?]? = nil, callback: ((Int, UIView)->CGRect?)? = nil, condition: (()->Bool)? = nil, section: Int = 0, item: Int? = nil, itemTo: Int? = nil, bannerId: AnyHashable? = nil, border: CGFloat = 0, horizontalBorder: CGFloat? = nil, verticalBorder: CGFloat? = nil, radius: CGFloat = 8, shrink: Bool = false, direction: SpeechBubbleArrowDirection? = nil) {
         
-        self.elements.append(HelpViewElement(attributedText: attributedText, descriptor: descriptor, views: views, callback: callback, condition: condition, section: section, item: item, itemTo: itemTo, bannerId: bannerId, border: border, horizontalBorder: horizontalBorder, verticalBorder: verticalBorder, radius: radius, shrink: shrink, direction: direction))
+        self.add(HelpViewElement(attributedText: attributedText, descriptor: descriptor, views: views, callback: callback, condition: condition, section: section, item: item, itemTo: itemTo, bannerId: bannerId, border: border, horizontalBorder: horizontalBorder, verticalBorder: verticalBorder, radius: radius, shrink: shrink, direction: direction))
+    }
+    
+    private func add(_ element: HelpViewElement) {
+        if !(element.views?.isEmpty ?? false) || element.bannerId != nil {
+            self.elements.append(element)
+        }
     }
     
     public func show(alwaysNext: Bool = false, completion: ((Bool)->())? = nil) {
@@ -374,9 +379,9 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
         let showNext = (self.alwaysNext || self.currentElement < self.activeElements.count - 1)
         let activeElement = self.activeElements[self.currentElement]
         
-        if activeElement.source == .menu {
+        if activeElement.source == .menu && self.parentViewController.menuController?.isVisible ?? false {
             // Need to execute remotely in the menu controller
-            if self.parentViewController.menuController?.isVisible ?? false {
+            if self.parentViewController.container != .none && self.parentViewController.menuController?.isVisible ?? false {
                 let sourceElement = activeElement.element
                 let menuElement = HelpViewElement(attributedText: sourceElement.text, descriptor: activeElement.descriptor, views: activeElement.views, horizontalBorder: sourceElement.horizontalBorder, verticalBorder: sourceElement.verticalBorder)
                 

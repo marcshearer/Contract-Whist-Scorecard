@@ -807,8 +807,15 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
                 let popover = viewControllerToPresent.popoverPresentationController!
                 popover.permittedArrowDirections = []
                 viewControllerToPresent.preferredContentSize = popoverSize
-                let actualSourceView = self.popoverPresentationController?.sourceView ?? self.rootViewController.view
-                popover.sourceView = actualSourceView
+                var actualSourceView = self.popoverPresentationController?.sourceView
+                if actualSourceView == nil {
+                    if self.container == .none {
+                        actualSourceView = self.view
+                    } else {
+                        actualSourceView = self.rootViewController.view
+                    }
+                }
+                popover.sourceView = actualSourceView!
 
                 viewControllerToPresent.popoverSourceView = sourceView ?? actualSourceView
                 viewControllerToPresent.popoverVerticalOffset = verticalOffset

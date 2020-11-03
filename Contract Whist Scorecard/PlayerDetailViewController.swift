@@ -808,9 +808,8 @@ class PlayerDetailViewController: ScorecardViewController, PlayerDetailViewDeleg
         }
         
         let popoverSize = (ScorecardUI.phoneSize() || container != nil ? nil : ScorecardUI.defaultSize)
-        let sourceView = (ScorecardUI.phoneSize() || container != nil  ? nil : sourceView)
                         
-        sourceViewController.present(playerDetailViewController, popoverSize: popoverSize, sourceView: sourceView, animated: true, container: container, completion: nil)
+        sourceViewController.present(playerDetailViewController, popoverSize: popoverSize, animated: true, container: container, completion: nil)
     }
     
 }

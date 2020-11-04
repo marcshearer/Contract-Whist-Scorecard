@@ -395,7 +395,7 @@ class HistoryDetailViewController: ScorecardViewController, UITableViewDataSourc
     
     // MARK: - method to show and dismiss this view controller ============================================================================== -
     
-    static public func show(from sourceViewController: ScorecardViewController, gameDetail: HistoryGame, sourceView: UIView?, completion: ((HistoryGame?)->())? = nil) {
+    static public func show(from sourceViewController: ScorecardViewController, gameDetail: HistoryGame, sourceView: UIView? = nil, completion: ((HistoryGame?)->())? = nil) {
         let storyboard = UIStoryboard(name: "HistoryDetailViewController", bundle: nil)
         let historyDetailViewController = storyboard.instantiateViewController(withIdentifier: "HistoryDetailViewController") as! HistoryDetailViewController
 
@@ -403,7 +403,6 @@ class HistoryDetailViewController: ScorecardViewController, UITableViewDataSourc
         historyDetailViewController.callerCompletion = completion
 
         let popoverSize = (ScorecardUI.phoneSize() ? nil : ScorecardUI.defaultSize)
-        let sourceView = (ScorecardUI.phoneSize() ? nil : sourceView)
         
         sourceViewController.present(historyDetailViewController, popoverSize: popoverSize, sourceView: sourceView, animated: true, container: nil, completion: nil)
     }

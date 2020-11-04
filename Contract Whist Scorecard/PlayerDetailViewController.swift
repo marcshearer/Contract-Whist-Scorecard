@@ -540,7 +540,7 @@ class PlayerDetailViewController: ScorecardViewController, PlayerDetailViewDeleg
                     if participantMO.count > 0 {
                         let history = History(gameUUID: participantMO[0].gameUUID, getParticipants: true)
                         if history.games.count >= 1 {
-                            HistoryDetailViewController.show(from: self, gameDetail: history.games[0], sourceView: self.popoverPresentationController?.sourceView)
+                            HistoryDetailViewController.show(from: self, gameDetail: history.games[0])
                         }
                     }
                 }

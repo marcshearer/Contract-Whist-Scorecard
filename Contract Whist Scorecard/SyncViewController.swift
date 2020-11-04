@@ -256,9 +256,8 @@ class SyncViewController: ScorecardViewController, UITableViewDelegate, UITableV
         SyncViewController.completion = completion
         
         let popoverSize = (ScorecardUI.phoneSize() ? nil : ScorecardUI.defaultSize)
-        let sourceView = (ScorecardUI.phoneSize() ? nil : viewController.view)
-        
-        viewController.present(SyncViewController, popoverSize: popoverSize, sourceView: sourceView, animated: true, completion: nil)
+       
+        viewController.present(SyncViewController, popoverSize: popoverSize, animated: true, completion: nil)
     }
     
     private func dismiss() {

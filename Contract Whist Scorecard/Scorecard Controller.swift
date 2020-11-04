@@ -640,6 +640,7 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
     internal var helpView: HelpView!
     internal var popoverSourceView: UIView!
     internal var popoverVerticalOffset: CGFloat!
+    internal var popoverDepth = 0
     private var baseFirstTime = true
     private var baseRotated = false
     
@@ -808,7 +809,10 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
                 popover.permittedArrowDirections = []
                 viewControllerToPresent.preferredContentSize = popoverSize
                 var actualSourceView = self.popoverPresentationController?.sourceView
-                if actualSourceView == nil {
+                if actualSourceView != nil {
+                    viewControllerToPresent.popoverDepth += 1
+                } else {
+                    viewControllerToPresent.popoverDepth = 0
                     if self.container == .none {
                         actualSourceView = self.view
                     } else {
@@ -1008,7 +1012,7 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
             let sourceViewHeight = sourceView.frame.height
             let viewHeight = viewController.preferredContentSize.height
             let center = CGPoint(x: sourceView.bounds.midX, y: sourceView.bounds.minY + (viewController.popoverVerticalOffset * (sourceViewHeight - viewHeight)) + (viewHeight / 2))
-            let adjustedCenter = actualSourceView.convert(center, from: sourceView)
+            let adjustedCenter = actualSourceView.convert(center.offsetBy(dx: CGFloat(viewController.popoverDepth) * 10, dy: CGFloat(viewController.popoverDepth) * 10), from: sourceView)
             let sourceRect = CGRect(origin: adjustedCenter, size: CGSize())
             if viewController.popoverPresentationController?.sourceRect != sourceRect {
                 viewController.popoverPresentationController?.sourceRect = sourceRect

@@ -32,40 +32,22 @@
                                     <outlet property="parentViewController" destination="oF9-Yc-WbQ" id="RmS-Wd-rRg"/>
                                 </connections>
                             </view>
-                            <tableView contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="DkQ-EB-XGS">
-                                <rect key="frame" x="0.0" y="88" width="414" height="675"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="9ZI-cl-dpv">
+                                <rect key="frame" x="20" y="108" width="374" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="7ui-Ne-bDe"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="DkQ-EB-XGS">
+                                <rect key="frame" x="0.0" y="129" width="414" height="634"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <color key="separatorColor" name="Clear"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="Message" id="ttA-mQ-0ac" userLabel="Message" customClass="OverrideTableCell" customModule="Whist" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="414" height="44"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ttA-mQ-0ac" id="xAa-pR-KAC">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="ZjX-DC-9B2">
-                                                    <rect key="frame" x="50" y="11" width="314" height="22"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                            <color key="backgroundColor" name="Clear"/>
-                                            <constraints>
-                                                <constraint firstAttribute="bottomMargin" secondItem="ZjX-DC-9B2" secondAttribute="bottom" id="5Zs-MS-prK"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="ZjX-DC-9B2" secondAttribute="trailing" constant="30" id="EIe-HS-Qdu"/>
-                                                <constraint firstItem="ZjX-DC-9B2" firstAttribute="top" secondItem="xAa-pR-KAC" secondAttribute="topMargin" id="V09-sQ-9JE"/>
-                                                <constraint firstItem="ZjX-DC-9B2" firstAttribute="leading" secondItem="xAa-pR-KAC" secondAttribute="leadingMargin" constant="30" id="XPb-aZ-Gsj"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                        <color key="backgroundColor" name="Clear"/>
-                                        <connections>
-                                            <outlet property="instructionLabel" destination="ZjX-DC-9B2" id="Tsj-FL-8hZ"/>
-                                        </connections>
-                                    </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Save" rowHeight="70" id="CAz-VF-S03" customClass="OverrideTableCell" customModule="Whist" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="72" width="414" height="70"/>
+                                        <rect key="frame" x="0.0" y="28" width="414" height="70"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="CAz-VF-S03" id="Fwz-xt-iyC">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="70"/>
@@ -103,7 +85,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Sub Heading" rowHeight="44" id="bKB-gB-NhW" customClass="OverrideTableCell" customModule="Whist" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="142" width="414" height="44"/>
+                                        <rect key="frame" x="0.0" y="98" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="bKB-gB-NhW" id="Yae-On-XCH">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
@@ -128,7 +110,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cards" rowHeight="76" id="gBa-sa-EJM" customClass="OverrideTableCell" customModule="Whist" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="186" width="414" height="76"/>
+                                        <rect key="frame" x="0.0" y="142" width="414" height="76"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="gBa-sa-EJM" id="pNU-Yp-XU9">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="76"/>
@@ -182,7 +164,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Bounce" id="uWi-PW-sya" customClass="OverrideTableCell" customModule="Whist" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="262" width="414" height="44"/>
+                                        <rect key="frame" x="0.0" y="218" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="uWi-PW-sya" id="7mY-Fq-CKr">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
@@ -259,8 +241,11 @@
                             <constraint firstItem="DkQ-EB-XGS" firstAttribute="trailing" secondItem="hOp-TY-evR" secondAttribute="trailing" id="0p0-Oo-WrP"/>
                             <constraint firstItem="XnD-Df-Iax" firstAttribute="bottom" secondItem="kMb-EO-wFQ" secondAttribute="bottom" id="AIB-Ol-F7K"/>
                             <constraint firstItem="F6E-8M-LIy" firstAttribute="leading" secondItem="hOp-TY-evR" secondAttribute="leading" id="CoA-7t-p5s"/>
+                            <constraint firstItem="XnD-Df-Iax" firstAttribute="trailing" secondItem="9ZI-cl-dpv" secondAttribute="trailing" constant="20" id="GZa-4G-6vm"/>
+                            <constraint firstItem="9ZI-cl-dpv" firstAttribute="leading" secondItem="XnD-Df-Iax" secondAttribute="leading" constant="20" id="OfM-he-hGN"/>
+                            <constraint firstItem="9ZI-cl-dpv" firstAttribute="top" secondItem="F6E-8M-LIy" secondAttribute="bottom" constant="20" id="SHo-bl-5Wc"/>
                             <constraint firstItem="XnD-Df-Iax" firstAttribute="trailing" secondItem="kMb-EO-wFQ" secondAttribute="trailing" id="TuU-L8-5CN"/>
-                            <constraint firstItem="DkQ-EB-XGS" firstAttribute="top" secondItem="F6E-8M-LIy" secondAttribute="bottom" id="Uj1-VT-FIm"/>
+                            <constraint firstItem="DkQ-EB-XGS" firstAttribute="top" secondItem="9ZI-cl-dpv" secondAttribute="bottom" id="Uj1-VT-FIm"/>
                             <constraint firstItem="kMb-EO-wFQ" firstAttribute="top" secondItem="DkQ-EB-XGS" secondAttribute="bottom" constant="16" id="VFQ-dF-rKh"/>
                             <constraint firstItem="DkQ-EB-XGS" firstAttribute="leading" secondItem="hOp-TY-evR" secondAttribute="leading" id="Wng-Rv-4ck"/>
                             <constraint firstItem="F6E-8M-LIy" firstAttribute="top" secondItem="hOp-TY-evR" secondAttribute="top" id="ewV-30-8Z0"/>
@@ -274,6 +259,8 @@
                         <outlet property="banner" destination="F6E-8M-LIy" id="AWb-YH-o7t"/>
                         <outlet property="bottomSectionHeightConstraint" destination="ksP-rp-nkL" id="KSw-85-wJU"/>
                         <outlet property="confirmButton" destination="M1M-we-zHJ" id="Iml-zb-HDr"/>
+                        <outlet property="instructionLabel" destination="9ZI-cl-dpv" id="4UZ-h8-YeX"/>
+                        <outlet property="instructionLabelHeightConstraint" destination="7ui-Ne-bDe" id="dog-Z5-SrE"/>
                         <outlet property="settingsTableView" destination="DkQ-EB-XGS" id="XAl-cI-XOi"/>
                     </connections>
                 </viewController>

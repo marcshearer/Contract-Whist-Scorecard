@@ -11,16 +11,14 @@ import UIKit
 class OverrideViewController : ScorecardViewController, UITableViewDelegate, UITableViewDataSource, BannerDelegate {
     
     private enum Options: Int, CaseIterable {
-        case message = 0
-        case saveHistory = 1
-        case saveStats = 2
-        case subHeading = 3
-        case startCards = 4
-        case endCards = 5
-        case bounce = 6
+        case saveHistory = 0
+        case saveStats = 1
+        case subHeading = 2
+        case startCards = 3
+        case endCards = 4
+        case bounce = 5
     }
     
-    private var value = 1
     private var skipOptions = 0
     
     // UI elements
@@ -31,15 +29,14 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
     private var saveHistorySelection: UISegmentedControl!
     private var existingOverride = false
     private var rotated = false
-    private var instructionHeight: CGFloat = 0
-    
-    private var instructions = "Changes will only last for one session and will be reset back to your choices in Settings automatically."
     
     // MARK: - IB Outlets ============================================================================== -
     @IBOutlet private weak var banner: Banner!
     @IBOutlet private weak var bottomSectionHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var confirmButton: ShadowButton!
     @IBOutlet private weak var settingsTableView: UITableView!
+    @IBOutlet private weak var instructionLabel: UILabel!
+    @IBOutlet private weak var instructionLabelHeightConstraint: NSLayoutConstraint!
 
     // MARK: - IB Actions ============================================================================== -
     
@@ -88,6 +85,8 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
         // Setup help
         self.setupHelpView()
         
+        self.instructionLabel.text = "Changes will only last for one session and will be reset back to your choices in Settings automatically"
+    
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -96,7 +95,7 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
         self.view.setNeedsLayout()
     }
     
-    override func viewWillLayoutSubviews() {
+    override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
         if self.rotated {
@@ -104,7 +103,8 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
             self.setupButtons()
         }
         
-        self.instructionHeight = max(40,self.instructions.labelHeight(width: self.settingsTableView.frame.width - 150, font: UIFont.systemFont(ofSize: 17)))
+        let instructionHeight = self.instructionLabel.text!.labelHeight(width: min(500, self.settingsTableView.frame.width - 150), font: UIFont.systemFont(ofSize: 17)) + 30
+        self.instructionLabelHeightConstraint.constant = instructionHeight
         
         self.bottomSectionHeightConstraint.constant =  (ScorecardUI.landscapePhone() ? 0 : ((self.menuController?.isVisible ?? false) ? 75 : 58) + (self.view.safeAreaInsets.bottom == 0 ? 8.0 : 0.0))
 
@@ -120,8 +120,6 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
         var height: CGFloat = 0.0
         if let option = self.option(indexPath.row) {
             switch option {
-            case .message:
-                height = self.instructionHeight
             case .saveHistory, .saveStats:
                 height = 80.0
             case .subHeading:
@@ -140,13 +138,6 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
         
         if let option = self.option(indexPath.row) {
             switch option {
-            case .message:
-                cell  = tableView.dequeueReusableCell(withIdentifier: "Message", for: indexPath) as? OverrideTableCell
-                // Setup default colors (previously done in StoryBoard)
-                self.defaultCellColors(cell: cell)
-                
-                cell.instructionLabel.text = self.instructions
-
             case .saveHistory:
                 cell = tableView.dequeueReusableCell(withIdentifier: "Save", for: indexPath) as? OverrideTableCell
                 // Setup default colors (previously done in StoryBoard)
@@ -207,7 +198,7 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
     }
     
     private func option(_ row: Int) -> Options? {
-        return Options(rawValue: row == 0 ? 0 : row + skipOptions)
+        return Options(rawValue: row + skipOptions)
     }
 
     // MARK: - Action Handlers ========================================================================= -
@@ -312,7 +303,6 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
 // MARK: - Other UI Classes - e.g. Cells =========================================================== -
 
 class OverrideTableCell: UITableViewCell {
-    @IBOutlet weak var instructionLabel: UILabel!
     @IBOutlet weak var subHeadingLabel: UILabel!
     @IBOutlet weak var cardsLabel: UILabel!
     @IBOutlet weak var cardsSlider: UISlider!
@@ -329,12 +319,11 @@ extension OverrideViewController {
     private func defaultViewColors() {
 
         self.view.backgroundColor = Palette.normal.background
+        self.instructionLabel.textColor = Palette.normal.faintText
     }
 
     private func defaultCellColors(cell: OverrideTableCell) {
         switch cell.reuseIdentifier {
-        case "Message":
-            cell.instructionLabel.textColor = Palette.normal.faintText
         case "Bounce":
             cell.bounceSelection.tintColor = Palette.segmentedControls.background
         case "Cards":

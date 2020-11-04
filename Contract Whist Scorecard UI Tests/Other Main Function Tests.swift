@@ -106,20 +106,4 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.returnHome()
         
     }
-    
-    func testWalkthrough() {
-        
-        // Select Walkthrough
-        self.tap(app.navigationBars["Contract Whist"].buttons["More Info"])
-        
-        // Move forward 2 pages and back 1
-        let walkthroughPage = app.children(matching: .window).element(boundBy: 0).children(matching: .other).element
-        self.swipeLeft(walkthroughPage)
-        self.swipeLeft(walkthroughPage)
-        self.swipeRight(walkthroughPage)
-        
-        // Go back to home page
-        self.returnHome()
-        
-    }
 }

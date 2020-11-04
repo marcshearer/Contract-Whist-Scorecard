@@ -57,6 +57,7 @@ class SpeechBubbleView : UIView {
     private var parentViewController: ScorecardViewController!
     private var parentView: UIView!
     private var overrideWidth: CGFloat?
+    private var color: PaletteColor = Palette.buttonFace
     
     private static let spacing: CGFloat = 16
     
@@ -83,8 +84,6 @@ class SpeechBubbleView : UIView {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        
-        self.label.textColor = Palette.buttonFace.text
     }
     
     override func layoutSubviews() {
@@ -130,7 +129,8 @@ class SpeechBubbleView : UIView {
             labelFrame = self.parentView.convert(labelFrame, to: self)
             self.label.frame = labelFrame.grownBy(dx: -self.textInset, dy: -self.textInset)
             let localPoint = self.parentView.convert(self.point!, to: self)
-            let shapeLayer = Polygon.speechBubble(frame: labelFrame, point: (self.arrowHeight == 0 ? nil : localPoint), strokeColor: Palette.buttonFace.background, fillColor: Palette.buttonFace.background, arrowWidth: self.arrowWidth)
+            let shapeLayer = Polygon.speechBubble(frame: labelFrame, point: (self.arrowHeight == 0 ? nil : localPoint), strokeColor: self.color.background, fillColor: self.color.background, arrowWidth: self.arrowWidth)
+            self.label.textColor = self.color.text
             
             // Remove any previous sublayers
             if let sublayers = contentView.layer.sublayers {
@@ -167,7 +167,7 @@ class SpeechBubbleView : UIView {
     
     public var labelFrame: CGRect { return self.convert(self.label.frame, to: self.parentView)}
     
-    public func show(_ text: NSAttributedString, point: CGPoint? = nil, direction: SpeechBubbleArrowDirection? = nil, width: CGFloat? = nil, font: UIFont? = nil, arrowHeight: CGFloat? = nil, arrowWidth: CGFloat? = nil) {
+    public func show(_ text: NSAttributedString, point: CGPoint? = nil, direction: SpeechBubbleArrowDirection? = nil, width: CGFloat? = nil, font: UIFont? = nil, color: PaletteColor? = nil, arrowHeight: CGFloat? = nil, arrowWidth: CGFloat? = nil) {
 
         self.label.attributedText = text
         
@@ -175,6 +175,7 @@ class SpeechBubbleView : UIView {
         self.direction = direction
         self.overrideWidth = (width == nil ? nil : min(375, width!) - (2 * SpeechBubbleView.spacing))
         self.font = font
+        self.color = color ?? self.color
         if let arrowHeight = arrowHeight { self.arrowHeight = arrowHeight }
         if let arrowWidth = arrowWidth { self.arrowWidth = arrowWidth }
         self.parentView.bringSubviewToFront(self)

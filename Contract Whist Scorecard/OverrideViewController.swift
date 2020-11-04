@@ -11,12 +11,13 @@ import UIKit
 class OverrideViewController : ScorecardViewController, UITableViewDelegate, UITableViewDataSource, BannerDelegate {
     
     private enum Options: Int, CaseIterable {
-        case saveHistory = 0
-        case saveStats = 1
-        case subHeading = 2
-        case startCards = 3
-        case endCards = 4
-        case bounce = 5
+        case message = 0
+        case saveHistory = 1
+        case saveStats = 2
+        case subHeading = 3
+        case startCards = 4
+        case endCards = 5
+        case bounce = 6
     }
     
     private var value = 1
@@ -29,11 +30,12 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
     private var saveStatsSelection: UISegmentedControl!
     private var saveHistorySelection: UISegmentedControl!
     private var existingOverride = false
+    private var rotated = false
+    
+    private var instructions = "Changes will only last for one session and will be reset back to your choices in Settings automatically."
     
     // MARK: - IB Outlets ============================================================================== -
     @IBOutlet private weak var banner: Banner!
-    @IBOutlet private weak var instructionView: UIView!
-    @IBOutlet private weak var instructionLabel: UILabel!
     @IBOutlet private weak var bottomSectionHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var confirmButton: ShadowButton!
     @IBOutlet private weak var settingsTableView: UITableView!
@@ -72,8 +74,6 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
         
         // Setup default colors (previously done in StoryBoard)
         self.defaultViewColors()
-
-        ScorecardUI.roundCorners(view)
         
         self.existingOverride = (Scorecard.game.settings != Scorecard.settings)
         
@@ -88,31 +88,40 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
         self.setupHelpView()
     }
     
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        self.rotated = true
+        self.view.setNeedsLayout()
+    }
+    
     override func viewWillLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        self.bottomSectionHeightConstraint.constant = (ScorecardUI.smallPhoneSize() || ScorecardUI.landscapePhone() ? 0 : ((self.menuController?.isVisible ?? false) ? 75 : 58) + (self.view.safeAreaInsets.bottom == 0 ? 8.0 : 0.0))
+        if self.rotated {
+            self.rotated = false
+            self.setupButtons()
+        }
+        
+        self.bottomSectionHeightConstraint.constant =  (ScorecardUI.landscapePhone() ? 0 : ((self.menuController?.isVisible ?? false) ? 75 : 58) + (self.view.safeAreaInsets.bottom == 0 ? 8.0 : 0.0))
 
     }
     
     // MARK: - TableView Overrides ===================================================================== -
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if Scorecard.settings.saveHistory {
-            return Options.allCases.count
-        } else {
-            return Options.allCases.count - self.skipOptions
-        }
+        return Options.allCases.count - self.skipOptions
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         var height: CGFloat = 0.0
-        if let option = Options(rawValue: indexPath.row + skipOptions) {
+        if let option = self.option(indexPath.row) {
             switch option {
+            case .message:
+                height = self.instructions.labelHeight(width: self.settingsTableView.frame.width - 40, font: UIFont.systemFont(ofSize: 17))
             case .saveHistory, .saveStats:
                 height = 80.0
             case .subHeading:
-                height = 80.0
+                height = (ScorecardUI.landscapePhone() ? 30 : 80.0)
             case .startCards, .endCards:
                 height = 32.0
             case .bounce:
@@ -125,8 +134,15 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell: OverrideTableCell!
         
-        if let option = Options(rawValue: indexPath.row + skipOptions) {
+        if let option = self.option(indexPath.row) {
             switch option {
+            case .message:
+                cell  = tableView.dequeueReusableCell(withIdentifier: "Message", for: indexPath) as? OverrideTableCell
+                // Setup default colors (previously done in StoryBoard)
+                self.defaultCellColors(cell: cell)
+                
+                cell.instructionLabel.text = self.instructions
+
             case .saveHistory:
                 cell = tableView.dequeueReusableCell(withIdentifier: "Save", for: indexPath) as? OverrideTableCell
                 // Setup default colors (previously done in StoryBoard)
@@ -184,6 +200,10 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
         }
         
         return cell as UITableViewCell
+    }
+    
+    private func option(_ row: Int) -> Options? {
+        return Options(rawValue: row == 0 ? 0 : row + skipOptions)
     }
 
     // MARK: - Action Handlers ========================================================================= -
@@ -253,10 +273,11 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
     
     private func enableButtons() {
         let changed = (Scorecard.settings != Scorecard.game.settings)
-        let compact = ScorecardUI.smallPhoneSize() || ScorecardUI.landscapePhone()
-        self.confirmButton.isHidden = !changed || compact
-        self.banner.setButton("confirm", isHidden: !changed || !compact)
-        self.banner.setButton(Banner.finishButton, title: (changed && self.existingOverride ? "Revert" : "Cancel"))
+        let compact = ScorecardUI.landscapePhone()
+        self.confirmButton.isHidden = compact
+        self.confirmButton.isEnabled = changed
+        self.banner.setButton("confirm", isHidden: !compact, isEnabled: changed)
+        self.banner.setButton(Banner.finishButton, title: (changed && self.existingOverride ? "Revert" : "Cancel"), width: 80)
     }
     
     // Mark: - Main instatiation routine =============================================================== -
@@ -311,12 +332,13 @@ extension OverrideViewController {
 
     private func defaultViewColors() {
 
-        self.instructionLabel.textColor = Palette.normal.text
         self.view.backgroundColor = Palette.normal.background
     }
 
     private func defaultCellColors(cell: OverrideTableCell) {
         switch cell.reuseIdentifier {
+        case "Message":
+            cell.instructionLabel.textColor = Palette.normal.faintText
         case "Bounce":
             cell.bounceSelection.tintColor = Palette.segmentedControls.background
         case "Cards":
@@ -343,11 +365,15 @@ extension OverrideViewController {
         
         self.helpView.add("This screen allows you to customise settings for a single session. The override settings will continue until you choose @*/Stop Playing@*/ at the end of a game, or you @*/Abandon@*/ during a game.")
         
+        self.helpView.add("The {} will discard any overrides and return to normal settings.", bannerId: Banner.finishButton)
+        
         self.helpView.add("This setting allows you to choose whether the game should be included in @*/History@*/ or not. You might want to exclude it from history if you are just teaching someone how to play, or if you are changing the number of cards (which would make history inconsistent).", views: [self.settingsTableView], item: Options.saveHistory.rawValue, horizontalBorder: -16)
         
-        self.helpView.add("This setting allows you to choose whether the game should be included in @*/Statistics@*/ or not. You might want to exclude it from history if you are just teaching someone how to play, or if you are changing the number of cards (which would make statistics inconsistent).", views: [self.settingsTableView], item: Options.saveStats.rawValue, horizontalBorder: -16)
+        self.helpView.add("This setting allows you to choose whether the game should be included in @*/Statistics@*/ or not. To be included in Statistics it must be included in History.", views: [self.settingsTableView], item: Options.saveStats.rawValue, horizontalBorder: -16)
         
         self.helpView.add("These settings allow you to customise the number of cards in each hand. You can specify a starting point and and end point. You can also choose whether you bounce from the end point back to the starting point. E.g. you can start with 7 cards, progressively reduce to 1 card, and then progressively increase back to 7 cards.", views: [self.settingsTableView], item: Options.startCards.rawValue, itemTo: Options.bounce.rawValue, horizontalBorder: -16)
+        
+        self.helpView.add("Once you have entered any overrides the {} will be enabled. Tap it to confirm the overrides you have entered and they will apply to the next games you play (unless you abandon the current game).", descriptor: "@*/Confirm@*/ button", views: [self.confirmButton], bannerId: "confirm", radius: self.confirmButton.frame.height / 2)
     }
 }
 

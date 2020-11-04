@@ -34,7 +34,6 @@ Short-term
 Add tests for temporary settings
 Add tests for history / location to check they're not saved if play a game
 Auto-sync when download players in Get Started
-Update Walkthrough - esp online game
 
 TODO
 ----

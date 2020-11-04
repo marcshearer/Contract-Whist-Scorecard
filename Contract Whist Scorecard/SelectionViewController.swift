@@ -893,7 +893,7 @@ extension SelectionViewController {
         
         self.helpView.reset()
         
-        self.helpView.add("This screen allows you to select players \(self.gameMode == .scoring ? "for your game" : "to invite to your online game").\n\nTap (or drag) players in the list \(ScorecardUI.portraitPhone() ? "on the bottom" : "at the right") of the screen to add them to the game.\n\nTap (or drag) players in the room to remove them.\n\nClick on the '+' to add a new player to your device")
+        self.helpView.add("This screen allows you to select players \(self.gameMode == .scoring ? "for your game" : "to invite to your online game").\n\nTap (or drag) players in the list \(ScorecardUI.portraitPhone() ? "on the bottom" : "at the right") of the screen to add them to the game.\n\nTap (or drag) players in the room to remove them.\n\nTap on the '+' to add a new player to your device")
         
         self.helpView.add("The @*/Room@*/ contains the players who you select to take part in the game.\(self.gameMode == .scoring ? "" : " Your own player always appears at the bottom of the room.") Tap on a player to remove them from the room.", views: [self.selectedPlayersView], radius: 44)
         

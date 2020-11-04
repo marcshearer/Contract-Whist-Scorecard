@@ -608,7 +608,7 @@ extension GetStartedViewController {
         
         self.helpView.reset()
                 
-        self.helpView.add(NSAttributedString(markdown: "@*/Welcome to the Whist app!@*/\n\nTo get started you need to create some players.\n\nIf you have played before on another device, you can download players from iCloud by entering one of the players' Unique Ids.\n\nIf you have not played before tap the @*/Create New Player@*/ button to create a new player from scratch.\n\nOn nearly every screen in the @*/Whist app@*/ you will find an ") + NSAttributedString(imageName: "system.info.circle.fill", color: Palette.bannerShadow.background) + " button. Clicking it will display help for the screen you are on.")
+        self.helpView.add(NSAttributedString(markdown: "@*/Welcome to the Whist app!@*/\n\nTo get started you need to create some players.\n\nIf you have played before on another device, you can download players from iCloud by entering one of the players' Unique Ids.\n\nIf you have not played before tap the @*/Create New Player@*/ button to create a new player from scratch.\n\nOn nearly every screen in the @*/Whist app@*/ you will find an ") + NSAttributedString(imageName: "system.info.circle.fill", color: Palette.bannerShadow.background) + " button. Tapping it will display help for the screen you are on.")
         
         self.helpView.add("Once you have created some players the @*/Home@*/ button will become enabled.\n\nTap it to start playing Whist.", views: [self.smallFormatHomeButton], horizontalBorder: 8, verticalBorder: 4)
         

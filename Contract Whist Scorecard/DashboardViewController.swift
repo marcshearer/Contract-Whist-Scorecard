@@ -623,7 +623,7 @@ extension DashboardViewController {
         }
         self.helpView.add("\(text)\(self.dashboardHelp())")
         
-        self.helpView.add("The @*/Carousel@*/ allows you to switch between the different dashboard views. Either swipe it or click on one of the tiles to navigate.", views: [self.carouselCollectionView, self.scrollCollectionView], verticalBorder: 4, radius: 0)
+        self.helpView.add("The @*/Carousel@*/ allows you to switch between the different dashboard views. Either swipe it or tap on one of the tiles to navigate.", views: [self.carouselCollectionView, self.scrollCollectionView], verticalBorder: 4, radius: 0)
         
         self.helpView.add("The {} is used to synchronise the local database with the iCloud database", bannerId: "sync")
         

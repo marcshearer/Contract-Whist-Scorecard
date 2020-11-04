@@ -1866,7 +1866,7 @@ extension SettingsViewController {
         
         self.helpView.reset()
         
-        self.helpView.add("This is the default player for this device (i.e. yourself). You can change the default player by clicking the Change button or tapping the image.", views: [self.thisPlayerThumbnailView, self.thisPlayerChangeButtonContainer], border: 8)
+        self.helpView.add("This is the default player for this device (i.e. yourself). You can change the default player by tapping the Change button or tapping the image.", views: [self.thisPlayerThumbnailView, self.thisPlayerChangeButtonContainer], border: 8)
         
         self.helpView.add("This switches the ability to play online/nearby games with other devices on/off.", views: [self.settingsTableView], section: Sections.onlineGames.rawValue, item: -1, horizontalBorder: -16)
         

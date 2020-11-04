@@ -486,7 +486,7 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
             self.focus.set(around: focusFrame, radius: activeElement.radius)
             
             // Show bubble
-            self.speechBubble.show(text, point: point, direction: direction, width: requiredWidth, arrowHeight: (activeElement.source == .message ? 0 : arrowHeight), arrowWidth: 0)
+            self.speechBubble.show(text, point: point, direction: direction, width: requiredWidth, color: Palette.helpBubble, arrowHeight: (activeElement.source == .message ? 0 : arrowHeight), arrowWidth: 0)
             
             // Show Next / Finish buttons
             var buttonsBelow: Bool
@@ -598,8 +598,8 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
         let button = ShadowButton(frame: CGRect(x: 0, y: 0, width: self.buttonWidth, height: self.buttonHeight))
         self.addSubview(button)
         button.setTitle(NSAttributedString(title, font: UIFont.systemFont(ofSize: 18, weight: .black)))
-        button.setTitleColor(Palette.buttonFace.themeText, for: .normal)
-        button.setBackgroundColor(Palette.buttonFace.background)
+        button.setTitleColor(Palette.helpBubble.themeText, for: .normal)
+        button.setBackgroundColor(Palette.helpBubble.background)
         button.toCircle()
         button.addTarget(self, action: target, for: .touchUpInside)
         

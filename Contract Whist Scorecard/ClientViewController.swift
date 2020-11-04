@@ -438,10 +438,6 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
             container: .mainRight)
     }
     
-    private func showWalkthrough() {
-        WalkthroughPageViewController.show(from: self)
-    }
-    
     // MARK: - Player Selection View Delegate Handlers ======================================================= -
     
     internal func showPlayerSelection(completion: (()->())? = nil) {

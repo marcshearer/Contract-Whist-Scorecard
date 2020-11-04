@@ -470,7 +470,7 @@ extension HistoryDetailViewController {
         
         self.helpView.add("The location of the game is shown here.", views: [self.locationText], condition: { Scorecard.activeSettings.saveLocation }, horizontalBorder: 8, verticalBorder: -4)
         
-        self.helpView.add("You can update the location if it is incorrect by clicking the @*/Update@*/ button", views: [self.updateButton], condition: { Scorecard.activeSettings.saveLocation })
+        self.helpView.add("You can update the location if it is incorrect by tapping the @*/Update@*/ button", views: [self.updateButton], condition: { Scorecard.activeSettings.saveLocation })
         
         self.helpView.add("A map of the game location is displayed here.", views: [self.mapView], radius: 0)
     }

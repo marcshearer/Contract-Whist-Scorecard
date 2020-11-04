@@ -371,10 +371,10 @@
                                                                         <rect key="frame" x="20" y="0.0" width="1154" height="180"/>
                                                                         <subviews>
                                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JFu-Mp-NY9" userLabel="Create Player View" customClass="CreatePlayerView" customModule="Whist" customModuleProvider="target">
-                                                                                <rect key="frame" x="0.0" y="0.0" width="400" height="180"/>
+                                                                                <rect key="frame" x="352" y="0.0" width="450" height="180"/>
                                                                                 <color key="backgroundColor" name="Clear"/>
                                                                                 <constraints>
-                                                                                    <constraint firstAttribute="width" relation="lessThanOrEqual" constant="400" id="LhN-Ko-P7m"/>
+                                                                                    <constraint firstAttribute="width" relation="lessThanOrEqual" constant="450" id="LhN-Ko-P7m"/>
                                                                                 </constraints>
                                                                                 <connections>
                                                                                     <outlet property="delegate" destination="1IM-Ht-gqg" id="dm6-tM-2fk"/>
@@ -386,8 +386,9 @@
                                                                         <constraints>
                                                                             <constraint firstAttribute="height" constant="180" id="8q8-bh-875"/>
                                                                             <constraint firstAttribute="trailing" secondItem="JFu-Mp-NY9" secondAttribute="trailing" priority="750" id="Rbn-Ns-cB2"/>
+                                                                            <constraint firstItem="JFu-Mp-NY9" firstAttribute="centerX" secondItem="FVx-vr-YSF" secondAttribute="centerX" id="gvR-mk-xdK"/>
                                                                             <constraint firstItem="JFu-Mp-NY9" firstAttribute="top" secondItem="FVx-vr-YSF" secondAttribute="top" id="mn5-nE-uuX"/>
-                                                                            <constraint firstItem="JFu-Mp-NY9" firstAttribute="leading" secondItem="FVx-vr-YSF" secondAttribute="leading" id="xp9-v2-zoL"/>
+                                                                            <constraint firstItem="JFu-Mp-NY9" firstAttribute="leading" secondItem="FVx-vr-YSF" secondAttribute="leading" priority="750" id="xp9-v2-zoL"/>
                                                                             <constraint firstAttribute="bottom" secondItem="JFu-Mp-NY9" secondAttribute="bottom" id="zHl-vY-5E6"/>
                                                                         </constraints>
                                                                     </view>
@@ -397,8 +398,8 @@
                                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ex3-Kd-2iA" userLabel="Create Player Settings View">
                                                                                 <rect key="frame" x="0.0" y="20" width="1154" height="140"/>
                                                                                 <subviews>
-                                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Settings" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qs4-hp-wYf">
-                                                                                        <rect key="frame" x="195.5" y="10" width="69" height="70"/>
+                                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Settings" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qs4-hp-wYf">
+                                                                                        <rect key="frame" x="542.5" y="10" width="69" height="70"/>
                                                                                         <constraints>
                                                                                             <constraint firstAttribute="height" constant="70" id="sc7-fc-UPT"/>
                                                                                         </constraints>
@@ -454,6 +455,7 @@
                                                                                 </subviews>
                                                                                 <color key="backgroundColor" name="Clear"/>
                                                                                 <constraints>
+                                                                                    <constraint firstItem="Qs4-hp-wYf" firstAttribute="centerX" secondItem="ex3-Kd-2iA" secondAttribute="centerX" id="5B4-gJ-rTa"/>
                                                                                     <constraint firstItem="SAC-jk-6hd" firstAttribute="top" secondItem="L0Y-eP-e80" secondAttribute="bottom" constant="10" id="SYR-On-8gm"/>
                                                                                     <constraint firstItem="gbu-2i-tyr" firstAttribute="top" secondItem="Qs4-hp-wYf" secondAttribute="bottom" constant="12" id="Via-RZ-2pW"/>
                                                                                     <constraint firstAttribute="bottom" secondItem="NRM-Ik-bSI" secondAttribute="bottom" constant="20" id="Z3N-33-lkt"/>

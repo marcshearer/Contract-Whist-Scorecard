@@ -248,7 +248,7 @@ extension NSAttributedString {
         let pointSize = font.fontDescriptor.pointSize
         let boldItalicFont = UIFont(descriptor: font.fontDescriptor.withSymbolicTraits([.traitItalic, .traitBold])! , size: pointSize)
         let attributes: [[NSAttributedString.Key : Any]] = [
-            [NSAttributedString.Key.foregroundColor: Palette.normal.themeText,
+            [NSAttributedString.Key.foregroundColor: Palette.normal.themeText.cgColor,
              NSAttributedString.Key.font: boldItalicFont],
             
             [NSAttributedString.Key.font : UIFont.systemFont(ofSize: pointSize, weight: .bold)],

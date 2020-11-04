@@ -1466,7 +1466,7 @@ extension ClientViewController {
         self.helpView.add("This shows you who the default player for this device is. You can change the default player by tapping the image", views: [self.thisPlayerThumbnail], border: 8)
         
         if let item = self.nearbyItem {
-            self.helpView.add("This @*/Nearby@*/ button allows you to start a game with nearby players on other devices using bluetooth. All devices must have bluetooth and WiFi switched on but do not need to be connected to the internet.", views: [self.hostCollectionView], item: item)
+            self.helpView.add("The @*/Nearby@*/ button allows you to start a game with nearby players on other devices using bluetooth. All devices must have bluetooth and WiFi switched on but do not need to be connected to the internet.", views: [self.hostCollectionView], item: item)
         }
         
         if let item = self.onlineItem {

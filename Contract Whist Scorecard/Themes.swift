@@ -448,7 +448,7 @@ class Themes {
                 .leftSidePanelBorder         : ThemeColor(#colorLiteral(red: 0.4509385824, green: 0.4510071278, blue: 0.4509235024, alpha: 1), #colorLiteral(red: 0.4509385824, green: 0.4510071278, blue: 0.4509235024, alpha: 1),  .darkBackground),
                 .rightGameDetailPanel        : ThemeColor(#colorLiteral(red: 0.7058823529, green: 0.8549019608, blue: 0.862745098, alpha: 1), nil, .midBackground),
                 .rightGameDetailPanelShadow  : ThemeColor(#colorLiteral(red: 0.6274509804, green: 0.7764705882, blue: 0.7843137255, alpha: 1), nil, .midBackground),
-                .helpBubble                  : ThemeColor(#colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1), nil,  .lightBackground)],
+                .helpBubble                  : ThemeColor(#colorLiteral(red: 0.9215686275, green: 0.9215686275, blue: 1, alpha: 1), nil,  .lightBackground)],
 
             text: [
                 .lightBackground             : ThemeTextColor(normal: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), contrast: #colorLiteral(red: 0.337254902, green: 0.4509803922, blue: 0.4549019608, alpha: 1), strong: #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1), faint: #colorLiteral(red: 0.6235294118, green: 0.6235294118, blue: 0.6235294118, alpha: 1), theme: #colorLiteral(red: 0.6745098039, green: 0.2196078431, blue: 0.2, alpha: 1)) ,

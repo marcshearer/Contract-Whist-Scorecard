@@ -87,7 +87,8 @@ class RelatedPlayersViewController : ScorecardViewController, RelatedPlayersDele
         relatedPlayersViewController.completion = completion
         relatedPlayersViewController.delegate = viewController
         
-        viewController.present(relatedPlayersViewController, popoverSize: ScorecardUI.defaultSize, animated: true, container: .none, completion: nil)
+        let popoverSize = (ScorecardUI.phoneSize() ? nil : ScorecardUI.defaultSize)
+        viewController.present(relatedPlayersViewController, popoverSize: popoverSize, animated: true, container: .none, completion: nil)
     }
 }
 

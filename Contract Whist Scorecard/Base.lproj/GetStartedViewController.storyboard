@@ -209,7 +209,6 @@
                                                                                     <textField opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter identifier" textAlignment="natural" minimumFontSize="13" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="kTp-wT-5j4" customClass="TextField" customModule="Whist" customModuleProvider="target">
                                                                                         <rect key="frame" x="30" y="43" width="390" height="34"/>
                                                                                         <constraints>
-                                                                                            <constraint firstAttribute="width" relation="lessThanOrEqual" constant="400" id="Cmn-gm-wfp"/>
                                                                                             <constraint firstAttribute="height" constant="34" id="XP0-4c-H5a"/>
                                                                                         </constraints>
                                                                                         <fontDescription key="fontDescription" type="system" pointSize="16"/>
@@ -239,7 +238,6 @@
                                                                                         <rect key="frame" x="30" y="149" width="335" height="34"/>
                                                                                         <constraints>
                                                                                             <constraint firstAttribute="height" constant="34" id="Ht1-RB-Lss"/>
-                                                                                            <constraint firstAttribute="width" relation="lessThanOrEqual" constant="353" id="qAK-Pj-X5H"/>
                                                                                         </constraints>
                                                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                                         <color key="textColor" name="Text"/>
@@ -257,7 +255,6 @@
                                                                                         <rect key="frame" x="30" y="193" width="335" height="34"/>
                                                                                         <constraints>
                                                                                             <constraint firstAttribute="height" constant="34" id="ncC-qV-261"/>
-                                                                                            <constraint firstAttribute="width" relation="lessThanOrEqual" constant="353" id="qrc-Wj-M00"/>
                                                                                         </constraints>
                                                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                                         <color key="textColor" name="Text"/>
@@ -294,7 +291,7 @@
                                                                                     <constraint firstItem="r7j-ct-C03" firstAttribute="centerX" secondItem="kTp-wT-5j4" secondAttribute="centerX" id="1nM-fT-mD9"/>
                                                                                     <constraint firstItem="rsJ-aG-lPX" firstAttribute="leading" secondItem="DZR-yv-rGe" secondAttribute="trailing" constant="8" id="6EZ-Dq-002"/>
                                                                                     <constraint firstItem="hWL-vp-NMG" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Yxj-bF-zcW" secondAttribute="leading" constant="30" id="6rq-Cb-oVg"/>
-                                                                                    <constraint firstAttribute="trailing" secondItem="kTp-wT-5j4" secondAttribute="trailing" priority="750" constant="30" id="9js-dO-fw6"/>
+                                                                                    <constraint firstAttribute="trailing" secondItem="kTp-wT-5j4" secondAttribute="trailing" constant="30" id="9js-dO-fw6"/>
                                                                                     <constraint firstItem="b40-Dt-fzz" firstAttribute="leading" secondItem="QKE-Wj-jHa" secondAttribute="trailing" constant="8" id="Aaf-Po-bGf"/>
                                                                                     <constraint firstItem="r7j-ct-C03" firstAttribute="width" secondItem="Yxj-bF-zcW" secondAttribute="width" multiplier="0.7" priority="750" id="GPn-is-KDL"/>
                                                                                     <constraint firstItem="hWL-vp-NMG" firstAttribute="centerX" secondItem="kTp-wT-5j4" secondAttribute="centerX" id="HVX-OX-nGD"/>
@@ -306,8 +303,8 @@
                                                                                     <constraint firstItem="b40-Dt-fzz" firstAttribute="width" secondItem="b40-Dt-fzz" secondAttribute="height" multiplier="49:31" id="Xvy-Q5-94d"/>
                                                                                     <constraint firstItem="saw-B8-yT0" firstAttribute="top" secondItem="Yxj-bF-zcW" secondAttribute="top" constant="20" id="YNl-jl-le1"/>
                                                                                     <constraint firstAttribute="trailing" secondItem="saw-B8-yT0" secondAttribute="trailing" constant="30" id="dxH-qG-j0e"/>
-                                                                                    <constraint firstAttribute="trailing" secondItem="b40-Dt-fzz" secondAttribute="trailing" priority="750" constant="30" id="h9S-lt-58G"/>
-                                                                                    <constraint firstAttribute="trailing" secondItem="rsJ-aG-lPX" secondAttribute="trailing" priority="750" constant="30" id="jPI-62-IXM"/>
+                                                                                    <constraint firstAttribute="trailing" secondItem="b40-Dt-fzz" secondAttribute="trailing" constant="30" id="h9S-lt-58G"/>
+                                                                                    <constraint firstAttribute="trailing" secondItem="rsJ-aG-lPX" secondAttribute="trailing" constant="30" id="jPI-62-IXM"/>
                                                                                     <constraint firstItem="kTp-wT-5j4" firstAttribute="top" secondItem="saw-B8-yT0" secondAttribute="bottom" constant="2" id="jtD-b5-TWQ"/>
                                                                                     <constraint firstItem="b40-Dt-fzz" firstAttribute="top" secondItem="rsJ-aG-lPX" secondAttribute="bottom" constant="10" id="lCC-v1-BfQ"/>
                                                                                     <constraint firstItem="r7j-ct-C03" firstAttribute="top" secondItem="kTp-wT-5j4" secondAttribute="bottom" constant="16" id="ppY-JI-wN2"/>

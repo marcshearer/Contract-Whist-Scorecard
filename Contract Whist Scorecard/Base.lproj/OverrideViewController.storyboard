@@ -37,8 +37,35 @@
                                 <color key="backgroundColor" name="Clear"/>
                                 <color key="separatorColor" name="Clear"/>
                                 <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="Message" id="ttA-mQ-0ac" userLabel="Message" customClass="OverrideTableCell" customModule="Whist" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="414" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ttA-mQ-0ac" id="xAa-pR-KAC">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="ZjX-DC-9B2">
+                                                    <rect key="frame" x="50" y="11" width="314" height="22"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" name="Clear"/>
+                                            <constraints>
+                                                <constraint firstAttribute="bottomMargin" secondItem="ZjX-DC-9B2" secondAttribute="bottom" id="5Zs-MS-prK"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="ZjX-DC-9B2" secondAttribute="trailing" constant="30" id="EIe-HS-Qdu"/>
+                                                <constraint firstItem="ZjX-DC-9B2" firstAttribute="top" secondItem="xAa-pR-KAC" secondAttribute="topMargin" id="V09-sQ-9JE"/>
+                                                <constraint firstItem="ZjX-DC-9B2" firstAttribute="leading" secondItem="xAa-pR-KAC" secondAttribute="leadingMargin" constant="30" id="XPb-aZ-Gsj"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" name="Clear"/>
+                                        <connections>
+                                            <outlet property="instructionLabel" destination="ZjX-DC-9B2" id="Tsj-FL-8hZ"/>
+                                        </connections>
+                                    </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Save" rowHeight="70" id="CAz-VF-S03" customClass="OverrideTableCell" customModule="Whist" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="414" height="70"/>
+                                        <rect key="frame" x="0.0" y="72" width="414" height="70"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="CAz-VF-S03" id="Fwz-xt-iyC">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="70"/>
@@ -76,7 +103,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Sub Heading" rowHeight="44" id="bKB-gB-NhW" customClass="OverrideTableCell" customModule="Whist" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="98" width="414" height="44"/>
+                                        <rect key="frame" x="0.0" y="142" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="bKB-gB-NhW" id="Yae-On-XCH">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
@@ -101,7 +128,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cards" rowHeight="76" id="gBa-sa-EJM" customClass="OverrideTableCell" customModule="Whist" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="142" width="414" height="76"/>
+                                        <rect key="frame" x="0.0" y="186" width="414" height="76"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="gBa-sa-EJM" id="pNU-Yp-XU9">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="76"/>
@@ -155,7 +182,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Bounce" id="uWi-PW-sya" customClass="OverrideTableCell" customModule="Whist" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="218" width="414" height="44"/>
+                                        <rect key="frame" x="0.0" y="262" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="uWi-PW-sya" id="7mY-Fq-CKr">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
@@ -179,32 +206,6 @@
                                         <color key="backgroundColor" name="Clear"/>
                                         <connections>
                                             <outlet property="bounceSelection" destination="ker-Dk-WHk" id="2lJ-aV-BLQ"/>
-                                        </connections>
-                                    </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="default" indentationWidth="10" reuseIdentifier="Message" id="KUC-gC-LB6" userLabel="Message" customClass="OverrideTableCell" customModule="Whist" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="262" width="414" height="44"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KUC-gC-LB6" id="w9L-Ac-tHD">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="kYR-xM-Hmq">
-                                                    <rect key="frame" x="20" y="11" width="374" height="22"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstItem="kYR-xM-Hmq" firstAttribute="top" secondItem="w9L-Ac-tHD" secondAttribute="topMargin" id="QJo-S5-JAA"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="kYR-xM-Hmq" secondAttribute="trailing" id="ZFH-TN-TGC"/>
-                                                <constraint firstAttribute="bottomMargin" secondItem="kYR-xM-Hmq" secondAttribute="bottom" id="ZWf-ol-jT3"/>
-                                                <constraint firstItem="kYR-xM-Hmq" firstAttribute="leading" secondItem="w9L-Ac-tHD" secondAttribute="leadingMargin" id="dN7-E6-fbY"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                        <color key="backgroundColor" name="Clear"/>
-                                        <connections>
-                                            <outlet property="instructionLabel" destination="kYR-xM-Hmq" id="kvb-GU-s2g"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>

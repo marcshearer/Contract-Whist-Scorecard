@@ -31,6 +31,7 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
     private var saveHistorySelection: UISegmentedControl!
     private var existingOverride = false
     private var rotated = false
+    private var instructionHeight: CGFloat = 0
     
     private var instructions = "Changes will only last for one session and will be reset back to your choices in Settings automatically."
     
@@ -86,6 +87,7 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
         
         // Setup help
         self.setupHelpView()
+        
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -102,6 +104,8 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
             self.setupButtons()
         }
         
+        self.instructionHeight = max(40,self.instructions.labelHeight(width: self.settingsTableView.frame.width - 150, font: UIFont.systemFont(ofSize: 17)))
+        
         self.bottomSectionHeightConstraint.constant =  (ScorecardUI.landscapePhone() ? 0 : ((self.menuController?.isVisible ?? false) ? 75 : 58) + (self.view.safeAreaInsets.bottom == 0 ? 8.0 : 0.0))
 
     }
@@ -117,7 +121,7 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
         if let option = self.option(indexPath.row) {
             switch option {
             case .message:
-                height = self.instructions.labelHeight(width: self.settingsTableView.frame.width - 40, font: UIFont.systemFont(ofSize: 17))
+                height = self.instructionHeight
             case .saveHistory, .saveStats:
                 height = 80.0
             case .subHeading:
@@ -300,16 +304,8 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
         self.dismiss(animated: true, completion: nil)
     }
          
-    private func includeText(from: String) -> NSMutableAttributedString {
-        let attributedString = NSMutableAttributedString()
-        var attributes: [NSAttributedString.Key : Any] = [:]
-        attributes[NSAttributedString.Key.foregroundColor] = Palette.normal.text
-        attributes[NSAttributedString.Key.font] = UIFont.systemFont(ofSize: 17.0, weight: .light)
-        attributedString.append(NSAttributedString(string: "Include this game in ", attributes: attributes))
-        attributes[NSAttributedString.Key.font] = UIFont.systemFont(ofSize: 17.0, weight: .bold)
-        attributedString.append(NSAttributedString(string: from, attributes: attributes))
-        
-        return attributedString
+    private func includeText(from: String) -> NSAttributedString {
+        return NSAttributedString(markdown: "Include this game in **\(from)**")
     }
 }
 

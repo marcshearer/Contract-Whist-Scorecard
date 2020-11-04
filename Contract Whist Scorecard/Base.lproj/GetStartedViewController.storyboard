@@ -287,6 +287,7 @@
                                                                                     </button>
                                                                                 </subviews>
                                                                                 <color key="backgroundColor" name="Clear"/>
+                                                                                <accessibility key="accessibilityConfiguration" identifier="downloadPlayersCentered"/>
                                                                                 <constraints>
                                                                                     <constraint firstItem="r7j-ct-C03" firstAttribute="centerX" secondItem="kTp-wT-5j4" secondAttribute="centerX" id="1nM-fT-mD9"/>
                                                                                     <constraint firstItem="rsJ-aG-lPX" firstAttribute="leading" secondItem="DZR-yv-rGe" secondAttribute="trailing" constant="8" id="6EZ-Dq-002"/>
@@ -294,7 +295,7 @@
                                                                                     <constraint firstAttribute="trailing" secondItem="kTp-wT-5j4" secondAttribute="trailing" constant="30" id="9js-dO-fw6"/>
                                                                                     <constraint firstItem="b40-Dt-fzz" firstAttribute="leading" secondItem="QKE-Wj-jHa" secondAttribute="trailing" constant="8" id="Aaf-Po-bGf"/>
                                                                                     <constraint firstItem="r7j-ct-C03" firstAttribute="width" secondItem="Yxj-bF-zcW" secondAttribute="width" multiplier="0.7" priority="750" id="GPn-is-KDL"/>
-                                                                                    <constraint firstItem="hWL-vp-NMG" firstAttribute="centerX" secondItem="kTp-wT-5j4" secondAttribute="centerX" id="HVX-OX-nGD"/>
+                                                                                    <constraint firstItem="hWL-vp-NMG" firstAttribute="centerX" secondItem="Yxj-bF-zcW" secondAttribute="centerX" id="HVX-OX-nGD"/>
                                                                                     <constraint firstItem="DZR-yv-rGe" firstAttribute="leading" secondItem="Yxj-bF-zcW" secondAttribute="leading" constant="30" id="J7p-Sj-3cd"/>
                                                                                     <constraint firstItem="rsJ-aG-lPX" firstAttribute="width" secondItem="rsJ-aG-lPX" secondAttribute="height" multiplier="49:31" id="LJ8-6g-YlP"/>
                                                                                     <constraint firstItem="kTp-wT-5j4" firstAttribute="leading" secondItem="Yxj-bF-zcW" secondAttribute="leading" constant="30" id="U41-I1-isM"/>
@@ -318,6 +319,7 @@
                                                                             </view>
                                                                         </subviews>
                                                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                                        <accessibility key="accessibilityConfiguration" identifier="downloadPlayers"/>
                                                                         <constraints>
                                                                             <constraint firstItem="Yxj-bF-zcW" firstAttribute="centerX" secondItem="9u9-eF-iZh" secondAttribute="centerX" id="29Z-7P-EMx"/>
                                                                             <constraint firstItem="Yxj-bF-zcW" firstAttribute="leading" secondItem="9u9-eF-iZh" secondAttribute="leading" priority="750" id="2xX-HF-6L6"/>
@@ -328,6 +330,7 @@
                                                                     </view>
                                                                 </subviews>
                                                                 <color key="backgroundColor" name="Clear"/>
+                                                                <accessibility key="accessibilityConfiguration" identifier="downloadPlayersContainer"/>
                                                                 <constraints>
                                                                     <constraint firstItem="9u9-eF-iZh" firstAttribute="leading" secondItem="f7X-tF-vWj" secondAttribute="leading" id="4hX-8w-c38"/>
                                                                     <constraint firstAttribute="height" constant="180" id="OW8-dn-kGr"/>
@@ -380,6 +383,7 @@
                                                                             </view>
                                                                         </subviews>
                                                                         <color key="backgroundColor" name="Clear"/>
+                                                                        <accessibility key="accessibilityConfiguration" identifier="createPlayerContainer"/>
                                                                         <constraints>
                                                                             <constraint firstAttribute="height" constant="180" id="8q8-bh-875"/>
                                                                             <constraint firstAttribute="trailing" secondItem="JFu-Mp-NY9" secondAttribute="trailing" priority="750" id="Rbn-Ns-cB2"/>
@@ -392,88 +396,118 @@
                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="k6K-JD-dqz">
                                                                         <rect key="frame" x="20" y="180" width="1154" height="160"/>
                                                                         <subviews>
-                                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ex3-Kd-2iA" userLabel="Create Player Settings View">
-                                                                                <rect key="frame" x="0.0" y="20" width="1154" height="140"/>
+                                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4PZ-Jl-HoQ" userLabel="Create Player Settings View">
+                                                                                <rect key="frame" x="0.0" y="0.0" width="1154" height="160"/>
                                                                                 <subviews>
-                                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Settings" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qs4-hp-wYf">
-                                                                                        <rect key="frame" x="542.5" y="10" width="69" height="70"/>
+                                                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ex3-Kd-2iA" userLabel="Create Player Settings Centered View">
+                                                                                        <rect key="frame" x="352" y="0.0" width="450" height="160"/>
+                                                                                        <subviews>
+                                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Settings" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qs4-hp-wYf">
+                                                                                                <rect key="frame" x="190.5" y="10" width="69" height="70"/>
+                                                                                                <constraints>
+                                                                                                    <constraint firstAttribute="height" constant="70" id="sc7-fc-UPT"/>
+                                                                                                </constraints>
+                                                                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                                                                                <nil key="textColor"/>
+                                                                                                <nil key="highlightedColor"/>
+                                                                                            </label>
+                                                                                            <label opaque="NO" userInteractionEnabled="NO" tag="2" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enable online games" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="L0Y-eP-e80">
+                                                                                                <rect key="frame" x="30" y="88" width="335" height="34"/>
+                                                                                                <constraints>
+                                                                                                    <constraint firstAttribute="height" constant="34" id="m1J-1j-T6p"/>
+                                                                                                </constraints>
+                                                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                                                <color key="textColor" name="Text"/>
+                                                                                                <nil key="highlightedColor"/>
+                                                                                            </label>
+                                                                                            <switch opaque="NO" tag="2" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gbu-2i-tyr" userLabel="Enable online games switch">
+                                                                                                <rect key="frame" x="373" y="92" width="49" height="30"/>
+                                                                                                <constraints>
+                                                                                                    <constraint firstAttribute="height" constant="30" id="DJx-B8-eKD"/>
+                                                                                                    <constraint firstAttribute="width" constant="47" id="xEm-3c-PLv"/>
+                                                                                                </constraints>
+                                                                                                <color key="tintColor" name="Emphasis"/>
+                                                                                                <color key="onTintColor" name="Emphasis"/>
+                                                                                            </switch>
+                                                                                            <label opaque="NO" userInteractionEnabled="NO" tag="2" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Save game location" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="SAC-jk-6hd" userLabel="Save game location">
+                                                                                                <rect key="frame" x="30" y="132" width="335" height="34"/>
+                                                                                                <constraints>
+                                                                                                    <constraint firstAttribute="height" constant="34" id="1pg-6J-zYc"/>
+                                                                                                </constraints>
+                                                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                                                <color key="textColor" name="Text"/>
+                                                                                                <nil key="highlightedColor"/>
+                                                                                            </label>
+                                                                                            <switch opaque="NO" tag="2" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4lm-QV-dI8" userLabel="Save game location switch">
+                                                                                                <rect key="frame" x="373" y="132" width="49" height="30"/>
+                                                                                                <constraints>
+                                                                                                    <constraint firstAttribute="height" constant="30" id="NfI-Eh-yMU"/>
+                                                                                                    <constraint firstAttribute="width" constant="47" id="SfL-kd-pto"/>
+                                                                                                </constraints>
+                                                                                                <color key="tintColor" name="Emphasis"/>
+                                                                                                <color key="onTintColor" name="Emphasis"/>
+                                                                                            </switch>
+                                                                                            <button opaque="NO" tag="2" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NRM-Ik-bSI" userLabel="Home Button" customClass="ShadowButton" customModule="Whist" customModuleProvider="target">
+                                                                                                <rect key="frame" x="85" y="90" width="280" height="50"/>
+                                                                                                <constraints>
+                                                                                                    <constraint firstAttribute="height" constant="50" id="glc-nS-wpp"/>
+                                                                                                    <constraint firstAttribute="width" priority="750" constant="280" id="w00-7g-yiE"/>
+                                                                                                </constraints>
+                                                                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                                                                                <state key="normal" title="Home"/>
+                                                                                                <connections>
+                                                                                                    <action selector="homeButtonPressed:" destination="1IM-Ht-gqg" eventType="touchUpInside" id="IUJ-pG-dtQ"/>
+                                                                                                </connections>
+                                                                                            </button>
+                                                                                        </subviews>
+                                                                                        <color key="backgroundColor" name="Clear"/>
+                                                                                        <accessibility key="accessibilityConfiguration" identifier="createPlayerSettingsCentered"/>
                                                                                         <constraints>
-                                                                                            <constraint firstAttribute="height" constant="70" id="sc7-fc-UPT"/>
+                                                                                            <constraint firstAttribute="trailing" secondItem="gbu-2i-tyr" secondAttribute="trailing" constant="30" id="0RY-qF-NUK"/>
+                                                                                            <constraint firstItem="Qs4-hp-wYf" firstAttribute="centerX" secondItem="ex3-Kd-2iA" secondAttribute="centerX" id="5B4-gJ-rTa"/>
+                                                                                            <constraint firstItem="SAC-jk-6hd" firstAttribute="leading" secondItem="ex3-Kd-2iA" secondAttribute="leading" constant="30" id="EXh-uL-BLh"/>
+                                                                                            <constraint firstAttribute="trailing" secondItem="4lm-QV-dI8" secondAttribute="trailing" constant="30" id="JJc-SM-H8V"/>
+                                                                                            <constraint firstItem="SAC-jk-6hd" firstAttribute="top" secondItem="L0Y-eP-e80" secondAttribute="bottom" constant="10" id="SYR-On-8gm"/>
+                                                                                            <constraint firstItem="gbu-2i-tyr" firstAttribute="top" secondItem="Qs4-hp-wYf" secondAttribute="bottom" constant="12" id="Via-RZ-2pW"/>
+                                                                                            <constraint firstItem="NRM-Ik-bSI" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="ex3-Kd-2iA" secondAttribute="trailing" constant="30" id="WJv-D8-LYY"/>
+                                                                                            <constraint firstAttribute="bottom" secondItem="NRM-Ik-bSI" secondAttribute="bottom" constant="20" id="Z3N-33-lkt"/>
+                                                                                            <constraint firstItem="NRM-Ik-bSI" firstAttribute="centerX" secondItem="ex3-Kd-2iA" secondAttribute="centerX" id="ZAd-zX-g1s"/>
+                                                                                            <constraint firstItem="L0Y-eP-e80" firstAttribute="top" secondItem="Qs4-hp-wYf" secondAttribute="bottom" constant="8" id="gLR-XS-IRq"/>
+                                                                                            <constraint firstItem="gbu-2i-tyr" firstAttribute="leading" secondItem="L0Y-eP-e80" secondAttribute="trailing" constant="8" id="hIH-gI-683"/>
+                                                                                            <constraint firstItem="NRM-Ik-bSI" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="ex3-Kd-2iA" secondAttribute="leading" constant="30" id="iSS-Qb-cof"/>
+                                                                                            <constraint firstItem="4lm-QV-dI8" firstAttribute="top" secondItem="gbu-2i-tyr" secondAttribute="bottom" constant="10" id="kq7-K9-9nC"/>
+                                                                                            <constraint firstItem="L0Y-eP-e80" firstAttribute="leading" secondItem="ex3-Kd-2iA" secondAttribute="leading" constant="30" id="xEe-Mi-lWN"/>
+                                                                                            <constraint firstItem="4lm-QV-dI8" firstAttribute="leading" secondItem="SAC-jk-6hd" secondAttribute="trailing" constant="8" id="xnD-MC-8qm"/>
+                                                                                            <constraint firstAttribute="width" relation="lessThanOrEqual" constant="450" id="ypc-Yy-vm0"/>
+                                                                                            <constraint firstItem="Qs4-hp-wYf" firstAttribute="top" secondItem="ex3-Kd-2iA" secondAttribute="top" constant="10" id="z2g-sN-gDp"/>
                                                                                         </constraints>
-                                                                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
-                                                                                        <nil key="textColor"/>
-                                                                                        <nil key="highlightedColor"/>
-                                                                                    </label>
-                                                                                    <label opaque="NO" userInteractionEnabled="NO" tag="2" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Enable online games" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="L0Y-eP-e80">
-                                                                                        <rect key="frame" x="30" y="88" width="353" height="34"/>
-                                                                                        <constraints>
-                                                                                            <constraint firstAttribute="height" constant="34" id="m1J-1j-T6p"/>
-                                                                                        </constraints>
-                                                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                                                        <color key="textColor" name="Text"/>
-                                                                                        <nil key="highlightedColor"/>
-                                                                                    </label>
-                                                                                    <switch opaque="NO" tag="2" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gbu-2i-tyr" userLabel="Enable online games switch">
-                                                                                        <rect key="frame" x="391" y="92" width="51" height="30"/>
-                                                                                        <constraints>
-                                                                                            <constraint firstAttribute="height" constant="30" id="DJx-B8-eKD"/>
-                                                                                        </constraints>
-                                                                                        <color key="tintColor" name="Emphasis"/>
-                                                                                        <color key="onTintColor" name="Emphasis"/>
-                                                                                    </switch>
-                                                                                    <label opaque="NO" userInteractionEnabled="NO" tag="2" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Save game location" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="SAC-jk-6hd" userLabel="Save game location">
-                                                                                        <rect key="frame" x="30" y="132" width="353" height="34"/>
-                                                                                        <constraints>
-                                                                                            <constraint firstAttribute="height" constant="34" id="1pg-6J-zYc"/>
-                                                                                        </constraints>
-                                                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                                                        <color key="textColor" name="Text"/>
-                                                                                        <nil key="highlightedColor"/>
-                                                                                    </label>
-                                                                                    <switch opaque="NO" tag="2" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4lm-QV-dI8" userLabel="Save game location switch">
-                                                                                        <rect key="frame" x="391" y="132" width="51" height="30"/>
-                                                                                        <constraints>
-                                                                                            <constraint firstAttribute="height" constant="30" id="NfI-Eh-yMU"/>
-                                                                                        </constraints>
-                                                                                        <color key="tintColor" name="Emphasis"/>
-                                                                                        <color key="onTintColor" name="Emphasis"/>
-                                                                                    </switch>
-                                                                                    <button opaque="NO" tag="2" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NRM-Ik-bSI" userLabel="Home Button" customClass="ShadowButton" customModule="Whist" customModuleProvider="target">
-                                                                                        <rect key="frame" x="90" y="70" width="280" height="50"/>
-                                                                                        <constraints>
-                                                                                            <constraint firstAttribute="height" constant="50" id="glc-nS-wpp"/>
-                                                                                        </constraints>
-                                                                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
-                                                                                        <state key="normal" title="Home"/>
-                                                                                        <connections>
-                                                                                            <action selector="homeButtonPressed:" destination="1IM-Ht-gqg" eventType="touchUpInside" id="IUJ-pG-dtQ"/>
-                                                                                        </connections>
-                                                                                    </button>
+                                                                                    </view>
                                                                                 </subviews>
-                                                                                <color key="backgroundColor" name="Clear"/>
+                                                                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                                                <accessibility key="accessibilityConfiguration" identifier="createPlayerSettings"/>
                                                                                 <constraints>
-                                                                                    <constraint firstItem="Qs4-hp-wYf" firstAttribute="centerX" secondItem="ex3-Kd-2iA" secondAttribute="centerX" id="5B4-gJ-rTa"/>
-                                                                                    <constraint firstItem="SAC-jk-6hd" firstAttribute="top" secondItem="L0Y-eP-e80" secondAttribute="bottom" constant="10" id="SYR-On-8gm"/>
-                                                                                    <constraint firstItem="gbu-2i-tyr" firstAttribute="top" secondItem="Qs4-hp-wYf" secondAttribute="bottom" constant="12" id="Via-RZ-2pW"/>
-                                                                                    <constraint firstAttribute="bottom" secondItem="NRM-Ik-bSI" secondAttribute="bottom" constant="20" id="Z3N-33-lkt"/>
-                                                                                    <constraint firstItem="L0Y-eP-e80" firstAttribute="top" secondItem="Qs4-hp-wYf" secondAttribute="bottom" constant="8" id="gLR-XS-IRq"/>
-                                                                                    <constraint firstItem="4lm-QV-dI8" firstAttribute="top" secondItem="gbu-2i-tyr" secondAttribute="bottom" constant="10" id="kq7-K9-9nC"/>
-                                                                                    <constraint firstItem="Qs4-hp-wYf" firstAttribute="top" secondItem="ex3-Kd-2iA" secondAttribute="top" constant="10" id="z2g-sN-gDp"/>
+                                                                                    <constraint firstItem="ex3-Kd-2iA" firstAttribute="top" secondItem="4PZ-Jl-HoQ" secondAttribute="top" id="FrJ-5i-ZMv"/>
+                                                                                    <constraint firstAttribute="bottom" secondItem="ex3-Kd-2iA" secondAttribute="bottom" id="NLk-X1-5Dv"/>
+                                                                                    <constraint firstAttribute="trailing" secondItem="ex3-Kd-2iA" secondAttribute="trailing" priority="750" id="c28-fT-NFj"/>
+                                                                                    <constraint firstItem="ex3-Kd-2iA" firstAttribute="centerX" secondItem="4PZ-Jl-HoQ" secondAttribute="centerX" id="dga-G9-SW9"/>
+                                                                                    <constraint firstItem="ex3-Kd-2iA" firstAttribute="leading" secondItem="4PZ-Jl-HoQ" secondAttribute="leading" priority="750" id="lPb-RG-9t1"/>
                                                                                 </constraints>
                                                                             </view>
                                                                         </subviews>
                                                                         <color key="backgroundColor" name="Clear"/>
+                                                                        <accessibility key="accessibilityConfiguration" identifier="CreatePlayerSettingsContainer"/>
                                                                         <constraints>
-                                                                            <constraint firstAttribute="bottom" secondItem="ex3-Kd-2iA" secondAttribute="bottom" id="Ab4-5q-KWD"/>
-                                                                            <constraint firstAttribute="trailing" secondItem="ex3-Kd-2iA" secondAttribute="trailing" id="bnn-s4-NW6"/>
-                                                                            <constraint firstItem="ex3-Kd-2iA" firstAttribute="top" secondItem="k6K-JD-dqz" secondAttribute="top" constant="20" id="ckE-q7-sQg"/>
+                                                                            <constraint firstItem="4PZ-Jl-HoQ" firstAttribute="top" secondItem="k6K-JD-dqz" secondAttribute="top" id="RqX-2C-42K"/>
+                                                                            <constraint firstAttribute="bottom" secondItem="4PZ-Jl-HoQ" secondAttribute="bottom" id="VyI-1l-LcK"/>
+                                                                            <constraint firstAttribute="trailing" secondItem="4PZ-Jl-HoQ" secondAttribute="trailing" id="egw-cL-Xbw"/>
                                                                             <constraint firstAttribute="height" constant="160" id="ghg-5f-yCf"/>
-                                                                            <constraint firstItem="ex3-Kd-2iA" firstAttribute="leading" secondItem="k6K-JD-dqz" secondAttribute="leading" id="wA3-jI-boD"/>
+                                                                            <constraint firstItem="4PZ-Jl-HoQ" firstAttribute="leading" secondItem="k6K-JD-dqz" secondAttribute="leading" id="pCp-4B-6mQ"/>
                                                                         </constraints>
                                                                     </view>
                                                                 </subviews>
                                                                 <viewLayoutGuide key="safeArea" id="qnq-Ha-dWp"/>
                                                                 <color key="backgroundColor" name="Clear"/>
+                                                                <accessibility key="accessibilityConfiguration" identifier="createPlayerClippingContainer"/>
                                                                 <constraints>
                                                                     <constraint firstItem="k6K-JD-dqz" firstAttribute="top" secondItem="FVx-vr-YSF" secondAttribute="bottom" id="23g-L6-3dT"/>
                                                                     <constraint firstItem="qnq-Ha-dWp" firstAttribute="trailing" secondItem="FVx-vr-YSF" secondAttribute="trailing" constant="20" id="DKV-Bl-RwE"/>
@@ -487,6 +521,7 @@
                                                         </subviews>
                                                         <viewLayoutGuide key="safeArea" id="ZES-Ck-4an"/>
                                                         <color key="backgroundColor" name="Clear"/>
+                                                        <accessibility key="accessibilityConfiguration" identifier="inputClippingContainer"/>
                                                         <constraints>
                                                             <constraint firstItem="GKG-0U-Qdr" firstAttribute="leading" secondItem="ZES-Ck-4an" secondAttribute="leading" constant="20" id="1iE-PY-uA5"/>
                                                             <constraint firstItem="ZES-Ck-4an" firstAttribute="trailing" secondItem="f7X-tF-vWj" secondAttribute="trailing" constant="20" id="2Sw-5e-0up"/>
@@ -601,7 +636,7 @@
                         <outlet property="createPlayerSettingsContainerTopConstraint" destination="23g-L6-3dT" id="jcQ-dc-eBH"/>
                         <outlet property="createPlayerSettingsContainerView" destination="k6K-JD-dqz" id="kNf-Zp-Tnf"/>
                         <outlet property="createPlayerSettingsTitleLabel" destination="Qs4-hp-wYf" id="dMe-tq-EVB"/>
-                        <outlet property="createPlayerSettingsView" destination="ex3-Kd-2iA" id="hfT-BX-w2l"/>
+                        <outlet property="createPlayerSettingsView" destination="4PZ-Jl-HoQ" id="o10-js-xl0"/>
                         <outlet property="createPlayerTitleBar" destination="GKG-0U-Qdr" id="3HA-uH-ul3"/>
                         <outlet property="createPlayerView" destination="JFu-Mp-NY9" id="5Tb-dS-0wE"/>
                         <outlet property="downloadButton" destination="r7j-ct-C03" id="u4S-x4-Eho"/>
@@ -625,13 +660,6 @@
                         <outlet property="thisPlayerThumbnailView" destination="pfN-IV-hS3" id="cDj-c8-gQv"/>
                         <outlet property="titleLabel" destination="7vg-uA-GWG" id="HY2-hf-LnO"/>
                         <outlet property="topSection" destination="66g-bK-cfb" id="oFs-IZ-qAG"/>
-                        <outletCollection property="settingsOnLineGamesEnabledSwitch" destination="gbu-2i-tyr" collectionClass="NSMutableArray" id="Jog-vs-gk6"/>
-                        <outletCollection property="settingsSaveLocationSwitch" destination="4lm-QV-dI8" collectionClass="NSMutableArray" id="jyf-PQ-yw9"/>
-                        <outletCollection property="formLabel" destination="L0Y-eP-e80" collectionClass="NSMutableArray" id="AC0-yv-8rv"/>
-                        <outletCollection property="formLabel" destination="SAC-jk-6hd" collectionClass="NSMutableArray" id="6CJ-TB-EAo"/>
-                        <outletCollection property="actionButton" destination="NRM-Ik-bSI" collectionClass="NSMutableArray" id="C9Y-eB-pyj"/>
-                        <outletCollection property="settingsOnlineGamesEnabledLabel" destination="L0Y-eP-e80" collectionClass="NSMutableArray" id="kXs-cx-52X"/>
-                        <outletCollection property="settingsSaveLocationLabel" destination="SAC-jk-6hd" collectionClass="NSMutableArray" id="tbp-q9-0mw"/>
                         <outletCollection property="actionButton" destination="hWL-vp-NMG" collectionClass="NSMutableArray" id="9yD-mX-Nsh"/>
                         <outletCollection property="formLabel" destination="saw-B8-yT0" collectionClass="NSMutableArray" id="Lg1-2r-vcQ"/>
                         <outletCollection property="formLabel" destination="DZR-yv-rGe" collectionClass="NSMutableArray" id="OFZ-8N-jn7"/>
@@ -640,6 +668,13 @@
                         <outletCollection property="formLabel" destination="QKE-Wj-jHa" collectionClass="NSMutableArray" id="520-sz-h1H"/>
                         <outletCollection property="settingsOnLineGamesEnabledSwitch" destination="rsJ-aG-lPX" collectionClass="NSMutableArray" id="R7n-Tm-dGT"/>
                         <outletCollection property="settingsOnlineGamesEnabledLabel" destination="DZR-yv-rGe" collectionClass="NSMutableArray" id="B8z-19-BfN"/>
+                        <outletCollection property="settingsSaveLocationLabel" destination="SAC-jk-6hd" collectionClass="NSMutableArray" id="tbp-q9-0mw"/>
+                        <outletCollection property="settingsOnlineGamesEnabledLabel" destination="L0Y-eP-e80" collectionClass="NSMutableArray" id="kXs-cx-52X"/>
+                        <outletCollection property="settingsOnLineGamesEnabledSwitch" destination="gbu-2i-tyr" collectionClass="NSMutableArray" id="Jog-vs-gk6"/>
+                        <outletCollection property="settingsSaveLocationSwitch" destination="4lm-QV-dI8" collectionClass="NSMutableArray" id="jyf-PQ-yw9"/>
+                        <outletCollection property="actionButton" destination="NRM-Ik-bSI" collectionClass="NSMutableArray" id="C9Y-eB-pyj"/>
+                        <outletCollection property="formLabel" destination="SAC-jk-6hd" collectionClass="NSMutableArray" id="6CJ-TB-EAo"/>
+                        <outletCollection property="formLabel" destination="L0Y-eP-e80" collectionClass="NSMutableArray" id="AC0-yv-8rv"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="e9Q-MP-3gh" userLabel="First Responder" sceneMemberID="firstResponder"/>

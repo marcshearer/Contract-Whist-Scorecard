@@ -14,7 +14,7 @@ enum AlertViewButton {
     case other
 }
 
-class AlertViewController: UIViewController {
+class AlertViewController: UIViewController, UIPopoverPresentationControllerDelegate {
     
     private var okHandler: (()->())?
     private var cancelHandler: (()->())?
@@ -192,6 +192,7 @@ class AlertViewController: UIViewController {
         viewController.preferredContentSize = popoverSize
         viewController.popoverPresentationController?.sourceView = sourceView
         viewController.popoverPresentationController?.sourceRect = sourceRect
+        viewController.popoverPresentationController?.delegate = viewController
         viewController.isModalInPopover = true
         
         parentViewController.present(viewController, animated: false)

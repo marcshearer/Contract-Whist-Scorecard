@@ -108,11 +108,12 @@
                             </constraints>
                         </view>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iUy-Pb-3Vy" userLabel="Create Player Button" customClass="ShadowButton" customModule="Whist" customModuleProvider="target">
-                            <rect key="frame" x="30" y="245" width="315" height="50"/>
+                            <rect key="frame" x="87.5" y="245" width="200" height="40"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="50" id="NXa-eS-u5J"/>
+                                <constraint firstAttribute="height" constant="40" id="NXa-eS-u5J"/>
+                                <constraint firstAttribute="width" relation="lessThanOrEqual" constant="200" id="oIx-Un-Ym6"/>
                             </constraints>
-                            <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                             <state key="normal" title="Create New Player"/>
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -142,10 +143,10 @@
                     </subviews>
                     <color key="backgroundColor" name="Clear"/>
                     <constraints>
-                        <constraint firstAttribute="trailing" secondItem="iUy-Pb-3Vy" secondAttribute="trailing" constant="30" id="0Pk-At-ONz"/>
+                        <constraint firstAttribute="trailing" secondItem="iUy-Pb-3Vy" secondAttribute="trailing" priority="251" constant="30" id="0Pk-At-ONz"/>
                         <constraint firstItem="zxG-Ev-cRQ" firstAttribute="leading" secondItem="9u3-wu-EBQ" secondAttribute="trailing" id="2XT-Rl-cKo"/>
                         <constraint firstItem="ywu-HJ-YWs" firstAttribute="leading" secondItem="4f7-EG-TTF" secondAttribute="trailing" constant="16" id="3bQ-oA-DyR"/>
-                        <constraint firstItem="iUy-Pb-3Vy" firstAttribute="leading" secondItem="LAo-9j-rI7" secondAttribute="leading" constant="30" id="6Ns-Na-kkU"/>
+                        <constraint firstItem="iUy-Pb-3Vy" firstAttribute="leading" secondItem="LAo-9j-rI7" secondAttribute="leading" priority="251" constant="30" id="6Ns-Na-kkU"/>
                         <constraint firstAttribute="trailing" secondItem="cw0-LT-KSb" secondAttribute="trailing" constant="30" id="8Tg-V3-Wzs"/>
                         <constraint firstItem="6fl-Y8-bXz" firstAttribute="top" secondItem="9u3-wu-EBQ" secondAttribute="bottom" constant="2" id="ABm-aR-d8Z"/>
                         <constraint firstItem="4f7-EG-TTF" firstAttribute="leading" secondItem="LAo-9j-rI7" secondAttribute="leading" constant="30" id="Aow-1a-xPV"/>
@@ -161,6 +162,7 @@
                         <constraint firstAttribute="trailing" secondItem="zxG-Ev-cRQ" secondAttribute="trailing" constant="30" id="cKe-fh-LY6"/>
                         <constraint firstItem="wPW-PC-gxV" firstAttribute="top" secondItem="1JK-yI-rAC" secondAttribute="bottom" constant="2" id="dQo-rQ-1U9"/>
                         <constraint firstItem="iUy-Pb-3Vy" firstAttribute="top" secondItem="4f7-EG-TTF" secondAttribute="bottom" constant="30" id="ese-3I-bdP"/>
+                        <constraint firstItem="iUy-Pb-3Vy" firstAttribute="centerX" secondItem="LAo-9j-rI7" secondAttribute="centerX" id="gZj-mh-KDd"/>
                         <constraint firstItem="4f7-EG-TTF" firstAttribute="top" secondItem="6fl-Y8-bXz" secondAttribute="bottom" constant="12" id="i1M-DT-A3u"/>
                         <constraint firstAttribute="trailing" secondItem="1JK-yI-rAC" secondAttribute="trailing" constant="80" id="jtT-6X-hag"/>
                         <constraint firstItem="1JK-yI-rAC" firstAttribute="top" secondItem="5CH-F5-L5g" secondAttribute="bottom" constant="2" id="k7U-J6-myj"/>

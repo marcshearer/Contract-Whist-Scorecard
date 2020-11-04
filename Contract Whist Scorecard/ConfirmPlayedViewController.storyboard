@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -10,7 +11,7 @@
         <!--Confirm Played View Controller-->
         <scene sceneID="pUI-3i-9Br">
             <objects>
-                <viewController storyboardIdentifier="ConfirmPlayedViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="x2M-PG-c9N" userLabel="Confirm Played View Controller" customClass="ConfirmPlayedViewController" customModule="Whist_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ConfirmPlayedViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="x2M-PG-c9N" userLabel="Confirm Played View Controller" customClass="ConfirmPlayedViewController" customModule="Whist" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="trW-Bp-29g"/>
                         <viewControllerLayoutGuide type="bottom" id="If8-U8-ybZ"/>
@@ -52,7 +53,7 @@
                                     <constraint firstAttribute="height" constant="1" id="8Nr-dj-Taj"/>
                                 </constraints>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SAC-LY-LBW">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SAC-LY-LBW">
                                 <rect key="frame" x="120.5" y="161" width="119.5" height="39"/>
                                 <color key="backgroundColor" name="Room Interior"/>
                                 <constraints>
@@ -74,7 +75,7 @@
                                     <constraint firstAttribute="width" constant="1" id="sR9-w3-VYF"/>
                                 </constraints>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LbQ-qn-Vs4">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LbQ-qn-Vs4">
                                 <rect key="frame" x="0.0" y="161" width="119.5" height="39"/>
                                 <color key="backgroundColor" name="Room Interior"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>

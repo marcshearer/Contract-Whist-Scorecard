@@ -187,7 +187,7 @@ class CreatePlayerView : UIView, UITextFieldDelegate, PlayerViewImagePickerDeleg
             playerDetail.name = textField.text!
         case self.createIDFieldTag:
             // PlayerUUID
-            playerDetail.tempEmail = textField.text!
+            playerDetail.tempEmail = textField.text!.lowercased()
         default:
             break
         }

@@ -802,11 +802,12 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
             // Use custom animation
             viewControllerToPresent.transitioningDelegate = self
             
-            if  let popoverSize = popoverSize {
+            if let popoverSize = popoverSize {
                 // Show as popup
                 viewControllerToPresent.modalPresentationStyle = UIModalPresentationStyle.popover
                 let popover = viewControllerToPresent.popoverPresentationController!
                 popover.permittedArrowDirections = []
+                viewControllerToPresent.presentationController?.delegate = viewControllerToPresent
                 viewControllerToPresent.preferredContentSize = popoverSize
                 var actualSourceView = self.popoverPresentationController?.sourceView
                 if actualSourceView != nil {

@@ -113,7 +113,7 @@ class RelatedPlayersView : UIView, UITableViewDelegate, UITableViewDataSource, S
     // MARK: - Public methods =========================================================================== -
     
     public func set(email: String?, descriptionMode: DescriptionMode = .opponents, playerDetailView: PlayerDetailViewDelegate? = nil) {
-        self.email = email
+        self.email = email?.lowercased()
         self.descriptionMode = descriptionMode
         self.playerDetailView = playerDetailView
         self.selectCloudPlayers()
@@ -220,7 +220,7 @@ class RelatedPlayersView : UIView, UITableViewDelegate, UITableViewDataSource, S
                 for playerDetail in returnedList {
                     let index = Scorecard.shared.playerList.firstIndex(where: {($0.playerUUID == playerDetail.playerUUID)})
                     if index == nil {
-                        self.playerDetailList.append((playerDetail, false))
+                        self.playerDetailList.append((playerDetail, playerDetail.playerUUID == thisPlayerUUID))
                     }
                 }
                 if thisPlayerUUID != nil {

@@ -173,6 +173,7 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
     
     private func setOnlineGamesEnabled(_ enabled: Bool) {
         Scorecard.settings.onlineGamesEnabled = enabled
+        Scorecard.settings.onlineGamesEnabledSettingState = (enabled ? .available : .availableNotify)
         Scorecard.settings.save()
         self.settingsOnLineGamesEnabledSwitch.forEach{(control) in control.isOn = enabled}
     }

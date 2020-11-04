@@ -103,7 +103,7 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
             self.setupButtons()
         }
         
-        let instructionHeight = self.instructionLabel.text!.labelHeight(width: min(500, self.settingsTableView.frame.width - 150), font: UIFont.systemFont(ofSize: 17)) + 30
+        let instructionHeight = min((ScorecardUI.smallPhoneSize() ? 80 : 120), self.instructionLabel.text!.labelHeight(width: self.settingsTableView.frame.width - 150, font: UIFont.systemFont(ofSize: 17)) + 30)
         self.instructionLabelHeightConstraint.constant = instructionHeight
         
         self.bottomSectionHeightConstraint.constant =  (ScorecardUI.landscapePhone() ? 0 : ((self.menuController?.isVisible ?? false) ? 75 : 58) + (self.view.safeAreaInsets.bottom == 0 ? 8.0 : 0.0))

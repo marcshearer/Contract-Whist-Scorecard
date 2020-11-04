@@ -36,7 +36,8 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
     @IBOutlet private weak var instructionLabel: UILabel!
     @IBOutlet private weak var bottomSectionHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var confirmButton: ShadowButton!
-    
+    @IBOutlet private weak var settingsTableView: UITableView!
+
     // MARK: - IB Actions ============================================================================== -
     
     @IBAction func confirmPressed(_ sender: UIButton) {
@@ -82,6 +83,9 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
         self.confirmButton.setTitleColor(Palette.continueButton.text, for: .normal)
 
         self.setupButtons()
+        
+        // Setup help
+        self.setupHelpView()
     }
     
     override func viewWillLayoutSubviews() {
@@ -238,6 +242,7 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
         // Add banner confirm button
         self.banner.set(
             rightButtons: [
+                BannerButton(action: self.helpPressed, type: .help),
                 BannerButton(title: "Confirm", image: UIImage(named: "forward"), width: 100, action: self.confirmPressed, menuHide: true, id: "confirm")])
         
         // Set confirm button and title
@@ -328,5 +333,21 @@ extension OverrideViewController {
         }
     }
 
+}
+
+extension OverrideViewController {
+    
+    internal func setupHelpView() {
+        
+        self.helpView.reset()
+        
+        self.helpView.add("This screen allows you to customise settings for a single session. The override settings will continue until you choose @*/Stop Playing@*/ at the end of a game, or you @*/Abandon@*/ during a game.")
+        
+        self.helpView.add("This setting allows you to choose whether the game should be included in @*/History@*/ or not. You might want to exclude it from history if you are just teaching someone how to play, or if you are changing the number of cards (which would make history inconsistent).", views: [self.settingsTableView], item: Options.saveHistory.rawValue, horizontalBorder: -16)
+        
+        self.helpView.add("This setting allows you to choose whether the game should be included in @*/Statistics@*/ or not. You might want to exclude it from history if you are just teaching someone how to play, or if you are changing the number of cards (which would make statistics inconsistent).", views: [self.settingsTableView], item: Options.saveStats.rawValue, horizontalBorder: -16)
+        
+        self.helpView.add("These settings allow you to customise the number of cards in each hand. You can specify a starting point and and end point. You can also choose whether you bounce from the end point back to the starting point. E.g. you can start with 7 cards, progressively reduce to 1 card, and then progressively increase back to 7 cards.", views: [self.settingsTableView], item: Options.startCards.rawValue, itemTo: Options.bounce.rawValue, horizontalBorder: -16)
+    }
 }
 

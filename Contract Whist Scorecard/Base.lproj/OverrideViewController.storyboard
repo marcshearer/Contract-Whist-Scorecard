@@ -181,7 +181,7 @@
                                             <outlet property="bounceSelection" destination="ker-Dk-WHk" id="2lJ-aV-BLQ"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Message" id="KUC-gC-LB6" userLabel="Message" customClass="OverrideTableCell" customModule="Whist" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="default" indentationWidth="10" reuseIdentifier="Message" id="KUC-gC-LB6" userLabel="Message" customClass="OverrideTableCell" customModule="Whist" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="262" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KUC-gC-LB6" id="w9L-Ac-tHD">

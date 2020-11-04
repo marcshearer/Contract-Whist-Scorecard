@@ -210,7 +210,6 @@
                                                         <constraint firstAttribute="bottom" secondItem="HpQ-kL-YL6" secondAttribute="bottom" id="KOd-ML-7TG"/>
                                                         <constraint firstItem="d1j-sg-4Sc" firstAttribute="centerY" secondItem="igM-PG-Fey" secondAttribute="centerY" id="KwK-tK-SnT"/>
                                                         <constraint firstItem="d1j-sg-4Sc" firstAttribute="leading" secondItem="HpQ-kL-YL6" secondAttribute="trailing" constant="8" id="L6B-FD-AcM"/>
-                                                        <constraint firstItem="d1j-sg-4Sc" firstAttribute="width" secondItem="d1j-sg-4Sc" secondAttribute="height" multiplier="1:1" id="sJl-oL-zGM"/>
                                                         <constraint firstItem="HpQ-kL-YL6" firstAttribute="leading" secondItem="igM-PG-Fey" secondAttribute="leading" id="yXK-aH-ZwG"/>
                                                     </constraints>
                                                 </tableViewCellContentView>

@@ -404,7 +404,7 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
             let filterClearImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: clearImageHeight, height: clearImageHeight))
             Constraint.setWidth(control: filterClearImageView, width: clearImageHeight)
             Constraint.setHeight(control: filterClearImageView, height: clearImageHeight)
-            filterClearImageView.image = UIImage(named: "cross white")?.asTemplate()
+            filterClearImageView.image = UIImage(named: "cross white")?.asTemplate
             filterClearImageView.contentMode = .scaleAspectFit
             filterClearImageView.tintColor = Palette.banner.text
             self.filterClearView.addSubview(filterClearImageView)

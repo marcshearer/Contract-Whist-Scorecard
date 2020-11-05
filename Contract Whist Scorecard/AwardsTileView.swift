@@ -136,7 +136,7 @@ class AwardsTileView: DashboardTileView, AwardCollectionDelegate, UICollectionVi
     
     internal func addHelp(to helpView: HelpView) {
         
-        helpView.add("The @*/Awarded@*/ section shows awards you have already achieved. The title shows the number of awards you have achieved compared to the number still to achieve", views: [self.collectionView], callback: self.title, section: achievedSection, item: -1, horizontalBorder: 8)
+        helpView.add("The @*/Awarded@*/ section shows awards you have already achieved. The title shows the number of awards you have achieved compared to the total number that can be achieved.", views: [self.collectionView], callback: self.title, section: achievedSection, item: -1, horizontalBorder: 8)
         
         self.addButtons(helpView: helpView, section: achievedSection)
         

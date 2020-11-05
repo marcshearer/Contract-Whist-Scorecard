@@ -52,7 +52,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WOm-6F-AOV" userLabel="Bid View">
                                 <rect key="frame" x="0.0" y="89" width="414" height="273"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9Qd-R1-QFb" userLabel="Bid Title View">
+                                    <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9Qd-R1-QFb" userLabel="Bid Title View">
                                         <rect key="frame" x="8" y="0.0" width="180" height="60"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ogG-Zb-bD7" userLabel="Round Label">
@@ -89,7 +89,7 @@
                                             <constraint firstAttribute="trailing" secondItem="8eS-ht-l72" secondAttribute="trailing" constant="32" id="uvV-Zm-ET5"/>
                                         </constraints>
                                     </view>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9mj-dN-gyV" userLabel="Bid Status View">
+                                    <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9mj-dN-gyV" userLabel="Bid Status View">
                                         <rect key="frame" x="8" y="60" width="180" height="213"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="89y-V6-3Ez" userLabel="Player 1 Label">
@@ -165,23 +165,22 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="7R0-J5-W0b">
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="shb-iK-dt6">
                                                             <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="24"/>
-                                                            <color key="textColor" name="Bid Button Text"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
+                                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="28"/>
+                                                            <state key="normal" title="Button"/>
+                                                        </button>
                                                     </subviews>
                                                 </view>
                                                 <color key="backgroundColor" name="Clear"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="bottom" secondItem="7R0-J5-W0b" secondAttribute="bottom" id="4ak-Of-Ajb"/>
-                                                    <constraint firstItem="7R0-J5-W0b" firstAttribute="top" secondItem="Ehc-94-c19" secondAttribute="top" id="Lrm-da-OVp"/>
-                                                    <constraint firstItem="7R0-J5-W0b" firstAttribute="leading" secondItem="Ehc-94-c19" secondAttribute="leading" id="cn3-rN-aEk"/>
-                                                    <constraint firstAttribute="trailing" secondItem="7R0-J5-W0b" secondAttribute="trailing" id="sXf-n5-9gC"/>
+                                                    <constraint firstAttribute="trailing" secondItem="shb-iK-dt6" secondAttribute="trailing" id="Gj8-U1-wOV"/>
+                                                    <constraint firstItem="shb-iK-dt6" firstAttribute="top" secondItem="Ehc-94-c19" secondAttribute="top" id="LNo-I4-zSN"/>
+                                                    <constraint firstAttribute="bottom" secondItem="shb-iK-dt6" secondAttribute="bottom" id="OgW-cF-wiR"/>
+                                                    <constraint firstItem="shb-iK-dt6" firstAttribute="leading" secondItem="Ehc-94-c19" secondAttribute="leading" id="SiZ-6R-zQR"/>
                                                 </constraints>
                                                 <connections>
-                                                    <outlet property="bidButton" destination="7R0-J5-W0b" id="ymT-yg-8ty"/>
+                                                    <outlet property="bidButton" destination="shb-iK-dt6" id="WO1-ew-SF7"/>
                                                 </connections>
                                             </collectionViewCell>
                                         </cells>
@@ -648,9 +647,6 @@
         <image name="back" width="22" height="22"/>
         <namedColor name="Background">
             <color red="0.94117647058823528" green="0.93725490196078431" blue="0.92941176470588238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="Bid Button Text">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </namedColor>
         <namedColor name="Card Face">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

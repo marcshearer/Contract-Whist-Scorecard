@@ -33,6 +33,8 @@ class HighScoreTileView: DashboardTileView, UITableViewDataSource, UITableViewDe
     private var winnerImageInsets: CGFloat = 32.0
     private var rowInfo: [RowInfo] = []
     private var captionAbove: Bool = false
+    private var type: HighScoreType?
+    private var multiTypes = false
     
     @IBInspectable private var totalScore: Bool = true
     @IBInspectable private var handsMade: Bool = true
@@ -123,7 +125,7 @@ class HighScoreTileView: DashboardTileView, UITableViewDataSource, UITableViewDe
 
     internal func addHelp(to helpView: HelpView) {
         
-        helpView.add("The @*/\(self.title)@*/ tile shows \(self.personal ? "your" : "the") highest scores\(self.personal ? "" : " for the players on this device").\n\nTap on the tile to show more high score details.", views: [self], shrink: true)
+        helpView.add("The @*/\(self.title)@*/ tile shows \(self.personal ? "your" : "the") \(!self.multiTypes ? self.type!.description : "high scores")\(self.personal ? "" : " for the players on this device").\n\nTap on the tile to show more high score details.", views: [self], shrink: true)
     }
 
     internal func reloadData() {
@@ -178,7 +180,7 @@ class HighScoreTileView: DashboardTileView, UITableViewDataSource, UITableViewDe
         switch row.type {
         case .totalScore:
             title = "High Score"
-            cell.valueImageView.image = UIImage(named: "rosette")?.asTemplate()
+            cell.valueImageView.image = UIImage(named: "rosette")?.asTemplate
             cell.valueImageView.tintColor = Palette.highScores
             cell.valueLabel.text = "\(score)"
             cell.valueLabel.font = UIFont.systemFont(ofSize: max(6, cell.valueImageView.frame.width / 4))
@@ -241,7 +243,7 @@ class HighScoreTileView: DashboardTileView, UITableViewDataSource, UITableViewDe
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Collection Cell", for: indexPath) as! HighScoreTileCollectionViewCell
-        cell.winImageView.image = UIImage(named: "cup")?.asTemplate()
+        cell.winImageView.image = UIImage(named: "cup")?.asTemplate
         cell.winImageView.tintColor = Palette.highScores
         return cell
     }
@@ -309,26 +311,32 @@ class HighScoreTileView: DashboardTileView, UITableViewDataSource, UITableViewDe
             for occurrence in 0..<self.count {
                 self.rowInfo.append(RowInfo(type: .totalScore, occurrence: occurrence))
             }
+            self.type = .totalScore
         }
         if self.handsMade {
             types += 1
             for occurrence in 0..<self.count {
                 self.rowInfo.append(RowInfo(type: .handsMade, occurrence: occurrence))
             }
+            self.type = .handsMade
         }
         if self.winStreak {
             types += 1
             for occurrence in 0..<self.count {
                 self.rowInfo.append(RowInfo(type: .winStreak, occurrence: occurrence))
             }
+            self.type = .winStreak
         }
         if self.twosMade && Scorecard.settings.bonus2 {
            types += 1
            for occurrence in 0..<self.count {
                 self.rowInfo.append(RowInfo(type: .twosMade, occurrence: occurrence))
             }
+            self.type = .twosMade
         }
         self.captionAbove = (types > 1)
+        self.multiTypes = (types > 1)
+        self.type = (types > 1 ? nil : self.type)
     }
     
     private func adjustHeights() {

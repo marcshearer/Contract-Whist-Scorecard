@@ -173,7 +173,7 @@ class DataTableTileView: DashboardTileView, UITableViewDataSource, UITableViewDe
 
     internal func addHelp(to helpView: HelpView) {
         
-        helpView.add("The @*/\(self.title)@*/ tile shows \(self.personal ? "your" : "the") \(self.detailType.description.lowercased()) \(self.personal ? "" : " for the players with the highest win% on this device").\n\n\(detailDrill ? "Tap on a row to see detail" : "Tap on the tile to see more details").", views: [self], shrink: true)
+        helpView.add("The @*/\(self.title)@*/ tile shows \(self.personal ? "your" : "the") \(self.detailType == .highScores ? self.highScoreType.description : self.detailType.description.lowercased())\(self.personal ? "" : " for the \(self.detailType.context) on this device").\n\n\(detailDrill ? "Tap on a row to see detail" : "Tap on the tile to see more information.").", views: [self], shrink: true)
     }
     
     internal func reloadData() {
@@ -322,7 +322,7 @@ class DataTableTileView: DashboardTileView, UITableViewDataSource, UITableViewDe
             return cell
         } else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Content Collection Cell", for: indexPath) as! DataTableTileContentCollectionViewCell
-            cell.imageView.image = UIImage(named: "cup")?.asTemplate()
+            cell.imageView.image = UIImage(named: "cup")?.asTemplate
             cell.imageView.tintColor = Palette.highScores
             
             return cell

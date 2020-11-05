@@ -134,7 +134,7 @@ public class ThumbnailView: UIView {
             self.additionalImage.isHidden = false
             let image = (systemImage ? UIImage(systemName: imageName) :UIImage(named: imageName))
             if let tintColor = tintColor {
-                self.additionalImage.image = image?.asTemplate()
+                self.additionalImage.image = image?.asTemplate
                 self.additionalImage.tintColor = tintColor
             } else {
                 self.additionalImage.image = image

@@ -23,6 +23,19 @@ enum HighScoreType: Int {
         }
     }
     
+    var description: String {
+        switch self {
+        case .totalScore:
+            return "highest points score in a game"
+        case .twosMade:
+            return "most tricks won with a two in a game"
+        case .handsMade:
+            return "most bids achieved in a game"
+        case .winStreak:
+            return "most games won in a row"
+        }
+    }
+    
     var playerSort: [(String, SortDirection)] {
         switch self {
         case .totalScore:

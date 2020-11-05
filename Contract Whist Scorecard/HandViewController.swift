@@ -71,6 +71,8 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
     private let lastHandButton = 2
     private let roundSummaryButton = 3
     private let overUnderButton = 4
+    private let moreButton = -1
+    private let lessButton = -2
     
     // UI component pointers
     private var bidButtonEnabled = [Bool](repeating: false, count: 15)
@@ -326,13 +328,19 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
             self.defaultCellColors(cell: cell)
 
             if indexPath.row <= maxBidButton || (moreMode && indexPath.row <= currentCards) {
-                cell.bidButton.text = "\(indexPath.row)"
+                cell.bidButton.setTitle("\(indexPath.row)", for: .normal)
+                cell.bidButton.setImage(nil, for: .normal)
+                cell.bidButton.tag = indexPath.row
             } else if !moreMode {
-                cell.bidButton.text = ">"
+                cell.bidButton.setTitle("", for: .normal)
+                cell.bidButton.setImage(UIImage(named: "forward"), for: .normal)
+                cell.bidButton.tag = self.moreButton
             } else {
-                cell.bidButton.text = "<"
+                cell.bidButton.setTitle("", for: .normal)
+                cell.bidButton.setImage(UIImage(named: "back"), for: .normal)
+                cell.bidButton.tag = self.lessButton
             }
-            cell.bidButton.tag = indexPath.row
+            cell.bidButton.addTarget(self, action: #selector(HandViewController.bidButtonPressed(_:)), for: .touchUpInside)
             ScorecardUI.roundCorners(cell.bidButton)
             self.bidEnable(cell, bidButtonEnabled[indexPath.row])
             return cell
@@ -425,25 +433,27 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if collectionView.tag == bidCollectionTag {
-            if indexPath.row <= maxBidButton || (moreMode && indexPath.row <= currentCards) {
-                confirmBid(bid: indexPath.row)
-            } else {
-                if !moreMode {
-                    // Switch to more mode
-                    moreMode = true
-                    setupBidSize()
-                    self.bidCollectionView.reloadData()
-                } else {
-                    // Leave more mode
-                    moreMode = false
-                    setupBidSize()
-                    self.bidCollectionView.reloadData()
-                }
-                bidsEnable(true, blockRemaining: Scorecard.game.roundPlayerNumber(enteredPlayerNumber: self.enteredPlayerNumber, round: self.round) == Scorecard.game.currentPlayers)
-            }
-        } else {
+        if collectionView.tag == playedCardCollectionTag {
             confirmCard(collectionView, indexPath)
+        }
+    }
+    
+    @objc private func bidButtonPressed(_ button: UIButton) {
+        if button.tag >= 0 {
+            confirmBid(bid: button.tag)
+        } else {
+            if button.tag == self.moreButton {
+                // Switch to more mode
+                moreMode = true
+                setupBidSize()
+                self.bidCollectionView.reloadData()
+            } else {
+                // Leave more mode
+                moreMode = false
+                setupBidSize()
+                self.bidCollectionView.reloadData()
+            }
+            bidsEnable(true, blockRemaining: Scorecard.game.roundPlayerNumber(enteredPlayerNumber: self.enteredPlayerNumber, round: self.round) == Scorecard.game.currentPlayers)
         }
     }
     
@@ -1211,7 +1221,7 @@ class PlayedCardCollectionCell: UICollectionViewCell {
 }
 
 class BidCollectionCell: UICollectionViewCell {
-    @IBOutlet weak var bidButton: UILabel!
+    @IBOutlet weak var bidButton: UIButton!
 }
 
 class HandState {
@@ -1319,7 +1329,8 @@ extension HandViewController {
     private func defaultCellColors(cell: BidCollectionCell) {
         switch cell.reuseIdentifier {
         case "Bid Collection Cell":
-            cell.bidButton.textColor = Palette.bidButton.text
+            cell.bidButton.setTitleColor(Palette.bidButton.text, for: .normal)
+            cell.bidButton.tintColor = Palette.bidButton.text
         default:
             break
         }
@@ -1372,7 +1383,7 @@ extension HandViewController {
         
         self.helpView.add("The players' names in the order they should bid are displayed here.\n\nAs they bid their bids are displayed alongside their name.", views: [self.statusPlayer1BidLabel, self.statusPlayer2BidLabel, self.statusPlayer3BidLabel, self.statusPlayer4BidLabel], condition: { self.bidMode }, horizontalBorder: 4)
         
-        self.helpView.add("When it is your turn to bid, tap on a bid button and then tap the confirm button to make your bid.\n\nIf not all bids are shown, then the '>' button can be used to show higher bid values.\n\nIf you are the last person to bid, then you cannot make the total of the bids equal the number of tricks and one of the buttons will be disabled.", views: [self.bidCollectionView], condition: { self.bidMode }, border: 4)
+        self.helpView.add("When it is your turn to bid, tap on a bid button and then tap the confirm button to make your bid.\n\nIf not all bids are shown, then the " + NSAttributedString(imageName: "forward", color: Palette.normal.themeText) + " button can be used to show higher bid values.\n\nIf you are the last person to bid, then you cannot make the total of the bids equal the number of tricks and one of the buttons will be disabled.", views: [self.bidCollectionView], condition: { self.bidMode }, border: 4)
         
         self.helpView.add("During play the current trick will be displayed here.\n\nUnderneath each card will be the name of the player who played it. Underneath their name is their bid for this round and, if they have won any tricks, the number of tricks they have won.\n\nThe winner of the current trick is highlighted.", views: [self.tabletopView])
         

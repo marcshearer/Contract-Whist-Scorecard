@@ -51,7 +51,7 @@ public class BannerButton: NSObject {
     init(title: String? = nil, attributedTitle: NSAttributedString? = nil, image: UIImage? = nil, asTemplate: Bool = true, width: CGFloat? = nil, action: (()->())?, releaseAction: (()->())? = nil, type: BannerButtonType = .clear, menuHide: Bool? = nil, menuText: String? = nil, releaseMenuText: String? = nil, menuSpaceBefore: CGFloat = 0, menuTextColor: UIColor? = nil, gameDetailHide: Bool = false, backgroundColor: ThemeBackgroundColorName? = nil, textColorType: ThemeTextType? = .normal, specificTextColor: UIColor? = nil, font: UIFont = BannerButton.defaultFont, alignment: UIControl.ContentHorizontalAlignment? = .none, id: AnyHashable? = nil) {
         self.title = title
         self.attributedTitle = attributedTitle
-        self.image = (asTemplate ? image?.asTemplate() : image)
+        self.image = (asTemplate ? image?.asTemplate : image)
         self.asTemplate = asTemplate
         self.width = width ?? (type == .help ? 28 : 30)
         self.action = action
@@ -182,7 +182,7 @@ class Banner : UIView {
         }
         
         if finishText != nil || finishImage != nil {
-            self.leftButtons = [BannerButton(title: self.finishText, image: self.finishImage?.asTemplate(), width: (self.finishText == nil ? 22 : 100), action: self.delegate?.finishPressed, menuHide: self.menuHide, menuText: self.menuText, menuSpaceBefore: self.menuSpaceBefore, id: Banner.finishButton)]
+            self.leftButtons = [BannerButton(title: self.finishText, image: self.finishImage?.asTemplate, width: (self.finishText == nil ? 22 : 100), action: self.delegate?.finishPressed, menuHide: self.menuHide, menuText: self.menuText, menuSpaceBefore: self.menuSpaceBefore, id: Banner.finishButton)]
             arrange = true
         }
         
@@ -314,7 +314,7 @@ class Banner : UIView {
             }
             if let image = image {
                 button.image = image
-                button.control?.setImage((button.asTemplate ? image.asTemplate() : image), for: .normal)
+                button.control?.setImage((button.asTemplate ? image.asTemplate : image), for: .normal)
             }
             if let specificTextColor = titleColor {
                 button.specificTextColor = specificTextColor

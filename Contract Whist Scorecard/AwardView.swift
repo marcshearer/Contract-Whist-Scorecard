@@ -58,7 +58,7 @@ class AwardView: UIView {
             self.countBadgeImageView.isHidden = false
             self.countBadgeLabel.text = "\(award.count)"
             self.countBadgeLabel.textColor = Palette.banner.text
-            self.countBadgeImageView.image = UIImage(named: "award")?.asTemplate()
+            self.countBadgeImageView.image = UIImage(named: "award")?.asTemplate
             self.countBadgeImageView.tintColor = Palette.banner.background
         }
     }

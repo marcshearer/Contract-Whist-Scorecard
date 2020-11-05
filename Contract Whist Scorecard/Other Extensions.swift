@@ -154,7 +154,7 @@ extension UIImage {
         }
     }
     
-    func asTemplate() -> UIImage {
+    public var asTemplate: UIImage {
         return self.withRenderingMode(UIImage.RenderingMode.alwaysTemplate)
     }
 }
@@ -248,7 +248,7 @@ extension NSAttributedString {
         let pointSize = font.fontDescriptor.pointSize
         let boldItalicFont = UIFont(descriptor: font.fontDescriptor.withSymbolicTraits([.traitItalic, .traitBold])! , size: pointSize)
         let attributes: [[NSAttributedString.Key : Any]] = [
-            [NSAttributedString.Key.foregroundColor: Palette.normal.themeText.cgColor,
+            [NSAttributedString.Key.foregroundColor: Palette.normal.themeText,
              NSAttributedString.Key.font: boldItalicFont],
             
             [NSAttributedString.Key.font : UIFont.systemFont(ofSize: pointSize, weight: .bold)],
@@ -270,7 +270,9 @@ extension NSAttributedString {
     
     convenience init(imageName: String, color: UIColor? = nil) {
         let image = UIImage(prefixed: imageName)!
-        let imageString = NSMutableAttributedString(attachment: NSTextAttachment(image: (color == nil ? image : image.asTemplate())))
+        let imageAttachment = NSTextAttachment()
+        imageAttachment.image = (color == nil ? image : image.asTemplate)
+        let imageString = NSMutableAttributedString(attachment: imageAttachment)
         if let color = color {
             imageString.addAttribute(NSAttributedString.Key.foregroundColor, value: color, range: NSRange(0...imageString.length - 1))
         }
@@ -295,7 +297,7 @@ extension NSAttributedString {
     }
     
     static func ~= (left: inout NSAttributedString, right: String) {
-        left = NSAttributedString(right)
+        left = NSAttributedString(markdown: right)
     }
     
     static func + (left: NSAttributedString, right: NSAttributedString) -> NSAttributedString {
@@ -308,13 +310,13 @@ extension NSAttributedString {
     static func + (left: NSAttributedString, right: String) -> NSAttributedString {
         let result = NSMutableAttributedString()
         result.append(left)
-        result.append(NSAttributedString(right))
+        result.append(NSAttributedString(markdown: right))
         return result
     }
     
     static func + (left: String, right: NSAttributedString) -> NSAttributedString {
         let result = NSMutableAttributedString()
-        result.append(NSAttributedString(left))
+        result.append(NSAttributedString(markdown: left))
         result.append(right)
         return result
     }

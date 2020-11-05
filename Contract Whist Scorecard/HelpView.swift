@@ -424,6 +424,7 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
         var focusFrame: CGRect
         
         // Instantiate text and substitute for {} with descriptor
+        
         let text = element.text().mutableCopy() as! NSMutableAttributedString
         if let descriptor = activeElement.descriptor ?? element.descriptor {
             while true {

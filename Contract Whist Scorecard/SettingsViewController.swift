@@ -370,7 +370,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                 self.defaultCellColors(cell: cell)
                 
                 header = SettingsHeaderFooterView(cell)
-                cell.collapseButton.setImage(UIImage(named: (dataInfoExpanded ? "arrow down" : "arrow right"))?.asTemplate(), for: .normal)
+                cell.collapseButton.setImage(UIImage(named: (dataInfoExpanded ? "arrow down" : "arrow right"))?.asTemplate, for: .normal)
                 cell.collapseButton.tintColor = Palette.emphasis.background
                 
                 cell.label.text = "Data"
@@ -1877,17 +1877,17 @@ extension SettingsViewController {
         
         self.helpView.add("This switches visibility of games you are scoring on/off to allow/prevent others from viewing the scorecard.", views: [self.settingsTableView], section: Sections.onlineGames.rawValue, item: OnlineGameOptions.shareScorecard.rawValue, horizontalBorder: -16)
 
-        self.helpView.add("This switches game notifications on/off. If switched on, you will receive a notification on your if any player on your device wins a game.", views: [self.settingsTableView], section: Sections.onlineGames.rawValue, item: OnlineGameOptions.receiveNotifications.rawValue, horizontalBorder: -16)
+        self.helpView.add("This switches game notifications on/off. If switched on, you will receive a notification on your device if any player on your device wins a game.", views: [self.settingsTableView], section: Sections.onlineGames.rawValue, item: OnlineGameOptions.receiveNotifications.rawValue, horizontalBorder: -16)
         
         self.helpView.add("This switches location saving on/off. You have to allow the app access to your location while the app is running to enable this option. If location saving is switched on you will be prompted to confirm the location at the start of nearby games.", views: [self.settingsTableView], section: Sections.onlineGames.rawValue, item: OnlineGameOptions.saveGameLocation.rawValue, horizontalBorder: -16)
         
         self.helpView.add("This section allows you to change the colour scheme for your device and also to specify how you want to work with dark mode.\nIf you specify 'light' then you will always operate in light mode even if your device is in dark mode.\nSimilarly if you specify 'dark' then you will always operate in dark mode.\nIf you specify 'device' the app will follow dark mode on your device.", views: [self.settingsTableView], section: Sections.theme.rawValue, item: -1, itemTo: ThemeOptions.colorTheme.rawValue, horizontalBorder: -16)
         
-        self.helpView.add("These settings allow you to customise the number of cards in each hand. You can specify a starting point and and end point. You can also choose whether you bounce from the end point back to the starting point. E.g. you can start with 7 cards, progressively reduce to 1 card, and then progressively increase back to 7 cards.", views: [self.settingsTableView], section: Sections.inGame.rawValue, item: InGameOptions.cardsInHandSubheading.rawValue, itemTo: InGameOptions.cardsInHandBounce.rawValue, horizontalBorder: -16)
+        self.helpView.add("These settings allow you to customise the number of cards in each hand. You can specify a starting point and an end point. You can also choose whether you bounce from the end point back to the starting point. E.g. you can start with 7 cards, progressively reduce to 1 card, and then progressively increase back to 7 cards.", views: [self.settingsTableView], section: Sections.inGame.rawValue, item: InGameOptions.cardsInHandSubheading.rawValue, itemTo: InGameOptions.cardsInHandBounce.rawValue, horizontalBorder: -16)
         
         self.helpView.add("This setting allows you to enable/disable a special ten point bonus every time a player wins a trick with a 2.", views: [self.settingsTableView], section: Sections.inGame.rawValue, item: InGameOptions.bonus2Subheading.rawValue, itemTo: InGameOptions.bonus2.rawValue, horizontalBorder: -16)
         
-        self.helpView.add("These settings allow you to choose if you have rounds with no trumps. You can also customise the order of the suits", views: [self.settingsTableView], section: Sections.inGame.rawValue, item: InGameOptions.includeNoTrump.rawValue, itemTo: InGameOptions.trumpSequenceSuits.rawValue, horizontalBorder: -16)
+        self.helpView.add("These settings allow you to choose if you have rounds with no trumps. You can also customise the order of the trump suit", views: [self.settingsTableView], section: Sections.inGame.rawValue, item: InGameOptions.includeNoTrump.rawValue, itemTo: InGameOptions.trumpSequenceSuits.rawValue, horizontalBorder: -16)
         
         self.helpView.add("This setting allows you to choose if the status bar at the top of the device (showing time, battery, signal etc) is displayed.", views: [self.settingsTableView], section: Sections.displayStatus.rawValue, item: -1, horizontalBorder: -16)
         

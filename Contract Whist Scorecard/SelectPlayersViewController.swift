@@ -428,9 +428,9 @@ extension SelectPlayersViewController {
         
         self.helpView.reset()
                 
-        self.helpView.add("The @*/\(self.banner.title ?? "Select Players")@*/ screen allows you to add players to your device.\n\nYou can either download existing players from iCloud or create new players.\n\n\(self.section == .downloadPlayers ? "To create new players tap the @*/Create New Player@*/ button.\n\nYou can download players in two way\n- either by entering the player's **Unique ID**\n- or by selecting from a list of players who have **played a game with a player on this device**." : "To download players from iCloud tap the @*/Download Players@*/ button.")")
+        self.helpView.add("The @*/\(self.banner.title ?? "Select Players")@*/ screen allows you to add players to your device.\n\nYou can either download existing players from iCloud or create new players.\n\n\(self.section == .downloadPlayers ? "To create new players tap the @*/Create New Player@*/ button.\n\nYou can download players in two ways\n- either by entering the player's **Unique ID**\n- or by selecting from a list of players who have **played a game with a player on this device**." : "To download players from iCloud tap the @*/Download Players@*/ button.")")
         
-        self.helpView.add("To download a player using their **Unique ID**, enter it in the identifier box and then tap the @*/Download@*/ button.", views: [self.downloadIdentifierView, self.downloadDownloadButton], condition: {self.section == .downloadPlayers }, border: 4)
+        self.helpView.add("To download a player using their **Unique ID**, enter it in the identifier box and then tap the @*/Download@*/ button. Note that the unique ID is not case sensitive.", views: [self.downloadIdentifierView, self.downloadDownloadButton], condition: {self.section == .downloadPlayers }, border: 4)
         
         self.downloadRelatedPlayersView.addHelp(to: self.helpView, condition: { self.section == .downloadPlayers })
         

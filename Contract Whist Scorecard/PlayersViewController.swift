@@ -434,9 +434,9 @@ extension PlayersViewController {
         
         self.helpView.add("This area shows the photo and name of all the players on this device. Tap on a player to see their details.", views: [self.collectionView], item: 0, itemTo: 999, border: 8, shrink: true)
         
-        self.helpView.add("The {} allows you to add new players. These can either be completely new players, or existing players created on another device, but not yet downloaded from the cloud to this device.", bannerId: "add")
+        self.helpView.add("The {} allows you to add new players. These can either be completely new players, or existing players created on another device, but not yet downloaded from iCloud to this device.", bannerId: "add")
         
-        self.helpView.add("The {} allows you to remove players from this device. Note that if they have been synced to the cloud they will still exist there and can be downloaded again in future.", bannerId: "remove")
+        self.helpView.add("The {} allows you to remove players from this device. Note that if they have been synced to iCloud they will still exist there and can be downloaded again in future.", bannerId: "remove")
         
         self.helpView.add("The {} takes you out of remove mode.", bannerId: "cancel")
         

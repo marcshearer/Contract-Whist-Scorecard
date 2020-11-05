@@ -97,7 +97,7 @@ class SyncViewController: ScorecardViewController, UITableViewDelegate, UITableV
                     
                     // Update tick and stop activity indicator
                     if let completeCell = self.syncStageTableView.cellForRow(at: IndexPath(row: stage.rawValue, section: 0)) as? SyncStageTableCell {
-                        completeCell.statusImage.image = UIImage(named: "box tick")?.asTemplate()
+                        completeCell.statusImage.image = UIImage(named: "box tick")?.asTemplate
                         completeCell.statusImage.tintColor = Palette.banner.text
                         completeCell.activityIndicator.stopAnimating()
                     }
@@ -186,7 +186,7 @@ class SyncViewController: ScorecardViewController, UITableViewDelegate, UITableV
             let stage = SyncStage(rawValue: indexPath.row)!
             
             stageCell.label.text = Sync.stageDescription(stage: stage)
-            stageCell.statusImage.image = UIImage(named: ((stageComplete[stage] ?? false) ? "box tick" : "box"))?.asTemplate()
+            stageCell.statusImage.image = UIImage(named: ((stageComplete[stage] ?? false) ? "box tick" : "box"))?.asTemplate
             stageCell.statusImage.tintColor = Palette.banner.text
 
             cell = stageCell

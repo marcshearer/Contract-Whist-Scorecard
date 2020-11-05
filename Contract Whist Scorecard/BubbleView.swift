@@ -84,7 +84,7 @@ class BubbleView: UIView {
         
         self.bubbleView?.backgroundColor = Palette.banner.background
         
-        self.imageView?.image = UIImage(named: "big tick")?.asTemplate()
+        self.imageView?.image = UIImage(named: "big tick")?.asTemplate
         self.imageView?.tintColor = Palette.banner.text
         
         self.label?.backgroundColor = UIColor.clear

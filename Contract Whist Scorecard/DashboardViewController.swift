@@ -23,6 +23,15 @@ import UIKit
             return "High Scores"
         }
     }
+    
+    var context: String {
+        switch self {
+        case .statistics:
+            return "players with the highest win%"
+        default:
+            return "players"
+        }
+    }
 }
 
 public enum Orientation: String, CaseIterable {
@@ -286,7 +295,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
             let dashboardInfo = dashboardViewInfo[indexPath.item]!
             carouselCell.titleLabel.text = dashboardInfo.title
             if let imageName = dashboardInfo.imageName {
-                carouselCell.backgroundImageView.image = UIImage(named: imageName)!.asTemplate()
+                carouselCell.backgroundImageView.image = UIImage(named: imageName)!.asTemplate
             }
             return carouselCell
             
@@ -516,7 +525,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     
     // MARK: - Function to present and dismiss this view ================================================= -
     
-    @discardableResult class public func show(from viewController: ScorecardViewController, title: String? = nil, dashboardNames: [DashboardName], allowSync: Bool = true, backImage: String = "home", backText: String = "", backgroundColor: PaletteColor = Palette.dark, container: Container? = .main, bottomInset: CGFloat? = nil, menuFinishText: String? = nil, completion: (()->())? = nil) -> ScorecardViewController {
+    @discardableResult class public func show(from viewController: ScorecardViewController, title: String? = nil, dashboardNames: [DashboardName], allowSync: Bool = true, backImage: String = "home", backText: String? = nil, backgroundColor: PaletteColor = Palette.dark, container: Container? = .main, bottomInset: CGFloat? = nil, menuFinishText: String? = nil, completion: (()->())? = nil) -> ScorecardViewController {
         
         let dashboardViewController = DashboardViewController.create(title: title, dashboardNames: dashboardNames, allowSync: allowSync, backImage: backImage, backText: backText, backgroundColor: backgroundColor, bottomInset: bottomInset, menuFinishText: menuFinishText, completion: completion)
         
@@ -525,7 +534,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
         return dashboardViewController
     }
     
-    class public func create(title: String? = nil, dashboardNames: [DashboardName], allowSync: Bool = true, backImage: String = "home", backText: String = "", backgroundColor: PaletteColor = Palette.dark, bottomInset: CGFloat? = nil, menuFinishText: String? = nil, completion: (()->())? = nil) -> DashboardViewController {
+    class public func create(title: String? = nil, dashboardNames: [DashboardName], allowSync: Bool = true, backImage: String = "home", backText: String? = nil, backgroundColor: PaletteColor = Palette.dark, bottomInset: CGFloat? = nil, menuFinishText: String? = nil, completion: (()->())? = nil) -> DashboardViewController {
         
         let storyboard = UIStoryboard(name: "DashboardViewController", bundle: nil)
         let dashboardViewController: DashboardViewController = storyboard.instantiateViewController(withIdentifier: "DashboardViewController") as! DashboardViewController
@@ -593,7 +602,7 @@ class Dashboard {
     }
     
     public class func formatTypeButton(detailView: DashboardDetailType, button: RoundedButton) {
-        button.setImage(Dashboard.typeImage(detailView: detailView).asTemplate(), for: .normal)
+        button.setImage(Dashboard.typeImage(detailView: detailView).asTemplate, for: .normal)
         button.backgroundColor = Dashboard.color(detailView: detailView)
         button.tintColor = Palette.buttonFace.background
         button.toCircle()
@@ -636,13 +645,13 @@ extension DashboardViewController {
         if let id = self.dashboardInfo[currentPage].helpId as? String {
             switch id {
             case "personalResults":
-                return "The @*/Personal@*/ dashboard shows you your own personal results and statistics.\n\nYou can tap on any specific tile to see more details."
+                return "The @*/Personal@*/ dashboard shows you your own personal results and statistics.\n\nYou can tap on a tile to see more details."
             case "everyoneResults":
-                return "The @*/Everyone@*/ dashboard shows you the aggregated results and statistics for all players on this device.\n\nYou can tap on any specific tile to see more details."
+                return "The @*/Everyone@*/ dashboard shows you the aggregated results and statistics for all players on this device.\n\nYou can tap on a tile to see more details."
             case "awards":
                 return "The @*/Awards@*/ dashboard shows you the Awards that you have achieved so far plus the Awards that are still available to be achieved in the future.\n\nYou can tap on an award tile to see details."
             case "highScores":
-                return "The @*/High Scores@*/ dashboard shows you the highest scores for each category.\n\nTap on a specific high score to see the detail."
+                return "The @*/High Scores@*/ dashboard shows you the highest scores for each category.\n\nTap on a high score to see the detail."
             default:
                 return ""
             }

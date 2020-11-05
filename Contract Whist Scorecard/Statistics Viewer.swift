@@ -110,7 +110,7 @@ class StatisticsViewer : NSObject, DataTableViewerDelegate {
         
         helpView.add("The @*/\(self.viewTitle)@*/ screen allows you to review the key statistics for all players on this device.")
         
-        helpView.add("The header row contains the column titles.\n\nTap on a column title to sort the data by that column's value.\n\nTap the same column again to reverse the order of the sort.\n\nThe up/down arrow shows the order of the sort.", views: [header])
+        helpView.add("The header row contains the column titles.\n\nTap on a column title to sort the data by that column's value.\n\nTap the same column again to reverse the order of the sort.\n\nThe up / down arrow shows the order of the sort.", views: [header])
         
         helpView.add("The body of the screen contains the data.\n\nTap on a row to show a graph of the player's recent game scores.", views: [body], item: 0, itemTo: 999, shrink: true, direction: .up)
         

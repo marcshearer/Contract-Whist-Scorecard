@@ -425,11 +425,11 @@ extension RelatedPlayersView {
                 
         helpView.add("To see details of a player before you download them, tap on the " + NSAttributedString(imageName: "system.info.circle.fill", color: Palette.otherButton.background) + " button beside them.\n\nNote that their photo will not be shown.", views: [self.tableView], callback: self.infoButton(item:view:), condition: condition, item: 0, border: 8)
         
-        helpView.add("The @*/Cancel@*/ button cancels the download and returns to the \(previousScreen ?? "previous screen")", views: [self.cancelButton], condition: condition, direction: .down)
+        helpView.add("The @*/Cancel@*/ button cancels the download and returns to the \(previousScreen ?? "previous screen")", views: [self.cancelButton], condition: condition, radius: 5, direction: .down)
         
-        helpView.add("The @*/Select All@*/ button selects all players.\n\nYou can then tap players to deselect them.\n\nWhen some players are selected this button becomes a @*/Clear All@*/ button.\n\nTap it to deselect all players.", views: [self.changeAllButton], condition: condition, direction: .down)
+        helpView.add("The @*/Select All@*/ button selects all players.\n\nYou can then tap players to deselect them.\n\nWhen some players are selected this button becomes a @*/Clear All@*/ button.\n\nTap it to deselect all players.", views: [self.changeAllButton], condition: condition, radius: 5, direction: .down)
         
-        helpView.add("The @*/Confirm@*/ button initiates the download for all selected players.\n\nIt only becomes enabled when some players have been selected.", views: [self.confirmButton], condition: condition, direction: .down)
+        helpView.add("The @*/Confirm@*/ button initiates the download for all selected players.\n\nIt only becomes enabled when some players have been selected.", views: [self.confirmButton], condition: condition, radius: 5, direction: .down)
     }
     
     private func infoButton(item: Int, view: UIView) -> CGRect? {

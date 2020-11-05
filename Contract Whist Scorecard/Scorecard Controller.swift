@@ -372,7 +372,7 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
         var locationViewController: LocationViewController?
         
         if let parentViewController = self.fromViewController() {
-            locationViewController = LocationViewController.show(from: parentViewController, appController: self, gameLocation: Scorecard.game.location, useCurrentLocation: true, mustChange: false, bannerColor: Palette.banner)
+            locationViewController = LocationViewController.show(from: parentViewController, appController: self, gameLocation: Scorecard.game.location, useCurrentLocation: true, updateMode: false, bannerColor: Palette.banner)
         }
         return locationViewController
     }

@@ -175,7 +175,7 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
     
     internal func addHelp(to helpView: HelpView, header: UITableView, body: UITableView) {
         
-        helpView.add("The @*/\(self.viewTitle)@*/ screen allows you to review the game history for all players on this device, or for a single player.")
+        helpView.add("The @*/\(self.viewTitle)@*/ screen \(self.winStreakPlayer != nil ? "shows you the games that make up a win streak" : "allows you to review the game history for all players on this device, or for a single player").")
         
         helpView.add("The @*/Filter@*/ button allows you to view the game history for a specific player.\n\n\(self.filterState == .notFiltered ? "If you tap it you will see a list of players.\n\nTap a player to show only their history" : (self.filterState == .selecting ? "When you are filtering the filter button becomes a cancel button.\n\nTap it to return to showing all players' history" : "When you are filtering the player's name will appear on the filter button with a cross beside it.\n\nTap it to stop filtering and return to all players' history")).", views: [self.filterButton], bannerId: self.customButtonId)
         

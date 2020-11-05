@@ -43,9 +43,7 @@ Implement Facetime calls
 When menu reappears due to multi-tasking not defaulting to correct item (get locked in)
 Help for notification box on menu
 Notification straight through from Settings?
-Incorrect help in win streak detail
 Missing dealer halo in (at least) score game
-Incorrect help for location from update in history
 
 Jack
 ----

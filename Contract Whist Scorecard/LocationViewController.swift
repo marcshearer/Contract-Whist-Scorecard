@@ -16,7 +16,7 @@ class LocationViewController: ScorecardViewController, UITableViewDataSource, UI
 
     // Properties to pass state
     private var useCurrentLocation = true
-    private var mustChange = false
+    private var updateMode = false
     private var bannerColor: PaletteColor?
     private var completion: ((GameLocation?)->())?
 
@@ -129,7 +129,7 @@ class LocationViewController: ScorecardViewController, UITableViewDataSource, UI
         } else {
             dropPin()
         }
-        if self.mustChange || self.newLocation.description == "" {
+        if self.updateMode || self.newLocation.description == "" {
             hideFinishButtons()
         }
         if historyMode {
@@ -554,7 +554,7 @@ class LocationViewController: ScorecardViewController, UITableViewDataSource, UI
     
     // MARK: - Function to present and dismiss this view ==============================================================
     
-    class public func show(from viewController: ScorecardViewController, appController: ScorecardAppController? = nil, gameLocation: GameLocation, useCurrentLocation: Bool = true, mustChange: Bool = false, bannerColor: PaletteColor? = nil, completion: ((GameLocation?)->())? = nil) -> LocationViewController {
+    class public func show(from viewController: ScorecardViewController, appController: ScorecardAppController? = nil, gameLocation: GameLocation, useCurrentLocation: Bool = true, updateMode: Bool = false, bannerColor: PaletteColor? = nil, completion: ((GameLocation?)->())? = nil) -> LocationViewController {
         
         if appController != nil && completion != nil {
             fatalError("Completion not used in app controller")
@@ -565,7 +565,7 @@ class LocationViewController: ScorecardViewController, UITableViewDataSource, UI
         
         locationViewController.newLocation = gameLocation
         locationViewController.useCurrentLocation = useCurrentLocation
-        locationViewController.mustChange = mustChange
+        locationViewController.updateMode = updateMode
         locationViewController.bannerColor = bannerColor
         locationViewController.completion = completion
         
@@ -624,7 +624,7 @@ extension LocationViewController {
         
         self.helpView.reset()
           
-        self.helpView.add("This screen allows you to enter the current location which will be saved to the game history.\nThe current location will be shown on entry if you have allowed the app access to your current location.\nYou can also either select a recent location from the list (when the search bar is empty) or you can enter text in the search bar to search for a location.")
+        self.helpView.add("The @*/Location@*/ screen allows you to \(self.updateMode ? "update the location for a game in your history" : "enter the current location which will be saved to the game history").\(self.useCurrentLocation ? "\nThe current location will be shown on entry if you have allowed the app access to your current location." : "")\nYou can select a recent location from a list (when the search bar is empty) or you can enter text in the search bar to search for a location.")
         
         self.helpView.add("Enter text to search for the current location in the @*/Search@*/ bar or set to blank to see a list of recent locations.", views: [self.searchTextField], border: 0, radius: 8)
         

@@ -100,6 +100,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     internal var containerTitle = "Play Game"
     internal var centeredFlowLayout = CenteredCollectionViewLayout()
     private var lastWidth: CGFloat?
+    internal var noSettingsRestart = false
     
     internal var containers = false
     
@@ -422,7 +423,11 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         hostCollectionView.reloadData()
         peerCollectionView.reloadData()
         self.menuController?.refresh()
-        self.restart()
+        if !self.noSettingsRestart {
+            self.restart()
+        } else {
+            self.noSettingsRestart = false
+        }
     }
     
     private func showPlayers() {

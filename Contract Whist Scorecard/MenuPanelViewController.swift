@@ -126,8 +126,13 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
     
     @IBAction private func notificationTapGesture(recognizer: UITapGestureRecognizer) {
         if let deviceName = self.notificationDeviceName {
-            self.dismissAndSelectOption(option: .playGame)
-            self.rootViewController.selectAvailableDevice(deviceName: deviceName)
+            if self.currentOption == .settings {
+                // Need to avoid restart of comms on exit from settings
+                self.rootViewController.setNoSettingsRestart()
+            }
+            self.dismissAndSelectOption(option: .playGame) {
+                self.rootViewController.selectAvailableDevice(deviceName: deviceName)
+            }
         }
     }
     

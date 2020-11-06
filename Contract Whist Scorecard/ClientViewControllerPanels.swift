@@ -33,6 +33,8 @@ protocol PanelContainer {
     func selectAvailableDevice(deviceName: String)
     
     func panelhelpPressed(alwaysNext: Bool, completion: ((Bool)->())?)
+    
+    func setNoSettingsRestart()
 }
 
 extension PanelContainer {
@@ -276,6 +278,10 @@ extension ClientViewController : PanelContainer {
     internal func selectAvailableDevice(deviceName: String) {
         // Connect to a particular device based on click-through of notification
         self.selectAvailable(deviceName: deviceName)
+    }
+    
+    internal func setNoSettingsRestart() {
+        self.noSettingsRestart = true
     }
     
     internal func panelhelpPressed(alwaysNext: Bool, completion: ((Bool)->())?) {

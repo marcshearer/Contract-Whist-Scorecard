@@ -679,7 +679,7 @@ class PlayerDetailViewController: ScorecardViewController, PlayerDetailViewDeleg
             }
         }
          
-        self.banner.setButton(Banner.finishButton, isHidden: (self.mode == .amending))
+        self.banner.setButton(Banner.finishButton, isHidden: (self.mode == .amending || self.container == .rightInset))
         
         if let view = tableView.headerView(forSection: nameSection) as? PlayerDetailHeaderFooterView {
             if let cell = view.cell {

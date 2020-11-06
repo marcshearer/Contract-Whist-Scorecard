@@ -101,7 +101,8 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
     private var notificationDeviceName: String?
     private var playingGame: Bool = false
     private var gamePlayingTitle: String? = nil
-    private var helpViewAfter: HelpView!
+    private var helpViewAfterPlayGame: HelpView!
+    private var helpViewAfterOther: HelpView!
 
     // MARK: - IB Outlets ============================================================================== -
     
@@ -131,14 +132,20 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
     }
     
     @objc internal func menuPanelHelpPressed(_ sender: UIButton) {
+        
+        func rootHelpView(isHidden: Bool) {
+            self.rootViewController.helpView.isHidden = isHidden
+        }
+        
+        func completion() {
+            self.view.superview?.insertSubview(self.view, at: 1)
+            rootHelpView(isHidden: true)
+        }
+        
+        rootHelpView(isHidden: false) // Show the root help view to mask out any tap gestures below
+        
         if currentOption == .playGame && self.rootViewController.viewControllerStack.isEmpty {
             // Show menu initial menu panel help followed by option help followed by final menu panel help
-            
-            func rootHelpView(isHidden: Bool) {
-                self.rootViewController.helpView.isHidden = isHidden
-            }
-            
-            rootHelpView(isHidden: false) // Show the root help view to mask out any tap gestures below
             self.view.superview?.bringSubviewToFront(self.view)
             self.helpView.show(alwaysNext: true) { (finishPressed) in
                 self.view.superview?.insertSubview(self.view, at: 1)
@@ -147,20 +154,24 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
                         if !finishPressed {
                             self.view.superview?.bringSubviewToFront(self.view)
                             rootHelpView(isHidden: false)
-                            self.helpViewAfter.show(alwaysNext: false) { (finishPressed) in
-                                self.view.superview?.insertSubview(self.view, at: 1)
-                                rootHelpView(isHidden: true)
+                            self.helpViewAfterPlayGame.show(alwaysNext: false) { (finishPressed) in
+                                completion()
                             }
                         } else {
-                            rootHelpView(isHidden: true)
+                            completion()
                         }
                     }
                 } else {
-                    rootHelpView(isHidden: true)
+                    completion()
                 }
             }
         } else {
             self.rootViewController.panelhelpPressed(alwaysNext: false) { (finishPressed) in
+                self.view.superview?.bringSubviewToFront(self.view)
+                rootHelpView(isHidden: false)
+                self.helpViewAfterOther.show(alwaysNext: false) { (finishPressed) in
+                    completion()
+                }
             }
         }
     }
@@ -183,7 +194,8 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
         self.showThisPlayer()
         
         // Set up help
-        self.helpViewAfter = HelpView(in: self)
+        self.helpViewAfterPlayGame = HelpView(in: self)
+        self.helpViewAfterOther = HelpView(in: self)
         self.setupHelpViews()
     }
     
@@ -713,27 +725,32 @@ extension MenuPanelViewController {
         
         self.helpView.add("This shows you who the default player for this device is. You can change the default player by tapping the image", views: [self.thisPlayerThumbnail], border: 8)
         
-        self.helpViewAfter.reset()
+        self.helpViewAfterPlayGame.reset()
         
         for (item, element) in self.optionMap.enumerated() {
             if element.mainOption {
                 let option = self.options[element.index]
                 switch option.menuOption {
                 case .playGame:
-                    self.helpViewAfter.add("This @*/Play Game@*/ menu option displays the main home page which allows you to start or join a game.", views: [self.optionsTableView], item: item, horizontalBorder: 16)
+                    self.helpViewAfterPlayGame.add("This @*/Play Game@*/ menu option displays the main home page which allows you to start or join a game.", views: [self.optionsTableView], item: item, horizontalBorder: 16)
                 case .personalResults:
-                    self.helpViewAfter.add("The @*/Results@*/ menu option allows you to view dashboards showing your own history and statistics and history and statistics for all players on this device. You can drill into each tile in the dashboard to see supporting data.", views: [self.optionsTableView], item: item, horizontalBorder: 16)
+                    self.helpViewAfterPlayGame.add("The @*/Results@*/ menu option allows you to view dashboards showing your own history and statistics and history and statistics for all players on this device. You can drill into each tile in the dashboard to see supporting data.", views: [self.optionsTableView], item: item, horizontalBorder: 16)
                 case .awards:
-                    self.helpViewAfter.add("The @*/Awards@*/ menu option displays the awards achieved so far by this player and other awards which are available to be achieved in the future", views: [self.optionsTableView], item: item, horizontalBorder: 16)
+                    self.helpViewAfterPlayGame.add("The @*/Awards@*/ menu option displays the awards achieved so far by this player and other awards which are available to be achieved in the future", views: [self.optionsTableView], item: item, horizontalBorder: 16)
                 case .profiles:
-                    self.helpViewAfter.add("The @*/Profiles@*/ menu option allows you to add/remove players from this device or to view/modify the details of an existing player", views: [self.optionsTableView], item: item, horizontalBorder: 16)
+                    self.helpViewAfterPlayGame.add("The @*/Profiles@*/ menu option allows you to add/remove players from this device or to view/modify the details of an existing player", views: [self.optionsTableView], item: item, horizontalBorder: 16)
                 default:
                     break
                 }
             }
         }
             
-        self.helpViewAfter.add("The @*/Settings@*/ menu option allows you to customise the Whist app to meet your individual requirements. Options include choosing a colour theme for your device.", views: [self.settingsTableView], item: 0, horizontalBorder: 16)
+        self.helpViewAfterPlayGame.add("The @*/Settings@*/ menu option allows you to customise the Whist app to meet your individual requirements. Options include choosing a colour theme for your device.", views: [self.settingsTableView], item: 0, horizontalBorder: 16)
+    
+        self.helpViewAfterOther.reset()
+        
+        self.helpViewAfterOther.add("The @*/Notifications@*/ pane will show you if someone has invited you to a game while you are not in the @*/Play Game@*/ screen.\n\nTap the notification to join the game.\n\nIf there is more than one game available you will just be taken to the @*/Play Game@*/ screen where you can choose which game to join.", views: [notificationsView], radius: 16)
+        
     }
 }
 

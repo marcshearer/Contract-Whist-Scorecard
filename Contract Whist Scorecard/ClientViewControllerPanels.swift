@@ -308,7 +308,7 @@ extension ClientViewController : PanelContainer {
                         // Need to keep the previous helpView around to stop click throughs
                         helpView.isHidden = false
                         
-                        // Now show any help for the game detail panel
+                        // Now show any help for the detail panel
                         delegate!.detailView.superview!.bringSubviewToFront(delegate!.detailView)
                         delegate!.helpPressed(alwaysNext: alwaysNext) { (finishPressed) in
                             mainView.superview!.bringSubviewToFront(mainView)

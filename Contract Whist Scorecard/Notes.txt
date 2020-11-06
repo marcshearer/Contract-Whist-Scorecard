@@ -39,7 +39,7 @@ TODO
 ----
 TODO Need to switch off MallocStackLogging variables in Edit Scheme
 Looks like it is still in recovery mode even when play game and override warning
-Implement Facetime calls
+Reinstate Facetime calls?
 When menu reappears due to multi-tasking not defaulting to correct item (get locked in)
 Notification straight through from Settings?
 

@@ -167,9 +167,13 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
             }
         } else {
             self.rootViewController.panelhelpPressed(alwaysNext: false) { (finishPressed) in
-                self.view.superview?.bringSubviewToFront(self.view)
-                rootHelpView(isHidden: false)
-                self.helpViewAfterOther.show(alwaysNext: false) { (finishPressed) in
+                if !finishPressed {
+                    self.view.superview?.bringSubviewToFront(self.view)
+                    rootHelpView(isHidden: false)
+                    self.helpViewAfterOther.show(alwaysNext: false) { (finishPressed) in
+                        completion()
+                    }
+                } else {
                     completion()
                 }
             }

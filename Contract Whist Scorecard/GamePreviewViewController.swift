@@ -230,7 +230,7 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
             }
             if !cutting && (rotated || firstTime) {
                 self.refreshPlayers()
-                self.showCurrentDealer()
+                self.showCurrentDealer(clear: true)
             }
         }
     }
@@ -355,13 +355,7 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
         // Configure selected players view
         self.selectedPlayersView.roundCorners(cornerRadius: 40.0)
         self.selectedPlayersView.setHaloWidth(haloWidth: self.haloWidth, allowHaloWidth: self.dealerHaloWidth)
-        self.selectedPlayersView.setHaloColor(color: Palette.halo.background)
         
-        // Update layout to get correct size
-        if !wasAlreadyDrawing {
-           // self.view.layoutIfNeeded()
-        }
-
         // Draw room
         self.selectedPlayersView.drawRoom(thumbnailWidth: self.thumbnailWidth, thumbnailHeight: self.thumbnailHeight, players: self.selectedPlayers.count)
         

@@ -145,6 +145,15 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
     public static var helpContext: String? { _helpContext }
     
     public var isEmpty: Bool { return self.elements.isEmpty }
+
+    public override var isHidden: Bool {
+        didSet(isHidden) {
+            // If view becomes hidden hide all its components individually as well
+            if isHidden {
+                self.isHidden(true)
+            }
+        }
+    }
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)

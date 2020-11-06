@@ -140,6 +140,9 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
         
         func rootHelpView(isHidden: Bool) {
             self.rootViewController.helpView.isHidden = isHidden
+            if !isHidden {
+                self.rootViewController.view.bringSubviewToFront(self.rootViewController.helpView)
+            }
         }
         
         func completion() {

@@ -128,6 +128,10 @@ class PlayersViewController: ScorecardViewController, PlayersViewDelegate, UICol
         self.enableButtons()
     }
     
+    override func rightPanelDidDisappear() {
+        self.playerDetailView = nil
+    }
+    
     // MARK: - Players View Delegate ================================================================= -
     
     internal func playerRemoved(playerUUID: String) {
@@ -204,13 +208,13 @@ class PlayersViewController: ScorecardViewController, PlayersViewDelegate, UICol
     }
     
     func amendPlayer(at indexPath: IndexPath) {
-        self.rootViewController.rightPanelDefaultScreenColors(rightInsetColor: Palette.normal.background)
         let playerDetail = self.playerDetailList[indexPath.row]
         if let playerDetailView = self.playerDetailView {
+            self.rootViewController.rightPanelDefaultScreenColors(rightInsetColor: Palette.normal.background)
             self.setRightPanel(title: playerDetail.name, caption: "")
             playerDetailView.refresh(playerDetail: playerDetail, mode: .amend)
         } else {
-            PlayerDetailViewController.show(from: self, playerDetail: playerDetail, mode: .amend, sourceView: self.view, playersViewDelegate: self)
+            PlayerDetailViewController.show(from: self, playerDetail: playerDetail, mode: .amend, sourceView: self.view, playersViewDelegate: self, returnTo: "Return to Profiles")
         }
     }
     

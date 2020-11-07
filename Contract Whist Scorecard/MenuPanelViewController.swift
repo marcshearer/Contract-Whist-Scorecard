@@ -51,7 +51,9 @@ protocol MenuController {
     
     var isVisible: Bool {get}
     
-    func didDisappear()
+    func menuDidDisappear()
+    
+    func rightPanelDidDisappear(completion: (()->())?)
     
     func add(suboptions: [Option], to option: MenuOption, on container: Container, highlight: Int?, disableOptions: Bool)
     
@@ -60,6 +62,8 @@ protocol MenuController {
     func removeSuboptions(for container: Container?)
     
     func refresh()
+    
+    func reset()
     
     func setNotification(message: String?, deviceName: String?)
     
@@ -233,12 +237,33 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
         return self.rootViewController.isVisible(container: .left)
     }
     
-    internal func didDisappear() {
+    internal func menuDidDisappear() {
         // Release any pressed press and hold buttons
         for option in self.suboptions {
             if option.pressed {
                 option.releaseAction?()
             }
+        }
+    }
+    
+    internal func rightPanelDidDisappear(completion: (()->())?) {
+        var dismissItems: [PanelContainerItem] = []
+        if let items = self.currentContainerItems {
+            for (index, item) in items.reversed().enumerated() {
+                if item.container == .right || item.container == .rightInset {
+                    dismissItems.append(item)
+                    self.currentContainerItems?.remove(at: index)
+                } else {
+                    item.viewController.rightPanelDidDisappear()
+                }
+            }
+        }
+        if !dismissItems.isEmpty {
+            self.dismissItems(dismissItems, completion: completion)
+            self.rootViewController.rightPanelDefaultScreenColors(rightInsetColor: Palette.banner.background)
+            self.rootViewController.showLastGame()
+        } else {
+            completion?()
         }
     }
     
@@ -289,6 +314,11 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
             self.view.superview?.insertSubview(self.view, at: 1)
             completion(finishPressed)
         })
+    }
+    
+    internal func reset() {
+        self.setCurrentOption(option: .playGame)
+        self.refresh()
     }
     
     internal func refresh() {
@@ -593,7 +623,7 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
         }
     }
     
-    private func dismissItems(_ items: [PanelContainerItem], sequence: Int = 0, removeSuboptions: Bool = true, completion: (()->())?) {
+    private func dismissItems(_ items: [PanelContainerItem], sequence: Int = 0, removeSuboptions: Bool = true, completion: (()->())? = nil) {
         let viewController = items[sequence].viewController
         viewController.willDismiss()
         viewController.dismiss(animated: false, hideDismissImageView: false, removeSuboptions: removeSuboptions, completion: viewController.didDismiss)
@@ -614,6 +644,7 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
     }
     
     private func dismissAndSelectCompletion(option: MenuOption, completion: (()->())? = nil) {
+        self.currentContainerItems = []
         self.invokeOption(option) {
             self.rootViewController.view.isUserInteractionEnabled = true
         }
@@ -625,7 +656,7 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
         completion?()
     }
     
-    public func invokeOption(_ option: MenuOption, completion: (()->())?) {
+    private func invokeOption(_ option: MenuOption, completion: (()->())?) {
         
         switch option {
         case .playGame:
@@ -635,40 +666,49 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
             let title = (option == .personalResults ? "Personal" : "Everyone")
             let filename = "\(title)Dashboard"
             let viewController = DashboardViewController.create(
-                dashboardNames: [DashboardName(title: title, returnTo: title, fileName: filename, helpId: "\(title.lowercased())Results")])
+                dashboardNames: [DashboardName(title: title, returnTo: title, fileName: filename, helpId: "\(title.lowercased())Results")], completion: self.optionCompletion)
             self.presentInContainers([PanelContainerItem(viewController: viewController, container: .mainRight)], animated: true, completion: completion)
             
         case .highScores:
             let viewController = DashboardViewController.create(
-                dashboardNames: [DashboardName(title: "High Scores", fileName: "HighScoresDashboard", helpId: "highScores")])
+                dashboardNames: [DashboardName(title: "High Scores", fileName: "HighScoresDashboard", helpId: "highScores")], completion: self.optionCompletion)
             self.presentInContainers([PanelContainerItem(viewController: viewController, container: .mainRight)], animated: true, completion: completion)
             
         case .awards:
             let viewController = DashboardViewController.create( title: "Awards",
                  dashboardNames: [DashboardName(title: "Awards",  fileName: "AwardsDashboard",  helpId: "awards")],
-                 allowSync: false, backgroundColor: Palette.normal, bottomInset: 0)
-            let detailViewController = AwardDetailViewController.create()
-            detailViewController.rootViewController = self.rootViewController
-            detailViewController.rootViewController.detailDelegate = detailViewController
-            viewController.awardDetail = detailViewController
-            self.presentInContainers([                                       PanelContainerItem(viewController: viewController, container: .main),
-                PanelContainerItem(viewController: detailViewController, container: .rightInset)],
-                rightPanelTitle: "", animated: true, completion: completion)
+                 allowSync: false, backgroundColor: Palette.normal, bottomInset: 0, completion: self.optionCompletion)
+            var items = [PanelContainerItem(viewController: viewController, container: .main)]
+            
+            if self.rootViewController.isVisible(container: .rightInset) {
+                let detailViewController = AwardDetailViewController.create()
+                detailViewController.rootViewController = self.rootViewController
+                detailViewController.rootViewController.detailDelegate = detailViewController
+                viewController.awardDetail = detailViewController
+                items.append(PanelContainerItem(viewController: detailViewController, container: .rightInset))
+            }
+            
+            self.presentInContainers(items, rightPanelTitle: "", animated: true, completion: completion)
             
         case .profiles:
-            let viewController = PlayersViewController.create(completion: nil)
-            let playerMO = Scorecard.shared.findPlayerByPlayerUUID(Scorecard.settings.thisPlayerUUID)!
-            let playerDetail = PlayerDetail()
-            playerDetail.fromManagedObject(playerMO: playerMO)
-            self.rootViewController.rightPanelDefaultScreenColors(rightInsetColor: Palette.normal.background)
-           let detailViewController = PlayerDetailViewController.create(playerDetail: playerDetail, mode: .amend, playersViewDelegate: viewController, dismissOnSave: false)
-            detailViewController.rootViewController = self.rootViewController
-            detailViewController.rootViewController.detailDelegate = detailViewController
-            viewController.playerDetailView = detailViewController
-            self.presentInContainers([
-                PanelContainerItem(viewController: viewController, container: .main),
-                PanelContainerItem(viewController: detailViewController, container: .rightInset)],
-                rightPanelTitle: playerDetail.name, animated: true, completion: completion)
+            let viewController = PlayersViewController.create(completion: self.optionCompletion)
+            var items = [PanelContainerItem(viewController: viewController, container: .main)]
+            var title = ""
+            
+            if self.rootViewController.isVisible(container: .rightInset) {
+                let playerMO = Scorecard.shared.findPlayerByPlayerUUID(Scorecard.settings.thisPlayerUUID)!
+                let playerDetail = PlayerDetail()
+                playerDetail.fromManagedObject(playerMO: playerMO)
+                self.rootViewController.rightPanelDefaultScreenColors(rightInsetColor: Palette.normal.background)
+                let detailViewController = PlayerDetailViewController.create(playerDetail: playerDetail, mode: .amend, playersViewDelegate: viewController, dismissOnSave: false)
+                detailViewController.rootViewController = self.rootViewController
+                detailViewController.rootViewController.detailDelegate = detailViewController
+                viewController.playerDetailView = detailViewController
+                items.append(PanelContainerItem(viewController: detailViewController, container: .rightInset))
+                title = playerDetail.name
+            }
+            
+            self.presentInContainers(items, rightPanelTitle: title, animated: true, completion: completion)
             
         case .settings:
             // Need to invoke settings from root view controller
@@ -679,6 +719,14 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
         default:
             // Not a genuine new option - execute via root view controller
             self.rootViewController.invokeOption(option, completion: completion)
+        }
+    }
+    
+    private func optionCompletion() {
+        if !self.isVisible {
+            // Completing option but menu no longer visible - reset and re-allocate screen space
+            self.reset()
+            self.rootViewController.allocateContainerSizes()
         }
     }
     

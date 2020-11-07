@@ -24,6 +24,8 @@ protocol PanelContainer {
     
     func panelLayoutSubviews()
     
+    func allocateContainerSizes()
+    
     func presentInContainers(_ items: [PanelContainerItem], rightPanelTitle: String?, animated: Bool, completion: (() -> ())?)
         
     @discardableResult func invokeOption(_ option: MenuOption, completion: (()->())?) -> ScorecardViewController?
@@ -112,9 +114,13 @@ extension ClientViewController : PanelContainer {
     
     internal func allocateContainerSizes() {
         // Idea is to have all 3 containers available, but sometimes offscreen if on an iPad
+        self.containers = true
+        let canAddMenu = (self.gameMode != .none || self.viewControllerStack.isEmpty)
+        let menuWasVisible = self.menuController?.isVisible ?? false
+        let rightPanelWasVisible = self.isVisible(container: .right)
+
         repeat {
-            self.containers = true
-            if !ScorecardUI.phoneSize() && self.leftPanelWidthConstraint != nil && self.rightPanelWidthConstraint != nil {
+            if canAddMenu && !ScorecardUI.phoneSize() && self.leftPanelWidthConstraint != nil && self.rightPanelWidthConstraint != nil {
                 if self.view.frame.width >= 1000 {
                     // Room for all 3
                     let leftWidth = self.view.frame.width * 0.29
@@ -136,11 +142,6 @@ extension ClientViewController : PanelContainer {
                     break
                 }
             }
-            // Just 1
-            if self.menuController?.isVisible ?? false {
-                // Losing menu - close it cleanly
-                self.menuController?.didDisappear()
-            }
             
             let leftWidth = self.view.frame.width * 1
             let rightWidth = self.view.frame.width * 1
@@ -153,6 +154,21 @@ extension ClientViewController : PanelContainer {
                 self.containers = false
             }
         } while false
+        
+        let menuIsVisible = self.menuController?.isVisible ?? false
+        if menuIsVisible != menuWasVisible {
+            if !menuIsVisible {
+                // Losing menu - close it cleanly
+                self.menuController?.menuDidDisappear()
+            } else  {
+                // Menu becoming visible - reset
+                self.menuController?.reset()
+            }
+        }
+        if rightPanelWasVisible && !self.isVisible(container: .right) {
+            // Losing right panel - close it cleanly
+            self.menuController?.rightPanelDidDisappear(completion: nil)
+        }
         
         self.container = (self.containers ? .main : .none)
         

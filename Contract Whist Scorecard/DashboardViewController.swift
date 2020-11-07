@@ -159,6 +159,10 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         self.rotated = true
+        if let collectionViewLayout = self.carouselCollectionView.collectionViewLayout as? UICollectionViewFlowLayout {
+            collectionViewLayout.invalidateLayout()
+        }
+        
         self.view.setNeedsLayout()
     }
     
@@ -200,6 +204,10 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         // self.carouselCollectionView.reloadData()
+    }
+    
+    override func rightPanelDidDisappear() {
+        self.awardDetail = nil
     }
     
     internal func reloadData() {
@@ -285,6 +293,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
         switch DashboardCollectionViews(rawValue: collectionView.tag) {
         case .carousel:
             let carouselCell = collectionView.dequeueReusableCell(withReuseIdentifier: "Carousel Cell", for: indexPath) as! DashboardCarouselCell
+            carouselCell.containerView.layoutIfNeeded()
             carouselCell.containerView.roundCorners(cornerRadius: 8.0)
             carouselCell.addShadow(shadowSize: CGSize(width: 4.0, height: 4.0))
             carouselCell.titleLabel.alpha = (indexPath.row != self.currentPage ? 0.0 : 1.0)

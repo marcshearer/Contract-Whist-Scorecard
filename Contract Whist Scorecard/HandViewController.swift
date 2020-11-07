@@ -211,7 +211,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
         super.viewWillTransition(to: size, with: coordinator)
         resizing = true
         // Release last trick if pressed
-        self.menuController?.didDisappear()
+        self.menuController?.menuDidDisappear()
         view.setNeedsLayout()
     }
     

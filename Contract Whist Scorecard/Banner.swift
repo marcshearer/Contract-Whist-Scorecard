@@ -479,7 +479,7 @@ class Banner : UIView {
     }
     
     /// Update background, title and clear button titles / tints
-    private func updateBackgroundColor() {
+    public func updateBackgroundColor() {
         self.updateTitleColors()
         for (_, button) in self.buttonIds {
             if button.type == .clear {

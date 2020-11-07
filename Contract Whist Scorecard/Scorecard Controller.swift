@@ -741,6 +741,7 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
         }
         Palette.forcingGameBanners(to: useGameColor) {
             self.bannerClass?.layoutSubviews()
+            self.bannerClass?.updateBackgroundColor()
         }
     }
   
@@ -1056,6 +1057,9 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
     
     internal func helpPressed() {
         self.helpPressed(alwaysNext: false, completion: nil)
+    }
+    
+    internal func rightPanelDidDisappear() {
     }
     
     // MARK: - Utility routines ======================================================================== -

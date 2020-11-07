@@ -440,7 +440,11 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
                 DashboardName(title: "Awards",  fileName: "AwardsDashboard",  imageName: "award", helpId: "awards"),
                 DashboardName(title: "Personal", fileName: "PersonalDashboard", imageName: "personal", helpId: "personalResults"),
                 DashboardName(title: "Everyone", fileName: "EveryoneDashboard", imageName: "everyone", helpId: "everyoneResults")],
-            container: .mainRight)
+             container: .mainRight) {
+            
+            // Reallocate container sizes in case screen grew during dashboard
+            self.allocateContainerSizes()
+        }
     }
     
     // MARK: - Player Selection View Delegate Handlers ======================================================= -
@@ -581,10 +585,12 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         self.destroyClientController()
         self.hostController = nil
         self.scoringController = nil
+        self.appController = nil
         self.setupHostingOptions()
         self.setupHelpView()
         self.appStateChange(to: .notConnected)
         self.checkPlayingGame()
+        self.allocateContainerSizes()
         Scorecard.game?.resetValues()
         Scorecard.game.setGameInProgress(false)
         self.availablePeers = []
@@ -593,7 +599,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         self.peerReloadData()
         self.updateSettingsBadge()
         self.menuController?.set(playingGame: false)
-
+        
         if createController {
             // Create controller after short delay
             Utility.executeAfter(delay: 0.1) {
@@ -963,6 +969,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         // Create Host controller
         if self.hostController == nil {
             self.hostController = HostController(from: self)
+            self.appController = self.hostController
         }
         
         // Start Host controller
@@ -972,6 +979,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
             }
             self.hostController?.stop()
             self.hostController = nil
+            self.appController = nil
             self.restart()
         })
     }
@@ -986,6 +994,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         // Create Scoring controller
         if self.scoringController == nil {
             self.scoringController = ScoringController(from: self)
+            self.appController = self.scoringController
         }
         
         // Move menu to in-game mode
@@ -998,6 +1007,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
             }
             self.scoringController?.stop()
             self.scoringController = nil
+            self.appController = nil
             self.restart()
         })
     }
@@ -1042,11 +1052,15 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         if self.thisPlayer != nil {
             self.clientController = ClientController(from: self, playerUUID: self.thisPlayer, playerName: self.thisPlayerName, matchDeviceName: self.matchDeviceName, matchProximity: self.matchProximity, matchGameUUID: matchGameUUID)
             self.clientController.delegate = self
+            self.appController = self.clientController
         }
     }
     
     private func destroyClientController() {
-        self.clientController?.stop()
+        if let clientController = self.clientController {
+            clientController.stop()
+            self.appController = nil
+        }
         self.clientController = nil
     }
     
@@ -1303,6 +1317,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         self.hostController = nil
         self.clientController?.stop()
         self.clientController = nil
+        self.appController = nil
         self.recoveryMode = false
         self.matchDeviceName = nil
         self.matchProximity = nil
@@ -1428,12 +1443,13 @@ extension ClientViewController {
     }
     
     private func layoutControls(firstTime: Bool) {
+        self.hostCollectionContentView.layoutIfNeeded()
         if self.hostRoundedContainer {
             self.hostCollectionContentView.roundCorners(cornerRadius: 8.0, topRounded: false, bottomRounded: true)
         } else {
             self.hostCollectionContentView.removeRoundCorners()
         }
-        self.hostCollectionContentView.layoutIfNeeded()
+        self.peerCollectionContentView.layoutIfNeeded()
         self.peerCollectionContentView.roundCorners(cornerRadius: 8.0, topRounded: self.menuController?.isVisible ?? false, bottomRounded: true)
         self.peerCollectionContainerView.addShadow(shadowSize: CGSize(width: 4.0, height: 4.0), shadowOpacity: 0.1, shadowRadius: 2.0)
         self.peerScrollCollectionView.isHidden = (self.availablePeers.count <= 1)

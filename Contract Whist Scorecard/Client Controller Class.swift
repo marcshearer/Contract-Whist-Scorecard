@@ -712,7 +712,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
             _ = Scorecard.game.save()
             self.present(nextView: .gameSummary)
         } else {
-            if self.gameDetailDelegate?.isVisible ?? false {
+            if (self.gameDetailDelegate?.isVisible ?? false) && Scorecard.game!.handState.finished {
                 self.present(nextView: .nextHand, context: ["round" : round])
             } else {
                 self.present(nextView: .scorepad)

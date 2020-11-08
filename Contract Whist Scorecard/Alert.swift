@@ -19,22 +19,22 @@ extension UIViewController {
         case lock = 1305
     }
 
-    public func alertMessage(if condition: Bool = true, _ message: String? = nil, _ attributedMessage: NSAttributedString? = nil, title: String = "Warning", buttonText: String = "OK", okHandler: (() -> ())? = nil) {
+    public func alertMessage(if condition: Bool = true, _ message: String? = nil, _ attributedMessage: NSAttributedString? = nil, title: String = "Warning", width: CGFloat? = nil, image: UIImage? = nil, imageWidth: CGFloat? = nil, imageTint: UIColor? = nil, sourceView: UIView? = nil, buttonText: String = "OK", okHandler: (() -> ())? = nil) {
         
         if condition {
             Utility.mainThread {
-                AlertViewController.show(from: self, message: message, attributedMessage: attributedMessage, title: title, okButtonText: buttonText, okHandler: okHandler)
+                AlertViewController.show(from: self, sourceView: sourceView, message: message, attributedMessage: attributedMessage, title: title, width: width, image: image, imageWidth: imageWidth, imageTint: imageTint, okButtonText: buttonText, okHandler: okHandler)
             }
         } else {
             okHandler?()
         }
     }
 
-    public func alertDecision(if condition: Bool = true, _ message: String? = nil, _ attributedMessage: NSAttributedString? = nil, title: String = "Warning", okButtonText: String = "OK", okHandler: (() -> ())? = nil, otherButtonText: String? = nil, otherHandler: (() -> ())? = nil, cancelButtonText: String = "Cancel", cancelHandler: (() -> ())? = nil) {
+    public func alertDecision(if condition: Bool = true, _ message: String? = nil, _ attributedMessage: NSAttributedString? = nil, title: String = "Warning", width: CGFloat? = nil, image: UIImage? = nil, imageWidth: CGFloat? = nil, imageTint: UIColor? = nil, sourceView: UIView? = nil, okButtonText: String = "OK", okHandler: (() -> ())? = nil, otherButtonText: String? = nil, otherHandler: (() -> ())? = nil, cancelButtonText: String = "Cancel", cancelHandler: (() -> ())? = nil) {
         
         if condition {
             Utility.mainThread {
-                AlertViewController.show(from: self, message: message, attributedMessage: attributedMessage, title: title, okButtonText: okButtonText, okHandler: okHandler, otherButtonText: otherButtonText, otherHandler: otherHandler, cancelButtonText: cancelButtonText, cancelHandler: cancelHandler)
+                AlertViewController.show(from: self, sourceView: sourceView, message: message, attributedMessage: attributedMessage, title: title, width: width, image: image, imageWidth: imageWidth, imageTint: imageTint, okButtonText: okButtonText, okHandler: okHandler, otherButtonText: otherButtonText, otherHandler: otherHandler, cancelButtonText: cancelButtonText, cancelHandler: cancelHandler)
             }
         } else {
             okHandler?()

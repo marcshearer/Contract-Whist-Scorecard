@@ -418,17 +418,12 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
     
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         
-        if collectionView.tag == bidCollectionTag {
-            // Bid collection - enable if in bid mode and not disabled
-            return (self.bidMode && bidButtonEnabled[indexPath.row])
-            
-        } else if collectionView.tag == playedCardCollectionTag {
-            // Played cards never interactive
-            return false
-            
-        } else {
+        if collectionView.tag < self.mirroredHand.handSuits.count {
             // Must be suits collection - enable if not in bid mode
             return !self.bidMode
+        } else {
+            // Played cards never interactive and bids now buttons
+            return false
         }
     }
     
@@ -829,6 +824,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
         } else {
             bidCell.bidButton.backgroundColor = Palette.bidButton.background.withAlphaComponent(0.25)
         }
+        bidCell.bidButton.isEnabled = enable
     }
     
     func cardsEnable(_ enable: Bool, suit matchSuit: Suit! = nil) {

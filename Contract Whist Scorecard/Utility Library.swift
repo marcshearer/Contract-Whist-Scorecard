@@ -588,32 +588,29 @@ class Utility {
 
     // MARK: - FaceTime ======================================================================== -
 
-    private class func faceTimeInternal(phoneNumber:String = "", video: Bool = false, checkOnly: Bool = false) -> Bool {
+    private class func faceTimeInternal(members: [String], video: Bool = false, checkOnly: Bool = false, completion: ((Bool)->())? = nil) -> Bool {
         var ok = false
-        var prefix: String
-        if video {
-            prefix = "facetime"
-        } else {
-            prefix = "facetime-audio"
-        }
         
-        if let faceTimeURL:URL = URL(string: "\(prefix)://\(phoneNumber)") {
+        let memberList = members.joined(separator: ";")
+        let urlString = "facetime-group://?remoteMembers=\(memberList)&isVideoEnabled=\(video ? 1 : 0)"
+        
+        if let faceTimeURL:URL = URL(string: urlString) {
             let application:UIApplication = UIApplication.shared
             if (application.canOpenURL(faceTimeURL)) {
                 ok = true
                 if !checkOnly {
-                    application.open(faceTimeURL)
+                    application.open(faceTimeURL,completionHandler: completion)
                 }
             }
         }
         return ok
     }
 
-    public class func faceTime(phoneNumber:String, video: Bool = false) {
+    public class func faceTime(members: [String], video: Bool = false, completion: ((Bool)->())? = nil) {
         if Utility.isSimulator {
-            Utility.getActiveViewController()?.alertDecision(phoneNumber, title: "", okButtonText: "Call", cancelButtonText: "Cancel")
-        } else if !Utility.faceTimeInternal(phoneNumber: phoneNumber, video: video) {
-            Utility.getActiveViewController()?.alertMessage("FaceTime not available")
+            Utility.getActiveViewController()?.alertDecision("Call \(members.toNaturalString())?", title: "FaceTime \(video ? "Video" : "Audio") Call", okButtonText: "Call", okHandler: { completion?(true)}, cancelButtonText: "Cancel", cancelHandler: { completion?(false)})
+        } else if !Utility.faceTimeInternal(members: members, video: video) {
+            Utility.getActiveViewController()?.alertMessage("FaceTime not available", okHandler: {completion?(false)})
         }
     }
 
@@ -621,8 +618,15 @@ class Utility {
         if Utility.isSimulator {
             return true
         } else {
-            return Utility.faceTimeInternal(video: video, checkOnly: true)
+            return Utility.faceTimeInternal(members: ["1234567890"], video: video, checkOnly: true)
         }
     }
 }
 
+extension Array where Element == String {
+    
+    public func toNaturalString() -> String {
+        return ListFormatter.localizedString(byJoining: self)
+    }
+    
+}

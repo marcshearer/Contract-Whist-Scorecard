@@ -5,7 +5,6 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
-        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -18,117 +17,150 @@
                         <rect key="frame" x="0.0" y="0.0" width="240" height="200"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="pBG-QZ-a8Y">
-                                <rect key="frame" x="8" y="0.0" width="224" height="50"/>
-                                <accessibility key="accessibilityConfiguration" identifier="title"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="50" id="dff-2x-LCh"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Message" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="XJF-ax-MaD">
-                                <rect key="frame" x="8" y="50" width="224" height="17"/>
-                                <accessibility key="accessibilityConfiguration" identifier="message"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uKe-UG-Cp5">
-                                <rect key="frame" x="0.0" y="159" width="240" height="41"/>
+                            <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mrK-Ry-T63">
+                                <rect key="frame" x="-100" y="-100" width="440" height="400"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="Krm-Am-6J1">
+                                    <rect key="frame" x="0.0" y="0.0" width="440" height="400"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                </view>
+                                <blurEffect style="systemThickMaterialDark"/>
+                            </visualEffectView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="G02-EV-dBe">
+                                <rect key="frame" x="0.0" y="0.0" width="240" height="200"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vlC-bm-MBM" userLabel="Horizontal Separator">
-                                        <rect key="frame" x="0.0" y="7" width="240" height="1"/>
-                                        <color key="backgroundColor" name="Separator"/>
-                                        <accessibility key="accessibilityConfiguration" identifier="horizontalSeparator"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="pBG-QZ-a8Y">
+                                        <rect key="frame" x="8" y="0.0" width="224" height="50"/>
+                                        <accessibility key="accessibilityConfiguration" identifier="title"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="1" id="HwS-1p-MkQ"/>
+                                            <constraint firstAttribute="height" constant="50" id="dff-2x-LCh"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Message" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="XJF-ax-MaD">
+                                        <rect key="frame" x="16" y="50" width="216" height="17"/>
+                                        <accessibility key="accessibilityConfiguration" identifier="message"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uKe-UG-Cp5">
+                                        <rect key="frame" x="0.0" y="159" width="240" height="41"/>
+                                        <subviews>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vlC-bm-MBM" userLabel="Horizontal Separator">
+                                                <rect key="frame" x="0.0" y="7" width="240" height="1"/>
+                                                <color key="backgroundColor" name="Separator"/>
+                                                <accessibility key="accessibilityConfiguration" identifier="horizontalSeparator"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="1" id="HwS-1p-MkQ"/>
+                                                </constraints>
+                                            </view>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Azx-e8-Uib" userLabel="OK Button">
+                                                <rect key="frame" x="0.0" y="8" width="78" height="33"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <state key="normal" title="OK"/>
+                                                <connections>
+                                                    <action selector="okPressed:" destination="5nE-wB-eav" eventType="touchUpInside" id="9Mn-B4-her"/>
+                                                </connections>
+                                            </button>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sne-98-wpW" userLabel="Other Vertical Separator">
+                                                <rect key="frame" x="78" y="8" width="1" height="33"/>
+                                                <color key="backgroundColor" name="Separator"/>
+                                                <accessibility key="accessibilityConfiguration" identifier="otherSeparator"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="1" id="R1x-JQ-tNv"/>
+                                                </constraints>
+                                            </view>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3VP-Pg-BCM" userLabel="Other Button">
+                                                <rect key="frame" x="79" y="8" width="80" height="33"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="80" id="CCI-fG-vnv"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <state key="normal" title="Other"/>
+                                                <connections>
+                                                    <action selector="otherPressed:" destination="5nE-wB-eav" eventType="touchUpInside" id="hpT-Pl-of5"/>
+                                                </connections>
+                                            </button>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JXa-6a-oVp" userLabel="Cancel Vertical Separator">
+                                                <rect key="frame" x="159" y="8" width="1" height="33"/>
+                                                <color key="backgroundColor" name="Separator"/>
+                                                <accessibility key="accessibilityConfiguration" identifier="cancelSeparator"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="1" id="3Rn-v5-gzP"/>
+                                                </constraints>
+                                            </view>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yXX-e4-3X5" userLabel="Cancel Button">
+                                                <rect key="frame" x="160" y="8" width="80" height="33"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="80" id="KBH-w0-adI"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <state key="normal" title="Cancel"/>
+                                                <connections>
+                                                    <action selector="cancelPressed:" destination="5nE-wB-eav" eventType="touchUpInside" id="7lP-e9-c8V"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                        <constraints>
+                                            <constraint firstAttribute="bottom" secondItem="yXX-e4-3X5" secondAttribute="bottom" id="Alh-ze-1NO"/>
+                                            <constraint firstAttribute="trailing" secondItem="yXX-e4-3X5" secondAttribute="trailing" id="BaR-em-0ga"/>
+                                            <constraint firstItem="JXa-6a-oVp" firstAttribute="leading" secondItem="3VP-Pg-BCM" secondAttribute="trailing" id="BsJ-oy-o9R"/>
+                                            <constraint firstItem="yXX-e4-3X5" firstAttribute="leading" secondItem="JXa-6a-oVp" secondAttribute="trailing" id="Cen-ZB-CTo"/>
+                                            <constraint firstItem="yXX-e4-3X5" firstAttribute="top" secondItem="vlC-bm-MBM" secondAttribute="bottom" id="Clw-3e-pIA"/>
+                                            <constraint firstItem="JXa-6a-oVp" firstAttribute="top" secondItem="vlC-bm-MBM" secondAttribute="bottom" id="Cmd-rV-wfQ"/>
+                                            <constraint firstItem="sne-98-wpW" firstAttribute="top" secondItem="vlC-bm-MBM" secondAttribute="bottom" id="GfT-MW-xhX"/>
+                                            <constraint firstItem="3VP-Pg-BCM" firstAttribute="top" secondItem="vlC-bm-MBM" secondAttribute="bottom" id="L4e-FK-I02"/>
+                                            <constraint firstItem="Azx-e8-Uib" firstAttribute="top" secondItem="vlC-bm-MBM" secondAttribute="bottom" id="UX5-nV-SXD"/>
+                                            <constraint firstAttribute="height" constant="41" id="VJs-cr-lq0"/>
+                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="41" id="ZVn-SC-Qv7"/>
+                                            <constraint firstAttribute="bottom" secondItem="Azx-e8-Uib" secondAttribute="bottom" id="bPR-6b-r0g"/>
+                                            <constraint firstItem="sne-98-wpW" firstAttribute="leading" secondItem="Azx-e8-Uib" secondAttribute="trailing" id="blC-Cy-8hn"/>
+                                            <constraint firstItem="3VP-Pg-BCM" firstAttribute="leading" secondItem="sne-98-wpW" secondAttribute="trailing" id="kAU-Xs-r1e"/>
+                                            <constraint firstAttribute="bottom" secondItem="JXa-6a-oVp" secondAttribute="bottom" id="kIG-tx-v7I"/>
+                                            <constraint firstAttribute="bottom" secondItem="sne-98-wpW" secondAttribute="bottom" id="kgP-a4-fcr"/>
+                                            <constraint firstAttribute="bottom" secondItem="3VP-Pg-BCM" secondAttribute="bottom" id="nxA-me-sif"/>
+                                            <constraint firstAttribute="trailing" secondItem="vlC-bm-MBM" secondAttribute="trailing" id="qdg-mZ-vNE"/>
+                                            <constraint firstItem="Azx-e8-Uib" firstAttribute="leading" secondItem="uKe-UG-Cp5" secondAttribute="leading" id="sHh-J0-plI"/>
+                                            <constraint firstItem="vlC-bm-MBM" firstAttribute="leading" secondItem="uKe-UG-Cp5" secondAttribute="leading" id="x2n-6y-TXi"/>
                                         </constraints>
                                     </view>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Azx-e8-Uib" userLabel="OK Button">
-                                        <rect key="frame" x="0.0" y="8" width="78" height="33"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <state key="normal" title="OK"/>
-                                        <connections>
-                                            <action selector="okPressed:" destination="5nE-wB-eav" eventType="touchUpInside" id="9Mn-B4-her"/>
-                                        </connections>
-                                    </button>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sne-98-wpW" userLabel="Other Vertical Separator">
-                                        <rect key="frame" x="78" y="8" width="1" height="33"/>
-                                        <color key="backgroundColor" name="Separator"/>
-                                        <accessibility key="accessibilityConfiguration" identifier="otherSeparator"/>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="XaI-6p-56a">
+                                        <rect key="frame" x="8" y="50" width="0.0" height="0.0"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="1" id="R1x-JQ-tNv"/>
+                                            <constraint firstAttribute="width" id="OLn-XA-NN3"/>
+                                            <constraint firstAttribute="width" secondItem="XaI-6p-56a" secondAttribute="height" multiplier="1:1" id="kOx-q5-9dr"/>
                                         </constraints>
-                                    </view>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3VP-Pg-BCM" userLabel="Other Button">
-                                        <rect key="frame" x="79" y="8" width="80" height="33"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="80" id="CCI-fG-vnv"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <state key="normal" title="Other"/>
-                                        <connections>
-                                            <action selector="otherPressed:" destination="5nE-wB-eav" eventType="touchUpInside" id="hpT-Pl-of5"/>
-                                        </connections>
-                                    </button>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JXa-6a-oVp" userLabel="Cancel Vertical Separator">
-                                        <rect key="frame" x="159" y="8" width="1" height="33"/>
-                                        <color key="backgroundColor" name="Separator"/>
-                                        <accessibility key="accessibilityConfiguration" identifier="cancelSeparator"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="1" id="3Rn-v5-gzP"/>
-                                        </constraints>
-                                    </view>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yXX-e4-3X5" userLabel="Cancel Button">
-                                        <rect key="frame" x="160" y="8" width="80" height="33"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="80" id="KBH-w0-adI"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <state key="normal" title="Cancel"/>
-                                        <connections>
-                                            <action selector="cancelPressed:" destination="5nE-wB-eav" eventType="touchUpInside" id="7lP-e9-c8V"/>
-                                        </connections>
-                                    </button>
+                                    </imageView>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
-                                    <constraint firstAttribute="bottom" secondItem="yXX-e4-3X5" secondAttribute="bottom" id="Alh-ze-1NO"/>
-                                    <constraint firstAttribute="trailing" secondItem="yXX-e4-3X5" secondAttribute="trailing" id="BaR-em-0ga"/>
-                                    <constraint firstItem="JXa-6a-oVp" firstAttribute="leading" secondItem="3VP-Pg-BCM" secondAttribute="trailing" id="BsJ-oy-o9R"/>
-                                    <constraint firstItem="yXX-e4-3X5" firstAttribute="leading" secondItem="JXa-6a-oVp" secondAttribute="trailing" id="Cen-ZB-CTo"/>
-                                    <constraint firstItem="yXX-e4-3X5" firstAttribute="top" secondItem="vlC-bm-MBM" secondAttribute="bottom" id="Clw-3e-pIA"/>
-                                    <constraint firstItem="JXa-6a-oVp" firstAttribute="top" secondItem="vlC-bm-MBM" secondAttribute="bottom" id="Cmd-rV-wfQ"/>
-                                    <constraint firstItem="sne-98-wpW" firstAttribute="top" secondItem="vlC-bm-MBM" secondAttribute="bottom" id="GfT-MW-xhX"/>
-                                    <constraint firstItem="3VP-Pg-BCM" firstAttribute="top" secondItem="vlC-bm-MBM" secondAttribute="bottom" id="L4e-FK-I02"/>
-                                    <constraint firstItem="Azx-e8-Uib" firstAttribute="top" secondItem="vlC-bm-MBM" secondAttribute="bottom" id="UX5-nV-SXD"/>
-                                    <constraint firstAttribute="height" constant="41" id="VJs-cr-lq0"/>
-                                    <constraint firstAttribute="bottom" secondItem="Azx-e8-Uib" secondAttribute="bottom" id="bPR-6b-r0g"/>
-                                    <constraint firstItem="sne-98-wpW" firstAttribute="leading" secondItem="Azx-e8-Uib" secondAttribute="trailing" id="blC-Cy-8hn"/>
-                                    <constraint firstItem="3VP-Pg-BCM" firstAttribute="leading" secondItem="sne-98-wpW" secondAttribute="trailing" id="kAU-Xs-r1e"/>
-                                    <constraint firstAttribute="bottom" secondItem="JXa-6a-oVp" secondAttribute="bottom" id="kIG-tx-v7I"/>
-                                    <constraint firstAttribute="bottom" secondItem="sne-98-wpW" secondAttribute="bottom" id="kgP-a4-fcr"/>
-                                    <constraint firstAttribute="bottom" secondItem="3VP-Pg-BCM" secondAttribute="bottom" id="nxA-me-sif"/>
-                                    <constraint firstAttribute="trailing" secondItem="vlC-bm-MBM" secondAttribute="trailing" id="qdg-mZ-vNE"/>
-                                    <constraint firstItem="Azx-e8-Uib" firstAttribute="leading" secondItem="uKe-UG-Cp5" secondAttribute="leading" id="sHh-J0-plI"/>
-                                    <constraint firstItem="vlC-bm-MBM" firstAttribute="leading" secondItem="uKe-UG-Cp5" secondAttribute="leading" id="x2n-6y-TXi"/>
+                                    <constraint firstAttribute="trailing" secondItem="XJF-ax-MaD" secondAttribute="trailing" constant="8" id="1FM-01-dCp"/>
+                                    <constraint firstAttribute="trailing" secondItem="uKe-UG-Cp5" secondAttribute="trailing" id="5QD-q4-dO8"/>
+                                    <constraint firstAttribute="bottom" secondItem="uKe-UG-Cp5" secondAttribute="bottom" id="MBw-v8-Yce"/>
+                                    <constraint firstItem="pBG-QZ-a8Y" firstAttribute="top" secondItem="G02-EV-dBe" secondAttribute="top" id="Nkg-f3-Bbj"/>
+                                    <constraint firstItem="uKe-UG-Cp5" firstAttribute="leading" secondItem="G02-EV-dBe" secondAttribute="leading" id="Thf-gO-ZGj"/>
+                                    <constraint firstItem="pBG-QZ-a8Y" firstAttribute="leading" secondItem="G02-EV-dBe" secondAttribute="leading" constant="8" id="UDM-wg-RNP"/>
+                                    <constraint firstItem="XJF-ax-MaD" firstAttribute="top" secondItem="pBG-QZ-a8Y" secondAttribute="bottom" id="W04-Pa-6Pc"/>
+                                    <constraint firstItem="XJF-ax-MaD" firstAttribute="leading" secondItem="XaI-6p-56a" secondAttribute="trailing" constant="8" id="dBG-4w-EHJ"/>
+                                    <constraint firstItem="XaI-6p-56a" firstAttribute="top" secondItem="pBG-QZ-a8Y" secondAttribute="bottom" id="sMt-2X-xW4"/>
+                                    <constraint firstItem="XaI-6p-56a" firstAttribute="leading" secondItem="G02-EV-dBe" secondAttribute="leading" constant="8" id="siO-Nn-Kpo"/>
+                                    <constraint firstAttribute="trailing" secondItem="pBG-QZ-a8Y" secondAttribute="trailing" constant="8" id="uAt-2D-vi8"/>
                                 </constraints>
                             </view>
                         </subviews>
-                        <viewLayoutGuide key="safeArea" id="rQR-2d-JyM"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <color key="backgroundColor" name="Clear"/>
                         <constraints>
-                            <constraint firstItem="pBG-QZ-a8Y" firstAttribute="leading" secondItem="DdC-tk-IvO" secondAttribute="leading" constant="8" id="2eP-Xb-2fP"/>
-                            <constraint firstItem="XJF-ax-MaD" firstAttribute="leading" secondItem="DdC-tk-IvO" secondAttribute="leading" constant="8" id="2hX-hW-mB1"/>
-                            <constraint firstItem="rQR-2d-JyM" firstAttribute="bottom" secondItem="uKe-UG-Cp5" secondAttribute="bottom" id="Hhi-EE-pn5"/>
-                            <constraint firstAttribute="trailing" secondItem="pBG-QZ-a8Y" secondAttribute="trailing" constant="8" id="NCH-RX-tnA"/>
-                            <constraint firstItem="XJF-ax-MaD" firstAttribute="top" secondItem="pBG-QZ-a8Y" secondAttribute="bottom" id="Xnm-bd-ghS"/>
-                            <constraint firstItem="pBG-QZ-a8Y" firstAttribute="top" secondItem="DdC-tk-IvO" secondAttribute="top" id="XzQ-bH-Wai"/>
-                            <constraint firstItem="rQR-2d-JyM" firstAttribute="trailing" secondItem="uKe-UG-Cp5" secondAttribute="trailing" id="cqd-vq-aUN"/>
-                            <constraint firstItem="uKe-UG-Cp5" firstAttribute="leading" secondItem="rQR-2d-JyM" secondAttribute="leading" id="he1-xJ-YJ3"/>
-                            <constraint firstAttribute="trailing" secondItem="XJF-ax-MaD" secondAttribute="trailing" constant="8" id="wip-ij-on4"/>
+                            <constraint firstAttribute="bottom" secondItem="G02-EV-dBe" secondAttribute="bottom" id="3MD-nI-2UZ"/>
+                            <constraint firstAttribute="trailing" secondItem="mrK-Ry-T63" secondAttribute="trailing" constant="-100" id="EwH-h6-eJx"/>
+                            <constraint firstItem="mrK-Ry-T63" firstAttribute="top" secondItem="DdC-tk-IvO" secondAttribute="top" constant="-100" id="SHI-Zu-gVg"/>
+                            <constraint firstAttribute="trailing" secondItem="G02-EV-dBe" secondAttribute="trailing" id="TD6-Th-hty"/>
+                            <constraint firstItem="G02-EV-dBe" firstAttribute="top" secondItem="DdC-tk-IvO" secondAttribute="top" id="WRK-l1-ZOD"/>
+                            <constraint firstItem="mrK-Ry-T63" firstAttribute="leading" secondItem="DdC-tk-IvO" secondAttribute="leading" constant="-100" id="dTQ-iH-LuK"/>
+                            <constraint firstAttribute="bottom" secondItem="mrK-Ry-T63" secondAttribute="bottom" constant="-100" id="k9e-n0-MUX"/>
+                            <constraint firstItem="G02-EV-dBe" firstAttribute="leading" secondItem="DdC-tk-IvO" secondAttribute="leading" id="poo-sj-8TQ"/>
                         </constraints>
                     </view>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
@@ -138,6 +170,9 @@
                         <outlet property="cancelButton" destination="yXX-e4-3X5" id="fPt-C4-W4h"/>
                         <outlet property="cancelButtonWidthConstraint" destination="KBH-w0-adI" id="337-aT-Mcb"/>
                         <outlet property="cancelSeparatorWidthConstraint" destination="3Rn-v5-gzP" id="gsb-pM-jtS"/>
+                        <outlet property="contentView" destination="G02-EV-dBe" id="PRh-Gq-mu5"/>
+                        <outlet property="imageView" destination="XaI-6p-56a" id="irf-Wr-5KA"/>
+                        <outlet property="imageWidthConstraint" destination="OLn-XA-NN3" id="WMA-Gu-auh"/>
                         <outlet property="messageLabel" destination="XJF-ax-MaD" id="Kmx-Qw-wIk"/>
                         <outlet property="okButton" destination="Azx-e8-Uib" id="uRe-w4-LfN"/>
                         <outlet property="otherButton" destination="3VP-Pg-BCM" id="gTx-mh-fQm"/>
@@ -145,8 +180,13 @@
                         <outlet property="otherSeparatorWidthConstraint" destination="R1x-JQ-tNv" id="EqW-PI-CBb"/>
                         <outlet property="titleLabel" destination="pBG-QZ-a8Y" id="ane-VQ-hxn"/>
                         <outletCollection property="separators" destination="vlC-bm-MBM" collectionClass="NSMutableArray" id="Fag-id-HtG"/>
-                        <outletCollection property="separators" destination="sne-98-wpW" collectionClass="NSMutableArray" id="YbE-qv-rLt"/>
                         <outletCollection property="separators" destination="JXa-6a-oVp" collectionClass="NSMutableArray" id="vwy-4N-zqg"/>
+                        <outletCollection property="separators" destination="sne-98-wpW" collectionClass="NSMutableArray" id="YbE-qv-rLt"/>
+                        <outletCollection property="buttons" destination="Azx-e8-Uib" collectionClass="NSMutableArray" id="eh5-wK-Qfv"/>
+                        <outletCollection property="buttons" destination="3VP-Pg-BCM" collectionClass="NSMutableArray" id="ZGH-qf-Xvo"/>
+                        <outletCollection property="buttons" destination="yXX-e4-3X5" collectionClass="NSMutableArray" id="ExP-p2-Rnb"/>
+                        <outletCollection property="imageInsets" destination="siO-Nn-Kpo" collectionClass="NSMutableArray" id="NX1-Ra-BSc"/>
+                        <outletCollection property="imageInsets" destination="dBG-4w-EHJ" collectionClass="NSMutableArray" id="o0i-LD-sb9"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Q2g-Vj-BR4" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -155,6 +195,9 @@
         </scene>
     </scenes>
     <resources>
+        <namedColor name="Clear">
+            <color red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <namedColor name="Separator">
             <color red="0.49411764705882355" green="0.49411764705882355" blue="0.49411764705882355" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>

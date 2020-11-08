@@ -66,6 +66,7 @@ class GameDetailPanelViewController: ScorecardViewController, UITableViewDataSou
         
         self.setDefaultColors()
         self.thisPlayer = Scorecard.game.enteredPlayerNumber(playerUUID: Scorecard.settings.thisPlayerUUID)
+        self.getLatestScores()
         self.sortScores()
         self.refresh()
         self.setupScoresSubscription()
@@ -162,6 +163,12 @@ class GameDetailPanelViewController: ScorecardViewController, UITableViewDataSou
         self.view.backgroundColor = Palette.rightGameDetailPanel.background
         self.normalLabels.forEach{ (label) in label.textColor = Palette.rightGameDetailPanel.text}
         self.strongLabels.forEach{ (label) in label.textColor = Palette.rightGameDetailPanel.strongText}
+    }
+    
+    private func getLatestScores() {
+        for playerNumber in 1...Scorecard.game.currentPlayers {
+            self.latestScores[playerNumber] = Scorecard.game.scores.totalScore(playerNumber: playerNumber)
+        }
     }
     
     private func setupScoresSubscription() {

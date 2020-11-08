@@ -52,7 +52,6 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
     private var haloWidth: CGFloat = 3.0
     private var dealerHaloWidth: CGFloat = 5.0
     private weak var observer: NSObjectProtocol?
-    private var faceTimeAvailable = false
     private var initialising = true
     private var cutCardView: [UILabel] = []
     private var smallScreen = false
@@ -105,8 +104,10 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
     }
     
     internal func continuePressed() {
-        self.willDismiss()
-        self.controllerDelegate?.didProceed()
+        self.faceTimeCall() {
+            self.willDismiss()
+            self.controllerDelegate?.didProceed()
+        }
     }
     
     internal func overrideSettingsPressed() {
@@ -173,11 +174,7 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
         // Setup buttons
         self.setupButtons()
         
-        if !self.readOnly {
-            self.checkFaceTimeAvailable()
-        }
-        
-        // Become delegate of selected players view
+      // Become delegate of selected players view
         self.selectedPlayersView.delegate = self
         
         // Set up help
@@ -508,19 +505,34 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
 
     }
     
-    private func checkFaceTimeAvailable() {
-        self.faceTimeAvailable = false
-        if (self.delegate?.gamePreviewHosting ?? false) && Scorecard.shared.commsDelegate?.connectionProximity == .online && Utility.faceTimeAvailable() {
-            var allBlank = true
-            if self.faceTimeAddress.count > 0 {
-                for (_, address) in self.faceTimeAddress {
-                    if address != "" {
-                        allBlank = false
-                        break
+    private func faceTimeCall(completion: (()->())? = nil) {
+        if Utility.faceTimeAvailable() {
+            var players: [(playerMO: PlayerMO, faceTimeAddress: String)] = []
+            for playerMO in self.selectedPlayers {
+                if let playerUUID = playerMO?.playerUUID {
+                    if let faceTimeAddress = self.faceTimeAddress[playerUUID] {
+                        players.append((playerMO!, faceTimeAddress))
                     }
                 }
             }
-            self.faceTimeAvailable = !allBlank
+            if !players.isEmpty {
+                let names = players.map{$0.playerMO.name!}.toNaturalString()
+                self.alertDecision("\(names) \(players.count == 1 ? "has" : "have") asked you to call them on FaceTime. Would you like to do this now?",
+                    title: "FaceTime Audio", width: min(400, self.view.frame.width * 0.9),
+                    image: UIImage(systemName: "phone.circle.fill")?.asTemplate, imageWidth: 80, imageTint: Palette.normal.themeText,
+                    okButtonText: "Yes",
+                    okHandler: {
+                        Utility.faceTime(members: players.map{$0.faceTimeAddress}) { (result) in
+                            completion?()
+                        }
+                    },
+                    cancelButtonText: "No")
+                
+            } else {
+                completion?()
+            }
+        } else {
+            completion?()
         }
     }
     

@@ -33,8 +33,8 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
     public weak var delegate: GamePreviewDelegate?
     
     // Properties to determine how view operates
-    public var selectedPlayers = [PlayerMO?]()          // Selected players passed in from player selection
-    private var faceTimeAddress: [String] = []          // FaceTime addresses for the above
+    public var selectedPlayers = [PlayerMO?]()                  // Selected players passed in from player selection
+    public var faceTimeAddress: [String: String] = [:]          // FaceTime addresses for the above
     private var readOnly = false
     private var formTitle = "Preview"
     private var smallFormTitle = "Preview"
@@ -256,13 +256,6 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
         }
     }
     
-    // MARK: - Action Handlers ================================================================ -
- 
-    @objc func faceTimePressed(_ button: UIButton) {
-        let playerNumber = button.tag
-        Utility.faceTime(phoneNumber: self.faceTimeAddress[playerNumber - 1])
-    }
-    
     // MARK: - Image download handlers =================================================== -
     
     func setImageDownloadNotification() -> NSObjectProtocol? {
@@ -292,6 +285,7 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
             self.updateSelectedPlayers(selectedPlayers)
         }
         self.delegate?.gamePreview?(moved: playerMO, to: slot)
+        self.refreshPlayers()
     }
     
     func selectedPlayersView(wasTappedOn slot: Int) {
@@ -462,6 +456,7 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
             for slot in 0..<Scorecard.shared.maxPlayers {
                 if slot < self.selectedPlayers.count {
                     self.selectedPlayersView.set(slot: slot, playerMO: self.selectedPlayers[slot]!)
+                    self.selectedPlayersView.set(slot: slot, faceTimeIsHidden: (self.faceTimeAddress[self.selectedPlayers[slot]!.playerUUID!] == nil))
                     if !(self.delegate?.gamePreview?(isConnected: self.selectedPlayers[slot]!) ?? true) {
                         self.selectedPlayersView.setAlpha(slot: slot, alpha: 0.3)
                     } else {
@@ -518,7 +513,7 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
         if (self.delegate?.gamePreviewHosting ?? false) && Scorecard.shared.commsDelegate?.connectionProximity == .online && Utility.faceTimeAvailable() {
             var allBlank = true
             if self.faceTimeAddress.count > 0 {
-                for address in self.faceTimeAddress {
+                for (_, address) in self.faceTimeAddress {
                     if address != "" {
                         allBlank = false
                         break
@@ -776,7 +771,6 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
         gamePreviewViewController.smallFormTitle = smallFormTitle ?? formTitle
         gamePreviewViewController.backText = backText
         gamePreviewViewController.readOnly = readOnly
-        gamePreviewViewController.faceTimeAddress = faceTimeAddress
         gamePreviewViewController.delegate = delegate
         gamePreviewViewController.controllerDelegate = appController
                 

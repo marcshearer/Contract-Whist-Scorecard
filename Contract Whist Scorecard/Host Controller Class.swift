@@ -623,6 +623,10 @@ enum InviteStatus {
     
     private func refreshPlayers() {
         self.gamePreviewViewController?.selectedPlayers = self.playerData.map {$0.playerMO}
+        self.gamePreviewViewController?.faceTimeAddress = [:]
+        for player in self.playerData {
+            self.gamePreviewViewController?.faceTimeAddress[player.playerUUID] = player.faceTimeAddress
+        }
         self.gamePreviewViewController?.refreshPlayers()
         _ = self.statusMessage()
     }

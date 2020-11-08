@@ -258,10 +258,8 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
             case .onlineGames:
                 if let option = OnlineGameOptions(rawValue: indexPath.row) {
                     switch option {
-                    case .facetimeCalls:
-                        height = 0 // TODO reinstate
                     case .facetimeAddress:
-                        height = 0 // TODO reinstate (facetimeEnabled ? self.rowHeight : 0.0)
+                        height = (facetimeEnabled ? self.rowHeight : 0.0)
                     default:
                         height =  self.rowHeight
                     }
@@ -1872,8 +1870,7 @@ extension SettingsViewController {
         
         self.helpView.add("This switches a vibration on/off when it is your turn to bid or play.", views: [self.settingsTableView], section: Sections.onlineGames.rawValue, item: OnlineGameOptions.vibrateAlert.rawValue, horizontalBorder: -16)
         
-        // TODO Reinstate
-        // self.helpView.addElement("This allows you to specify a facetime address which will be used to set up a group facetime audio call during online games", views: [self.settingsTableView], section: Sections.onlineGames.rawValue, item: OnlineGameOptions.facetimeCalls.rawValue, horizontalBorder: -16)
+        self.helpView.add("This allows you to specify a facetime address which will be used to set up a group facetime audio call during online games", views: [self.settingsTableView], section: Sections.onlineGames.rawValue, item: OnlineGameOptions.facetimeCalls.rawValue, horizontalBorder: -16)
         
         self.helpView.add("This switches visibility of games you are scoring on/off to allow/prevent others from viewing the scorecard.", views: [self.settingsTableView], section: Sections.onlineGames.rawValue, item: OnlineGameOptions.shareScorecard.rawValue, horizontalBorder: -16)
 

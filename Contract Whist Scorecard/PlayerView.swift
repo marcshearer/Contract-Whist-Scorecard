@@ -46,8 +46,10 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
     public var playerMO: PlayerMO?
     public var haloWidth: CGFloat = 0.0
     public var allowHaloWidth: CGFloat = 0.0
+    private var faceTimeImageView: UIImageView!
+    private var faceTimeIsHidden = false
     
-    init(type: PlayerViewType, parentViewController: ScorecardViewController? = nil, parentView: UIView! = nil, width: CGFloat, height: CGFloat, tag: Int = 0, haloWidth: CGFloat = 0.0, allowHaloWidth: CGFloat = 0.0, tapGestureDelegate: UIGestureRecognizerDelegate? = nil, cameraTintColor: UIColor? = nil) {
+    init(type: PlayerViewType, parentViewController: ScorecardViewController? = nil, parentView: UIView! = nil, width: CGFloat, height: CGFloat, tag: Int = 0, haloWidth: CGFloat = 0.0, allowHaloWidth: CGFloat = 0.0, tapGestureDelegate: UIGestureRecognizerDelegate? = nil, cameraTintColor: UIColor? = nil, faceTimeTintColor: UIColor? = nil) {
         
         // Save properties
         self.parentViewController = parentViewController
@@ -65,6 +67,15 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
     
         parentView.addSubview(self.thumbnailView)
         parentView.bringSubviewToFront(self.thumbnailView)
+        
+        // Setup FaceTime image
+        self.faceTimeImageView = UIImageView(frame: CGRect())
+        self.setFaceTimeFrame()
+        self.faceTimeImageView.image = UIImage(named: "phone")?.asTemplate
+        self.faceTimeImageView.tintColor = faceTimeTintColor ?? Palette.normal.themeText
+        parentView.addSubview(self.faceTimeImageView)
+        parentView.bringSubviewToFront(self.faceTimeImageView)
+        self.set(faceTimeIsHidden: true)
         
         // Setup tap gesture
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(PlayerView.tapSelector(_:)))
@@ -91,6 +102,7 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
         }
         set (newValue) {
             self.thumbnailView.alpha = newValue
+            self.faceTimeImageView.alpha = newValue
         }
     }
     
@@ -100,6 +112,7 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
         }
         set (newValue) {
             self.thumbnailView.set(frame: newValue)
+            self.setFaceTimeFrame()
         }
     }
     
@@ -118,6 +131,7 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
         }
         set(newValue) {
             self.thumbnailView.isHidden = newValue
+            self.faceTimeImageView.isHidden = newValue || faceTimeIsHidden
         }
     }
     
@@ -125,6 +139,7 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
         self.inUse = true
         self.playerMO = nil
         self.thumbnailView.set(data: data, name: name, initials: initials, nameHeight: nameHeight ?? 30.0, alpha: alpha)
+        self.setFaceTimeFrame()
         self.stopDeleteWiggle()
         self.updateCameraImage()
     }
@@ -133,6 +148,11 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
         self.set(data: playerMO.thumbnail, name: playerMO.name, nameHeight: nameHeight)
         self.playerMO = playerMO
         self.updateCameraImage()
+    }
+    
+    public func set(faceTimeIsHidden: Bool) {
+        self.faceTimeIsHidden = faceTimeIsHidden
+        self.faceTimeImageView.isHidden = self.isHidden || self.faceTimeIsHidden
     }
     
     public func set(haloWidth: CGFloat, allowHaloWidth: CGFloat) {
@@ -147,6 +167,7 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
     
     public func set(thumbnailAlpha: CGFloat) {
         self.thumbnailView.set(thumbnailAlpha: thumbnailAlpha)
+        self.faceTimeImageView.alpha = thumbnailAlpha
     }
     
     public func clear(initials: String? = nil, keepInUse: Bool = false) {
@@ -185,8 +206,15 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
         }
     }
     
+    private func setFaceTimeFrame() {
+        let frame = self.thumbnailView.frame
+        let size = frame.width * 0.4
+        self.faceTimeImageView.frame = CGRect(x: frame.maxX - (size * 0.5), y: frame.maxY  - self.thumbnailView.nameHeight - (size * 0.7), width: size, height: size)
+    }
+    
     public func removeFromSuperview() {
         self.thumbnailView.removeFromSuperview()
+        self.faceTimeImageView.removeFromSuperview()
     }
     
     public func startDeleteWiggle() {

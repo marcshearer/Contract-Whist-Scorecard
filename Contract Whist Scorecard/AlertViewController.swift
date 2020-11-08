@@ -19,7 +19,7 @@ class AlertViewController: UIViewController, UIPopoverPresentationControllerDele
     private var okHandler: (()->())?
     private var cancelHandler: (()->())?
     private var otherHandler: (()->())?
-    private var messageText: String?
+    private var messageText: NSAttributedString?
     private var titleText: String?
     private var extraHeight: CGFloat = 0
     private var okButtonText: String?
@@ -30,6 +30,7 @@ class AlertViewController: UIViewController, UIPopoverPresentationControllerDele
     private var rotated = false
     private var sourceView: UIView?
     private var activityIndicator: UIActivityIndicatorView?
+    private var focusView: FocusView!
     
     @IBOutlet private weak var messageLabel: UILabel!
     @IBOutlet private weak var titleLabel: UILabel!
@@ -44,18 +45,21 @@ class AlertViewController: UIViewController, UIPopoverPresentationControllerDele
     @IBOutlet private var separators: [UIView]!
     
     @IBAction func okPressed(_ sender: UIButton) {
+        self.view.isUserInteractionEnabled = false
         self.dismiss(animated: false) {
             self.okHandler?()
         }
     }
 
     @IBAction func otherPressed(_ sender: UIButton) {
+        self.view.isUserInteractionEnabled = false
         self.dismiss(animated: false) {
             self.otherHandler?()
         }
     }
 
     @IBAction func cancelPressed(_ sender: UIButton) {
+        self.view.isUserInteractionEnabled = false
         self.dismiss(animated: false) {
             self.cancelHandler?()
         }
@@ -65,7 +69,7 @@ class AlertViewController: UIViewController, UIPopoverPresentationControllerDele
         super.viewDidLoad()
         
         self.titleLabel.text = titleText
-        self.messageLabel.text = messageText
+        self.messageLabel.attributedText = messageText
         self.okButton.setTitle(okButtonText, for: .normal)
         self.otherButton.setTitle(otherButtonText ?? "", for: .normal)
         self.cancelButton.setTitle(cancelButtonText ?? "", for: .normal)
@@ -143,8 +147,13 @@ class AlertViewController: UIViewController, UIPopoverPresentationControllerDele
     }
     
     public func set(message: String) {
+        self.messageText = NSAttributedString(markdown: message)
+        self.messageLabel.attributedText = self.messageText
+    }
+
+    public func set(message: NSAttributedString) {
         self.messageText = message
-        self.messageLabel.text = message
+        self.messageLabel.attributedText = self.messageText
     }
     
     public func set(button: AlertViewButton, text: String? = nil) {
@@ -164,12 +173,18 @@ class AlertViewController: UIViewController, UIPopoverPresentationControllerDele
         self.view.layoutIfNeeded()
     }
     
-    @discardableResult public static func show(from parentViewController: UIViewController, _ message: String, title: String = "Warning", extraHeight: CGFloat = 0.0, okButtonText: String? = "OK", okHandler: (() -> ())? = nil, otherButtonText: String? = nil, otherHandler: (() -> ())? = nil, cancelButtonText: String? = nil, cancelHandler: (() -> ())? = nil) -> AlertViewController {
+    @discardableResult public static func show(from parentViewController: UIViewController, message: String? = nil, attributedMessage: NSAttributedString? = nil, title: String = "Warning", extraHeight: CGFloat = 0.0, okButtonText: String? = "OK", okHandler: (() -> ())? = nil, otherButtonText: String? = nil, otherHandler: (() -> ())? = nil, cancelButtonText: String? = nil, cancelHandler: (() -> ())? = nil) -> AlertViewController {
         
         let storyboard = UIStoryboard(name: "AlertViewController", bundle: nil)
         let viewController = storyboard.instantiateViewController(withIdentifier: "AlertViewController") as! AlertViewController
-            
-        viewController.messageText = message
+        
+        if let attributedMessage = attributedMessage {
+            viewController.messageText = attributedMessage
+        } else if let message = message {
+            viewController.messageText = NSAttributedString(markdown: message)
+        } else {
+            viewController.messageText = nil
+        }
         viewController.titleText = title
         viewController.extraHeight = extraHeight
         viewController.okButtonText = okButtonText
@@ -180,11 +195,11 @@ class AlertViewController: UIViewController, UIPopoverPresentationControllerDele
         viewController.otherHandler = otherHandler
         
         let (width, _) = viewController.setupWidths()
-        let height = message.labelHeight(width: width - 16, font: UIFont.systemFont(ofSize: 14.0)) + extraHeight + 100
+        let height = viewController.messageText!.labelHeight(width: width - 16, font: UIFont.systemFont(ofSize: 14.0)) + extraHeight + 100
         
         let sourceView = parentViewController.view
         let sourceRect = CGRect(origin: CGPoint(x: sourceView!.frame.width / 2, y: sourceView!.frame.height / 2), size: CGSize())
-        let popoverSize = CGSize(width: width, height: height)
+        let popoverSize = CGSize(width: width + 20, height: height + 20)
         
         viewController.sourceView = sourceView
         viewController.modalPresentationStyle = UIModalPresentationStyle.popover

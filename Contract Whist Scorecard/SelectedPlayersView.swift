@@ -121,6 +121,10 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
         return self.playerViews[slot].thumbnailView.convert(CGPoint(x: 0, y: 0), to: view)
     }
     
+    public func set(slot: Int, faceTimeIsHidden: Bool) {
+        self.playerViews[slot].set(faceTimeIsHidden: faceTimeIsHidden)
+    }
+    
     public func freeSlot() -> Int? {
         return self.playerViews.firstIndex(where: { $0.inUse == false })
     }
@@ -237,7 +241,7 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
         
         for index in 0..<Scorecard.shared.maxPlayers {
             
-            let playerView = PlayerView(type: .selected, parentView: self.contentView, width: self.width, height: self.height, tag: index, haloWidth: self.haloWidth, allowHaloWidth: self.allowHaloWidth)
+            let playerView = PlayerView(type: .selected, parentView: self.contentView, width: self.width, height: self.height, tag: index, haloWidth: self.haloWidth, allowHaloWidth: self.allowHaloWidth, faceTimeTintColor: Palette.tableTop.themeText)
             playerView.delegate = self
             playerView.set(textColor: Palette.tableTop.contrastText)
             self.clear(playerView: playerView, slot: index)
@@ -413,7 +417,6 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
                                 // Call back calling view to see if they want to do anything
                                 self.delegate?.selectedPlayersView?(moved: playerMO!, to: toSlot)
                             }
-                            
                         }
                         
                     }

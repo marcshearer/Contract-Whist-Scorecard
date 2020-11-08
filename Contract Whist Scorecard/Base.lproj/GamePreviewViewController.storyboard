@@ -34,10 +34,10 @@
                                 </connections>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kP9-VZ-fcb" userLabel="Top Section">
-                                <rect key="frame" x="0.0" y="88" width="375" height="309"/>
+                                <rect key="frame" x="0.0" y="88" width="375" height="96"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nKd-io-ud9" customClass="SelectedPlayersView" customModule="Whist" customModuleProvider="target">
-                                        <rect key="frame" x="30" y="16" width="315" height="259.66666666666669"/>
+                                        <rect key="frame" x="30" y="16" width="315" height="80.666666666666671"/>
                                         <color key="backgroundColor" name="Clear"/>
                                         <accessibility key="accessibilityConfiguration" identifier="selectedPlayers"/>
                                         <constraints>
@@ -59,7 +59,7 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OvE-wK-XoH" userLabel="Upper Middle Section">
-                                <rect key="frame" x="0.0" y="397" width="375" height="38"/>
+                                <rect key="frame" x="0.0" y="184" width="375" height="38"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eVj-U8-RFG" customClass="ShadowButton" customModule="Whist" customModuleProvider="target">
                                         <rect key="frame" x="137.66666666666666" y="8" width="100" height="30"/>
@@ -83,13 +83,13 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" verticalHuggingPriority="1" verticalCompressionResistancePriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="iDT-Xi-tM5" userLabel="Lower Middle Section">
-                                <rect key="frame" x="0.0" y="435" width="375" height="293"/>
+                                <rect key="frame" x="0.0" y="222" width="375" height="0.0"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" verticalCompressionResistancePriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="x89-xH-iQy" userLabel="Left View">
-                                        <rect key="frame" x="0.0" y="0.0" width="202.66666666666666" height="293"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="202.66666666666666" height="0.0"/>
                                         <subviews>
                                             <view tag="1" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FyF-vn-V6o" userLabel="Cut for Dealer Button" customClass="ImageButton" customModule="Whist" customModuleProvider="target">
-                                                <rect key="frame" x="25.333333333333329" y="70.666666666666671" width="152" height="151.66666666666663"/>
+                                                <rect key="frame" x="25.333333333333329" y="-76" width="152" height="152"/>
                                                 <viewLayoutGuide key="safeArea" id="Epv-wr-w77"/>
                                                 <color key="backgroundColor" name="Clear"/>
                                                 <constraints>
@@ -133,10 +133,10 @@
                                         </variation>
                                     </view>
                                     <view contentMode="scaleToFill" verticalCompressionResistancePriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="Bs3-BT-kuE" userLabel="Right View">
-                                        <rect key="frame" x="172.66666666666663" y="0.0" width="202.33333333333337" height="293"/>
+                                        <rect key="frame" x="172.66666666666663" y="0.0" width="202.33333333333337" height="0.0"/>
                                         <subviews>
                                             <view tag="2" contentMode="scaleToFill" verticalHuggingPriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="xXV-k4-gfB" userLabel="Next Dealer Button" customClass="ImageButton" customModule="Whist" customModuleProvider="target">
-                                                <rect key="frame" x="25" y="70.666666666666671" width="152" height="151.66666666666663"/>
+                                                <rect key="frame" x="25" y="-76" width="152" height="152"/>
                                                 <viewLayoutGuide key="safeArea" id="oxI-0X-Fyz"/>
                                                 <color key="backgroundColor" name="Clear"/>
                                                 <constraints>
@@ -179,7 +179,7 @@
                                         </variation>
                                     </view>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="PUR-r5-ySO">
-                                        <rect key="frame" x="0.0" y="106.66666666666663" width="375" height="80"/>
+                                        <rect key="frame" x="0.0" y="-40" width="375" height="80"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="80" id="aF4-bC-pDj"/>
                                         </constraints>
@@ -206,7 +206,7 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d8e-Bu-nij" userLabel="Bottom Section">
-                                <rect key="frame" x="0.0" y="728" width="375" height="50"/>
+                                <rect key="frame" x="0.0" y="222" width="375" height="50"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Jbr-Nz-gFc" userLabel="Continue Button" customClass="ShadowButton" customModule="Whist" customModuleProvider="target">
                                         <rect key="frame" x="75" y="8" width="225" height="50"/>

@@ -778,7 +778,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
         self.showWhisper(message, hideAfter: 10.0)
      }
     
-    public func connect(row: Int, faceTimeAddress: String) {
+    public func connect(row: Int, faceTimeAddress: String?) {
         if row < available.count {
             if let peer = available[row].peer {
                 if self.connect(peer: peer, faceTimeAddress: faceTimeAddress) {

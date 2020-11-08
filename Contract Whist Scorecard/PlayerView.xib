@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PlayerView" customModule="Whist" customModuleProvider="target">
+            <connections>
+                <outlet property="_thumbnailView" destination="YKn-V5-Qet" id="0Vs-VU-30e"/>
+                <outlet property="contentView" destination="iN0-l3-epB" id="5Oy-Cy-N11"/>
+                <outlet property="faceTimeImageView" destination="49b-Cd-6ys" id="GUW-1F-q5v"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" userLabel="Content View">
+            <rect key="frame" x="0.0" y="0.0" width="75" height="100"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YKn-V5-Qet" customClass="ThumbnailView" customModule="Whist" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="0.0" width="75" height="100"/>
+                    <color key="backgroundColor" name="Clear"/>
+                </view>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="phone" translatesAutoresizingMaskIntoConstraints="NO" id="49b-Cd-6ys" userLabel="FaceTime Image View">
+                    <rect key="frame" x="40" y="45" width="30" height="30"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="30" id="3XY-3b-fn6"/>
+                        <constraint firstAttribute="width" secondItem="49b-Cd-6ys" secondAttribute="height" multiplier="1:1" id="Ei2-MX-u3n"/>
+                    </constraints>
+                </imageView>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <color key="backgroundColor" name="Clear"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="YKn-V5-Qet" secondAttribute="bottom" id="4bp-7y-Wiz"/>
+                <constraint firstAttribute="bottom" secondItem="49b-Cd-6ys" secondAttribute="bottom" constant="25" id="OIm-l0-dkn"/>
+                <constraint firstItem="YKn-V5-Qet" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="VuY-Tc-iHJ"/>
+                <constraint firstItem="YKn-V5-Qet" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="X0i-ga-qEB"/>
+                <constraint firstAttribute="trailing" secondItem="49b-Cd-6ys" secondAttribute="trailing" constant="5" id="mpm-mn-RZO"/>
+                <constraint firstAttribute="trailing" secondItem="YKn-V5-Qet" secondAttribute="trailing" id="yD6-R4-wn7"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="70" y="63"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="phone" width="25.5" height="28"/>
+        <namedColor name="Clear">
+            <color red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+    </resources>
+</document>

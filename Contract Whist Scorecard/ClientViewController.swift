@@ -652,7 +652,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
                 message = "Some players may have been corrupted during synchronisation and are being rebuilt"
             }
             
-            self.reconcileAlertViewController = AlertViewController.show(from: self, message, title: "Rebuild Players", extraHeight: 30, okButtonText: nil)
+            self.reconcileAlertViewController = AlertViewController.show(from: self, message: message, title: "Rebuild Players", extraHeight: 30, okButtonText: nil)
 
             //add the activity indicator
             self.reconcileAlertViewController.activityIndicator(isHidden: false, offset: 30)
@@ -1019,7 +1019,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     private func selectPeer(_ item: Int) {
         let availableFound = availablePeers[item]
         self.checkFaceTime(peer: availableFound, completion: { (faceTimeAddress) in
-            self.clientController.connect(row: item, faceTimeAddress: faceTimeAddress ?? "")
+            self.clientController.connect(row: item, faceTimeAddress: faceTimeAddress ?? nil)
         })
         
         // Move menu to in-game mode
@@ -1028,7 +1028,8 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     
     private func checkFaceTime(peer: AvailablePeer, completion: @escaping (String?)->()) {
         if peer.proximity == .online && Scorecard.activeSettings.faceTimeAddress != "" && Utility.faceTimeAvailable() {
-            self.alertDecision("\nWould you like the host to call you back on FaceTime at '\(Scorecard.activeSettings.faceTimeAddress)'?\n\nNote that this will make this address visible to the host",
+            let host = peer.name ?? "the host"
+            self.alertDecision("\nWould you like \(host) to call you back on FaceTime at\n\n@*/\(Scorecard.activeSettings.faceTimeAddress.rtrim())@*/\n\n so that you can chat while you play?\n\nNote that this will make this address visible to \(host).",
                 title: "FaceTime",
                 okButtonText: "Yes",
                 okHandler: {

@@ -19,39 +19,23 @@ extension UIViewController {
         case lock = 1305
     }
 
-    public func alertMessage(_ message: String, title: String = "Warning", buttonText: String = "OK", okHandler: (() -> ())? = nil) {
+    public func alertMessage(if condition: Bool = true, _ message: String? = nil, _ attributedMessage: NSAttributedString? = nil, title: String = "Warning", buttonText: String = "OK", okHandler: (() -> ())? = nil) {
         
-        func alertMessageCompletion(alertAction: UIAlertAction) {
-            if okHandler != nil {
-                okHandler!()
+        if condition {
+            Utility.mainThread {
+                AlertViewController.show(from: self, message: message, attributedMessage: attributedMessage, title: title, okButtonText: buttonText, okHandler: okHandler)
             }
-        }
-        
-        Utility.mainThread {
-            AlertViewController.show(from: self, message, title: title, okButtonText: buttonText, okHandler: okHandler)
-        }
-    }
-    
-    public func alertMessage(if condition: Bool, _ message: String!, title: String = "Warning", buttonText: String! = "OK", okHandler: @escaping () -> ()) {
-        // Pop up alert message if condition is true and execute handler on exit - else execute handler without alert
-        if condition {
-            self.alertMessage(message, title: title, buttonText: buttonText, okHandler: okHandler)
         } else {
-            okHandler()
+            okHandler?()
         }
     }
 
-    public func alertDecision(_ message: String, title: String = "Warning", okButtonText: String = "OK", okHandler: (() -> ())? = nil, otherButtonText: String? = nil, otherHandler: (() -> ())? = nil, cancelButtonText: String = "Cancel", cancelHandler: (() -> ())? = nil) {
+    public func alertDecision(if condition: Bool = true, _ message: String? = nil, _ attributedMessage: NSAttributedString? = nil, title: String = "Warning", okButtonText: String = "OK", okHandler: (() -> ())? = nil, otherButtonText: String? = nil, otherHandler: (() -> ())? = nil, cancelButtonText: String = "Cancel", cancelHandler: (() -> ())? = nil) {
         
-        Utility.mainThread {
-            AlertViewController.show(from: self, message, title: title, okButtonText: okButtonText, okHandler: okHandler, otherButtonText: otherButtonText, otherHandler: otherHandler, cancelButtonText: cancelButtonText, cancelHandler: cancelHandler)
-        }
-    }
-
-    public func alertDecision(if condition: Bool,_ message: String, title: String = "Warning", okButtonText: String = "OK", okHandler: (() -> ())? = nil, otherButtonText: String? = nil, otherHandler: (() -> ())? = nil, cancelButtonText: String = "Cancel", cancelHandler: (() -> ())? = nil) {
-        // Pop up alert decision if condition is true and execute handler on exit - else execute ok handler without alert
         if condition {
-            self.alertDecision(message, title: title, okButtonText: okButtonText, okHandler: okHandler, otherButtonText: otherButtonText, otherHandler: otherHandler, cancelButtonText: cancelButtonText, cancelHandler: cancelHandler)
+            Utility.mainThread {
+                AlertViewController.show(from: self, message: message, attributedMessage: attributedMessage, title: title, okButtonText: okButtonText, okHandler: okHandler, otherButtonText: otherButtonText, otherHandler: otherHandler, cancelButtonText: cancelButtonText, cancelHandler: cancelHandler)
+            }
         } else {
             okHandler?()
         }

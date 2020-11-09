@@ -61,7 +61,6 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
     private var cutting = false
     private var autoStarting = false
     private var alreadyDrawing = false
-    private var faceTimeCall = false
     
     // MARK: - IB Outlets ================================================================ -
     
@@ -117,7 +116,11 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
     }
     
     @IBAction func faceTimePressed(_ sender: UIButton) {
-        self.faceTimeCall.toggle()
+        // Toggle address in game from settings
+        Scorecard.game.faceTimeAddress = (Scorecard.game.faceTimeAddress == nil ? Scorecard.activeSettings.faceTimeAddress : nil)
+        // Send it
+        Scorecard.shared.sendFaceTimeAddress()
+        // Refresh UI
         self.setupFaceTimeButton()
     }
     
@@ -180,8 +183,8 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
         
         // Setup buttons
         self.setupButtons()
-        
-      // Become delegate of selected players view
+                
+        // Become delegate of selected players view
         self.selectedPlayersView.delegate = self
         
         // Set up help
@@ -364,6 +367,9 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
     }
     
     private func updateButtons() {
+        
+        self.bottomSectionHeightConstraint.constant = (ScorecardUI.landscapePhone() ? 0.0 : ((self.menuController?.isVisible ?? false) ? 75 : 58) + (self.view.safeAreaInsets.bottom == 0 ? 8.0 : 0.0))
+        
         if self.readOnly {
             self.banner.setButton("override", isHidden: true)
             self.leftViewLeadingConstraint.constant = actionButtonView.frame.width * 0.25
@@ -372,7 +378,6 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
             // Hide / show buttons dependent on format
             self.banner.setButton("continue", isHidden: !ScorecardUI.landscapePhone())
             self.continueButton.isHidden = ScorecardUI.landscapePhone()
-            self.bottomSectionHeightConstraint.constant = (ScorecardUI.landscapePhone() ? 0.0 : ((self.menuController?.isVisible ?? false) ? 75 : 58) + (self.view.safeAreaInsets.bottom == 0 ? 8.0 : 0.0))
             self.banner.setButton("override", isHidden: false)
             
             self.leftViewLeadingConstraint.constant = 0.0
@@ -413,14 +418,16 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
         
         self.faceTimeButton.isHidden = (Scorecard.activeSettings.faceTimeAddress == "" || self.gameMode != .joining || Scorecard.shared.commsDelegate?.connectionProximity != .online)
         
-        if self.faceTimeCall {
-            self.faceTimeButton.setTitle("Cancel FaceTime request", for: .normal)
-            self.faceTimeButton.shadowSize = CGSize(width: 5, height: 5)
-            color = Palette.confirmButton
-        } else {
-            self.faceTimeButton.setTitle("Request FaceTime call", for: .normal)
+        if Scorecard.game.faceTimeAddress != nil {
+            color = Palette.continueButton
+            let title = NSAttributedString(imageName: "system.phone.down.fill", color: color.contrastText) + "  Cancel FaceTime Call"
+            self.faceTimeButton.setTitle(title)
             self.faceTimeButton.shadowSize = .zero
-            color = Palette.otherButton
+        } else {
+            color = Palette.confirmButton
+            let title = NSAttributedString(imageName: "system.phone.fill.arrow.down.left", color: color.contrastText) + "  Request FaceTime Call"
+            self.faceTimeButton.setTitle(title)
+            self.faceTimeButton.shadowSize = CGSize(width: 5, height: 5)
         }
         
         self.faceTimeButton.setBackgroundColor(color.background)
@@ -555,7 +562,8 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
                             completion?()
                         }
                     },
-                    cancelButtonText: "No")
+                    cancelButtonText: "No",
+                    cancelHandler: completion)
                 
             } else {
                 completion?()

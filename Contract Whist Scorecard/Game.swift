@@ -76,6 +76,9 @@ class Game {
     /** Deal history */
     public var dealHistory: [Int : Deal] = [:]
     
+    /** FaceTime Address*/
+    public var faceTimeAddress: String?
+    
     /** Game complete notification sent */
     public var gameCompleteNotificationSent = false
 
@@ -219,6 +222,7 @@ class Game {
         self.inProgress = false
         self.datePlayed = nil
         self.gameUUID = nil
+        self.faceTimeAddress = nil
         self.deal = nil
         
         // Reset game managed object

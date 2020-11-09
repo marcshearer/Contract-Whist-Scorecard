@@ -424,6 +424,10 @@ enum InviteStatus {
                     }
                     Scorecard.shared.refreshState(from: self, to: peer)
                     self.refreshPlayers()
+                case "faceTimeAddress":
+                    // Face time address update
+                    playerData.faceTimeAddress = data?["faceTimeAddress"] as? String
+                    self.refreshPlayers()
                 default:
                     // Try scorecard generic handler
                     Scorecard.shared.didReceiveData(descriptor: descriptor, data: data, from: peer)

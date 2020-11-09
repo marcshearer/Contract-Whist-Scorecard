@@ -64,6 +64,10 @@ class Recovery {
         UserDefaults.standard.set(online, forKey: "recoveryOnline")
         UserDefaults.standard.synchronize()
     }
+    
+    func saveFaceTimeAddress() {
+        UserDefaults.standard.set(Scorecard.game.faceTimeAddress, forKey: "recoveryfaceTimeAddress")
+    }
        
     public func saveBid(round: Int, playerNumber: Int) {
         let key = "recoveryBid\(round)-\(playerNumber)"
@@ -237,6 +241,9 @@ class Recovery {
         // Reload game unique key / date
         Scorecard.game.datePlayed = UserDefaults.standard.object(forKey: "recoveryDatePlayed") as? Date
         Scorecard.game.gameUUID = UserDefaults.standard.string(forKey: "recoveryGameUUID")
+        
+        // Reload facetime address
+        Scorecard.game.faceTimeAddress = UserDefaults.standard.string(forKey: "recoveryFaceTimeAddress")
         
         if Scorecard.game.gameComplete() {
             // Try to reload managed objects

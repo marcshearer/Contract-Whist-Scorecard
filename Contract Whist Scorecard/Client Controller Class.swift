@@ -314,6 +314,9 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
                         stopProcessing =  self.processQueue(descriptor: "playHand", data: nil, peer: peer) || stopProcessing
                     }
                     
+                    // Update remote end with FaceTime address
+                    Scorecard.shared.sendFaceTimeAddress()
+                    
                 case "gameUUID":
                     
                     if let gameUUID = data!["gameUUID"] as? String,

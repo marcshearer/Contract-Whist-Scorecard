@@ -1022,33 +1022,14 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
             // Old connection which has been disconected by host - just restart
             self.restart()
         } else {
-            self.checkFaceTime(peer: availableFound, completion: { (faceTimeAddress) in
-                self.clientController.connect(row: item, faceTimeAddress: faceTimeAddress ?? nil)
-            })
+            self.clientController.connect(row: item, faceTimeAddress: nil)
+            // Not setting faceTime address till later now
+            Scorecard.game.faceTimeAddress = nil
+            Scorecard.recovery.saveFaceTimeAddress()
         }
         
         // Move menu to in-game mode
         self.menuController?.set(playingGame: true)
-    }
-    
-    private func checkFaceTime(peer: AvailablePeer, completion: @escaping (String?)->()) {
-        if peer.proximity == .online && Scorecard.activeSettings.faceTimeAddress != "" && Utility.faceTimeAvailable() {
-            let host = peer.name ?? "the host"
-            self.alertDecision("Would you like \(host) to call you back at\n\n@*/\(Scorecard.activeSettings.faceTimeAddress.rtrim())@*/\n\n so that you can chat while you play? Note that this address will be visible to \(host).",
-                title: "FaceTime Audio", width: min(400, self.view.frame.width * 0.85),
-                image: UIImage(systemName: "phone.circle.fill")?.asTemplate, imageWidth: 80, imageTint: Palette.normal.themeText,
-                sourceView: (self.container == .main ? self.mainContainer : nil),
-                okButtonText: "Yes",
-                okHandler: {
-                    completion(Scorecard.activeSettings.faceTimeAddress)
-            },
-                cancelButtonText: "No",
-                cancelHandler: {
-                    completion(nil)
-            })
-        } else {
-            completion(nil)
-        }
     }
     
     // MARK: - Utility Routines ======================================================================== -

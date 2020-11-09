@@ -61,12 +61,18 @@ class Constraint {
         return constraint
     }
 
-    
     @discardableResult public static func proportionalHeight(view: UIView, control: UIView, to: UIView? = nil, multiplier: CGFloat = 1.0, priority: UILayoutPriority = .required) -> NSLayoutConstraint{
         let to = to ?? view
         let constraint = NSLayoutConstraint(item: control, attribute: .height, relatedBy: .equal, toItem: to, attribute: .height, multiplier: multiplier, constant: 0.0)
         constraint.priority = priority
         view.addConstraint(constraint)
+        return constraint
+    }
+    
+    @discardableResult public static func aspectRatio(control: UIView, multiplier: CGFloat = 1.0, priority: UILayoutPriority = .required) -> NSLayoutConstraint{
+        let constraint = NSLayoutConstraint(item: control, attribute: .width, relatedBy: .equal, toItem: control, attribute: .height, multiplier: multiplier, constant: 0.0)
+        constraint.priority = priority
+        control.addConstraint(constraint)
         return constraint
     }
     

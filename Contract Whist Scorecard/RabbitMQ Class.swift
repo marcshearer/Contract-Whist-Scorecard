@@ -121,7 +121,7 @@ class RabbitMQService: NSObject, CommsServiceDelegate, CommsDataDelegate, CommsS
             if commsPeer == nil && matchPlayerUUID == nil {
                 // Send to all
                 self.forEachQueue(do: { (rabbitMQQueue) in
-                    _ = rabbitMQQueue.send(descriptor:"data", dictionary: [descriptor : dictionary])
+                    _ = rabbitMQQueue.send(descriptor: "data", dictionary: [descriptor : dictionary])
                 })
                 
             } else {
@@ -788,7 +788,7 @@ public class RabbitMQQueue: NSObject, RMQConnectionDelegate {
                     if let fromDeviceName = propertyList["fromDeviceName"] as! String? {
                         switch type {
                         case "connectRequest":
-                            if self.parent.connectionType == .server {
+                            if self.parent?.connectionType == .server {
                                 // Connections only accepted by servers
                                 Scorecard.dataLogMessage(propertyList: propertyList, fromDeviceName: fromDeviceName, using: self.parent)
                                 var rabbitMQPeer: RabbitMQPeer!

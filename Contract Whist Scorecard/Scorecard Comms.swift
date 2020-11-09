@@ -417,6 +417,11 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
         self.commsDelegate?.send("status", status, to: commsPeer)
     }
     
+    public func sendFaceTimeAddress(to commsPeer: CommsPeer! = nil) {
+        let address: [String: Any?] = [ "faceTimeAddress" : Scorecard.game.faceTimeAddress ]
+        self.commsDelegate?.send("faceTimeAddress", address, to: commsPeer)
+    }
+    
     public func sendBid(playerNumber: Int, round: Int, to commsPeer: CommsPeer! = nil, using commsDelegate: CommsServiceDelegate? = nil) {
         if !(Scorecard.game.isHosting || Scorecard.game.isSharing) || Scorecard.game.isPlayingComputer {
             // No need to send if hosting/sharing as all changes automatically sent

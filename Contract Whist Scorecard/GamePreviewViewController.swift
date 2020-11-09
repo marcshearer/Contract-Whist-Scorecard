@@ -61,6 +61,7 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
     private var cutting = false
     private var autoStarting = false
     private var alreadyDrawing = false
+    private var faceTimeCall = false
     
     // MARK: - IB Outlets ================================================================ -
     
@@ -68,6 +69,7 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
     @IBOutlet private weak var topSectionView: UIView!
     @IBOutlet private weak var messageLabel: UILabel!
     @IBOutlet private weak var continueButton: ShadowButton!
+    @IBOutlet private weak var faceTimeButton: ShadowButton!
     @IBOutlet public weak var selectedPlayersView: SelectedPlayersView!
     @IBOutlet private weak var overrideSettingsButton: ShadowButton!
     @IBOutlet private weak var lowerMiddleSectionView: UIView!
@@ -112,6 +114,11 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
     
     internal func overrideSettingsPressed() {
         self.controllerDelegate?.didInvoke(.overrideSettings)
+    }
+    
+    @IBAction func faceTimePressed(_ sender: UIButton) {
+        self.faceTimeCall.toggle()
+        self.setupFaceTimeButton()
     }
     
     internal func buttonPressed(_ sender: UIView) {
@@ -179,6 +186,9 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
         
         // Set up help
         self.setupHelpView()
+        
+        // Set up FaceTime button
+        self.setupFaceTimeButton()
     }
         
     override internal func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -396,6 +406,25 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
             }
         }
         self.banner.set(title: (self.smallScreen && !ScorecardUI.landscapePhone() ? smallFormTitle : self.formTitle))
+    }
+    
+    private func setupFaceTimeButton() {
+        var color: PaletteColor
+        
+        self.faceTimeButton.isHidden = (Scorecard.activeSettings.faceTimeAddress == "" || self.gameMode != .joining || Scorecard.shared.commsDelegate?.connectionProximity != .online)
+        
+        if self.faceTimeCall {
+            self.faceTimeButton.setTitle("Cancel FaceTime request", for: .normal)
+            self.faceTimeButton.shadowSize = CGSize(width: 5, height: 5)
+            color = Palette.confirmButton
+        } else {
+            self.faceTimeButton.setTitle("Request FaceTime call", for: .normal)
+            self.faceTimeButton.shadowSize = .zero
+            color = Palette.otherButton
+        }
+        
+        self.faceTimeButton.setBackgroundColor(color.background)
+        self.faceTimeButton.setTitleColor(color.text, for: .normal)
     }
     
     private func setupScreenSize() {
@@ -802,7 +831,6 @@ extension GamePreviewViewController {
         self.topSectionView.backgroundColor = ((self.menuController?.isVisible ?? false) ? Palette.normal.background : Palette.banner.background)
         self.selectedPlayersView.backgroundColor = Palette.tableTop.background
         self.messageLabel.textColor = Palette.normal.text
-        self.continueButton.setTitleColor(Palette.continueButton.text, for: .normal)
         self.continueButton.setBackgroundColor(Palette.continueButton.background)
         self.continueButton.setTitleColor(Palette.continueButton.text, for: .normal)
         self.actionButtons.forEach{(button) in button.set(faceColor: Palette.buttonFace.background)}

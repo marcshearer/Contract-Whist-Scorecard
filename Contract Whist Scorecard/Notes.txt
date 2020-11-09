@@ -39,7 +39,6 @@ TODO
 ----
 TODO Need to switch off MallocStackLogging variables in Edit Scheme
 Looks like it is still in recovery mode even when play game and override warning
-Reinstate Facetime calls?
 
 Jack
 ----

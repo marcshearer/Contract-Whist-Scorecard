@@ -481,7 +481,7 @@
                         <outlet property="otherCollectionView" destination="2h7-Jf-CHY" id="Rn9-W1-Hib"/>
                         <outlet property="otherCollectionViewHeight" destination="UCw-7L-t8U" id="YLX-fr-7N6"/>
                         <outlet property="otherCollectionViewWidth" destination="8L9-vx-Fqr" id="7K4-I3-OpP"/>
-                        <outlet property="playAgainButton" destination="OFe-jn-Bt6" id="Ulk-Wk-GNW"/>
+                        <outlet property="playAgainButton" destination="5J7-Q9-k63" id="xDQ-4o-NQD"/>
                         <outlet property="rightSwipeGesture" destination="eQO-xa-QSi" id="W0m-9i-foC"/>
                         <outlet property="tapGesture" destination="RaZ-ty-O6E" id="LQ9-1i-eB5"/>
                         <outlet property="topArea" destination="H46-u6-heu" id="b8q-j3-p48"/>

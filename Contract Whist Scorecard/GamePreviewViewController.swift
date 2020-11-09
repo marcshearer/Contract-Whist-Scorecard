@@ -911,6 +911,8 @@ extension GamePreviewViewController {
 
         }
         
+        self.helpView.add("Tapping the @*/Request FaceTime Call@*/ button will request \(self.selectedPlayers[0]?.name ?? "the host") to include you in a FaceTime (call) so that you can chat while you play Whist. Once you tap the button it becomes a @*/Cancel FaceTime Call@*/ which allows you to cancel the request.")
+        
         self.helpView.add("The {} takes you back to the selection screen and allows you to change the players in the game", bannerId: "cancel", horizontalBorder: 8, verticalBorder: 4)
 
         self.helpView.add("The {} abandons the game and takes you back to the @*/Home@*/ screen.", bannerId: "home", horizontalBorder: 8, verticalBorder: 4)

@@ -1035,7 +1035,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         if peer.proximity == .online && Scorecard.activeSettings.faceTimeAddress != "" && Utility.faceTimeAvailable() {
             let host = peer.name ?? "the host"
             self.alertDecision("Would you like \(host) to call you back at\n\n@*/\(Scorecard.activeSettings.faceTimeAddress.rtrim())@*/\n\n so that you can chat while you play? Note that this address will be visible to \(host).",
-                title: "FaceTime Audio", width: min(400, self.view.frame.width * 0.9),
+                title: "FaceTime Audio", width: min(400, self.view.frame.width * 0.85),
                 image: UIImage(systemName: "phone.circle.fill")?.asTemplate, imageWidth: 80, imageTint: Palette.normal.themeText,
                 sourceView: (self.container == .main ? self.mainContainer : nil),
                 okButtonText: "Yes",

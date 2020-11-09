@@ -877,26 +877,25 @@ extension GamePreviewViewController {
             self.helpView.add(text)
         }
         
-        if self.gameMode != .viewing && self.gameMode != .joining {
-            var text = ""
-            
-            switch self.gameMode {
-            case .playingComputer:
-                text = "The @*/room@*/ contains the players in the game. This is always you and 3 robots. You cannot cange them."
-            case .scoring:
-                text = "The @*/Room@*/ contains the players you have chosen. You can't change them, but you can drag the players to different positions in the room"
-            case .hostingOnline:
-                text = "The @*/room@*/ contains  yourself (at the bottom) and the other players you have invited to join the game. They will be dim until they have accepted their invitation. You cannot change these players, but you can drag the other players to different positions in the room."
-            case .hostingNearby:
-                text = "The @*/room@*/ contains yourself (at the bottom) and the other players who have joined your game. You can tap on one of the other players to reject them or you can drag the other players to different positions in the room."
-            default:
-                break
-            }
-            
-            self.helpView.add(text, views: [self.selectedPlayersView], radius: 40)
-            
-            self.helpView.add("The {} allows you to change the settings for the current game only. You can change the number of cards in each hand and include/exclude the game in history and/or statistics.", descriptor: "@*/Override@*/ button", views: [self.overrideSettingsButton], bannerId: "override")
+        text = ""
+        switch self.gameMode {
+        case .playingComputer:
+            text = "The @*/room@*/ contains the players in the game. This is always you and 3 robots. You cannot cange them."
+        case .scoring:
+            text = "The @*/Room@*/ contains the players you have chosen. You can't change them, but you can drag the players to different positions in the room"
+        case .hostingOnline:
+            text = "The @*/room@*/ contains  yourself (at the bottom) and the other players you have invited to join the game. They will be dim until they have accepted their invitation. You cannot change these players, but you can drag the other players to different positions in the room."
+        case .hostingNearby:
+            text = "The @*/room@*/ contains yourself (at the bottom) and the other players who have joined your game. You can tap on one of the other players to reject them or you can drag the other players to different positions in the room."
+        case .viewing, .joining:
+            text = "The @*/Room@*/ shows the other players in the game."
+        default:
+            break
         }
+        
+        self.helpView.add(text!, views: [self.selectedPlayersView], radius: 40)
+        
+        self.helpView.add("The {} allows you to change the settings for the current game only. You can change the number of cards in each hand and include/exclude the game in history and/or statistics.", descriptor: "@*/Override@*/ button", views: [self.overrideSettingsButton], bannerId: "override")
         
         self.helpView.add("You will be kept informed of progress towards starting the game by this message", views: [self.messageLabel], horizontalBorder: -4)
         
@@ -911,7 +910,7 @@ extension GamePreviewViewController {
 
         }
         
-        self.helpView.add("Tapping the @*/Request FaceTime Call@*/ button will request \(self.selectedPlayers[0]?.name ?? "the host") to include you in a FaceTime (call) so that you can chat while you play Whist. Once you tap the button it becomes a @*/Cancel FaceTime Call@*/ which allows you to cancel the request.")
+        self.helpView.add("Tapping the @*/Request FaceTime Call@*/ button will request the host (\((self.selectedPlayers[0]?.name)!)) to include you in a FaceTime call so that you can chat while you play Whist. Once you tap the button it becomes a @*/Cancel FaceTime Call@*/ button which allows you to cancel the request.", views: [self.faceTimeButton], radius: 12)
         
         self.helpView.add("The {} takes you back to the selection screen and allows you to change the players in the game", bannerId: "cancel", horizontalBorder: 8, verticalBorder: 4)
 

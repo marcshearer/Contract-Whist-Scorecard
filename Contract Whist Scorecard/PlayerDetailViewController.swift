@@ -711,11 +711,15 @@ class PlayerDetailViewController: ScorecardViewController, PlayerDetailViewDeleg
     }
     
     func setupBanner() {
-        self.banner.set(title: playerDetail.name,
-            leftButtons:
-                [BannerButton(image: UIImage(named: "back"), action: self.finishPressed, menuHide: true, menuText: self.returnTo, id: Banner.finishButton)],
-            rightButtons:
-                [BannerButton(action: self.helpPressed, type: .help)])
+        if self.container == .rightInset {
+            self.banner.set(leftButtons: [])
+        } else {
+            self.banner.set(title: playerDetail.name,
+                leftButtons:
+                    [BannerButton(image: UIImage(named: "back"), action: self.finishPressed, menuHide: true, menuText: self.returnTo, id: Banner.finishButton)],
+                rightButtons:
+                    [BannerButton(action: self.helpPressed, type: .help)])
+        }
     }
     
     func setupImagePickerPlayerView(cell: PlayerDetailCell) {

@@ -175,6 +175,14 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
         self.checkReceiveNotifications()
     }
     
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        
+        // Not sure why we need this but otherwise banner is too big
+        self.lastMenuVisible = nil
+        self.view.setNeedsLayout()
+    }
+    
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         self.reload = true

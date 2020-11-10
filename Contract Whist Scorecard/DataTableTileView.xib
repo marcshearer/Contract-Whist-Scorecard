@@ -3,13 +3,12 @@
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DataTableTileView" customModule="Whist_2" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DataTableTileView" customModule="Whist" customModuleProvider="target">
             <connections>
                 <outlet property="contentView" destination="iN0-l3-epB" id="D2e-AZ-VEJ"/>
                 <outlet property="tableView" destination="vYe-rM-Zn0" id="YnH-2I-ePZ"/>
@@ -32,7 +31,7 @@
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Md8-3V-C5o" userLabel="Title Container">
                             <rect key="frame" x="0.0" y="0.0" width="160" height="26.5"/>
                             <subviews>
-                                <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="right" contentVerticalAlignment="top" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ib2-4R-VY6" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
+                                <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="right" contentVerticalAlignment="top" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ib2-4R-VY6" customClass="ClearButton" customModule="Whist" customModuleProvider="target">
                                     <rect key="frame" x="130" y="2.5" width="22" height="22"/>
                                     <color key="backgroundColor" name="Clear"/>
                                     <constraints>
@@ -50,7 +49,7 @@
                                     <nil key="highlightedColor"/>
                                 </label>
                             </subviews>
-                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            <color key="backgroundColor" name="Clear"/>
                             <constraints>
                                 <constraint firstItem="ib2-4R-VY6" firstAttribute="centerY" secondItem="Md8-3V-C5o" secondAttribute="centerY" id="CbP-jq-nC0"/>
                                 <constraint firstItem="gqZ-O1-DtO" firstAttribute="leading" secondItem="Md8-3V-C5o" secondAttribute="leading" constant="16" id="Nuj-bn-4A8"/>
@@ -97,8 +96,5 @@
         <namedColor name="Clear">
             <color red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
     </resources>
 </document>

@@ -559,17 +559,19 @@ class Banner : UIView {
     
     private func setupMenuEntries() {
         if let container = self.parentViewController?.container {
-            if let menuOption = self.menuOption ?? menuController?.currentOption {
-                if menuController?.isVisible ?? false {
-                    // A menu panel exists - update it
-                    var menuSuboptions: [Option] = []
-                    menuSuboptions.append(contentsOf: self.setupMenuEntries(buttons: rightButtons))
-                    menuSuboptions.append(contentsOf: self.setupMenuEntries(buttons: lowerButtons))
-                    menuSuboptions.append(contentsOf: self.setupMenuEntries(buttons: nonBannerButtonsBefore))
-                    menuSuboptions.append(contentsOf: self.setupMenuEntries(buttons: leftButtons))
-                    menuSuboptions.append(contentsOf: self.setupMenuEntries(buttons: nonBannerButtonsAfter))
-                    
-                    menuController?.add(suboptions: menuSuboptions, to: menuOption, on: container, highlight: nil, disableOptions: self.disableOptions)
+            if container == .main || container == .mainRight {
+                if let menuOption = self.menuOption ?? menuController?.currentOption {
+                    if menuController?.isVisible ?? false {
+                        // A menu panel exists - update it
+                        var menuSuboptions: [Option] = []
+                        menuSuboptions.append(contentsOf: self.setupMenuEntries(buttons: rightButtons))
+                        menuSuboptions.append(contentsOf: self.setupMenuEntries(buttons: lowerButtons))
+                        menuSuboptions.append(contentsOf: self.setupMenuEntries(buttons: nonBannerButtonsBefore))
+                        menuSuboptions.append(contentsOf: self.setupMenuEntries(buttons: leftButtons))
+                        menuSuboptions.append(contentsOf: self.setupMenuEntries(buttons: nonBannerButtonsAfter))
+                        
+                        menuController?.add(suboptions: menuSuboptions, to: menuOption, on: container, highlight: nil, disableOptions: self.disableOptions)
+                    }
                 }
             }
         }

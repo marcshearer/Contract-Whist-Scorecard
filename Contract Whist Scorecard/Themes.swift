@@ -405,7 +405,7 @@ class Themes {
                 .alternate                   : ThemeColor(#colorLiteral(red: 0.9724639058, green: 0.9726034999, blue: 0.9724336267, alpha: 1), nil, .lightBackground), //w
                 .background                  : ThemeColor(#colorLiteral(red: 0.9724639058, green: 0.9726034999, blue: 0.9724336267, alpha: 1), #colorLiteral(red: 0.2605174184, green: 0.2605243921, blue: 0.260520637, alpha: 1),  .lightBackground, .darkBackground), //w
                 .mid                         : ThemeColor(#colorLiteral(red: 0.9724639058, green: 0.9726034999, blue: 0.9724336267, alpha: 1), #colorLiteral(red: 0.2605174184, green: 0.2605243921, blue: 0.260520637, alpha: 1),  .lightBackground, .darkBackground), //      Home screen No devices... background
-                .dark                        : ThemeColor(#colorLiteral(red: 0.9098039216, green: 0.9098039216, blue: 0.9098039216, alpha: 1), #colorLiteral(red: 0.1298420429, green: 0.1298461258, blue: 0.1298439503, alpha: 1),  .lightBackground, .darkBackground), //      Home screen & Results background
+                .dark                        : ThemeColor(#colorLiteral(red: 0.9098039216, green: 0.9098039216, blue: 0.9098039216, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1),  .lightBackground, .darkBackground), //      Home screen & Results background
                 .banner                      : ThemeColor(#colorLiteral(red: 0.6745098039, green: 0.2196078431, blue: 0.2, alpha: 1), #colorLiteral(red: 0.1298420429, green: 0.1298461258, blue: 0.1298439503, alpha: 1),  .midBackground,   .darkBackground),   //1     Banner
                 .bannerShadow                : ThemeColor(#colorLiteral(red: 0.7294117647, green: 0.2392156863, blue: 0.2156862745, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1),  .midBackground,   .darkBackground),
                 .carouselSelected            : ThemeColor(#colorLiteral(red: 0.7294117647, green: 0.2392156863, blue: 0.2156862745, alpha: 1), nil, .midBackground),
@@ -431,7 +431,7 @@ class Themes {
                 .instruction                 : ThemeColor(#colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1), nil, .lightBackground),
                 .madeContract                : ThemeColor(#colorLiteral(red: 0.7333333333, green: 0.8470588235, blue: 0.8549019608, alpha: 1), nil, .midBackground),   //7
                 .roomInterior                : ThemeColor(#colorLiteral(red: 0.5215686275, green: 0.6980392157, blue: 0.7058823529, alpha: 1), nil, .midBackground),   //4
-                .sectionHeading              : ThemeColor(#colorLiteral(red: 0.6745098039, green: 0.2196078431, blue: 0.2, alpha: 1), nil, .midBackground),   //4
+                .sectionHeading              : ThemeColor(#colorLiteral(red: 0.6745098039, green: 0.2196078431, blue: 0.2, alpha: 1), #colorLiteral(red: 0.1298420429, green: 0.1298461258, blue: 0.1298439503, alpha: 1),  .midBackground, .darkBackground),   //4
                 .segmentedControls           : ThemeColor(#colorLiteral(red: 0.6745098039, green: 0.2196078431, blue: 0.2, alpha: 1), nil, .midBackground),   //4
                 .separator                   : ThemeColor(#colorLiteral(red: 0.493078649, green: 0.4981283545, blue: 0.4939036965, alpha: 1), nil, .midBackground),
                 .tableTop                    : ThemeColor(#colorLiteral(red: 0.6470588235, green: 0.7960784314, blue: 0.8039215686, alpha: 1), nil, .midBackground),   //5     Table
@@ -445,9 +445,9 @@ class Themes {
                 .alwaysTheme                 : ThemeColor(#colorLiteral(red: 0.6745098039, green: 0.2196078431, blue: 0.2, alpha: 1), nil, .midBackground),
                 .watermark                   : ThemeColor(#colorLiteral(red: 0.9724639058, green: 0.9726034999, blue: 0.9724336267, alpha: 1), #colorLiteral(red: 0.2195822597, green: 0.2196257114, blue: 0.2195765674, alpha: 1),  .lightBackground, .darkBackground),
                 .leftSidePanel               : ThemeColor(#colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1),  .darkBackground),
-                .leftSidePanelBorder         : ThemeColor(#colorLiteral(red: 0.4509385824, green: 0.4510071278, blue: 0.4509235024, alpha: 1), #colorLiteral(red: 0.4509385824, green: 0.4510071278, blue: 0.4509235024, alpha: 1),  .darkBackground),
-                .rightGameDetailPanel        : ThemeColor(#colorLiteral(red: 0.7058823529, green: 0.8549019608, blue: 0.862745098, alpha: 1), nil, .midBackground),
-                .rightGameDetailPanelShadow  : ThemeColor(#colorLiteral(red: 0.6274509804, green: 0.7764705882, blue: 0.7843137255, alpha: 1), nil, .midBackground),
+                .leftSidePanelBorder         : ThemeColor(#colorLiteral(red: 0.4509385824, green: 0.4510071278, blue: 0.4509235024, alpha: 1), nil,  .darkBackground),
+                .rightGameDetailPanel        : ThemeColor(#colorLiteral(red: 0.7058823529, green: 0.8549019608, blue: 0.862745098, alpha: 1), #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1),  .midBackground, .darkBackground),
+                .rightGameDetailPanelShadow  : ThemeColor(#colorLiteral(red: 0.6274509804, green: 0.7764705882, blue: 0.7843137255, alpha: 1), #colorLiteral(red: 0.2605174184, green: 0.2605243921, blue: 0.260520637, alpha: 1),  .midBackground, .darkBackground),
                 .helpBubble                  : ThemeColor(#colorLiteral(red: 0.9215686275, green: 0.9215686275, blue: 1, alpha: 1), nil,  .lightBackground)],
 
             text: [

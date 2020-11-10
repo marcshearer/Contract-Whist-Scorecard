@@ -128,7 +128,7 @@
             ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
             <ActionContent
                title = "Run Script"
-               scriptText = "echo ${PROJECT_DIR} &gt;/tmp/log&#10;echo `date` &gt;&gt;/tmp/log&#10;cd ${PROJECT_DIR}&#10;agvtool next-version -all &gt;&gt;/tmp/log 2&gt;&amp;1&#10;&#10;">
+               scriptText = "cd &quot;${WORKSPACE_PATH}&quot; &gt;/tmp/log 2&gt;&amp;1&#10;cd .. &gt;&gt;/tmp/log 2&gt;&amp;1&#10;echo `pwd` &gt;&gt; /tmp/log&#10;agvtool next-version -all &gt;&gt;/tmp/log 2&gt;&amp;1&#10;">
             </ActionContent>
          </ExecutionAction>
       </PreActions>

@@ -54,6 +54,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     public var dismissImageViewStack: [UIImageView] = []
     internal var viewControllerStack: [(uniqueID: String, viewController: ScorecardViewController)] = []
     internal var detailDelegate: DetailDelegate?
+    private var playerSelectionVisible = false
 
     // Observers
     private var observer: NSObjectProtocol?
@@ -159,7 +160,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     // MARK: - IB Actions ============================================================================== -
         
     @IBAction private func tapGesture(recognizer: UITapGestureRecognizer) {
-        if self.playerSelectionViewHeightConstraint.constant != 0 || self.playerSelectionViewWidthConstraint.constant != 0 {
+        if self.playerSelectionVisible {
             self.hidePlayerSelection()
         } else {
             self.showPlayerSelection()
@@ -353,8 +354,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
                 self.showThisPlayer()
             }
             
-            if rotated && (self.playerSelectionViewHeightConstraint.constant != 0 ||
-                self.playerSelectionViewWidthConstraint.constant != 0) {
+            if rotated && self.playerSelectionVisible {
                 // Resize player selection
                 self.showPlayerSelection()
             }
@@ -450,6 +450,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     // MARK: - Player Selection View Delegate Handlers ======================================================= -
     
     internal func showPlayerSelection(completion: (()->())? = nil) {
+        self.playerSelectionVisible = true
         
         Utility.animate(view: self.view, duration: 0.5, completion: {
             self.hostTitleBar.isHidden = true
@@ -477,6 +478,8 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     }
     
     internal func hidePlayerSelection(completion: (()->())? = nil) {
+        self.playerSelectionVisible = false
+        
         self.showThisPlayer(alwaysShow: true)
         self.hostTitleBar.isHidden = false
         
@@ -1475,23 +1478,25 @@ extension ClientViewController {
         
         self.helpView.add("This shows you who the default player for this device is. You can change the default player by tapping the image", views: [self.thisPlayerThumbnail], border: 8)
         
+        self.helpView.add("You have chosen to change the default player for this device. Tap a player in this area to select them as the default player. Click the @*+@* to add a new player. Click on the @*/Cancel@*/ button to keep the current player.", views: [self.playerSelectionView], condition: { self.playerSelectionVisible }, shrink: true, direction: .up)
+        
         if let item = self.nearbyItem {
-            self.helpView.add("The @*/Nearby@*/ button allows you to start a game with nearby players on other devices using bluetooth. All devices must have bluetooth and WiFi switched on but do not need to be connected to the internet.", views: [self.hostCollectionView], item: item)
+            self.helpView.add("The @*/Nearby@*/ button allows you to start a game with nearby players on other devices using bluetooth. All devices must have bluetooth and WiFi switched on but do not need to be connected to the internet.", views: [self.hostCollectionView], condition: { !self.playerSelectionVisible }, item: item)
         }
         
         if let item = self.onlineItem {
-            self.helpView.add("The @*/Online@*/ button allows you to start a game with players on other devices who are remote, using the public internet. All devices must be connected to the internet.", views: [self.hostCollectionView], item: item)
+            self.helpView.add("The @*/Online@*/ button allows you to start a game with players on other devices who are remote, using the public internet. All devices must be connected to the internet.", views: [self.hostCollectionView], condition: { !self.playerSelectionVisible }, item: item)
         }
         
         if let item = self.scoringItem {
-            self.helpView.add("The @*/Score@*/ button allows you to score a game, played with a physical pack of cards.", views: [self.hostCollectionView], item: item)
+            self.helpView.add("The @*/Score@*/ button allows you to score a game, played with a physical pack of cards.", views: [self.hostCollectionView], condition: { !self.playerSelectionVisible }, item: item)
         }
         
         if let item = self.robotItem {
-            self.helpView.add("The @*/Robot@*/ button allows you to play a game against three robots controlled by the computer", views: [self.hostCollectionView], item: item)
+            self.helpView.add("The @*/Robot@*/ button allows you to play a game against three robots controlled by the computer", views: [self.hostCollectionView], condition: { !self.playerSelectionVisible }, item: item)
         }
         
-        self.helpView.add("This area will show you details if another player starts hosting a game nearby, or an online game that you are invited to.", views: [self.peerCollectionView], item: 0)
+        self.helpView.add("This area will show you details if another player starts hosting a game nearby, or an online game that you are invited to.", views: [self.peerCollectionView], condition: { !self.playerSelectionVisible }, item: 0)
         
         var text: String?
         for button in self.actionButtons {
@@ -1506,7 +1511,7 @@ extension ClientViewController {
                 break
             }
             if let text = text {
-                self.helpView.add(text, views: [button])
+                self.helpView.add(text, views: [button], condition: { !self.playerSelectionVisible })
             }
         }        
     }

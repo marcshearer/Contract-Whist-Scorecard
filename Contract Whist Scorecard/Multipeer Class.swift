@@ -632,7 +632,7 @@ class MultipeerClientService : MultipeerService, CommsClientServiceDelegate, MCN
         self.client?.browser?.stopBrowsingForPeers()
     }
     
-    func checkOnlineInvites(playerUUID: String, checkExpiry: Bool = true) {
+    func checkOnlineInvites(playerUUID: String, checkExpiry: Bool = true, matchDeviceName: String? = nil) {
         // Not used in broadcast mode
         fatalError("Not relevant in broadcast mode")
     }

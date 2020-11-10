@@ -31,6 +31,7 @@ class Invite {
     private var inviteUUID: String!
     private var expiryDate: Date!
     private var checkExpiry: Bool!
+    private var matchDeviceName: String?
     private var invited: [InviteReceived]!
     private var completionHandler: ((Bool, String?, [InviteReceived]?)->())!
     
@@ -84,7 +85,7 @@ class Invite {
         self.controller()
     }
     
-    func checkInvitations(to invitePlayerUUID: String, checkExpiry: Bool = true, completion: @escaping (Bool, String?, [InviteReceived]?)->()) {
+    func checkInvitations(to invitePlayerUUID: String, checkExpiry: Bool = true, matchDeviceName: String? = nil, completion: @escaping (Bool, String?, [InviteReceived]?)->()) {
         
         self.completionHandler = completion
         
@@ -95,6 +96,7 @@ class Invite {
         
         self.invitePlayerUUIDs = [invitePlayerUUID]
         self.checkExpiry = checkExpiry
+        self.matchDeviceName = matchDeviceName
         self.invited = []
         self.invitePhases = [.phaseCheckInvitations,
                              .phaseCompletion]
@@ -119,7 +121,7 @@ class Invite {
             case .phaseUpdateCloud:
                 self.sendUpdatedRecords(createRecords: self.createRecords, deleteRecordIDs: self.deleteRecordIDs, deleteUUIDs: self.deleteUUIDs)
             case .phaseCheckInvitations:
-                self.checkInviteRecords(invitePlayerUUIDs: self.invitePlayerUUIDs, checkExpiry: self.checkExpiry)
+                self.checkInviteRecords(invitePlayerUUIDs: self.invitePlayerUUIDs, checkExpiry: self.checkExpiry, matchDeviceName: self.matchDeviceName)
             case .phaseCompletion:
                 self.completion(true, nil, self.invited)
             }
@@ -236,22 +238,25 @@ class Invite {
         OperationQueue().addOperation(uploadOperation)
     }
     
-    func checkInviteRecords(invitePlayerUUIDs: [String], checkExpiry: Bool) {
+    func checkInviteRecords(invitePlayerUUIDs: [String], checkExpiry: Bool, matchDeviceName: String?) {
         // Get any existing invite records and queue
         var queryOperation: CKQueryOperation
-        var predicate: NSPredicate!
-
+        
         // Fetch host record from cloud
         let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
         let publicDatabase = cloudContainer.publicCloudDatabase
-        var expiry: NSDate?
+        
+        // Setup filter
+        var predicates = [NSPredicate(format: "invitePlayerUUID == %@", invitePlayerUUIDs[0])]
         if checkExpiry {
-            expiry = NSDate()
-            predicate = NSPredicate(format: "invitePlayerUUID == %@ AND expires >= %@", invitePlayerUUIDs[0], expiry!)
-        } else {
-            predicate = NSPredicate(format: "invitePlayerUUID == %@", invitePlayerUUIDs[0])
+            predicates.append(NSPredicate(format: "expires >= %@", NSDate()))
         }
-        let query = CKQuery(recordType: "Invites", predicate: predicate)
+        if let matchDeviceName = matchDeviceName {
+            predicates.append(NSPredicate(format: "hostDeviceName == %@", matchDeviceName))
+        }
+        
+        // Setup query
+        let query = CKQuery(recordType: "Invites", predicate: NSCompoundPredicate(andPredicateWithSubpredicates: predicates))
         queryOperation = CKQueryOperation(query: query, qos: .userInteractive)
         queryOperation.desiredKeys = ["hostPlayerUUID", "hostName", "hostDeviceName", "expires", "inviteUUID"]
         queryOperation.queuePriority = .veryHigh

@@ -445,7 +445,7 @@ class RabbitMQClientService : RabbitMQService, CommsClientServiceDelegate, Comms
         self.clientClearOnlineInviteNotifications(observer: self.onlineInviteObserver)
         self.onlineInviteObserver = self.clientOnlineInviteNotification()
         // Check current invites
-        self.checkOnlineInvites(playerUUID: playerUUID, checkExpiry: !self.recoveryMode)
+        self.checkOnlineInvites(playerUUID: playerUUID, checkExpiry: !self.recoveryMode, matchDeviceName: matchDeviceName)
     }
     
     internal func start(queue: String, filterPlayerUUID: String!) {
@@ -527,7 +527,7 @@ class RabbitMQClientService : RabbitMQService, CommsClientServiceDelegate, Comms
                 }
                 if !connected {
                     // Wasn't connected so reload invites
-                    self.checkOnlineInvites(playerUUID: self.invitePlayerUUID, checkExpiry: !self.recoveryMode)
+                    self.checkOnlineInvites(playerUUID: self.invitePlayerUUID, checkExpiry: !self.recoveryMode, matchDeviceName: self.matchDeviceName)
                 }
                 if mode != "stop" {
                     queue.forEachPeer { (rabbitMQPeer) in
@@ -547,10 +547,10 @@ class RabbitMQClientService : RabbitMQService, CommsClientServiceDelegate, Comms
     
     // MARK: - Online Invites - Client checking for current invites ========================================= -
     
-    public func checkOnlineInvites(playerUUID: String, checkExpiry: Bool = true) {
+    public func checkOnlineInvites(playerUUID: String, checkExpiry: Bool = true, matchDeviceName: String? = nil) {
         self.invitePlayerUUID = playerUUID
         self.invite = Invite()
-        self.invite.checkInvitations(to: self.invitePlayerUUID, checkExpiry: checkExpiry, completion: { [weak self] (success, message, invited) in
+        self.invite.checkInvitations(to: self.invitePlayerUUID, checkExpiry: checkExpiry, matchDeviceName: matchDeviceName, completion: { [weak self] (success, message, invited) in
             // Response to check for invitations in client
             if let self = self {
                 if !success {
@@ -629,7 +629,7 @@ class RabbitMQClientService : RabbitMQService, CommsClientServiceDelegate, Comms
             // Refresh online games - give iCloud a second to catch up!
             Utility.executeAfter(delay: 2, completion: { [unowned self] in
                 self.debugMessage("Notification received")
-                self.checkOnlineInvites(playerUUID: self.invitePlayerUUID)
+                self.checkOnlineInvites(playerUUID: self.invitePlayerUUID, matchDeviceName: self.matchDeviceName)
             })
         }
         return observer

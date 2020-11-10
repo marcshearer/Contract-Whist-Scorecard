@@ -178,6 +178,7 @@ class Recovery {
             } else {
                 self.connectionUUID = nil
                 self.connectionPlayerUUID = nil
+                self.connectionRemotePlayerUUID = nil
                 self.connectionRemoteDeviceName = nil
             }
         } else {
@@ -187,6 +188,7 @@ class Recovery {
             self.connectionUUID = nil
             self.connectionPlayerUUID = nil
             self.connectionRemoteDeviceName = nil
+            self.connectionRemotePlayerUUID = nil
         }
     }
     

@@ -288,7 +288,7 @@ public protocol CommsClientServiceDelegate : CommsServiceDelegate {
     
     func connect(to commsPeer: CommsPeer, playerUUID: String?, playerName: String?, context: [String : String]?, reconnect: Bool) -> Bool
     
-    func checkOnlineInvites(playerUUID: String, checkExpiry: Bool)
+    func checkOnlineInvites(playerUUID: String, checkExpiry: Bool, matchDeviceName: String?)
 }
 
 extension CommsClientServiceDelegate {
@@ -322,8 +322,8 @@ extension CommsClientServiceDelegate {
     }
     
     func checkOnlineInvites(playerUUID: String) {
-        checkOnlineInvites(playerUUID: playerUUID, checkExpiry: true)
-    }
+        checkOnlineInvites(playerUUID: playerUUID, checkExpiry: true, matchDeviceName: nil)
+    }    
 }
 
 // MARK: - Comms handler wrapper to get relevant comms class

@@ -129,7 +129,7 @@ class Scorecard {
      */
     public static var activeSettings: Settings {
         get {
-            return Scorecard.game?.settings ?? Scorecard.settings
+            return Scorecard.game?.settings ?? Scorecard.settings.copy()
         }
     }
         

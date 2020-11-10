@@ -134,6 +134,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
             self.playedCardCollectionView.reloadData()
             self.setBanner(title: "Last Trick", updateLast: false)
             if self.menuController?.isVisible ?? false {
+                self.cardsEnable(false)
                 self.handTableView.isUserInteractionEnabled = false
             }
         }
@@ -144,8 +145,14 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
             self.lastHand = false
             self.playedCardCollectionView.reloadData()
             self.setBanner(title: self.lastTitle!)
-            self.handTableView.isUserInteractionEnabled = true
+            if self.menuController?.isVisible ?? false {
+                if Scorecard.game.handState.toPlay == self.enteredPlayerNumber {
+                    self.cardsEnable(true)
+                }
+                self.handTableView.isUserInteractionEnabled = true
+            }
         }
+        self.updateToPlay()
     }
     
     @IBAction func longPresssGesture(_ sender: UILongPressGestureRecognizer) {
@@ -294,7 +301,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
             }
         } else if collectionView.tag == playedCardCollectionTag {
             // Played cards
-            if bidMode == nil || bidMode {
+            if bidMode ?? true {
                 return 0
             } else {
                 return Scorecard.game.currentPlayers
@@ -459,7 +466,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
         - parameters
            - currentTrickCards: No of cards currently played. Normally taken from state, but passed in when playing a card from a remote hand
     */
-    func stateController(updateState: Bool = true, currentTrickCards: Int = Scorecard.game.handState.trickCards.count) {
+    func stateController(updateState: Bool = true, currentTrickCards: Int = Scorecard.game.handState.trickCards.count, forceRefresh: Bool = false) {
         // Check whether bidding finished
         let bidsMade = Scorecard.game.scores.bidsMade(round: round)
         let newBidMode = (bidsMade < Scorecard.game.currentPlayers)
@@ -508,7 +515,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
         } else {
             // Update state
             if updateState {
-                // Might have already been update when remote action reflected
+                // Might have already been updated when remote action reflected
                 Scorecard.shared.updateState(alertUser: false)
             }
             
@@ -550,15 +557,21 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
                 }
             } else {
                 // Work out who should play
-                let hasPlayed = (self.enteredPlayerNumber + (Scorecard.game.handState.toLead! > self.enteredPlayerNumber ? Scorecard.game.currentPlayers : 0)) >= (Scorecard.game.handState.toLead! + Scorecard.game.handState.trickCards.count)
-                let lastHandButtonHidden = (Scorecard.game.handState.lastCards.count == 0 || !hasPlayed || Scorecard.game.handState.lastToLead == nil)
-                self.banner.setButton(lastHandButton, isHidden: lastHandButtonHidden)
-                tableTopLongPress.isEnabled = !lastHandButtonHidden
-                titleBarLongPress.isEnabled = !lastHandButtonHidden
-
-                self.nextCard()
+                if !self.lastHand {
+                    self.updateToPlay()
+                }
             }
         }
+    }
+    
+    private func updateToPlay() {
+        let hasPlayed = (self.enteredPlayerNumber + (Scorecard.game.handState.toLead! > self.enteredPlayerNumber ? Scorecard.game.currentPlayers : 0)) >= (Scorecard.game.handState.toLead! + Scorecard.game.handState.trickCards.count)
+        let lastHandButtonHidden = (Scorecard.game.handState.lastCards.count == 0 || !hasPlayed || Scorecard.game.handState.lastToLead == nil)
+        // Don't do this now if looking at last hand - will come back when release
+        self.banner.setButton(lastHandButton, isHidden: lastHandButtonHidden)
+        tableTopLongPress.isEnabled = !lastHandButtonHidden
+        titleBarLongPress.isEnabled = !lastHandButtonHidden
+        self.nextCard()
     }
     
     private func proceed(round: Int? = nil) {
@@ -668,13 +681,14 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
     
     public func refreshAll() {
         self.round = Scorecard.game.handState.round
-        self.bidMode = nil
+        let bidsMade = Scorecard.game.scores.bidsMade(round: self.round)
+        self.bidMode = (bidsMade < Scorecard.game.currentPlayers)
         self.updateMirroredHand()
         self.updatedMirroredTrickCards()
         self.handTableView.reloadData()
         self.bidCollectionView.reloadData()
         self.playedCardCollectionView.reloadData()
-        self.stateController()
+        self.stateController(forceRefresh: true)
     }
     
     func setBidButtonFormat() {

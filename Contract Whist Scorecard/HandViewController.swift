@@ -1393,7 +1393,14 @@ extension HandViewController {
         
         self.helpView.add("The players' names in the order they should bid are displayed here.\n\nAs they bid their bids are displayed alongside their name.", views: [self.statusPlayer1BidLabel, self.statusPlayer2BidLabel, self.statusPlayer3BidLabel, self.statusPlayer4BidLabel], condition: { self.bidMode && !self.moreMode }, horizontalBorder: 4)
         
-        self.helpView.add("When it is your turn to bid, tap on a bid button and then tap the confirm button to make your bid.\n\nIf not all bids are shown, then the " + NSAttributedString(imageName: "forward", color: Palette.normal.themeText) + " button can be tapped to show higher bid values.\nTap the " + NSAttributedString(imageName: "back", color: Palette.normal.themeText) + " button to return from the extended bid input mode\n\nIf you are the last person to bid, then you cannot make the total of the bids equal the number of tricks and one of the buttons will be disabled.", views: [self.bidCollectionView], condition: { self.bidMode }, border: 4)
+        var text: NSAttributedString
+        if ScorecardUI.smallPhoneSize() {
+            text = NSAttributedString(markdown: "When it is your turn to bid, tap on a bid button and then tap the confirm button to make your bid.\n\nIf not all bids are shown, then the @*>@* button can be tapped to show higher bid values. You cannot make the total of the bids equal the number of tricks.")
+        } else {
+            text = "When it is your turn to bid, tap on a bid button and then tap the confirm button to make your bid.\n\nIf not all bids are shown, then the " + NSAttributedString(imageName: "forward", color: Palette.normal.themeText) + " button can be tapped to show higher bid values.\nTap the " + NSAttributedString(imageName: "back", color: Palette.normal.themeText) + " button to return from the extended bid input mode\n\nIf you are the last person to bid, then you cannot make the total of the bids equal the number of tricks and one of the buttons will be disabled."
+        }
+        
+        self.helpView.add(text, views: [self.bidCollectionView], condition: { self.bidMode }, border: 4)
         
         self.helpView.add("During play the current trick will be displayed here.\n\nUnderneath each card will be the name of the player who played it. Underneath their name is their bid for this round and, if they have won any tricks, the number of tricks they have won.\n\nThe winner of the current trick is highlighted.", views: [self.tabletopView])
         

@@ -83,18 +83,6 @@
             ReferencedContainer = "container:Contract Whist Scorecard.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
-      <EnvironmentVariables>
-         <EnvironmentVariable
-            key = "MallocStackLogging"
-            value = "YES"
-            isEnabled = "YES">
-         </EnvironmentVariable>
-         <EnvironmentVariable
-            key = "MallocStackLoggingNoCompact"
-            value = "YES"
-            isEnabled = "YES">
-         </EnvironmentVariable>
-      </EnvironmentVariables>
       <LocationScenarioReference
          identifier = "London, England"
          referenceType = "1">

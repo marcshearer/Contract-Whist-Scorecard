@@ -641,7 +641,7 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
     }
     
     private func next() {
-        Utility.animate {
+        Utility.animate(duration: 0.2) {
             self.currentElement += 1
             if self.currentElement >= self.activeElements.count {
                 self.finished(false)

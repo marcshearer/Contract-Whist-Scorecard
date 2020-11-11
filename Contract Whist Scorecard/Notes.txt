@@ -33,8 +33,7 @@ Auto-sync when download players in Get Started?
 
 TODO
 ----
-TODO Need to switch off MallocStackLogging variables in Edit Scheme
-Notifications don't seem to be working when start a game
+Get rid of warnings
 
 Jack
 ----
@@ -44,4 +43,3 @@ Medium-term
 
 Long-term
 ---------
-Sort out constraints when in landscape mode

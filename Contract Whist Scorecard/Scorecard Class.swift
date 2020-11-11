@@ -515,9 +515,10 @@ class Scorecard {
     
     public func updatePrefersStatusBarHidden(from viewController : ScorecardViewController? = nil) {
         
-        if AppDelegate.applicationPrefersStatusBarHidden != Scorecard.settings.prefersStatusBarHidden {
+        let hidden = (ScorecardUI.phoneSize() ? Scorecard.settings.prefersStatusBarHidden : true)
+        if AppDelegate.applicationPrefersStatusBarHidden != hidden {
             
-            AppDelegate.applicationPrefersStatusBarHidden = Scorecard.settings.prefersStatusBarHidden
+            AppDelegate.applicationPrefersStatusBarHidden = hidden
             viewController?.setNeedsStatusBarAppearanceUpdate()
             
         }

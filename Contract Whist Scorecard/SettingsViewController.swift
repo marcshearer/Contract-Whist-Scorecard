@@ -51,6 +51,34 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
         case displayStatus = 3
         case generalInfo = 4
         case dataInfo = 5
+        
+        // Compute section for table view skipping display status on iPad
+        
+        init?(section: Int) {
+            var rawValue: Int
+            if section < Sections.displayStatus.rawValue {
+                rawValue = section
+            } else {
+                rawValue = section + (ScorecardUI.phoneSize() ? 0 : 1)
+            }
+            self.init(rawValue: rawValue)
+        }
+        
+        var section: Int {
+            switch self {
+            case .onlineGames, .theme, .inGame:
+                return self.rawValue
+            case .displayStatus:
+                return (ScorecardUI.phoneSize() ? self.rawValue : -1)
+            case .generalInfo, .dataInfo:
+                return self.rawValue - (ScorecardUI.phoneSize() ? 0 : 1)
+            }
+        }
+        
+        static var sections: Int {
+            return Sections.allCases.count - (ScorecardUI.phoneSize() ? 0 : 1)
+        }
+        
     }
     
     // Options
@@ -212,12 +240,12 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     // MARK: - TableView Overrides ===================================================================== -
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return Sections.allCases.count
+        return Sections.sections
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        if let section = Sections(rawValue: section) {
+        if let section = Sections(section: section) {
             switch section {
             case .onlineGames:
                 return (Scorecard.shared.playerList.count == 0 ? 0 : OnlineGameOptions.allCases.count)
@@ -245,7 +273,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         var height: CGFloat = 0.0
         
-        if let section = Sections(rawValue: section) {
+        if let section = Sections(section: section) {
             switch section {
             default:
                 height = 70.0
@@ -261,7 +289,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         var height: CGFloat = 0.0
         
-        if let section = Sections(rawValue: indexPath.section) {
+        if let section = Sections(section: indexPath.section) {
             switch section {
             case .onlineGames:
                 if let option = OnlineGameOptions(rawValue: indexPath.row) {
@@ -318,7 +346,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         var header: SettingsHeaderFooterView?
         
-        if let section = Sections(rawValue: section) {
+        if let section = Sections(section: section) {
             switch section {
             case .onlineGames:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "Header Switch") as! SettingsTableCell
@@ -397,7 +425,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     internal func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell: SettingsTableCell!
         
-        if let section = Sections(rawValue: indexPath.section) {
+        if let section = Sections(section: indexPath.section) {
             switch section {
             case .onlineGames:
                 if let option = OnlineGameOptions(rawValue: indexPath.row) {
@@ -696,7 +724,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     }
     
     internal func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if let section = Sections(rawValue: indexPath.section) {
+        if let section = Sections(section: indexPath.section) {
         switch section {
         case .inGame:
             if let option = InGameOptions(rawValue: indexPath.row) {
@@ -744,7 +772,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     
     func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         self.view.endEditing(true)
-        if let section = Sections(rawValue: indexPath.section) {
+        if let section = Sections(section: indexPath.section) {
             switch section {
             case .dataInfo:
                 // Expand data info if touch any part of section
@@ -794,7 +822,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     
     private func dataInfoClicked() {
         self.dataInfoExpanded = !self.dataInfoExpanded
-        self.settingsTableView.reloadSections(IndexSet(arrayLiteral: Sections.dataInfo.rawValue), with: .automatic)
+        self.settingsTableView.reloadSections(IndexSet(arrayLiteral: Sections.dataInfo.section), with: .automatic)
         self.scrollToBottom()
     }
     
@@ -852,17 +880,17 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
         
         if self.facetimeEnabled {
             // Enabled - edit address
-            self.setOptionEnabled(section: Sections.onlineGames.rawValue, option: OnlineGameOptions.facetimeAddress.rawValue, enabled: true)
+            self.setOptionEnabled(section: Sections.onlineGames.section, option: OnlineGameOptions.facetimeAddress.rawValue, enabled: true)
         } else {
             // Disabled blank out address
             Scorecard.settings.faceTimeAddress = ""
-            self.setOptionValue(section: Sections.onlineGames.rawValue, option: OnlineGameOptions.facetimeCalls.rawValue, value: false)
-            self.setOptionEnabled(section: Sections.onlineGames.rawValue, option: OnlineGameOptions.facetimeAddress.rawValue, enabled: false)
+            self.setOptionValue(section: Sections.onlineGames.section, option: OnlineGameOptions.facetimeCalls.rawValue, value: false)
+            self.setOptionEnabled(section: Sections.onlineGames.section, option: OnlineGameOptions.facetimeAddress.rawValue, enabled: false)
         }
         
         self.refreshFaceTimeAddress()
         if self.facetimeEnabled {
-            self.setOptionFirstResponder(section: Sections.onlineGames.rawValue, option: OnlineGameOptions.facetimeAddress.rawValue)
+            self.setOptionFirstResponder(section: Sections.onlineGames.section, option: OnlineGameOptions.facetimeAddress.rawValue)
         }
     }
     
@@ -882,8 +910,8 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
         // If blank then unset facetime calls switch and disable address
         if Scorecard.settings.faceTimeAddress == "" {
             self.facetimeEnabled = false
-            self.setOptionValue(section: Sections.onlineGames.rawValue, option: OnlineGameOptions.facetimeCalls.rawValue, value: false)
-            self.setOptionEnabled(section: Sections.onlineGames.rawValue, option: OnlineGameOptions.facetimeAddress.rawValue, enabled: false)
+            self.setOptionValue(section: Sections.onlineGames.section, option: OnlineGameOptions.facetimeCalls.rawValue, value: false)
+            self.setOptionEnabled(section: Sections.onlineGames.section, option: OnlineGameOptions.facetimeAddress.rawValue, enabled: false)
             self.refreshFaceTimeAddress()
         }
         self.resignFirstResponder()
@@ -910,7 +938,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
         let index = cardsSlider.tag
         let option = (index == 0 ? InGameOptions.cardsInHandStart : InGameOptions.cardsInHandEnd)
         Scorecard.settings.cards[index] = Int(cardsSlider.value)
-        self.setOptionValue(section: Sections.inGame.rawValue, option: option.rawValue, value: Scorecard.settings.cards[index])
+        self.setOptionValue(section: Sections.inGame.section, option: option.rawValue, value: Scorecard.settings.cards[index])
         self.cardsChanged()
     }
     
@@ -946,7 +974,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
             self.refreshTrumpSequence()
             
             // Disable suit buttons
-            self.setOptionEnabled(section: Sections.inGame.rawValue, option: InGameOptions.trumpSequenceSuits.rawValue, enabled: false)
+            self.setOptionEnabled(section: Sections.inGame.section, option: InGameOptions.trumpSequenceSuits.rawValue, enabled: false)
             
             // Rename edit button
             trumpSequenceEditButton.setTitle("Edit", for: .normal)
@@ -960,18 +988,18 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
             
         } else {
             // Entering edit mode - Enable suit buttons
-            self.setOptionEnabled(section: Sections.inGame.rawValue, option: InGameOptions.trumpSequenceSuits.rawValue, enabled: true)
+            self.setOptionEnabled(section: Sections.inGame.section, option: InGameOptions.trumpSequenceSuits.rawValue, enabled: true)
             
             // Rename edit button
             trumpSequenceEditButton.setTitle("Done", for: .normal)
             
             // Make sure that trump suit is in view
-            let indexPath = IndexPath(row: InGameOptions.trumpSequenceSuits.rawValue, section: Sections.inGame.rawValue)
+            let indexPath = IndexPath(row: InGameOptions.trumpSequenceSuits.rawValue, section: Sections.inGame.section)
             self.settingsTableView.scrollToRow(at: indexPath, at: .none, animated: true)
             
             // Start wiggling suits and disable everything else
             self.startWiggle()
-            self.disableAll(exceptSection: Sections.inGame.rawValue, exceptOptions: InGameOptions.trumpSequenceEdit.rawValue,
+            self.disableAll(exceptSection: Sections.inGame.section, exceptOptions: InGameOptions.trumpSequenceEdit.rawValue,
                                                                                     InGameOptions.trumpSequenceSuits.rawValue)
             self.settingsTableView.isScrollEnabled = false
             
@@ -994,7 +1022,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     }
     
     private func setAppearanceButtons(_ cell: SettingsTableCell? = nil) {
-        if let cell = cell ?? self.settingsTableView.cellForRow(at: IndexPath(row: ThemeOptions.appearance.rawValue, section: Sections.theme.rawValue)) as? SettingsTableCell {
+        if let cell = cell ?? self.settingsTableView.cellForRow(at: IndexPath(row: ThemeOptions.appearance.rawValue, section: Sections.theme.section)) as? SettingsTableCell {
             cell.appearanceButtons.forEach{(button) in
                 if button.tag == Scorecard.settings.appearance.rawValue {
                     button.setImage(UIImage(named: "box tick"), for: .normal)
@@ -1229,14 +1257,14 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
         if let cell = cell {
             cell.setEnabled(enabled: self.onlineEnabled)
         } else {
-            self.setOptionEnabled(section: Sections.onlineGames.rawValue, option: OnlineGameOptions.vibrateAlert.rawValue, enabled: self.onlineEnabled)
+            self.setOptionEnabled(section: Sections.onlineGames.section, option: OnlineGameOptions.vibrateAlert.rawValue, enabled: self.onlineEnabled)
         }
         if switchOn {
             Scorecard.settings.alertVibrate = true
             if let cell = cell {
                 self.setOptionValue(cell: cell, value: true)
             } else {
-                self.setOptionValue(section: Sections.onlineGames.rawValue, option: OnlineGameOptions.vibrateAlert.rawValue, value: true)
+                self.setOptionValue(section: Sections.onlineGames.section, option: OnlineGameOptions.vibrateAlert.rawValue, value: true)
             }
         }
     }
@@ -1260,7 +1288,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     
     private func refreshFaceTimeAddress() {
         // Reload row as height might have changed
-        let indexPath = IndexPath(row: OnlineGameOptions.facetimeAddress.rawValue, section: Sections.onlineGames.rawValue)
+        let indexPath = IndexPath(row: OnlineGameOptions.facetimeAddress.rawValue, section: Sections.onlineGames.section)
         self.settingsTableView.reloadRows(at: [indexPath], with: .automatic)
     }
     
@@ -1362,7 +1390,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     
     private func setSaveGameLocation(value: Bool) {
         Scorecard.settings.saveLocation = value
-        self.setOptionValue(section: Sections.onlineGames.rawValue, option: OnlineGameOptions.saveGameLocation.rawValue, value: value)
+        self.setOptionValue(section: Sections.onlineGames.section, option: OnlineGameOptions.saveGameLocation.rawValue, value: value)
     }
 
     
@@ -1490,7 +1518,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     
     private func getTrumpSuitCollectionView() -> UICollectionView? {
         var collection: UICollectionView?
-        let indexPath = IndexPath(row: InGameOptions.trumpSequenceSuits.rawValue, section: Sections.inGame.rawValue)
+        let indexPath = IndexPath(row: InGameOptions.trumpSequenceSuits.rawValue, section: Sections.inGame.section)
         if let cell = settingsTableView.cellForRow(at: indexPath) as? SettingsTableCell {
             collection = cell.trumpSequenceCollectionView
         }
@@ -1499,7 +1527,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
 
     private func getCardsInHandBounceSegmentedControl() -> UISegmentedControl? {
         var segmentedControl: UISegmentedControl?
-        let indexPath = IndexPath(row: InGameOptions.cardsInHandBounce.rawValue, section: Sections.inGame.rawValue)
+        let indexPath = IndexPath(row: InGameOptions.cardsInHandBounce.rawValue, section: Sections.inGame.section)
         if let cell = settingsTableView.cellForRow(at: indexPath) as? SettingsTableCell {
             segmentedControl = cell.segmentedControl
         }
@@ -1507,7 +1535,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     }
     
     private func clearReceiveNotifications() {
-        self.setOptionValue(section: Sections.onlineGames.rawValue, option: OnlineGameOptions.receiveNotifications.rawValue, value: false)
+        self.setOptionValue(section: Sections.onlineGames.section, option: OnlineGameOptions.receiveNotifications.rawValue, value: false)
         Scorecard.settings.receiveNotifications = false
         // Delete subscriptions
         Notifications.updateHighScoreSubscriptions()
@@ -1515,7 +1543,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     
     func clearAlerts() {
         // Reset Alert Vibrate
-        self.setOptionValue(section: Sections.onlineGames.rawValue, option: OnlineGameOptions.vibrateAlert.rawValue, value: false)
+        self.setOptionValue(section: Sections.onlineGames.section, option: OnlineGameOptions.vibrateAlert.rawValue, value: false)
         Scorecard.settings.alertVibrate = false
     }
     
@@ -1523,9 +1551,9 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
         self.onlineEnabled = true
         Scorecard.settings.onlineGamesEnabled = true
         // Enable online player details
-        self.setSectionEnabled(section: Sections.onlineGames.rawValue, enabled: true)
+        self.setSectionEnabled(section: Sections.onlineGames.section, enabled: true)
         // Enable Facetime calls switch
-        self.setOptionEnabled(section: Sections.onlineGames.rawValue, option: OnlineGameOptions.facetimeCalls.rawValue, enabled: true)
+        self.setOptionEnabled(section: Sections.onlineGames.section, option: OnlineGameOptions.facetimeCalls.rawValue, enabled: true)
         // Enable (and default on alerts
         self.enableAlerts(switchOn: true)
     }
@@ -1536,20 +1564,20 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
         // Delete Facetime address
         self.facetimeEnabled = false
         Scorecard.settings.faceTimeAddress = ""
-        self.setOptionValue(section: Sections.onlineGames.rawValue, option: OnlineGameOptions.facetimeCalls.rawValue, value: false)
-        self.setOptionEnabled(section: Sections.onlineGames.rawValue, option: OnlineGameOptions.facetimeCalls.rawValue, enabled: false)
-        self.setOptionValue(section: Sections.onlineGames.rawValue, option: OnlineGameOptions.facetimeAddress.rawValue, value: "")
+        self.setOptionValue(section: Sections.onlineGames.section, option: OnlineGameOptions.facetimeCalls.rawValue, value: false)
+        self.setOptionEnabled(section: Sections.onlineGames.section, option: OnlineGameOptions.facetimeCalls.rawValue, enabled: false)
+        self.setOptionValue(section: Sections.onlineGames.section, option: OnlineGameOptions.facetimeAddress.rawValue, value: "")
         self.refreshFaceTimeAddress()
         // Delete subscriptions
         self.updateOnlineGameSubscriptions()
         // Disable alerts
         self.clearAlerts()
-        self.setSectionValue(section: Sections.onlineGames.rawValue, value: false)
+        self.setSectionValue(section: Sections.onlineGames.section, value: false)
     }
     
     func clearSharing() {
         if Scorecard.settings.allowBroadcast {
-            self.setOptionValue(section: Sections.onlineGames.rawValue, option: OnlineGameOptions.shareScorecard.rawValue, value: false)
+            self.setOptionValue(section: Sections.onlineGames.section, option: OnlineGameOptions.shareScorecard.rawValue, value: false)
             Scorecard.settings.allowBroadcast = false
             Scorecard.shared.stopSharing()
         }
@@ -1557,7 +1585,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     
     func setSharing() {
         if !Scorecard.settings.allowBroadcast {
-            self.setOptionValue(section: Sections.onlineGames.rawValue, option: OnlineGameOptions.shareScorecard.rawValue, value: true)
+            self.setOptionValue(section: Sections.onlineGames.section, option: OnlineGameOptions.shareScorecard.rawValue, value: true)
             Scorecard.settings.allowBroadcast = true
             Scorecard.shared.resetSharing()
         }
@@ -1572,7 +1600,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
         } else if Scorecard.settings.confettiWinSettingState == .availableNotify {
             self.alertMessage("You have now achieved the loyalty card award. This has enabled a new setting to allow you to have a confetti storm on your device every time you win a game!", okHandler: {
                 Scorecard.settings.confettiWinSettingState = .available
-                let indexPath = IndexPath(row: InGameOptions.confettiWin.rawValue, section: Sections.inGame.rawValue)
+                let indexPath = IndexPath(row: InGameOptions.confettiWin.rawValue, section: Sections.inGame.section)
                 let cell = self.settingsTableView.cellForRow(at: indexPath) as! SettingsTableCell
                 self.settingsTableView.scrollToRow(at: indexPath, at: .top, animated: true)
                 self.settingsTableView.layoutIfNeeded()
@@ -1877,28 +1905,28 @@ extension SettingsViewController {
         
         self.helpView.add("This is the default player for this device (i.e. yourself). You can change the default player by tapping the Change button or tapping the image.", views: [self.thisPlayerThumbnailView, self.thisPlayerChangeButtonContainer], border: 8)
         
-        self.helpView.add("This switches the ability to play online/nearby games with other devices on/off.", views: [self.settingsTableView], section: Sections.onlineGames.rawValue, item: -1, horizontalBorder: -16)
+        self.helpView.add("This switches the ability to play online/nearby games with other devices on/off.", views: [self.settingsTableView], section: Sections.onlineGames.section, item: -1, horizontalBorder: -16)
         
-        self.helpView.add("This switches a vibration on/off when it is your turn to bid or play.", views: [self.settingsTableView], section: Sections.onlineGames.rawValue, item: OnlineGameOptions.vibrateAlert.rawValue, horizontalBorder: -16)
+        self.helpView.add("This switches a vibration on/off when it is your turn to bid or play.", views: [self.settingsTableView], section: Sections.onlineGames.section, item: OnlineGameOptions.vibrateAlert.rawValue, horizontalBorder: -16)
         
-        self.helpView.add("This allows you to specify a facetime address which will be used to set up a group facetime audio call during online games", views: [self.settingsTableView], section: Sections.onlineGames.rawValue, item: OnlineGameOptions.facetimeCalls.rawValue, itemTo: OnlineGameOptions.facetimeAddress.rawValue, horizontalBorder: -16)
+        self.helpView.add("This allows you to specify a facetime address which will be used to set up a group facetime audio call during online games", views: [self.settingsTableView], section: Sections.onlineGames.section, item: OnlineGameOptions.facetimeCalls.rawValue, itemTo: OnlineGameOptions.facetimeAddress.rawValue, horizontalBorder: -16, verticalBorder: 4)
         
-        self.helpView.add("This switches visibility of games you are scoring on/off to allow/prevent others from viewing the scorecard.", views: [self.settingsTableView], section: Sections.onlineGames.rawValue, item: OnlineGameOptions.shareScorecard.rawValue, horizontalBorder: -16)
+        self.helpView.add("This switches visibility of games you are scoring on/off to allow/prevent others from viewing the scorecard.", views: [self.settingsTableView], section: Sections.onlineGames.section, item: OnlineGameOptions.shareScorecard.rawValue, horizontalBorder: -16)
 
-        self.helpView.add("This switches game notifications on/off. If switched on, you will receive a notification on your device if any player on your device wins a game.", views: [self.settingsTableView], section: Sections.onlineGames.rawValue, item: OnlineGameOptions.receiveNotifications.rawValue, horizontalBorder: -16)
+        self.helpView.add("This switches game notifications on/off. If switched on, you will receive a notification on your device if any player on your device wins a game.", views: [self.settingsTableView], section: Sections.onlineGames.section, item: OnlineGameOptions.receiveNotifications.rawValue, horizontalBorder: -16)
         
-        self.helpView.add("This switches location saving on/off. You have to allow the app access to your location while the app is running to enable this option. If location saving is switched on you will be prompted to confirm the location at the start of nearby games.", views: [self.settingsTableView], section: Sections.onlineGames.rawValue, item: OnlineGameOptions.saveGameLocation.rawValue, horizontalBorder: -16)
+        self.helpView.add("This switches location saving on/off. You have to allow the app access to your location while the app is running to enable this option. If location saving is switched on you will be prompted to confirm the location at the start of nearby games.", views: [self.settingsTableView], section: Sections.onlineGames.section, item: OnlineGameOptions.saveGameLocation.rawValue, horizontalBorder: -16)
         
-        self.helpView.add("This section allows you to change the colour scheme for your device and also to specify how you want to work with dark mode.\nIf you specify 'light' then you will always operate in light mode even if your device is in dark mode.\nSimilarly if you specify 'dark' then you will always operate in dark mode.\nIf you specify 'device' the app will follow dark mode on your device.", views: [self.settingsTableView], section: Sections.theme.rawValue, item: -1, itemTo: ThemeOptions.colorTheme.rawValue, horizontalBorder: -16)
+        self.helpView.add("This section allows you to change the colour scheme for your device and also to specify how you want to work with dark mode.\nIf you specify 'light' then you will always operate in light mode even if your device is in dark mode.\nSimilarly if you specify 'dark' then you will always operate in dark mode.\nIf you specify 'device' the app will follow dark mode on your device.", views: [self.settingsTableView], section: Sections.theme.section, item: -1, itemTo: ThemeOptions.colorTheme.rawValue, horizontalBorder: -16)
         
-        self.helpView.add("These settings allow you to customise the number of cards in each hand. You can specify a starting point and an end point. You can also choose whether you bounce from the end point back to the starting point. E.g. you can start with 7 cards, progressively reduce to 1 card, and then progressively increase back to 7 cards.", views: [self.settingsTableView], section: Sections.inGame.rawValue, item: InGameOptions.cardsInHandSubheading.rawValue, itemTo: InGameOptions.cardsInHandBounce.rawValue, horizontalBorder: -16)
+        self.helpView.add("These settings allow you to customise the number of cards in each hand. You can specify a starting point and an end point. You can also choose whether you bounce from the end point back to the starting point. E.g. you can start with 7 cards, progressively reduce to 1 card, and then progressively increase back to 7 cards.", views: [self.settingsTableView], section: Sections.inGame.section, item: InGameOptions.cardsInHandSubheading.rawValue, itemTo: InGameOptions.cardsInHandBounce.rawValue, horizontalBorder: -16)
         
-        self.helpView.add("This setting allows you to enable/disable a special ten point bonus every time a player wins a trick with a 2.", views: [self.settingsTableView], section: Sections.inGame.rawValue, item: InGameOptions.bonus2Subheading.rawValue, itemTo: InGameOptions.bonus2.rawValue, horizontalBorder: -16)
+        self.helpView.add("This setting allows you to enable/disable a special ten point bonus every time a player wins a trick with a 2.", views: [self.settingsTableView], section: Sections.inGame.section, item: InGameOptions.bonus2Subheading.rawValue, itemTo: InGameOptions.bonus2.rawValue, horizontalBorder: -16)
         
-        self.helpView.add("These settings allow you to choose if you have rounds with no trumps. You can also customise the order of the trump suit", views: [self.settingsTableView], section: Sections.inGame.rawValue, item: InGameOptions.includeNoTrump.rawValue, itemTo: InGameOptions.trumpSequenceSuits.rawValue, horizontalBorder: -16)
+        self.helpView.add("These settings allow you to choose if you have rounds with no trumps. You can also customise the order of the trump suit", views: [self.settingsTableView], section: Sections.inGame.section, item: InGameOptions.includeNoTrump.rawValue, itemTo: InGameOptions.trumpSequenceSuits.rawValue, horizontalBorder: -16)
         
-        self.helpView.add("This setting allows you to choose if the status bar at the top of the device (showing time, battery, signal etc) is displayed.", views: [self.settingsTableView], section: Sections.displayStatus.rawValue, item: -1, horizontalBorder: -16)
+        self.helpView.add("This setting allows you to choose if the status bar at the top of the device (showing time, battery, signal etc) is displayed.", views: [self.settingsTableView], condition: { ScorecardUI.phoneSize() }, section: Sections.displayStatus.section, item: -1, horizontalBorder: -16)
         
-        self.helpView.add("This section shows you information about the Whist app installed on your phone.", views: [self.settingsTableView], section: Sections.generalInfo.rawValue, item: -1, itemTo: GeneralInfoOptions.database.rawValue, horizontalBorder: -16)
+        self.helpView.add("This section shows you information about the Whist app installed on your phone.", views: [self.settingsTableView], section: Sections.generalInfo.section, item: -1, itemTo: GeneralInfoOptions.database.rawValue, horizontalBorder: -16)
     }
 }

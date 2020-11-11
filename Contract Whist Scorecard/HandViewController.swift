@@ -252,6 +252,10 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
         Scorecard.shared.alertDelegate = nil
     }
     
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .darkContent
+    }
+
     override internal func willDismiss() {
         self.cancelBidSubscriptions()
     }

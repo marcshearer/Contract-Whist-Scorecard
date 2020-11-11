@@ -18,6 +18,8 @@ class Notifications {
     public static func deleteExistingSubscriptions(_ category: String? = nil, completion: (()->())? = nil) {
         let database = CKContainer.init(identifier: Config.iCloudIdentifier).publicCloudDatabase
         
+        
+        
         database.fetchAllSubscriptions(completionHandler: { (subscriptions, error) in
             if error == nil {
                 if let subscriptions = subscriptions {
@@ -121,7 +123,7 @@ class Notifications {
                 let subscription = CKQuerySubscription(recordType: "Invites", predicate: predicate, options: [.firesOnRecordCreation])
                 
                 let notification = CKSubscription.NotificationInfo()
-                notification.alertLocalizationKey = "%1$@ has invited you to play online. Tap this notification to accept, or start the Whist app and go to 'Online Game' and select 'Join a Game' to see the invitation"
+                notification.alertLocalizationKey = "%1$@ has invited you to play online. Tap this notification to accept, or start the Whist app"
                 notification.alertLocalizationArgs = ["hostName", "hostPlayerUUID", "hostDeviceName", "invitePlayerUUID"]
                 notification.category = category
                 subscription.notificationInfo = notification
@@ -154,8 +156,38 @@ class Notifications {
             }
         }
         if !skipNotification {
-            // let message = String(format: "%@ has invited you to join an online game of Contract Whist", arguments: args)
-            // Need to launch online game from within app
+            let message = String(format: "%@ has invited you to join an online game of Contract Whist", arguments: args)
+            if let scorecardViewController = viewController as? ScorecardViewController {
+                if !(scorecardViewController.menuController?.isVisible ?? false) {
+                    // Don't need to worry if menu is visible since that will handle this
+                    // Now close all view controllers and select the correct device
+                    viewController?.alertDecision(message, title: "Game Invitation", okButtonText: "Join", okHandler: {
+                        let rootViewController = scorecardViewController.rootViewController!
+                        var controllers: [ScorecardViewController] = []
+                        for (_, childViewController) in rootViewController.viewControllerStack.reversed() {
+                            controllers.append(childViewController)
+                        }
+                        self.dismissAll(controllers, completion: {
+                            rootViewController.selectAvailableDevice(deviceName: args[2])
+                        })
+                    }, cancelButtonText: "Ignore")
+                }
+            } else {
+                viewController?.alertMessage(message, title: "Game Invitation")
+            }
+        }
+    }
+    
+    private static func dismissAll(_ controllers: [ScorecardViewController], completion: (()->())? = nil) {
+        if controllers.count == 0 {
+            completion?()
+        } else {
+            var controllers = controllers
+            let controller = controllers.first!
+            controllers.remove(at: 0)
+            controller.dismiss(animated: true) {
+                self.dismissAll(controllers, completion: completion)
+            }
         }
     }
     

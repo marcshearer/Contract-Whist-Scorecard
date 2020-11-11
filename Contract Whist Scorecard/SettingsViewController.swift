@@ -822,7 +822,6 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
         Scorecard.settings.save()
     }
     
-    
     @objc internal func onlineGamesChanged(_ onlineGamesSwitch: UISwitch) {
         self.onlineEnabled = onlineGamesSwitch.isOn
         if self.onlineEnabled {
@@ -830,6 +829,8 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                 successAction: {
                     self.enableOnline()
                     Scorecard.settings.save()
+                    // Update subscriptions
+                    self.updateOnlineGameSubscriptions()
             },
                 failureAction: {
                     self.enableOnline()
@@ -1609,6 +1610,8 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
             Scorecard.settings.thisPlayerUUID = playerUUID
             if let thisPlayerMO = Scorecard.shared.findPlayerByPlayerUUID(playerUUID) {
                 self.thisPlayerThumbnailView.set(playerMO: thisPlayerMO, nameHeight: 20.0, diameter: self.thisPlayerThumbnailView.frame.width)
+                // Update subscriptions
+                self.updateOnlineGameSubscriptions()
             }
         } else {
             self.thisPlayerThumbnailView.set(nameHeight: 20.0, diameter: self.thisPlayerThumbnailView.frame.width)
@@ -1878,7 +1881,7 @@ extension SettingsViewController {
         
         self.helpView.add("This switches a vibration on/off when it is your turn to bid or play.", views: [self.settingsTableView], section: Sections.onlineGames.rawValue, item: OnlineGameOptions.vibrateAlert.rawValue, horizontalBorder: -16)
         
-        self.helpView.add("This allows you to specify a facetime address which will be used to set up a group facetime audio call during online games", views: [self.settingsTableView], section: Sections.onlineGames.rawValue, item: OnlineGameOptions.facetimeCalls.rawValue, horizontalBorder: -16)
+        self.helpView.add("This allows you to specify a facetime address which will be used to set up a group facetime audio call during online games", views: [self.settingsTableView], section: Sections.onlineGames.rawValue, item: OnlineGameOptions.facetimeCalls.rawValue, itemTo: OnlineGameOptions.facetimeAddress.rawValue, horizontalBorder: -16)
         
         self.helpView.add("This switches visibility of games you are scoring on/off to allow/prevent others from viewing the scorecard.", views: [self.settingsTableView], section: Sections.onlineGames.rawValue, item: OnlineGameOptions.shareScorecard.rawValue, horizontalBorder: -16)
 

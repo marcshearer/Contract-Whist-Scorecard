@@ -37,7 +37,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.tap(app.alerts["Warning"].buttons["OK"])
         
         // Enter playerUUID address
-        self.typeText(app.tables.textFields["Enter your Unique ID to find players"], "mshearer@waitrose.com")
+        self.typeText(app.tables.textFields["Enter your Unique ID to find players"], "marc@sheareronline.com")
         
         // Select download
         self.tap(app.tables.buttons["Download Players from Cloud"])

@@ -22,10 +22,6 @@ Run Create links
 Changes since last version
 --------------------------
 
-
-5.1 (0-2)
-Stability fixes
-
 Bugs fix now
 ------------
 
@@ -38,6 +34,7 @@ Auto-sync when download players in Get Started?
 TODO
 ----
 TODO Need to switch off MallocStackLogging variables in Edit Scheme
+Notifications don't seem to be working when start a game
 
 Jack
 ----

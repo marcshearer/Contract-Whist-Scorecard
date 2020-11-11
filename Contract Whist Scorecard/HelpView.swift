@@ -641,11 +641,13 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
     }
     
     private func next() {
-        self.currentElement += 1
-        if self.currentElement >= self.activeElements.count {
-            self.finished(false)
-        } else {
-            self.showElement()
+        Utility.animate {
+            self.currentElement += 1
+            if self.currentElement >= self.activeElements.count {
+                self.finished(false)
+            } else {
+                self.showElement()
+            }
         }
     }
     

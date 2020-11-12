@@ -427,7 +427,7 @@ class Themes {
                 .haloDealer                  : ThemeColor(#colorLiteral(red: 0.7294117647, green: 0.2392156863, blue: 0.2156862745, alpha: 1), nil, .midBackground),   //2
                 .hand                        : ThemeColor(#colorLiteral(red: 0.5215686275, green: 0.6980392157, blue: 0.7058823529, alpha: 1), nil, .midBackground),
                 .highlight                   : ThemeColor(#colorLiteral(red: 0.337254902, green: 0.4509803922, blue: 0.4549019608, alpha: 1), nil, .midBackground),   //1
-                .inputControl                : ThemeColor(#colorLiteral(red: 0.9490196078, green: 0.9490196078, blue: 0.9490196078, alpha: 1), nil, .lightBackground), //lg
+                .inputControl                : ThemeColor(#colorLiteral(red: 0.9490196078, green: 0.9490196078, blue: 0.9490196078, alpha: 1), #colorLiteral(red: 0.3137254902, green: 0.3137254902, blue: 0.3137254902, alpha: 1),  .lightBackground, .darkBackground), //lg
                 .instruction                 : ThemeColor(#colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1), nil, .lightBackground),
                 .madeContract                : ThemeColor(#colorLiteral(red: 0.7333333333, green: 0.8470588235, blue: 0.8549019608, alpha: 1), nil, .midBackground),   //7
                 .roomInterior                : ThemeColor(#colorLiteral(red: 0.5215686275, green: 0.6980392157, blue: 0.7058823529, alpha: 1), nil, .midBackground),   //4

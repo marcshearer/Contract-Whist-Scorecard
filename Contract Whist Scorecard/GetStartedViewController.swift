@@ -597,9 +597,12 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
         // Save to iCloud
         Scorecard.settings.saveToICloud()
         
+        // Update subscriptions
+        Notifications.addOnlineGameSubscription(Scorecard.settings.thisPlayerUUID)
+        Notifications.updateHighScoreSubscriptions()
+        
         self.dismiss(animated: true, completion: self.completion)
     }
-    
 }
 
 extension GetStartedViewController {

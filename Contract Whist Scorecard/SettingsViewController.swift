@@ -42,6 +42,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     private var playerSelectionHeight: CGFloat = 0.0
     private var thisPlayerHeight: CGFloat = 0.0
     private var lastMenuVisible: Bool?
+    private var topSectionCompressed = false
     
     // Sections
     private enum Sections: Int, CaseIterable {
@@ -222,13 +223,17 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
         
         self.setupPanelModeBannerSize()
         
-        if reload {
+        if self.reload {
             self.settingsTableView.reloadData()
         }
         self.reload = false
-        if firstTime {
+        if self.firstTime {
             self.setupThisPlayerView()
             self.firstTime = false
+        }
+        
+        if !(self.menuController?.isVisible ?? false) {
+            self.setTopSectionHeight(force: true)
         }
     }
     
@@ -464,6 +469,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                         cell.textField.addTarget(self, action: #selector(SettingsViewController.facetimeAddressBeginEdit(_:)), for: UIControl.Event.editingDidBegin)
                         cell.textField.placeholder = "Enter FaceTime address"
                         cell.textField.text = Scorecard.settings.faceTimeAddress
+                        cell.textField.layer.borderWidth = 0
                         cell.setEnabled(enabled: self.facetimeEnabled)
                         
                     case .shareScorecard:
@@ -788,27 +794,33 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
         // Configure collapsible header
         if !(self.menuController?.isVisible ?? false) { // Change player will be in menu panel otherwise
             if tableView == self.settingsTableView {
-                if tableView.contentOffset.y > 10.0 && self.availableSpaceHeightConstraint.constant != 0.0 {
-                    Utility.animate(view: self.view, duration: 0.3) {
-                        self.topSectionLandscapePhoneProportionalHeightConstraint.isActive = false
-                        self.topSectionProportionalHeightConstraint.isActive = false
-                        self.availableSpaceHeightConstraint.constant = 0.0
-                        self.thisPlayerThumbnailView.isHidden = true
-                        self.thisPlayerChangeButtonContainer.isHidden = true
-                        self.topSectionHeightConstraint.isActive = true
-                     }
-                } else if tableView.contentOffset.y < 10.0 && self.availableSpaceHeightConstraint.constant == 0.0 {
-                    Utility.animate(view: self.view, duration: 0.3) {
-                        self.topSectionHeightConstraint.isActive = false
-                        self.availableSpaceHeightConstraint.constant = 140
-                        self.thisPlayerThumbnailView.isHidden = false
-                        self.thisPlayerChangeButtonContainer.isHidden = false
-                        if ScorecardUI.landscapePhone() {
-                            self.topSectionLandscapePhoneProportionalHeightConstraint.isActive = true
-                        } else {
-                            self.topSectionProportionalHeightConstraint.isActive = true
-                        }
-                    }
+                self.setTopSectionHeight()
+            }
+        }
+    }
+    
+    private func setTopSectionHeight(force: Bool = false) {
+        if self.settingsTableView.contentOffset.y > 10.0 && (!self.topSectionCompressed || force) {
+            Utility.animate(if: !force, view: self.view, duration: 0.3) {
+                self.topSectionCompressed = true
+                self.topSectionLandscapePhoneProportionalHeightConstraint.isActive = false
+                self.topSectionProportionalHeightConstraint.isActive = false
+                self.availableSpaceHeightConstraint.constant = 0.0
+                self.thisPlayerThumbnailView.isHidden = true
+                self.thisPlayerChangeButtonContainer.isHidden = true
+                self.topSectionHeightConstraint.isActive = true
+             }
+        } else if self.settingsTableView.contentOffset.y < 10.0 && (self.topSectionCompressed || force) {
+            Utility.animate(if: !force, view: self.view, duration: 0.3) {
+                self.topSectionCompressed = false
+                self.topSectionHeightConstraint.isActive = false
+                self.availableSpaceHeightConstraint.constant = 140
+                self.thisPlayerThumbnailView.isHidden = false
+                self.thisPlayerChangeButtonContainer.isHidden = false
+                if ScorecardUI.landscapePhone() {
+                    self.topSectionLandscapePhoneProportionalHeightConstraint.isActive = true
+                } else {
+                    self.topSectionProportionalHeightConstraint.isActive = true
                 }
             }
         }
@@ -900,7 +912,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     }
     
     @objc internal func facetimeAddressBeginEdit(_ facetimeAddressTextField: UITextField) {
-        facetimeAddressTextField.layer.borderColor = Palette.normal.text.cgColor
+        facetimeAddressTextField.layer.borderWidth = 1
     }
     
     @objc internal func facetimeAddressEndEdit(_ facetimeAddressTextField: UITextField) {
@@ -915,7 +927,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
             self.refreshFaceTimeAddress()
         }
         self.resignFirstResponder()
-        facetimeAddressTextField.layer.borderColor = Palette.emphasis.background.cgColor
+        facetimeAddressTextField.layer.borderWidth = 0
     }
      
     @objc internal func receiveNotificationsChanged(_ receiveNotificationsSwitch: UISwitch) {
@@ -1618,7 +1630,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     
     private func setupPanelModeBannerSize() {
         let menuVisible = self.menuController?.isVisible ?? false
-        if menuVisible != self.lastMenuVisible {
+        if menuVisible != self.lastMenuVisible && !ScorecardUI.phoneSize() {
             // Change player and info will be in menu panel when menu is visible
             self.topSectionHeightConstraint.isActive = menuVisible
             self.availableSpaceHeightConstraint.isActive = !menuVisible
@@ -1760,8 +1772,6 @@ class SettingsTableCell: UITableViewCell {
     
     private func setEnabled(textField: UITextField?, enabled: Bool) {
         textField?.isEnabled = enabled
-        textField?.layer.borderWidth = (enabled ? 1.0 : 0.3)
-        textField?.layer.cornerRadius = (enabled ? 5.0 : 0.0)
     }
     
     override func prepareForReuse() {
@@ -1861,6 +1871,8 @@ extension SettingsViewController {
             cell.infoValue1.textColor = Palette.normal.text
             cell.infoValue2.textColor = Palette.normal.text
             cell.infoValue3.textColor = Palette.normal.text
+        case "Text Field":
+            cell.textField.layer.borderColor = Palette.normal.text.cgColor
         case "Slider":
             cell.slider.minimumTrackTintColor = nil
             cell.slider.thumbTintColor = nil

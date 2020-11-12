@@ -176,7 +176,13 @@ class LaunchScreenView: UIView, SyncDelegate, ReconcileDelegate {
                 if self.syncPlayerList != nil {
                     self.checkReceiveNotifications() {
                         Utility.mainThread {
+                            // Save settings
                             Scorecard.settings.save()
+                            // Update subscriptions
+                            let thisPlayerUUID = Scorecard.settings.thisPlayerUUID
+                            Notifications.addOnlineGameSubscription(thisPlayerUUID)
+                            Notifications.updateHighScoreSubscriptions()
+                            // Get players
                             self.syncGetPlayers = true
                             self.sync.delegate = self
                             if !self.sync.synchronise(syncMode: .syncGetPlayerDetails, specificPlayerUUIDs: self.syncPlayerList!, waitFinish: true) {

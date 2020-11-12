@@ -115,8 +115,8 @@ extension ClientViewController : PanelContainer {
     internal func allocateContainerSizes() {
         // Idea is to have all 3 containers available, but sometimes offscreen if on an iPad
         self.containers = true
-        let canAddMenu = (self.gameMode != .none || self.viewControllerStack.isEmpty)
         let menuWasVisible = self.menuController?.isVisible ?? false
+        let canAddMenu = (self.gameMode != .none || self.viewControllerStack.isEmpty || menuWasVisible)
         let rightPanelWasVisible = self.isVisible(container: .right)
 
         repeat {

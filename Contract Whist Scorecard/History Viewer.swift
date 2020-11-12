@@ -352,10 +352,12 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
         let small = ScorecardUI.smallPhoneSize()
         self.filterInstructionView = UIView()
         self.filterInstructionView.backgroundColor = Palette.banner.background
+        self.filterInstructionView.accessibilityIdentifier = "filterInstruction"
         self.customView!.addSubview(self.filterInstructionView)
         self.customView!.superview?.bringSubviewToFront(self.customView!)
         Constraint.anchor(view: customView!, control: self.filterInstructionView, attributes: .top, .leading, .trailing)
         self.filterInstructionHeightConstraint = Constraint.setHeight(control: self.filterInstructionView, height: small ? 0.0 : 44.0)
+        self.customHeightConstraint.constant = self.filterInstructionHeightConstraint.constant
         if small {
             // Create instruction label
             self.filterInstructionLabel = UILabel()
@@ -369,6 +371,7 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
             self.filterClearButton.setTitle("X", for: .normal)
             self.filterClearButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0, weight: .light)
             self.filterClearButton.addTarget(self, action: #selector(HistoryViewer.filterButtonPressed(_:)), for: .touchUpInside)
+            self.filterClearButton.accessibilityIdentifier = "filterClearButton"
             self.filterInstructionView.addSubview(self.filterClearButton)
             Constraint.anchor(view: self.filterInstructionView, control: self.filterClearButton, to: self.filterInstructionLabel, multiplier: 1.0, constant: 4.0, toAttribute: .trailing, attributes: .leading)
             Constraint.anchor(view: self.filterInstructionView, control: self.filterClearButton, attributes: .centerY)
@@ -386,6 +389,7 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
             Constraint.setWidth(control: self.filterButton, width: buttonWidth)
             Constraint.setHeight(control: self.filterButton, height: buttonHeight)
             self.filterButton.setTitle("Filter", for: .normal)
+            self.filterButton.accessibilityIdentifier = "filterButton"
             self.filterInstructionView.addSubview(self.filterButton)
             Constraint.anchor(view: self.filterInstructionView, control: filterButton, attributes: .centerY)
             Constraint.anchor(view: self.filterInstructionView, control: filterButton, constant: -((buttonWidth / 2.0) + 5.0), attributes: .centerX)
@@ -396,6 +400,7 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
             self.filterClearView.isUserInteractionEnabled = false
             self.filterClearView.roundCorners(cornerRadius: clearHeight / 2.0)
             self.filterClearView.backgroundColor = Palette.banner.background
+            self.filterClearView.accessibilityIdentifier = "filterClearView"
             Constraint.setWidth(control: self.filterClearView, width: clearHeight)
             Constraint.setHeight(control: self.filterClearView, height: clearHeight)
             self.filterButton.addSubview(self.filterClearView)
@@ -417,6 +422,7 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
             Constraint.setWidth(control: self.syncButton, width: buttonWidth)
             Constraint.setHeight(control: self.syncButton, height: buttonHeight)
             self.syncButton.setTitle("Sync", for: .normal)
+            self.syncButton.accessibilityIdentifier = "syncButton"
             self.filterInstructionView.addSubview(syncButton)
             Constraint.anchor(view: self.filterInstructionView, control: syncButton, attributes: .centerY)
             Constraint.anchor(view: self.filterInstructionView, control: syncButton, constant: ((buttonWidth / 2.0) + 5.0), attributes: .centerX)
@@ -425,6 +431,14 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
     }
     
     private func createFilterSelectionView() {
+        let filterSelectionContainerView = UIView(frame: CGRect(x: 0.0, y: 0.0, width: self.customView.frame.width, height: 0.0))
+        filterSelectionContainerView.backgroundColor = UIColor.clear
+        filterSelectionContainerView.clipsToBounds = true
+        filterSelectionContainerView.accessibilityIdentifier = "filterSelectionContainer"
+        self.customView.addSubview(filterSelectionContainerView)
+        Constraint.anchor(view: customView!, control: filterSelectionContainerView, attributes: .bottom, .leading, .trailing)
+        Constraint.anchor(view: customView!, control: filterSelectionContainerView, to: self.filterInstructionView, toAttribute: .bottom, attributes: .top)
+        
         self.filterSelectionView = PlayerSelectionView(parent: self.dataTableViewController, frame: CGRect(x: 0.0, y: 0.0, width: self.customView.frame.width, height: self.dataTableViewController.view.frame.height - self.customView.frame.minY), interRowSpacing: 10.0)
         self.filterSelectionView.delegate = self
         self.filterSelectionView.backgroundColor = Palette.banner.background
@@ -432,10 +446,9 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
         
         self.setFilterSelectionViewRequiredHeight()
         
-        self.customView.addSubview(self.filterSelectionView)
-        Constraint.anchor(view: customView!, control: self.filterSelectionView, attributes: .bottom, .leading, .trailing)
-        Constraint.anchor(view: customView!, control: self.filterSelectionView, to: self.filterInstructionView, toAttribute: .bottom, attributes: .top)
-        
+        filterSelectionContainerView.addSubview(self.filterSelectionView)
+        Constraint.anchor(view: filterSelectionContainerView, control: self.filterSelectionView, attributes: .bottom, .leading, .trailing)
+        self.filterSelectionHeightConstraint = Constraint.setHeight(control: self.filterSelectionView, height: self.filterSelectionViewHeight)
     }
     
     private func setFilterSelectionViewRequiredHeight() {

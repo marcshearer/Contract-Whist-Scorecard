@@ -33,14 +33,17 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6k9-mI-xNc" userLabel="Left Padding View">
                                 <rect key="frame" x="0.0" y="44" width="0.0" height="34"/>
                                 <color key="backgroundColor" name="Section Heading"/>
+                                <accessibility key="accessibilityConfiguration" identifier="leftPadding"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VqW-sd-yiV" userLabel="Right Padding View">
                                 <rect key="frame" x="375" y="44" width="0.0" height="34"/>
                                 <color key="backgroundColor" name="Section Heading"/>
+                                <accessibility key="accessibilityConfiguration" identifier="rightPadding"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0Rn-Vn-KHT" userLabel="Custom View">
                                 <rect key="frame" x="0.0" y="44" width="375" height="0.0"/>
                                 <color key="backgroundColor" name="Banner"/>
+                                <accessibility key="accessibilityConfiguration" identifier="custom"/>
                                 <constraints>
                                     <constraint firstAttribute="height" id="RFs-dp-wrs"/>
                                 </constraints>

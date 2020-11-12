@@ -167,6 +167,7 @@
                         <outlet property="player3Bid" destination="8aH-vc-6ie" id="dCP-xb-Zwd"/>
                         <outlet property="player4Bid" destination="p0z-M5-FE8" id="wer-fU-vd5"/>
                         <outlet property="roundSummaryView" destination="eJU-jx-Ao1" id="Hld-BC-mvQ"/>
+                        <outlet property="tapGesture" destination="uU2-FK-Pnb" id="QeO-c7-6YU"/>
                         <outlet property="trumpSuit" destination="r0e-On-sEv" id="WLI-Ax-q80"/>
                     </connections>
                 </viewController>

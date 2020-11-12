@@ -19,6 +19,7 @@ class RoundSummaryViewController: ScorecardViewController, BannerDelegate {
     @IBOutlet private weak var player2Bid: UILabel!
     @IBOutlet private weak var player3Bid: UILabel!
     @IBOutlet private weak var player4Bid: UILabel!
+    @IBOutlet private weak var tapGesture: UITapGestureRecognizer!
     
     // MARK: - IB Actions ============================================================================== -
     
@@ -28,6 +29,13 @@ class RoundSummaryViewController: ScorecardViewController, BannerDelegate {
     
     @IBAction func tapGesture(recognizer: UITapGestureRecognizer) {
         self.finishPressed()
+    }
+    
+    internal override func helpPressed() {
+        self.tapGesture.isEnabled = false
+        self.helpView.show() { (finishPressed) in
+            self.tapGesture.isEnabled = true
+        }
     }
     
     // MARK: - View Overrides ========================================================================== -
@@ -44,6 +52,7 @@ class RoundSummaryViewController: ScorecardViewController, BannerDelegate {
         // Setup default colors (previously done in StoryBoard)
         self.defaultViewColors()
     }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
        

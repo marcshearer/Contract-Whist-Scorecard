@@ -1773,6 +1773,7 @@ class SettingsTableCell: UITableViewCell {
     
     private func setEnabled(textField: UITextField?, enabled: Bool) {
         textField?.isEnabled = enabled
+        textField?.textColor = (enabled ? Palette.inputControl.text : Palette.inputControl.faintText)
     }
     
     override func prepareForReuse() {

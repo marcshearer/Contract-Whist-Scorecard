@@ -34,7 +34,6 @@ Auto-sync when download players in Get Started?
 TODO
 ----
 Get rid of warnings in console
-If switch appearance trait in settings scroll of banner goes funny
 
 Jack
 ----

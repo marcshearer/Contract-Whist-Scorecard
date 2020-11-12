@@ -1758,6 +1758,7 @@ class SettingsTableCell: UITableViewCell {
         self.segmentedControl?.alpha = (enabled ? 1.0 : 0.3)
         self.slider?.isEnabled = enabled
         self.slider?.alpha = (enabled ? 1.0 : 0.3)
+        self.appearanceButtons?.forEach{ (button) in button.isEnabled(enabled)}
         self.setEnabled(textField: self.textField, enabled: enabled)
         self.trumpSequenceCollectionView?.isUserInteractionEnabled = enabled
         self.trumpSequenceCollectionView?.alpha = (enabled ? 1.0 : 0.5)

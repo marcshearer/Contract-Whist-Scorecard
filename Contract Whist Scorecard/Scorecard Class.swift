@@ -99,8 +99,6 @@ class Scorecard {
                                                     // avoid duplicates
     
     // Network state
-    public var isLoggedIn = false
-    public var isNetworkAvailable = false
     public var iCloudUserIsMe = false
     
     // Comms services
@@ -372,30 +370,9 @@ class Scorecard {
         }
     }
     
-    public func checkNetworkConnection(action: (()->())? = nil) {
-        // First check network
-        Utility.mainThread {
-            
-            if Scorecard.reachability.connected ?? false {
-                self.isNetworkAvailable = true
-                                
-                // Now check icloud asynchronously
-                CKContainer.init(identifier: Config.iCloudIdentifier).accountStatus(completionHandler: { (accountStatus, errorMessage) -> Void in
-                    self.isLoggedIn = (accountStatus == .available)
-                    Utility.mainThread {
-                        action?()
-                    }
-                })
-            } else {
-                self.isNetworkAvailable = false
-                action?()
-            }
-        }
-    }
-    
     public var onlineEnabled: Bool {
         get {
-            return ((Utility.isDevelopment || (self.isNetworkAvailable && self.isLoggedIn)) &&
+            return ((Utility.isDevelopment || Scorecard.reachability.isConnected) &&
                     RabbitMQConfig.rabbitMQUri != "" &&
                     Scorecard.settings.onlineGamesEnabled)
         }
@@ -467,7 +444,7 @@ class Scorecard {
     private func setICloudUserIsMe() {
         
         self.iCloudUserIsMe = false
-        let container = CKContainer.init(identifier: Config.iCloudIdentifier)
+        let container = Sync.cloudKitContainer
         container.fetchUserRecordID() {
             recordID, error in
             if error == nil {

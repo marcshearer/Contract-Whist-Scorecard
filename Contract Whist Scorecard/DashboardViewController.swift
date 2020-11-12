@@ -155,7 +155,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
         
         self.setupSubtitle()
     }
-
+    
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         self.rotated = true
@@ -203,7 +203,6 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        // self.carouselCollectionView.reloadData()
     }
     
     override func rightPanelDidDisappear() {
@@ -481,11 +480,9 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
         if !self.allowSync {
             self.syncButtons(hidden: true)
         } else {
-            Scorecard.shared.checkNetworkConnection {
-                self.syncButtons(hidden: !(Scorecard.shared.isNetworkAvailable && Scorecard.shared.isLoggedIn))
-            }
-            self.observer = Scorecard.reachability.startMonitor { (available) in
-                self.syncButtons(hidden: !available)
+            self.syncButtons(hidden: !(Scorecard.reachability.isConnected))
+            self.observer = Scorecard.reachability.startMonitor { (isConnected) in
+                self.syncButtons(hidden: !isConnected)
             }
         }
     }

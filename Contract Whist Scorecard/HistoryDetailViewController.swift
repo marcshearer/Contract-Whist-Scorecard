@@ -78,10 +78,8 @@ class HistoryDetailViewController: ScorecardViewController, UITableViewDataSourc
             mapView.isHidden = true
         } else {
             // Only show update button if network available
-            Scorecard.shared.checkNetworkConnection {
-                let available = Scorecard.shared.isNetworkAvailable && Scorecard.shared.isLoggedIn
-                self.updateButton.isHidden = !available
-            }
+            let available = Scorecard.reachability.isConnected
+            self.updateButton.isHidden = !available
         }
         
         let dateString = DateFormatter.localizedString(from: gameDetail.datePlayed, dateStyle: .medium, timeStyle: .none)
@@ -220,7 +218,7 @@ class HistoryDetailViewController: ScorecardViewController, UITableViewDataSourc
             // First retrieve it from the cloud
             let syncDate = Date()
             var cloudObject: CKRecord!
-            let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
+            let cloudContainer = Sync.cloudKitContainer
             let publicDatabase = cloudContainer.publicCloudDatabase
             let predicate = NSPredicate(format: "gameUUID = %@", gameDetail.gameUUID)
             let query = CKQuery(recordType: "Games", predicate: predicate)
@@ -270,7 +268,7 @@ class HistoryDetailViewController: ScorecardViewController, UITableViewDataSourc
     func saveParticipants(gameUUID: String, syncDate: Date) {
         // Retrieve participants of game and set sync date
         var cloudObjectList: [CKRecord] = []
-        let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
+        let cloudContainer = Sync.cloudKitContainer
         let publicDatabase = cloudContainer.publicCloudDatabase
         let predicate = NSPredicate(format: "gameUUID = %@", gameUUID)
         let query = CKQuery(recordType: "Participants", predicate: predicate)

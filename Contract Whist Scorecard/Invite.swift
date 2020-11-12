@@ -136,7 +136,7 @@ class Invite {
         deleteUUIDs = []
         
         // Fetch host record from cloud
-        let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
+        let cloudContainer = Sync.cloudKitContainer
         let publicDatabase = cloudContainer.publicCloudDatabase
         predicate = NSPredicate(format: "hostPlayerUUID == %@", hostPlayerUUID)
         let query = CKQuery(recordType: "Invites", predicate: predicate)
@@ -200,7 +200,7 @@ class Invite {
     
     func sendUpdatedRecords(createRecords: [CKRecord]!, deleteRecordIDs: [CKRecord.ID]!, deleteUUIDs: [String]!) {
         // Now send back new / updated records
-        let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
+        let cloudContainer = Sync.cloudKitContainer
         let publicDatabase = cloudContainer.publicCloudDatabase
         
         let uploadOperation = CKModifyRecordsOperation(recordsToSave: createRecords, recordIDsToDelete: deleteRecordIDs)
@@ -243,7 +243,7 @@ class Invite {
         var queryOperation: CKQueryOperation
         
         // Fetch host record from cloud
-        let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
+        let cloudContainer = Sync.cloudKitContainer
         let publicDatabase = cloudContainer.publicCloudDatabase
         
         // Setup filter

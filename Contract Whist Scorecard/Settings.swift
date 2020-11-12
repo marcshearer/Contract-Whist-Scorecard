@@ -241,7 +241,7 @@ class Settings : Equatable {
     public func saveToICloud() {
         var downloadList: [(label: String, deviceName: String, type: String, value: String, record: CKRecord)] = []
         
-        let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
+        let cloudContainer = Sync.cloudKitContainer
         let database = cloudContainer.privateCloudDatabase
         
         let predicate = NSPredicate(format: "deviceName IN %@", argumentArray: [["", Scorecard.deviceName]])
@@ -381,7 +381,7 @@ class Settings : Equatable {
         // Note there should be 2 values for each column, the default and the device-specific
         // By sorting by device name we should get the default first and then overwrite it
         let downloaded = Settings()
-        let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
+        let cloudContainer = Sync.cloudKitContainer
         let database = cloudContainer.privateCloudDatabase
         var columnsDownloaded = 0
         var players: [String] = []

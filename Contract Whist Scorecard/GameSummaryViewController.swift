@@ -607,7 +607,7 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
     }
     
     public func saveGameNotification(newHighScore: Bool, winnerPlayerUUID: String, winner: String, winningScore: Int) {
-        if Scorecard.activeSettings.syncEnabled && Scorecard.shared.isNetworkAvailable && Scorecard.shared.isLoggedIn && !self.excludeHistory && !(Scorecard.game?.isPlayingComputer ?? false) {
+        if Scorecard.activeSettings.syncEnabled && Scorecard.reachability.isConnected && !self.excludeHistory && !(Scorecard.game?.isPlayingComputer ?? false) {
             var message = ""
             
             for playerNumber in 1...Scorecard.game.currentPlayers {
@@ -663,7 +663,7 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
         completionMode = returnMode
         completionAdvanceDealer = advanceDealer
         completionResetOverrides = resetOverrides
-        if Scorecard.activeSettings.syncEnabled && Scorecard.shared.isNetworkAvailable && Scorecard.shared.isLoggedIn && !self.excludeHistory && !(Scorecard.game?.isPlayingComputer ?? false && !Sync.temporaryPlayerUUIDs) {
+        if Scorecard.activeSettings.syncEnabled && Scorecard.reachability.isConnected && !self.excludeHistory && !(Scorecard.game?.isPlayingComputer ?? false && !Sync.temporaryPlayerUUIDs) {
             view.isUserInteractionEnabled = false
             activityIndicator.startAnimating()
             self.sync.delegate = self

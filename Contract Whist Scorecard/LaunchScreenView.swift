@@ -120,7 +120,7 @@ class LaunchScreenView: UIView, SyncDelegate, ReconcileDelegate {
         Utility.mainThread {
             if Scorecard.settings.termsDate == nil {
                 // Need to get terms approval - but only possible with network
-                if !Scorecard.shared.isNetworkAvailable || !Scorecard.shared.isLoggedIn {
+                if !Scorecard.reachability.isConnected {
                     self.failNoNetwork()
                 } else {
                     Sync.getUser { (userID) in
@@ -246,7 +246,7 @@ class LaunchScreenView: UIView, SyncDelegate, ReconcileDelegate {
     
     private func getCloudVersion(async: Bool = false) {
         self.syncGetVersion = true
-        if Scorecard.shared.isNetworkAvailable {
+        if Scorecard.reachability.isConnected {
             self.sync.delegate = self
             if self.sync.synchronise(syncMode: .syncGetVersion, timeout: nil, waitFinish: async) {
                 // Running or queued (if async)
@@ -280,7 +280,7 @@ class LaunchScreenView: UIView, SyncDelegate, ReconcileDelegate {
                 
                 Utility.debugMessage("launch", "Version returned")
                 
-                if Scorecard.shared.playerList.count != 0 && !Scorecard.version.blockSync && Scorecard.shared.isNetworkAvailable && Scorecard.shared.isLoggedIn {
+                if Scorecard.shared.playerList.count != 0 && !Scorecard.version.blockSync && Scorecard.reachability.isConnected {
                     // Rebuild any players who have a sync in progress flag set
                     self.reconcilePlayers()
                 } else {

@@ -13,47 +13,59 @@ import CloudKit
 public class Reachability {
     
     let monitor = NWPathMonitor()
-    private var _connected: Bool?
-    public var connected: Bool? { _connected }
-    private var isLoggedIn: Bool?
+    private var _isNetworkAvailable: Bool?
+    public var isNetworkAvailable: Bool { self._isNetworkAvailable ?? false }
+    private var _isLoggedIn: Bool?
+    public var isLoggedIn: Bool { self._isLoggedIn ?? false }
+    public var isConnected: Bool { self.isNetworkAvailable && self.isLoggedIn }
     
     init() {
         self.monitor.pathUpdateHandler = self.pathUpdateHandler
         self.monitor.start(queue: DispatchQueue.main)
+        NotificationCenter.default.addObserver(self, selector: #selector(accountStatusUpdateHandler(_:)), name: Notification.Name.CKAccountChanged, object: nil)
     }
     
     private func pathUpdateHandler(path: NWPath) {
-        var newConnected: Bool
-        if self._connected != nil && Utility.isSimulator {
+        var newNetworkIsAvailable: Bool
+        if self._isNetworkAvailable != nil && Utility.isSimulator {
             // Doesn't update status in simulator - just invert it
-            newConnected = !self._connected!
+            newNetworkIsAvailable = !self.isNetworkAvailable
         } else {
-            newConnected = (path.status == .satisfied)
+            newNetworkIsAvailable = (path.status == .satisfied)
         }
-        if newConnected != self._connected {
-            self._connected = newConnected
-            Scorecard.shared.isNetworkAvailable = self._connected!
-            if self._connected! {
-                // Now check icloud asynchronously
-                CKContainer.init(identifier: Config.iCloudIdentifier).accountStatus(completionHandler: { (accountStatus, errorMessage) -> Void in
-                    let newValue = (accountStatus == .available)
-                    if newValue != Scorecard.shared.isLoggedIn {
-                        // Changed - update it and reawaken listeners
-                        Scorecard.shared.isLoggedIn = newValue
-                        self.isLoggedIn = newValue
-                        NotificationCenter.default.post(name: .connectivityChanged, object: self, userInfo: ["available" : self._connected!])
-                    }
-                })
+        if newNetworkIsAvailable != self._isNetworkAvailable {
+            self._isNetworkAvailable = newNetworkIsAvailable
+            if newNetworkIsAvailable {
+                self.checkAccountStatus()
+            } else {
+                self._isLoggedIn = false
             }
-            NotificationCenter.default.post(name: .connectivityChanged, object: self, userInfo: ["available" : Scorecard.shared.isNetworkAvailable])
+            NotificationCenter.default.post(name: .connectivityChanged, object: self, userInfo: ["isConnected" : self.isConnected])
         }
+    }
+    
+    @objc private func accountStatusUpdateHandler(_ sender: Any) {
+        self.checkAccountStatus()
+    }
+    
+    private func checkAccountStatus() {
+        Sync.cloudKitContainer.accountStatus(completionHandler: { (accountStatus, errorMessage) -> Void in
+            let newValue = (accountStatus == .available)
+            if newValue != self._isLoggedIn {
+                // Changed - update it and reawaken listeners
+                self._isLoggedIn = newValue
+                NotificationCenter.default.post(name: .connectivityChanged, object: self, userInfo: ["isConnected" : self.isConnected])
+            }
+        })
     }
         
     public func startMonitor(action: @escaping (Bool)->()) -> NSObjectProtocol? {
         let observer = NotificationCenter.default.addObserver(forName: .connectivityChanged, object: nil, queue: nil) { (notification) in
             let info = notification.userInfo
-            let available = info?["available"] as! Bool?
-            action(available ?? false)
+            let available = info?["isConnected"] as! Bool?
+            Utility.mainThread {
+                action(available ?? false)
+            }
         }
         return observer
     }
@@ -63,8 +75,8 @@ public class Reachability {
     }
     
     private func wait(count: Int, completion: @escaping (Bool)->()) {
-        if count >= 50 || (Scorecard.reachability.connected != nil && self.isLoggedIn != nil) {
-            completion(Scorecard.reachability.connected ?? false)
+        if count >= 50 || (self._isNetworkAvailable != nil && self._isLoggedIn != nil) {
+            completion(self.isConnected)
         } else {
             Utility.executeAfter(delay: 0.01) {
                 self.wait(count: count + 1, completion: completion)

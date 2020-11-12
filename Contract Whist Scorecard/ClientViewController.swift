@@ -80,8 +80,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     internal var firstAppear = true
     private var launchScreen = true
     private var rotated = false
-    private var isNetworkAvailable: Bool?
-    private var isLoggedIn: Bool?
+    private var isConnected = false
     private var imageObserver: NSObjectProtocol?
     private var whisper: Whisper!
     
@@ -613,27 +612,17 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     
     @objc private func checkNetwork(_ sender: Any? = nil) {
         // Check network
-        self.observer = Scorecard.reachability.startMonitor { (available) in
-            self.networkChanged(available)
-        }
-        
-        Scorecard.shared.checkNetworkConnection() {
-            self.networkChanged(Scorecard.shared.isNetworkAvailable)
-        }
-    }
-    
-    private func networkChanged(_ available: Bool) {
-        Utility.mainThread {
-            Scorecard.shared.isNetworkAvailable = available
-            if (self.isNetworkAvailable != Scorecard.shared.isNetworkAvailable || self.isLoggedIn != Scorecard.shared.isLoggedIn) {
-                self.isNetworkAvailable = available
-                self.isLoggedIn = Scorecard.shared.isLoggedIn
+        self.isConnected = Scorecard.reachability.isConnected
+        self.observer = Scorecard.reachability.startMonitor { (isConnected) in
+            if (self.isConnected != Scorecard.reachability.isConnected) {
+                self.isConnected = isConnected
                 self.setupHostingOptions()
                 self.hostCollectionView.reloadData()
                 self.peerReloadData()
             }
         }
     }
+    
      
     // MARK: - Call reconcile and reconcile delegate methods =========================================================== -
     
@@ -881,7 +870,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         case peerCollection:
             if self.availablePeers.count == 0 {
                 return false
-            } else if !Scorecard.shared.isNetworkAvailable || !Scorecard.shared.isLoggedIn {
+            } else if !self.isConnected {
                 return true
             } else {
                 let availableFound = self.availablePeers[indexPath.row]
@@ -1069,7 +1058,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         if Scorecard.activeSettings.onlineGamesEnabled {
             self.nearbyItem = self.hostingOptions
             self.hostingOptions += 1
-            if Scorecard.shared.isNetworkAvailable && Scorecard.shared.isLoggedIn {
+            if self.isConnected {
                 self.onlineItem = self.hostingOptions
                 self.hostingOptions += 1
             }

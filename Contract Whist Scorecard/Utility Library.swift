@@ -537,7 +537,7 @@ class Utility {
     public static func getCloudRecordCount(_ table: String, predicate: NSPredicate? = nil, cursor: CKQueryOperation.Cursor? = nil, runningTotal: Int! = nil, completion: ((Int?)->())? = nil) {
         // Fetch data from cloud
         var queryOperation: CKQueryOperation
-        let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
+        let cloudContainer = Sync.cloudKitContainer
         let publicDatabase = cloudContainer.publicCloudDatabase
         var result: Int = (runningTotal == nil ? 0 : runningTotal)
         

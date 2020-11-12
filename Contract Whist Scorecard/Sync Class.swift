@@ -116,6 +116,7 @@ class Sync {
     private var timer: Timer!
     private var timeout: Double!
     private let uuid = UUID().uuidString
+    public static let cloudKitContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
     
     // Variables to hold updates
     public static var syncInProgress = false
@@ -377,7 +378,7 @@ class Sync {
         var database: String! = ""
         var cloudRabbitMQUri = ""
         
-        let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
+        let cloudContainer = Sync.cloudKitContainer
         let publicDatabase = cloudContainer.publicCloudDatabase
         let query = CKQuery(recordType: "Version", predicate: NSPredicate(value: true))
         let queryOperation = CKQueryOperation(query: query, qos: .userInteractive)
@@ -572,7 +573,7 @@ class Sync {
     private func getParticipantsFromCloudQuery(_ getParticipantMode: GetParticipantMode, gameUUIDList: [String]? = nil, remainder: [String]? = nil, cursor: CKQueryOperation.Cursor! = nil) -> Bool {
         // Fetch data from cloud
         var queryOperation: CKQueryOperation
-        let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
+        let cloudContainer = Sync.cloudKitContainer
         let publicDatabase = cloudContainer.publicCloudDatabase
         var predicate: NSCompoundPredicate
         var predicateList: [String]
@@ -742,7 +743,7 @@ class Sync {
         var remainder = remainder
         
         var queryOperation: CKQueryOperation
-        let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
+        let cloudContainer = Sync.cloudKitContainer
         let publicDatabase = cloudContainer.publicCloudDatabase
         
         if cursor == nil {
@@ -1052,7 +1053,7 @@ class Sync {
         var predicate: NSPredicate!
 
         // Fetch link records from cloud
-        let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
+        let cloudContainer = Sync.cloudKitContainer
         let publicDatabase = cloudContainer.publicCloudDatabase
         if cursor == nil {
             // First time in - set up the query
@@ -1153,7 +1154,7 @@ class Sync {
         var predicate: NSPredicate!
                 
         // Fetch player records from cloud
-        let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
+        let cloudContainer = Sync.cloudKitContainer
         let publicDatabase = cloudContainer.publicCloudDatabase
         if cursor == nil {
             // First time in - set up the query
@@ -1507,7 +1508,7 @@ class Sync {
         }
         
         // Create a CKModifyRecordsOperation operation
-        let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
+        let cloudContainer = Sync.cloudKitContainer
         let publicDatabase = cloudContainer.publicCloudDatabase
         
         let uploadOperation = CKModifyRecordsOperation(recordsToSave: self.cloudObjectList, recordIDsToDelete: nil)
@@ -1603,7 +1604,7 @@ class Sync {
     public func fetchPlayerImagesFromCloud(_ playerImageFromCloud: [PlayerMO]) {
         if playerImageFromCloud.count > 0 {
             
-            let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
+            let cloudContainer = Sync.cloudKitContainer
             let publicDatabase = cloudContainer.publicCloudDatabase
             var imageRecordID: [CKRecord.ID] = []
             self.cloudObjectList = []
@@ -1648,7 +1649,7 @@ class Sync {
     private func sendPlayerImagesToCloud(_ playerImageToCloud: [PlayerMO]) {
         if playerImageToCloud.count > 0 {
             
-            let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
+            let cloudContainer = Sync.cloudKitContainer
             let publicDatabase = cloudContainer.publicCloudDatabase
             
             for playerNumber in 1...playerImageToCloud.count {
@@ -1959,7 +1960,7 @@ class Sync {
             lastSplit = self.updatePortion(database: database, requireLess: true, lastSplit: lastSplit, records: records, recordIDsToDelete: recordIDsToDelete, recordsRemainder: recordsRemainder, recordIDsToDeleteRemainder: recordIDsToDeleteRemainder, completion: completion)
         } else {
             // Give it a go
-            let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
+            let cloudContainer = Sync.cloudKitContainer
             let database = database ?? cloudContainer.publicCloudDatabase
             
             let uploadOperation = CKModifyRecordsOperation(recordsToSave: records, recordIDsToDelete: recordIDsToDelete)
@@ -2064,7 +2065,7 @@ class Sync {
         var recordsRead = 0
         
         // Fetch link records from cloud
-        let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
+        let cloudContainer = Sync.cloudKitContainer
         let database = database ?? cloudContainer.publicCloudDatabase
         if cursor == nil {
             // First time in - set up the query
@@ -2212,7 +2213,7 @@ class Sync {
     }
     
     public static func getUser(completion: @escaping (String?)->()) {
-        let container = CKContainer.init(identifier: Config.iCloudIdentifier)
+        let container = Sync.cloudKitContainer
         container.fetchUserRecordID() {
             (recordID, error) in
             if error != nil || recordID == nil {

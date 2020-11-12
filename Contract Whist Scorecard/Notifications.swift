@@ -16,7 +16,7 @@ class Notifications {
     // MARK: - General routines =================================================================== -
     
     public static func deleteExistingSubscriptions(_ category: String? = nil, completion: (()->())? = nil) {
-        let database = CKContainer.init(identifier: Config.iCloudIdentifier).publicCloudDatabase
+        let database = Sync.cloudKitContainer.publicCloudDatabase
         
         
         
@@ -45,7 +45,7 @@ class Notifications {
     static func updateHighScoreNotificationRecord(winnerPlayerUUID: String, message: String) {
         var found = 0
         
-        let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
+        let cloudContainer = Sync.cloudKitContainer
         let publicDatabase = cloudContainer.publicCloudDatabase
         
         let predicate = NSPredicate(format: "playerUUID == %@", winnerPlayerUUID)
@@ -87,7 +87,7 @@ class Notifications {
             
             if Scorecard.activeSettings.syncEnabled && Scorecard.activeSettings.receiveNotifications {
                 // Now add a notification for each player on this device
-                let database = CKContainer.init(identifier: Config.iCloudIdentifier).publicCloudDatabase
+                let database = Sync.cloudKitContainer.publicCloudDatabase
                 let predicate = NSPredicate(format:"playerUUID IN %@", argumentArray: [Scorecard.shared.playerUUIDList()])
                 let subscription = CKQuerySubscription(recordType: "Notifications", predicate: predicate, options: [.firesOnRecordCreation, .firesOnRecordUpdate])
                 
@@ -118,7 +118,7 @@ class Notifications {
         Notifications.deleteExistingSubscriptions(category, completion: {
             if Scorecard.settings.onlineGamesEnabled {
                 // Now add a notification for the player linked to this device
-                let database = CKContainer.init(identifier: Config.iCloudIdentifier).publicCloudDatabase
+                let database = Sync.cloudKitContainer.publicCloudDatabase
                 let predicate = NSPredicate(format:"invitePlayerUUID = %@", invitePlayerUUID)
                 let subscription = CKQuerySubscription(recordType: "Invites", predicate: predicate, options: [.firesOnRecordCreation])
                 

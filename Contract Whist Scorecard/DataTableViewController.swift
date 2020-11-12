@@ -115,9 +115,6 @@ class DataTableViewController: ScorecardViewController, UITableViewDataSource, U
         // Setup default colors (previously done in StoryBoard
         self.defaultViewColors()
         
-        // Check for network / iCloud login
-        self.networkEnableSyncButton()
-        
         if let setupCustomControls = self.delegate?.setupCustomControls {
             setupCustomControls(self.viewDidLoadContinued)
         } else {
@@ -132,6 +129,9 @@ class DataTableViewController: ScorecardViewController, UITableViewDataSource, U
         
         // Setup help
         self.setupHelpView()
+        
+        // Check for network / iCloud login
+        self.networkEnableSyncButton()
         
         // Set initial sort (if any)
         self.lastSortField = self.delegate?.initialSortField ?? ""
@@ -205,11 +205,9 @@ class DataTableViewController: ScorecardViewController, UITableViewDataSource, U
     // MARK: - Utility Routines ======================================================================== -
     
     private func networkEnableSyncButton() {
-        Scorecard.shared.checkNetworkConnection{
-            self.syncButtons(enabled: (Scorecard.shared.isNetworkAvailable && Scorecard.shared.isLoggedIn))
-        }
-        self.observer = Scorecard.reachability.startMonitor { (available) in
-            self.syncButtons(enabled: available)
+        self.syncButtons(enabled: (Scorecard.reachability.isConnected))
+        self.observer = Scorecard.reachability.startMonitor { (isConnected) in
+            self.syncButtons(enabled: isConnected)
         }
     }
             

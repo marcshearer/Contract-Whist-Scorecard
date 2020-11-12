@@ -261,7 +261,7 @@ class PlayersViewController: ScorecardViewController, PlayersViewDelegate, UICol
     
     private func updatePlayersFromCloud(players: [String]? = nil) {
         
-        if Scorecard.activeSettings.syncEnabled && Scorecard.shared.isNetworkAvailable && Scorecard.shared.isLoggedIn {
+        if Scorecard.activeSettings.syncEnabled && Scorecard.reachability.isConnected {
             
             let players = players ?? Scorecard.shared.playerUUIDList()
             

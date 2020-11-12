@@ -133,7 +133,7 @@ Played</string>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="x7j-7w-yJj">
-                                                <rect key="frame" x="0.0" y="121" width="414" height="18"/>
+                                                <rect key="frame" x="0.0" y="121" width="414" height="30"/>
                                                 <color key="backgroundColor" name="Clear"/>
                                                 <accessibility key="accessibilityConfiguration" identifier="thisPlayerOverlap"/>
                                             </view>
@@ -166,7 +166,6 @@ Played</string>
                                             <constraint firstItem="XTv-6o-LLq" firstAttribute="top" secondItem="baT-Lm-DyX" secondAttribute="top" id="YHA-Pn-pco"/>
                                             <constraint firstAttribute="trailing" secondItem="XTv-6o-LLq" secondAttribute="trailing" id="a7q-9L-hle"/>
                                             <constraint firstItem="rhg-YK-v6u" firstAttribute="centerX" secondItem="baT-Lm-DyX" secondAttribute="centerX" id="b0M-Fp-ruV"/>
-                                            <constraint firstItem="x7j-7w-yJj" firstAttribute="height" secondItem="baT-Lm-DyX" secondAttribute="height" multiplier="0.12" id="bsM-gr-gao"/>
                                             <constraint firstItem="XTv-6o-LLq" firstAttribute="bottom" secondItem="rhg-YK-v6u" secondAttribute="bottom" constant="8" id="dt8-Hq-GNZ"/>
                                             <constraint firstAttribute="trailing" secondItem="x7j-7w-yJj" secondAttribute="trailing" id="jmq-QI-Us8"/>
                                             <constraint firstAttribute="height" priority="1" id="l4b-QK-6GL"/>
@@ -178,7 +177,6 @@ Played</string>
                                                 <exclude reference="MZt-h6-3zi"/>
                                                 <exclude reference="zCm-db-ZhY"/>
                                                 <exclude reference="Bzi-e3-1sg"/>
-                                                <exclude reference="bsM-gr-gao"/>
                                                 <exclude reference="Lpt-4b-nXG"/>
                                                 <exclude reference="b0M-Fp-ruV"/>
                                             </mask>
@@ -193,7 +191,6 @@ Played</string>
                                         <variation key="heightClass=regular">
                                             <mask key="constraints">
                                                 <include reference="zCm-db-ZhY"/>
-                                                <include reference="bsM-gr-gao"/>
                                                 <include reference="Lpt-4b-nXG"/>
                                             </mask>
                                         </variation>

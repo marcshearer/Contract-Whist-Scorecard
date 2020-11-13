@@ -51,10 +51,9 @@
                                                         <color key="backgroundColor" name="Clear"/>
                                                         <constraints>
                                                             <constraint firstItem="jyt-Sb-wJn" firstAttribute="leading" secondItem="ZcH-Ml-180" secondAttribute="leading" id="Ir8-Jv-pIP"/>
-                                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="25" id="LcA-Ok-zW2"/>
+                                                            <constraint firstAttribute="height" constant="25" id="LcA-Ok-zW2"/>
                                                             <constraint firstItem="jyt-Sb-wJn" firstAttribute="top" secondItem="ZcH-Ml-180" secondAttribute="top" id="QeZ-Vv-joY"/>
                                                             <constraint firstAttribute="trailing" secondItem="jyt-Sb-wJn" secondAttribute="trailing" id="c1O-jz-KEI"/>
-                                                            <constraint firstAttribute="height" constant="25" id="cAu-vz-Buk"/>
                                                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="80" id="eOi-ab-T7H"/>
                                                             <constraint firstAttribute="bottom" secondItem="jyt-Sb-wJn" secondAttribute="bottom" id="uvw-nO-aAb"/>
                                                             <constraint firstAttribute="width" constant="80" id="zhD-iK-5Sj"/>

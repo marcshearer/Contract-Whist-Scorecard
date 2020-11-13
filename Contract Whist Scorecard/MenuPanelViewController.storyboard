@@ -118,7 +118,7 @@
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hJD-RF-VuY" customClass="HelpButton" customModule="Whist" customModuleProvider="target">
-                                                            <rect key="frame" x="718" y="0.0" width="28" height="28"/>
+                                                            <rect key="frame" x="718" y="-0.5" width="28" height="28"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="28" id="ghq-c4-VhI"/>
                                                                 <constraint firstAttribute="width" secondItem="hJD-RF-VuY" secondAttribute="height" multiplier="1:1" id="mZf-X8-Vpu"/>
@@ -137,7 +137,7 @@
                                                         <constraint firstAttribute="trailing" secondItem="hJD-RF-VuY" secondAttribute="trailing" id="IYm-Z3-zwu"/>
                                                         <constraint firstAttribute="bottom" secondItem="njw-JR-F2N" secondAttribute="bottom" id="R1z-4Q-pud"/>
                                                         <constraint firstItem="hJD-RF-VuY" firstAttribute="leading" secondItem="njw-JR-F2N" secondAttribute="trailing" constant="8" id="TsY-Qb-WE8"/>
-                                                        <constraint firstItem="hJD-RF-VuY" firstAttribute="top" secondItem="eSB-0r-Uhw" secondAttribute="top" id="hf0-d8-vtg"/>
+                                                        <constraint firstItem="hJD-RF-VuY" firstAttribute="centerY" secondItem="eSB-0r-Uhw" secondAttribute="centerY" id="qh3-sT-OX2"/>
                                                         <constraint firstItem="njw-JR-F2N" firstAttribute="top" secondItem="eSB-0r-Uhw" secondAttribute="top" id="sKr-rI-b2H"/>
                                                         <constraint firstItem="njw-JR-F2N" firstAttribute="leading" secondItem="eSB-0r-Uhw" secondAttribute="leading" id="zUP-AW-iVf"/>
                                                     </constraints>
@@ -191,8 +191,8 @@
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d1j-sg-4Sc" customClass="HelpButton" customModule="Whist" customModuleProvider="target">
                                                             <rect key="frame" x="718" y="-1" width="28" height="28.5"/>
                                                             <constraints>
-                                                                <constraint firstAttribute="width" constant="28" id="A1b-zA-Zw7"/>
-                                                                <constraint firstAttribute="width" secondItem="d1j-sg-4Sc" secondAttribute="height" multiplier="1:1" id="z7W-tR-oAR"/>
+                                                                <constraint firstAttribute="width" priority="750" constant="28" id="A1b-zA-Zw7"/>
+                                                                <constraint firstAttribute="width" secondItem="d1j-sg-4Sc" secondAttribute="height" multiplier="1:1" priority="750" id="z7W-tR-oAR"/>
                                                             </constraints>
                                                             <color key="tintColor" red="1" green="0.99998801950000005" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                             <state key="normal" image="questionmark" catalog="system"/>

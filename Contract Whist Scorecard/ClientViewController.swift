@@ -192,6 +192,9 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
                         // Code correct - set admin mode
                         Scorecard.adminMode = !Scorecard.adminMode
                         self.banner.setButton("admin", isHidden: false)
+                        if Scorecard.adminMode {
+                            MultipeerLogger.logger.reset()
+                        }
                         self.restart()
                         matching = 0
                     }

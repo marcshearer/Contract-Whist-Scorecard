@@ -803,24 +803,24 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
         if self.settingsTableView.contentOffset.y > 10.0 && (!self.topSectionCompressed || force) {
             Utility.animate(if: !force, view: self.view, duration: 0.3) {
                 self.topSectionCompressed = true
-                self.topSectionLandscapePhoneProportionalHeightConstraint.isActive = false
-                self.topSectionProportionalHeightConstraint.isActive = false
+                Constraint.setActive(self.topSectionLandscapePhoneProportionalHeightConstraint, to: false)
+                Constraint.setActive(self.topSectionProportionalHeightConstraint, to: false)
                 self.availableSpaceHeightConstraint.constant = 0.0
                 self.thisPlayerThumbnailView.isHidden = true
                 self.thisPlayerChangeButtonContainer.isHidden = true
-                self.topSectionHeightConstraint.isActive = true
+                Constraint.setActive(self.topSectionHeightConstraint, to: true)
              }
         } else if self.settingsTableView.contentOffset.y < 10.0 && (self.topSectionCompressed || force) {
             Utility.animate(if: !force, view: self.view, duration: 0.3) {
                 self.topSectionCompressed = false
-                self.topSectionHeightConstraint.isActive = false
+                Constraint.setActive(self.topSectionHeightConstraint, to: false)
                 self.availableSpaceHeightConstraint.constant = 140
                 self.thisPlayerThumbnailView.isHidden = false
                 self.thisPlayerChangeButtonContainer.isHidden = false
                 if ScorecardUI.landscapePhone() {
-                    self.topSectionLandscapePhoneProportionalHeightConstraint.isActive = true
-                } else {
-                    self.topSectionProportionalHeightConstraint.isActive = true
+                    Constraint.setActive(self.topSectionLandscapePhoneProportionalHeightConstraint, to: true)
+                } else if ScorecardUI.phoneSize() {
+                    Constraint.setActive(self.topSectionProportionalHeightConstraint, to: true)
                 }
             }
         }
@@ -1632,10 +1632,10 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
         let menuVisible = self.menuController?.isVisible ?? false
         if menuVisible != self.lastMenuVisible && !ScorecardUI.phoneSize() {
             // Change player and info will be in menu panel when menu is visible
-            self.topSectionHeightConstraint.isActive = menuVisible
-            self.availableSpaceHeightConstraint.isActive = !menuVisible
-            self.topSectionProportionalHeightConstraint.isActive = !menuVisible && !ScorecardUI.landscapePhone()
-            self.topSectionLandscapePhoneProportionalHeightConstraint.isActive = !menuVisible && ScorecardUI.landscapePhone()
+            Constraint.setActive(self.topSectionHeightConstraint, to: menuVisible)
+            Constraint.setActive(self.availableSpaceHeightConstraint, to: !menuVisible)
+            Constraint.setActive(self.topSectionProportionalHeightConstraint, to: !menuVisible && !ScorecardUI.landscapePhone())
+            Constraint.setActive(self.topSectionLandscapePhoneProportionalHeightConstraint, to: !menuVisible && ScorecardUI.landscapePhone())
             self.thisPlayerThumbnailView.isHidden = menuVisible
             self.thisPlayerChangeButtonContainer.isHidden = menuVisible
             self.lastMenuVisible = menuVisible

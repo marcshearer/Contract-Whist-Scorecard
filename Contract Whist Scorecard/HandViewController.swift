@@ -774,8 +774,8 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
         if ScorecardUI.portraitPhone() {
             self.helpButton.isHidden = false
             let fullSuit = (self.firstSuitLength >= self.handCardsPerRow)
-            Constraint.setActive([self.helpButtonTopConstraint], to: !fullSuit)
-            Constraint.setActive([self.helpButtonBottomConstraint], to: fullSuit)
+            Constraint.setActive(self.helpButtonTopConstraint, to: !fullSuit)
+            Constraint.setActive(self.helpButtonBottomConstraint, to: fullSuit)
             self.banner.setButton(Banner.helpButton, isHidden: true)
         } else {
             self.helpButton.isHidden = true

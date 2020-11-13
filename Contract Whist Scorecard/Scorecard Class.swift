@@ -448,10 +448,10 @@ class Scorecard {
         container.fetchUserRecordID() {
             recordID, error in
             if error == nil {
-                // Check for Marc, Jack, Test1 and Test2 devices
+                // Check for Marc, Jack, and Rachel devices
                 if recordID?.recordName == "_1e924f27c7b4b89fec7b3d9d7ba2a482" ||
-                    recordID?.recordName == "" ||
-                    recordID?.recordName == "" ||
+                    recordID?.recordName == "_efa3c7bf9309fdf2ce61e6eb182fa7b8" ||
+                    recordID?.recordName == "_495feec85d5b12506f15a272e31a5db7" ||
                     recordID?.recordName == "" ||
                     recordID?.recordName == "" {
                     self.iCloudUserIsMe = true

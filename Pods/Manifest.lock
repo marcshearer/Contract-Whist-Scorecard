@@ -15,7 +15,7 @@ DEPENDENCIES:
   - RMQClient (~> 0.10.0)
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  trunk:
     - CocoaAsyncSocket
     - JKVValue
     - RMQClient
@@ -27,4 +27,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 9f8005997521b2b525638d8128fa40d7de744be1
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.9.1

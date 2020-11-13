@@ -181,8 +181,8 @@
 		B2A9096524A1BBEC00B35B69 /* DataTableTileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2A9096424A1BBEC00B35B69 /* DataTableTileView.swift */; };
 		B2A9096724A1C15700B35B69 /* DataTableTileTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2A9096624A1C15700B35B69 /* DataTableTileTableViewCell.xib */; };
 		B2A9096924A1C3A000B35B69 /* DataTableTileCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2A9096824A1C3A000B35B69 /* DataTableTileCollectionViewCell.xib */; };
-		B2B180122110128C008D3BAA /* (null) in Sources */ = {isa = PBXBuildFile; };
-		B2B180142114AD92008D3BAA /* (null) in Sources */ = {isa = PBXBuildFile; };
+		B2B180122110128C008D3BAA /* BuildFile in Sources */ = {isa = PBXBuildFile; };
+		B2B180142114AD92008D3BAA /* BuildFile in Sources */ = {isa = PBXBuildFile; };
 		B2B1801D21195FB0008D3BAA /* Robot Bidding.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B1801C21195FB0008D3BAA /* Robot Bidding.swift */; };
 		B2B1801F21195FBC008D3BAA /* Robot Player Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B1801E21195FBC008D3BAA /* Robot Player Class.swift */; };
 		B2B1802121195FFA008D3BAA /* Contract Whist Scorecard.pages in Resources */ = {isa = PBXBuildFile; fileRef = B2B1802021195FFA008D3BAA /* Contract Whist Scorecard.pages */; };
@@ -1903,7 +1903,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-Contract Whist Scorecard/Pods-Contract Whist Scorecard-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-Contract Whist Scorecard/Pods-Contract Whist Scorecard-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/CocoaAsyncSocket/CocoaAsyncSocket.framework",
 				"${BUILT_PRODUCTS_DIR}/JKVValue/JKVValue.framework",
 				"${BUILT_PRODUCTS_DIR}/RMQClient/RMQClient.framework",
@@ -1916,7 +1916,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Contract Whist Scorecard/Pods-Contract Whist Scorecard-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Contract Whist Scorecard/Pods-Contract Whist Scorecard-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		1E72EA25563F9EE7A8BDF289 /* [CP] Check Pods Manifest.lock */ = {
@@ -2040,7 +2040,7 @@
 				B20A66FE1E24002400E75190 /* GameSummaryViewController.swift in Sources */,
 				B202552122BCCE220074310A /* ScrollView.swift in Sources */,
 				CC4CC0FB1DEADC32007FB24F /* ScorepadViewController.swift in Sources */,
-				B2B180142114AD92008D3BAA /* (null) in Sources */,
+				B2B180142114AD92008D3BAA /* BuildFile in Sources */,
 				B2021D7E247FEA1900A82EBB /* LaunchScreenView.swift in Sources */,
 				49075FFC1E0E578E008E06FA /* PlayersViewController.swift in Sources */,
 				B250610020CD7F480030EE8F /* Recovery.swift in Sources */,
@@ -2075,7 +2075,7 @@
 				B2B755091E5B363200B1313B /* History Class.swift in Sources */,
 				B2BC51C71F7B5E8C0065F07D /* String Extensions.swift in Sources */,
 				CC4CC1161DEAF0F9007FB24F /* GamePreviewViewController.swift in Sources */,
-				B2B180122110128C008D3BAA /* (null) in Sources */,
+				B2B180122110128C008D3BAA /* BuildFile in Sources */,
 				B2F7281B1F6D74F9006F0941 /* Invite.swift in Sources */,
 				B20A66FA1E2385B500E75190 /* Reachability.swift in Sources */,
 				B247A72D24835A7C00591BBA /* TitleBar.swift in Sources */,
@@ -2325,7 +2325,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_TEAM = 3T7CT2S464;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				IBSC_MODULE = Contract_Whist_Watch_Extension;
@@ -2351,7 +2351,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_TEAM = 3T7CT2S464;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				IBSC_MODULE = Contract_Whist_Watch_Extension;
@@ -2376,7 +2376,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_TEAM = 3T7CT2S464;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_WARN_PEDANTIC = NO;
@@ -2402,7 +2402,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_TEAM = 3T7CT2S464;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_WARN_PEDANTIC = NO;
@@ -2582,7 +2582,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Contract Whist Scorecard/Contract Whist Scorecard.entitlements";
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_TEAM = 3T7CT2S464;
 				GCC_WARN_PEDANTIC = NO;
 				INFOPLIST_FILE = "Contract Whist Scorecard/Info.plist";
@@ -2603,7 +2603,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Contract Whist Scorecard/Contract Whist Scorecard.entitlements";
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_TEAM = 3T7CT2S464;
 				GCC_WARN_PEDANTIC = NO;
 				INFOPLIST_FILE = "Contract Whist Scorecard/Info.plist";

@@ -78,9 +78,13 @@ class Constraint {
     
     public static func setActive(_ group: [NSLayoutConstraint]!, to value: Bool) {
         group.forEach { (constraint) in
-            constraint.isActive = value
-            constraint.priority = (value ? .required : UILayoutPriority(1.0))
+            Constraint.setActive(constraint, to: value)
         }
+    }
+    
+    public static func setActive(_ constraint: NSLayoutConstraint, to value: Bool) {
+        constraint.isActive = value
+        constraint.priority = (value ? .required : UILayoutPriority(1.0))
     }
     
 }

@@ -49,6 +49,11 @@ class MultipeerLogger : CommsBrowserDelegate, CommsStateDelegate, CommsDataDeleg
         Utility.sendingMessage = false
     }
     
+    public func reset() {
+        self.service?.stop()
+        self.service?.start()
+    }
+    
     func peerFound(peer: CommsPeer, reconnect: Bool = true) {
         
         var logger = self.loggerList[peer.deviceName]
@@ -129,7 +134,7 @@ class MultipeerLogger : CommsBrowserDelegate, CommsStateDelegate, CommsDataDeleg
         }
     }
     
-    static func sendPlayerUUID(from: ScorecardViewController) {
+    static func sendPlayerEmail(from: ScorecardViewController) {
         var bodyText = ""
         
         if MFMailComposeViewController.canSendMail() {

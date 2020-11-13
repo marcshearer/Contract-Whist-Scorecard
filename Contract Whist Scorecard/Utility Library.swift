@@ -495,12 +495,10 @@ class Utility {
                 print(outputMessage)
                 fflush(stdout)
             }
-            #if ContractWhist
             // Write to remote logs (rabbitMQ no longer supported)
             if MultipeerLoggerConfig.logService != "" {
                 MultipeerLogger.logger.write(timestamp: timestamp, source: from, message: message)
             }
-            #endif
         }
         
         let sendingMessage = Utility.sendingMessage

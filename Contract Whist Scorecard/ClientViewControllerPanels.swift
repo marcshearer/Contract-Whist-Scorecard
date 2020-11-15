@@ -222,7 +222,7 @@ extension ClientViewController : PanelContainer {
     public func presentInContainers(_ items: [PanelContainerItem], rightPanelTitle: String? = nil, animated: Bool, completion: (() -> ())?) {
         if let rootViewController = self.rootViewController, let rootView = self.view {
             var containerView: UIView?
-            var animateViews: [UIView] = []
+            var animateViews: [(view: UIView, container: Container)] = []
             if let title = rightPanelTitle {
                 self.setRightPanel(title: title, caption: "")
             }
@@ -240,6 +240,7 @@ extension ClientViewController : PanelContainer {
                     case .right:
                         containerView = self.rightContainer
                     case .rightInset:
+                        rightInsetContainerUsed = true
                         containerView = self.rightInsetContainer
                     case .mainRight:
                         containerView = self.mainRightContainer
@@ -252,6 +253,13 @@ extension ClientViewController : PanelContainer {
                         view.frame = rootView.convert(containerView.frame, to: rootView)
                         rootView.addSubview(view)
                         viewController.didMove(toParent: rootViewController)
+                        if container == .rightInset {
+                            // Bring right view forward and animate in later
+                            rootView.bringSubviewToFront(self.rightContainer)
+                            if animated {
+                                self.rightContainer.alpha = 0.0
+                            }
+                        }
                         rootView.bringSubviewToFront(view)
                         
                         // Add layout constraints
@@ -262,7 +270,7 @@ extension ClientViewController : PanelContainer {
                         }
                         if animated {
                             view.alpha = 0.0
-                            animateViews.append(view)
+                            animateViews.append((view, container))
                         }
                         if container == .main || container == .mainRight {
                             // Add to controller stack
@@ -278,8 +286,12 @@ extension ClientViewController : PanelContainer {
                         self.presentInContainersCompletion(completion: completion)
                     },
                     animations: {
-                        animateViews.forEach{ (view) in view.alpha = 1.0 }
-                })
+                        animateViews.forEach{ (viewElement) in
+                            if viewElement.container == .rightInset {
+                                self.rightContainer.alpha = 1.0
+                            }
+                            viewElement.view.alpha = 1.0 }
+                        })
             } else {
                 self.presentInContainersCompletion(completion: completion)
             }

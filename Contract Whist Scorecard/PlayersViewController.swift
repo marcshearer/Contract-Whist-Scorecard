@@ -82,6 +82,14 @@ class PlayersViewController: ScorecardViewController, PlayersViewDelegate, UICol
         }
     }
     
+    @IBAction func leftRightSwipe(_ recognizer: UISwipeGestureRecognizer) {
+        if recognizer.state == .ended {
+            if self.menuController?.isVisible ?? false {
+                self.menuController?.swipeGesture(direction: recognizer.direction)
+            }
+        }
+    }
+    
     // MARK: - View Overrides ========================================================================== -
     override func viewDidLoad() {
         super.viewDidLoad()

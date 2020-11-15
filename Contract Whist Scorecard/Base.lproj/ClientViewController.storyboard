@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina6_1" orientation="portrait" appearance="light"/>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="ipad11_0rounded" orientation="landscape" layout="fullscreen" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -16,11 +16,11 @@
             <objects>
                 <viewController storyboardIdentifier="ClientViewController" id="iu4-6y-nl5" customClass="ClientViewController" customModule="Whist" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Ibw-xE-9yM" userLabel="Client View">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="1194" height="834"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zmp-Pb-RbJ" userLabel="Left Container">
-                                <rect key="frame" x="-300" y="0.0" width="300" height="896"/>
+                                <rect key="frame" x="-300" y="0.0" width="300" height="834"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <accessibility key="accessibilityConfiguration" identifier="leftContainer"/>
                                 <constraints>
@@ -28,13 +28,13 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hbD-Y0-uhD" userLabel="Right Container">
-                                <rect key="frame" x="414" y="0.0" width="300" height="896"/>
+                                <rect key="frame" x="1194" y="0.0" width="300" height="834"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Liw-Kx-YGP" userLabel="Right Inset Container">
-                                        <rect key="frame" x="30" y="172" width="240" height="674"/>
+                                        <rect key="frame" x="30" y="172" width="240" height="612"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Wv8-xT-NCE">
-                                                <rect key="frame" x="0.0" y="0.0" width="240" height="674"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="240" height="612"/>
                                                 <color key="backgroundColor" name="Clear"/>
                                             </view>
                                         </subviews>
@@ -84,15 +84,15 @@ Played</string>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4k6-G2-xLf" userLabel="Main Right Container">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                                <rect key="frame" x="0.0" y="0.0" width="1194" height="834"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <accessibility key="accessibilityConfiguration" identifier="mainRightContainer"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hFM-Q5-ViO" userLabel="Main Container">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                                <rect key="frame" x="0.0" y="0.0" width="1194" height="834"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Clx-ll-10L" customClass="Banner" customModule="Whist" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="88"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="1194" height="44"/>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="string" keyPath="title" value="W H I S T"/>
                                             <userDefinedRuntimeAttribute type="boolean" keyPath="bottomAlignTitle" value="YES"/>
@@ -103,17 +103,17 @@ Played</string>
                                         </connections>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YSU-nf-o4R" customClass="InsetPaddingView" customModule="Whist" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="0.0" height="896"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="0.0" height="834"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="baT-Lm-DyX" userLabel="Top Section">
-                                        <rect key="frame" x="0.0" y="88" width="414" height="151"/>
+                                        <rect key="frame" x="0.0" y="44" width="1194" height="150"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XTv-6o-LLq" userLabel="This Player Container View">
-                                                <rect key="frame" x="0.0" y="0.0" width="414" height="121"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="1194" height="120"/>
                                                 <subviews>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qjq-rE-5ew" customClass="ThumbnailView" customModule="Whist" customModuleProvider="target">
-                                                        <rect key="frame" x="174.5" y="23.5" width="65" height="86"/>
+                                                        <rect key="frame" x="565" y="23" width="64" height="86"/>
                                                         <color key="backgroundColor" name="Clear"/>
                                                         <gestureRecognizers/>
                                                         <constraints>
@@ -133,12 +133,12 @@ Played</string>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="x7j-7w-yJj">
-                                                <rect key="frame" x="0.0" y="121" width="414" height="30"/>
+                                                <rect key="frame" x="0.0" y="120" width="1194" height="30"/>
                                                 <color key="backgroundColor" name="Clear"/>
                                                 <accessibility key="accessibilityConfiguration" identifier="thisPlayerOverlap"/>
                                             </view>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rhg-YK-v6u" customClass="HelpButton" customModule="Whist" customModuleProvider="target">
-                                                <rect key="frame" x="366" y="85" width="28" height="28"/>
+                                                <rect key="frame" x="1146" y="84" width="28" height="28"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="28" id="M3g-Di-BnU" userLabel="Help Button Width"/>
                                                     <constraint firstAttribute="width" secondItem="rhg-YK-v6u" secondAttribute="height" multiplier="1:1" id="QQQ-Gk-Tmr" userLabel="Help Button Aspect"/>
@@ -196,7 +196,7 @@ Played</string>
                                         </variation>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0OQ-Wp-Xtp" customClass="PlayerSelectionView" customModule="Whist" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="239" width="414" height="0.0"/>
+                                        <rect key="frame" x="0.0" y="194" width="1194" height="0.0"/>
                                         <viewLayoutGuide key="safeArea" id="hea-F5-QBf"/>
                                         <color key="backgroundColor" name="Background"/>
                                         <constraints>
@@ -225,16 +225,16 @@ Played</string>
                                         </connections>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="e3D-oK-CzW" userLabel="Upper Middle Section">
-                                        <rect key="frame" x="0.0" y="239" width="414" height="204.5"/>
+                                        <rect key="frame" x="0.0" y="194" width="1194" height="203.5"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tZH-0W-X3K">
-                                                <rect key="frame" x="20" y="18.5" width="374" height="176"/>
+                                                <rect key="frame" x="20" y="18.5" width="1154" height="175"/>
                                                 <subviews>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FhF-F8-jiI" userLabel="Host Collection Content View">
-                                                        <rect key="frame" x="0.0" y="0.0" width="374" height="176"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="1154" height="175"/>
                                                         <subviews>
                                                             <collectionView multipleTouchEnabled="YES" tag="1" contentMode="scaleToFill" alwaysBounceHorizontal="YES" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="QLu-uS-rp7">
-                                                                <rect key="frame" x="0.0" y="0.0" width="374" height="176"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="1154" height="175"/>
                                                                 <color key="backgroundColor" name="Clear"/>
                                                                 <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="e6U-UB-5RB">
                                                                     <size key="itemSize" width="128" height="128"/>
@@ -244,7 +244,7 @@ Played</string>
                                                                 </collectionViewFlowLayout>
                                                                 <cells>
                                                                     <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Host Cell" id="740-ai-dFv" customClass="HostCollectionViewCell" customModule="Whist" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="24" width="128" height="128"/>
+                                                                        <rect key="frame" x="0.0" y="23.5" width="128" height="128"/>
                                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                         <collectionViewCellContentView key="contentView" opaque="NO" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="5oJ-Ci-gtK">
                                                                             <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
@@ -307,7 +307,7 @@ Played</string>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="w0v-BL-Raf" customClass="TitleBar" customModule="Whist" customModuleProvider="target">
-                                                <rect key="frame" x="20" y="-18.5" width="374" height="37"/>
+                                                <rect key="frame" x="20" y="-18.5" width="1154" height="37"/>
                                                 <color key="backgroundColor" name="Clear"/>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="string" keyPath="title" value="Start a Game"/>
@@ -360,16 +360,16 @@ Played</string>
                                         </variation>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="X53-w8-J5S" userLabel="Lower Middle Section">
-                                        <rect key="frame" x="0.0" y="443.5" width="414" height="268"/>
+                                        <rect key="frame" x="0.0" y="397.5" width="1194" height="266.5"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3t1-6y-FZY" userLabel="Peer Collection Container">
-                                                <rect key="frame" x="20" y="45" width="374" height="200"/>
+                                                <rect key="frame" x="20" y="45" width="1154" height="200"/>
                                                 <subviews>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0Mr-Ou-UxW" userLabel="Peer Collection Content View">
-                                                        <rect key="frame" x="0.0" y="0.0" width="374" height="200"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="1154" height="200"/>
                                                         <subviews>
                                                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="2" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Lq4-Ij-9pl" userLabel="Peer Collection View">
-                                                                <rect key="frame" x="0.0" y="0.0" width="374" height="200"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="1154" height="200"/>
                                                                 <color key="backgroundColor" name="Clear"/>
                                                                 <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="Aec-a3-Pfk" customClass="CustomCollectionViewLayout" customModule="Whist" customModuleProvider="target">
                                                                     <size key="itemSize" width="128" height="128"/>
@@ -453,7 +453,7 @@ Played</string>
                                                                 </connections>
                                                             </collectionView>
                                                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="3" contentMode="scaleToFill" alwaysBounceHorizontal="YES" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="vDb-os-978">
-                                                                <rect key="frame" x="182" y="186" width="10" height="10"/>
+                                                                <rect key="frame" x="572" y="186" width="10" height="10"/>
                                                                 <color key="backgroundColor" name="Clear"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" constant="10" id="Upz-y7-JWa"/>
@@ -518,7 +518,7 @@ Played</string>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1FM-AB-vSS" customClass="TitleBar" customModule="Whist" customModuleProvider="target">
-                                                <rect key="frame" x="20" y="8" width="374" height="37"/>
+                                                <rect key="frame" x="20" y="8" width="1154" height="37"/>
                                                 <color key="backgroundColor" name="Clear"/>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="string" keyPath="title" value="Join a Game"/>
@@ -552,10 +552,10 @@ Played</string>
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7pG-RR-uCS" userLabel="Bottom Section">
-                                        <rect key="frame" x="0.0" y="711.5" width="414" height="150.5"/>
+                                        <rect key="frame" x="0.0" y="664" width="1194" height="150"/>
                                         <subviews>
                                             <view tag="-1" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aq5-vX-83I" userLabel="Profiles Button" customClass="ImageButton" customModule="Whist" customModuleProvider="target">
-                                                <rect key="frame" x="20" y="10" width="116.5" height="140.5"/>
+                                                <rect key="frame" x="20" y="10" width="374" height="140"/>
                                                 <color key="backgroundColor" name="Clear"/>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="string" keyPath="title" value="Profiles"/>
@@ -578,7 +578,7 @@ Played</string>
                                                 </connections>
                                             </view>
                                             <view tag="-2" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bNw-dF-hBm" userLabel="Results Button" customClass="ImageButton" customModule="Whist" customModuleProvider="target">
-                                                <rect key="frame" x="148.5" y="10" width="117" height="140.5"/>
+                                                <rect key="frame" x="410" y="10" width="374" height="140"/>
                                                 <color key="backgroundColor" name="Clear"/>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="string" keyPath="title" value="Results"/>
@@ -601,7 +601,7 @@ Played</string>
                                                 </connections>
                                             </view>
                                             <view tag="-3" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pB1-JM-2cb" userLabel="Settings Button" customClass="ImageButton" customModule="Whist" customModuleProvider="target">
-                                                <rect key="frame" x="277.5" y="10" width="116.5" height="140.5"/>
+                                                <rect key="frame" x="800" y="10" width="374" height="140"/>
                                                 <color key="backgroundColor" name="Clear"/>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="string" keyPath="title" value="Settings"/>
@@ -624,7 +624,7 @@ Played</string>
                                                 </connections>
                                             </view>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KF8-nE-69M" userLabel="Settings Badge" customClass="ShadowButton" customModule="Whist" customModuleProvider="target">
-                                                <rect key="frame" x="379" y="5" width="20" height="20"/>
+                                                <rect key="frame" x="1159" y="5" width="20" height="20"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="20" id="70S-62-QpK"/>
                                                     <constraint firstAttribute="height" constant="20" id="wii-Nd-NPC"/>
@@ -891,6 +891,8 @@ Played</string>
                         </constraints>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="T3J-B5-Pwe" appends="YES" id="JTR-lD-y0f"/>
+                            <outletCollection property="gestureRecognizers" destination="MK0-Ub-dXr" appends="YES" id="8aE-RJ-9ZV"/>
+                            <outletCollection property="gestureRecognizers" destination="2I1-8u-P8N" appends="YES" id="0pr-xQ-2gE"/>
                         </connections>
                     </view>
                     <connections>
@@ -967,6 +969,16 @@ Played</string>
                         <action selector="rotationGestureWithRecognizer:" destination="iu4-6y-nl5" id="fiF-pI-lUL"/>
                     </connections>
                 </rotationGestureRecognizer>
+                <swipeGestureRecognizer direction="left" id="2I1-8u-P8N">
+                    <connections>
+                        <action selector="swipeGestureRecognizer:" destination="iu4-6y-nl5" id="ZiW-7f-WTu"/>
+                    </connections>
+                </swipeGestureRecognizer>
+                <swipeGestureRecognizer direction="right" id="MK0-Ub-dXr">
+                    <connections>
+                        <action selector="swipeGestureRecognizer:" destination="iu4-6y-nl5" id="8r8-N2-KBV"/>
+                    </connections>
+                </swipeGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="6034.7826086956529" y="1441.7410714285713"/>
         </scene>

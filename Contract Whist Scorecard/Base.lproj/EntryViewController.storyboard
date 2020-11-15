@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina5_9" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -327,10 +327,10 @@
                                         <rect key="frame" x="283" y="17" width="80" height="44"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rsi-X3-BHk" customClass="HelpButton" customModule="Whist" customModuleProvider="target">
-                                                <rect key="frame" x="17" y="7" width="46" height="30"/>
+                                                <rect key="frame" x="17" y="7" width="28" height="28"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" constant="28" id="HOe-Mf-Arw"/>
-                                                    <constraint firstAttribute="width" secondItem="rsi-X3-BHk" secondAttribute="height" multiplier="1:1" id="WaA-Hu-VS7"/>
+                                                    <constraint firstAttribute="width" secondItem="rsi-X3-BHk" secondAttribute="height" multiplier="1:1" id="aAC-KW-ZD9"/>
+                                                    <constraint firstAttribute="width" constant="28" id="j3K-Ln-ld2"/>
                                                 </constraints>
                                                 <connections>
                                                     <action selector="helpPressed:" destination="mEi-hH-CUE" eventType="touchUpInside" id="PlE-Rc-ECT"/>
@@ -412,38 +412,38 @@
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
+                                <exclude reference="DI5-tv-1fA"/>
                                 <exclude reference="2eM-PN-oJy"/>
                                 <exclude reference="n8b-50-rFW"/>
-                                <exclude reference="uIC-n6-z62"/>
                                 <exclude reference="7Q1-vq-9rN"/>
                                 <exclude reference="Lb2-js-Ia6"/>
                                 <exclude reference="O1j-LI-Iei"/>
                                 <exclude reference="vEO-nH-PpU"/>
-                                <exclude reference="9GJ-fm-OW1"/>
-                                <exclude reference="MwL-Uc-5Cl"/>
                                 <exclude reference="OVb-Qf-NUK"/>
                                 <exclude reference="Vhh-W5-xfv"/>
-                                <exclude reference="DI5-tv-1fA"/>
+                                <exclude reference="9GJ-fm-OW1"/>
+                                <exclude reference="MwL-Uc-5Cl"/>
+                                <exclude reference="uIC-n6-z62"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=compact">
                             <mask key="constraints">
                                 <include reference="n8b-50-rFW"/>
-                                <include reference="uIC-n6-z62"/>
                                 <include reference="O1j-LI-Iei"/>
                                 <include reference="vEO-nH-PpU"/>
+                                <include reference="Vhh-W5-xfv"/>
                                 <include reference="9GJ-fm-OW1"/>
                                 <include reference="MwL-Uc-5Cl"/>
-                                <include reference="Vhh-W5-xfv"/>
+                                <include reference="uIC-n6-z62"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular">
                             <mask key="constraints">
+                                <include reference="DI5-tv-1fA"/>
                                 <include reference="2eM-PN-oJy"/>
                                 <include reference="7Q1-vq-9rN"/>
                                 <include reference="Lb2-js-Ia6"/>
                                 <include reference="OVb-Qf-NUK"/>
-                                <include reference="DI5-tv-1fA"/>
                             </mask>
                         </variation>
                         <connections>

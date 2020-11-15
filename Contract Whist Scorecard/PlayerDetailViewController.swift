@@ -121,7 +121,11 @@ class PlayerDetailViewController: ScorecardViewController, PlayerDetailViewDeleg
     }
 
     @IBAction func allSwipe(recognizer:UISwipeGestureRecognizer) {
-        finishPressed()
+        if self.menuController?.isVisible ?? false {
+            self.menuController?.swipeGesture(direction: recognizer.direction)
+        } else {
+            finishPressed()
+        }
     }
     
     // MARK: - View Overrides ========================================================================== -

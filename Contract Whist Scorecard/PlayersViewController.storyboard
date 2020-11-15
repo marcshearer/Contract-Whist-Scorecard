@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -14,12 +14,12 @@
         <!--Players View Controller-->
         <scene sceneID="R0P-Iu-Enu">
             <objects>
-                <viewController storyboardIdentifier="PlayersViewController" id="U2q-d6-KUx" customClass="PlayersViewController" customModule="Whist_2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PlayersViewController" id="U2q-d6-KUx" customClass="PlayersViewController" customModule="Whist" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Dgm-Gz-P9f">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oeG-CJ-rcg" customClass="Banner" customModule="Whist_2" customModuleProvider="target">
+                            <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oeG-CJ-rcg" customClass="Banner" customModule="Whist" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="164"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <userDefinedRuntimeAttributes>
@@ -46,7 +46,7 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Player Cell" id="1V3-hZ-6ZF" customClass="PlayerCell" customModule="Whist_2" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Player Cell" id="1V3-hZ-6ZF" customClass="PlayerCell" customModule="Whist" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <collectionViewCellContentView key="contentView" opaque="NO" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="y8Q-d3-9ZW">
@@ -56,7 +56,7 @@
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hpK-06-DyB" userLabel="Tile View">
                                                     <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
                                                     <subviews>
-                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CBK-Ts-2tq" customClass="ThumbnailView" customModule="Whist_2" customModuleProvider="target">
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CBK-Ts-2tq" customClass="ThumbnailView" customModule="Whist" customModuleProvider="target">
                                                             <rect key="frame" x="8" y="8" width="112" height="112"/>
                                                             <color key="backgroundColor" name="Clear"/>
                                                         </view>
@@ -110,6 +110,8 @@
                         </constraints>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="Tva-fJ-Lfw" appends="YES" id="cwf-8B-6or"/>
+                            <outletCollection property="gestureRecognizers" destination="29d-Dk-pcv" appends="YES" id="MPB-ZC-ikq"/>
+                            <outletCollection property="gestureRecognizers" destination="GjN-lD-zsc" appends="YES" id="RQz-ne-Klf"/>
                         </connections>
                     </view>
                     <connections>
@@ -121,6 +123,16 @@
                 <swipeGestureRecognizer direction="down" id="Tva-fJ-Lfw">
                     <connections>
                         <action selector="downSwipeWithRecognizer:" destination="U2q-d6-KUx" id="aml-ey-9Og"/>
+                    </connections>
+                </swipeGestureRecognizer>
+                <swipeGestureRecognizer direction="left" id="29d-Dk-pcv">
+                    <connections>
+                        <action selector="leftRightSwipe:" destination="U2q-d6-KUx" id="B4k-mK-Y0H"/>
+                    </connections>
+                </swipeGestureRecognizer>
+                <swipeGestureRecognizer direction="right" id="GjN-lD-zsc">
+                    <connections>
+                        <action selector="leftRightSwipe:" destination="U2q-d6-KUx" id="r3B-zo-BmU"/>
                     </connections>
                 </swipeGestureRecognizer>
             </objects>

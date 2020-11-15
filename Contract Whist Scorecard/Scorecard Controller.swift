@@ -885,7 +885,21 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
     }
     
     override internal func dismiss(animated: Bool, completion: (() -> Void)? = nil) {
-        self.dismiss(animated: animated, hideDismissImageView: false, completion: completion)
+        repeat {
+            if let rootViewController = self as? RootViewController {
+                if !rootViewController.viewControllerStack.isEmpty {
+                    
+                    // Trying to dismiss the root view controller, but others are still there - dismiss them instead?
+                    // Seems to happen when click outside a non-modal popover
+                    rootViewController.viewControllerStack.last?.viewController.dismiss(animated: animated, hideDismissImageView: false, completion: completion)
+                    break
+                }
+            }
+            
+            // All ok - proceed
+            self.dismiss(animated: animated, hideDismissImageView: false, completion: completion)
+            
+        } while false
     }
     
     internal func dismiss(animated flag: Bool, hideDismissImageView: Bool, removeSuboptions: Bool = true, completion: (() -> Void)? = nil) {

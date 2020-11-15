@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DashboardView" customModule="Whist_2" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DashboardView" customModule="Whist" customModuleProvider="target">
             <connections>
                 <outlet property="contentView" destination="iN0-l3-epB" id="C8J-gG-YGA"/>
             </connections>
@@ -18,7 +19,7 @@
             <rect key="frame" x="0.0" y="0.0" width="414" height="700"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rDT-oS-tCg" userLabel="Total Scores Tile" customClass="DataTableTileView" customModule="Whist_2" customModuleProvider="target">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rDT-oS-tCg" userLabel="Total Scores Tile" customClass="DataTableTileView" customModule="Whist" customModuleProvider="target">
                     <rect key="frame" x="16" y="8" width="224.5" height="197"/>
                     <color key="backgroundColor" name="Clear"/>
                     <userDefinedRuntimeAttributes>
@@ -46,7 +47,7 @@
                         <outlet property="parentDashboardView" destination="-1" id="rAz-xR-LhT"/>
                     </connections>
                 </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NHt-cp-ido" userLabel="Twos Made Tile" customClass="DataTableTileView" customModule="Whist_2" customModuleProvider="target">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NHt-cp-ido" userLabel="Twos Made Tile" customClass="DataTableTileView" customModule="Whist" customModuleProvider="target">
                     <rect key="frame" x="16" y="221" width="224.5" height="187"/>
                     <color key="backgroundColor" name="Clear"/>
                     <userDefinedRuntimeAttributes>
@@ -74,7 +75,34 @@
                         <outlet property="parentDashboardView" destination="-1" id="G3l-Yv-17B"/>
                     </connections>
                 </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jqS-Vg-wOa" userLabel="Statistics Tile" customClass="DataTableTileView" customModule="Whist_2" customModuleProvider="target">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kVP-Fk-6a5" userLabel="High Scores Tile" customClass="HighScoreTileView" customModule="Whist" customModuleProvider="target">
+                    <rect key="frame" x="256.5" y="8" width="141.5" height="400"/>
+                    <color key="backgroundColor" name="Clear"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="detail">
+                            <integer key="value" value="3"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="personal" value="NO"/>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="totalScore" value="NO"/>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="handsMade" value="YES"/>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="winStreak" value="NO"/>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="twosMade" value="NO"/>
+                        <userDefinedRuntimeAttribute type="string" keyPath="title" value="Most Bids Made"/>
+                        <userDefinedRuntimeAttribute type="number" keyPath="count">
+                            <integer key="value" value="3"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="titleRows">
+                            <integer key="value" value="2"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="showTypeButton" value="NO"/>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="detailDrill" value="YES"/>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <outlet property="dashboardDelegate" destination="-1" id="kbS-Om-3LE"/>
+                        <outlet property="parentDashboardView" destination="-1" id="3vb-Le-tb5"/>
+                    </connections>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jqS-Vg-wOa" userLabel="Statistics Tile" customClass="DataTableTileView" customModule="Whist" customModuleProvider="target">
                     <rect key="frame" x="16" y="424" width="382" height="268"/>
                     <color key="backgroundColor" name="Clear"/>
                     <userDefinedRuntimeAttributes>
@@ -105,34 +133,8 @@
                         <outlet property="parentDashboardView" destination="-1" id="hT6-br-Vud"/>
                     </connections>
                 </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kVP-Fk-6a5" userLabel="High Scores Tile" customClass="HighScoreTileView" customModule="Whist_2" customModuleProvider="target">
-                    <rect key="frame" x="256.5" y="8" width="141.5" height="400"/>
-                    <color key="backgroundColor" name="Clear"/>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="number" keyPath="detail">
-                            <integer key="value" value="3"/>
-                        </userDefinedRuntimeAttribute>
-                        <userDefinedRuntimeAttribute type="boolean" keyPath="personal" value="NO"/>
-                        <userDefinedRuntimeAttribute type="boolean" keyPath="totalScore" value="NO"/>
-                        <userDefinedRuntimeAttribute type="boolean" keyPath="handsMade" value="YES"/>
-                        <userDefinedRuntimeAttribute type="boolean" keyPath="winStreak" value="NO"/>
-                        <userDefinedRuntimeAttribute type="boolean" keyPath="twosMade" value="NO"/>
-                        <userDefinedRuntimeAttribute type="string" keyPath="title" value="Most Bids Made"/>
-                        <userDefinedRuntimeAttribute type="number" keyPath="count">
-                            <integer key="value" value="3"/>
-                        </userDefinedRuntimeAttribute>
-                        <userDefinedRuntimeAttribute type="number" keyPath="titleRows">
-                            <integer key="value" value="2"/>
-                        </userDefinedRuntimeAttribute>
-                        <userDefinedRuntimeAttribute type="boolean" keyPath="showTypeButton" value="NO"/>
-                        <userDefinedRuntimeAttribute type="boolean" keyPath="detailDrill" value="YES"/>
-                    </userDefinedRuntimeAttributes>
-                    <connections>
-                        <outlet property="dashboardDelegate" destination="-1" id="kbS-Om-3LE"/>
-                        <outlet property="parentDashboardView" destination="-1" id="3vb-Le-tb5"/>
-                    </connections>
-                </view>
             </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <color key="backgroundColor" name="Clear"/>
             <constraints>
                 <constraint firstItem="jqS-Vg-wOa" firstAttribute="height" secondItem="iN0-l3-epB" secondAttribute="height" multiplier="0.4" constant="-12" id="3IH-S7-N1u"/>
@@ -153,7 +155,6 @@
                 <constraint firstItem="NHt-cp-ido" firstAttribute="top" secondItem="rDT-oS-tCg" secondAttribute="bottom" constant="16" id="vYI-9m-2F5"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <point key="canvasLocation" x="131.8840579710145" y="102.45535714285714"/>
         </view>
     </objects>

@@ -183,7 +183,7 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
             helpView.add("The @*/Sync@*/ button allows you to synchronize the data on this device with the data in iCloud.", views: [syncButton])
         }
         
-        helpView.add("As you have tapped the filter button you have a list of current players on the device to select from to start filtering.\n\nTap a player to view their history.\n\nTap the cancel button to return to showing all players' history.", views: [self.filterSelectionView])
+        helpView.add("As you have tapped the filter button you have a list of current players on the device to select from to start filtering.\n\nTap a player to view their history.\n\nTap the cancel button to return to showing all players' history.", views: [self.filterSelectionView], condition: { self.filterState == .selecting })
         
         helpView.add("The header row contains the column titles.\n\nTap on a column title to sort the data by that column's value.\n\nTap the same column again to reverse the order of the sort.\n\nThe up / down arrow shows the order of the sort.", views: [header])
         

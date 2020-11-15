@@ -178,6 +178,14 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         self.showSettings()
     }
     
+    @IBAction func swipeGestureRecognizer(_ recognizer: UISwipeGestureRecognizer) {
+        if recognizer.state == .ended {
+            if self.menuController?.isVisible ?? false {
+                self.menuController?.swipeGesture(direction: recognizer.direction)
+            }
+        }
+    }
+    
     @IBAction func rotationGesture(recognizer:UIRotationGestureRecognizer) {
         if self.appState != .notConnected || Scorecard.adminMode {
             // Go to standard menu

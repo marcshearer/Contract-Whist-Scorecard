@@ -143,7 +143,7 @@ class ConfirmPlayedViewController : ScorecardViewController {
         let sourceView = sourceView ?? parentViewController.view
         viewController.sourceView = sourceView
         viewController.preferredHeight = max(minHeight, content.frame.height + 100.0)
-        viewController.isModalInPopover = true
+        viewController.isModalInPresentation = true
             
         let popoverSize = CGSize(width: max(minWidth, content.frame.width), height: viewController.preferredHeight)
         

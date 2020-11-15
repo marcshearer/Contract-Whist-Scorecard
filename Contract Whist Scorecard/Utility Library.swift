@@ -409,17 +409,21 @@ class Utility {
     public static var _animating = false
     public static var animating:Bool { get { return _animating } }
     
-    public class func animate(if animate: Bool = true, view: UIView? = nil, duration: TimeInterval = 0.5, curve: UIView.AnimationCurve = .linear, afterDelay: TimeInterval? = 0.0, completion: (()->())? = nil, animations: @escaping ()->()) {
+    public class func animate(if animate: Bool = true, view: UIView? = nil, duration: TimeInterval = 0.5, curve: UIView.AnimationCurve = .linear, afterDelay: TimeInterval? = 0.0, layout: Bool = true, completion: (()->())? = nil, animations: @escaping ()->()) {
         var view = view
         if view == nil {
             view = Utility.getActiveViewController()!.view!
         }
         if animate {
-            view?.layoutIfNeeded()
+            if layout {
+                view?.layoutIfNeeded()
+            }
             Utility._animating = true
             let animation = UIViewPropertyAnimator(duration: duration, curve: curve) {
                 animations()
-                view?.layoutIfNeeded()
+                if layout {
+                    view?.layoutIfNeeded()
+                }
             }
             animation.addCompletion { (_) in
                 Utility._animating = false

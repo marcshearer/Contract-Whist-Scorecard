@@ -122,17 +122,21 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     
     @IBAction func swipeGestureRecognizer(_ recognizer: UISwipeGestureRecognizer) {
         if recognizer.state == .ended {
-            switch recognizer.direction {
-            case .left:
-                if self.currentPage < self.dashboardViewInfo.count - 1 {
-                    self.changed(self.carouselCollectionView, itemAtCenter: self.currentPage + 1, forceScroll: true)
+            if self.menuController?.isVisible ?? false {
+                self.menuController?.swipeGesture(direction: recognizer.direction)
+            } else {
+                switch recognizer.direction {
+                case .left:
+                    if self.currentPage < self.dashboardViewInfo.count - 1 {
+                        self.changed(self.carouselCollectionView, itemAtCenter: self.currentPage + 1, forceScroll: true)
+                    }
+                case .right:
+                    if self.currentPage > 0 {
+                        self.changed(self.carouselCollectionView, itemAtCenter: self.currentPage - 1, forceScroll: true)
+                    }
+                default:
+                    self.finishPressed()
                 }
-            case .right:
-                if self.currentPage > 0 {
-                    self.changed(self.carouselCollectionView, itemAtCenter: self.currentPage - 1, forceScroll: true)
-                }
-            default:
-                self.finishPressed()
             }
         }
     }

@@ -223,7 +223,7 @@ class AlertViewController: UIViewController, UIPopoverPresentationControllerDele
         viewController.popoverPresentationController?.sourceView = sourceView
         viewController.popoverPresentationController?.sourceRect = sourceRect
         viewController.popoverPresentationController?.delegate = viewController
-        viewController.isModalInPopover = true
+        viewController.isModalInPresentation = true
         
         parentViewController.present(viewController, animated: false)
         

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -193,10 +193,6 @@
                                 <color key="backgroundColor" name="Clear"/>
                                 <accessibility key="accessibilityConfiguration" identifier="Dashboard"/>
                                 <gestureRecognizers/>
-                                <connections>
-                                    <outletCollection property="gestureRecognizers" destination="g5a-Aq-ic4" appends="YES" id="VK2-qz-X8D"/>
-                                    <outletCollection property="gestureRecognizers" destination="oiv-3l-RvH" appends="YES" id="Ysa-hW-fSY"/>
-                                </connections>
                             </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="c6O-8s-uBR"/>
@@ -237,6 +233,8 @@
                         </variation>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="oJ4-uw-KST" appends="YES" id="P9y-Cj-dYg"/>
+                            <outletCollection property="gestureRecognizers" destination="oiv-3l-RvH" appends="YES" id="vhU-pq-h7U"/>
+                            <outletCollection property="gestureRecognizers" destination="g5a-Aq-ic4" appends="YES" id="zcV-xg-eDb"/>
                         </connections>
                     </view>
                     <connections>

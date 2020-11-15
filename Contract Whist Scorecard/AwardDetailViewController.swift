@@ -21,6 +21,11 @@ class AwardDetailViewController: ScorecardViewController, AwardDetail, DetailDel
     
     @IBOutlet private weak var awardDetailView: AwardDetailView!
         
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.awardDetailView.set(backgroundColor: Palette.banner.background, textColor: Palette.banner.text, detailFont: UIFont.systemFont(ofSize: 17), shadow: false, dismiss: false, widthPercent: 100)
+    }
+    
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         self.view.setNeedsLayout()
@@ -28,7 +33,7 @@ class AwardDetailViewController: ScorecardViewController, AwardDetail, DetailDel
     
     override internal func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        self.awardDetailView.set(backgroundColor: Palette.banner.background, textColor: Palette.banner.text, detailFont: UIFont.systemFont(ofSize: 17), shadow: false, dismiss: false, widthPercent: 100)
+        
     }
     
     internal func show(awards: Awards, playerUUID: String, award: Award, mode: AwardDetailMode) {

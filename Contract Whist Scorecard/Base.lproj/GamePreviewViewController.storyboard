@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina5_9" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -37,7 +37,7 @@
                                 <rect key="frame" x="0.0" y="88" width="375" height="309"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nKd-io-ud9" customClass="SelectedPlayersView" customModule="Whist" customModuleProvider="target">
-                                        <rect key="frame" x="30" y="16" width="315" height="259.66666666666669"/>
+                                        <rect key="frame" x="30" y="24.666666666666657" width="315" height="259.66666666666674"/>
                                         <color key="backgroundColor" name="Clear"/>
                                         <accessibility key="accessibilityConfiguration" identifier="selectedPlayers"/>
                                         <constraints>
@@ -54,7 +54,7 @@
                                         <variation key="heightClass=compact" constant="-20"/>
                                     </constraint>
                                     <constraint firstItem="nKd-io-ud9" firstAttribute="centerX" secondItem="kP9-VZ-fcb" secondAttribute="centerX" id="oca-mJ-xIa"/>
-                                    <constraint firstItem="nKd-io-ud9" firstAttribute="top" secondItem="kP9-VZ-fcb" secondAttribute="top" constant="16" id="pwb-eQ-qUu"/>
+                                    <constraint firstItem="nKd-io-ud9" firstAttribute="top" secondItem="kP9-VZ-fcb" secondAttribute="top" priority="1" constant="16" id="pwb-eQ-qUu"/>
                                     <constraint firstItem="nKd-io-ud9" firstAttribute="height" secondItem="kP9-VZ-fcb" secondAttribute="height" multiplier="315:375" id="rBR-xO-GSJ"/>
                                 </constraints>
                             </view>
@@ -85,11 +85,11 @@
                             <view contentMode="scaleToFill" verticalHuggingPriority="1" verticalCompressionResistancePriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="iDT-Xi-tM5" userLabel="Lower Middle Section">
                                 <rect key="frame" x="0.0" y="435" width="375" height="293"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" verticalCompressionResistancePriority="1" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="x89-xH-iQy" userLabel="Left View">
+                                    <view contentMode="scaleToFill" verticalCompressionResistancePriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="x89-xH-iQy" userLabel="Left View">
                                         <rect key="frame" x="0.0" y="0.0" width="202.66666666666666" height="293"/>
                                         <subviews>
-                                            <view tag="1" contentMode="scaleToFill" ambiguous="YES" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FyF-vn-V6o" userLabel="Cut for Dealer Button" customClass="ImageButton" customModule="Whist" customModuleProvider="target">
-                                                <rect key="frame" x="25.333333333333329" y="70.666666666666686" width="152" height="151.66666666666663"/>
+                                            <view tag="1" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FyF-vn-V6o" userLabel="Cut for Dealer Button" customClass="ImageButton" customModule="Whist" customModuleProvider="target">
+                                                <rect key="frame" x="25.333333333333329" y="70.666666666666671" width="152" height="151.66666666666663"/>
                                                 <viewLayoutGuide key="safeArea" id="Epv-wr-w77"/>
                                                 <color key="backgroundColor" name="Clear"/>
                                                 <constraints>
@@ -109,6 +109,7 @@
                                             </view>
                                         </subviews>
                                         <color key="backgroundColor" name="Clear"/>
+                                        <accessibility key="accessibilityConfiguration" identifier="left"/>
                                         <constraints>
                                             <constraint firstItem="FyF-vn-V6o" firstAttribute="centerY" secondItem="x89-xH-iQy" secondAttribute="centerY" id="Dz2-mX-WIv"/>
                                             <constraint firstItem="FyF-vn-V6o" firstAttribute="centerX" secondItem="x89-xH-iQy" secondAttribute="centerX" id="PQt-mG-1M0"/>
@@ -135,8 +136,8 @@
                                     <view contentMode="scaleToFill" verticalCompressionResistancePriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="Bs3-BT-kuE" userLabel="Right View">
                                         <rect key="frame" x="172.66666666666663" y="0.0" width="202.33333333333337" height="293"/>
                                         <subviews>
-                                            <view tag="2" contentMode="scaleToFill" verticalHuggingPriority="1" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xXV-k4-gfB" userLabel="Next Dealer Button" customClass="ImageButton" customModule="Whist" customModuleProvider="target">
-                                                <rect key="frame" x="25" y="70.666666666666686" width="152" height="151.66666666666663"/>
+                                            <view tag="2" contentMode="scaleToFill" verticalHuggingPriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="xXV-k4-gfB" userLabel="Next Dealer Button" customClass="ImageButton" customModule="Whist" customModuleProvider="target">
+                                                <rect key="frame" x="25" y="70.666666666666671" width="152" height="151.66666666666663"/>
                                                 <viewLayoutGuide key="safeArea" id="oxI-0X-Fyz"/>
                                                 <color key="backgroundColor" name="Clear"/>
                                                 <constraints>
@@ -156,6 +157,7 @@
                                             </view>
                                         </subviews>
                                         <color key="backgroundColor" name="Clear"/>
+                                        <accessibility key="accessibilityConfiguration" identifier="right"/>
                                         <constraints>
                                             <constraint firstItem="xXV-k4-gfB" firstAttribute="width" secondItem="Bs3-BT-kuE" secondAttribute="width" multiplier="0.75" id="Xc0-3D-VIy"/>
                                             <constraint firstItem="xXV-k4-gfB" firstAttribute="centerX" secondItem="Bs3-BT-kuE" secondAttribute="centerX" id="gX3-3Y-0Cd"/>
@@ -256,11 +258,12 @@
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="wSn-mE-2UN"/>
                         <color key="backgroundColor" name="Table Top"/>
+                        <accessibility key="accessibilityConfiguration" identifier="gamePreview"/>
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="IaK-Ab-3Lb" secondAttribute="trailing" id="1Kj-KT-h9H"/>
                             <constraint firstItem="OvE-wK-XoH" firstAttribute="top" secondItem="iDT-Xi-tM5" secondAttribute="bottom" priority="1" id="7bt-jT-hSz"/>
-                            <constraint firstItem="PUR-r5-ySO" firstAttribute="centerY" secondItem="nKd-io-ud9" secondAttribute="centerY" id="9AE-Fh-N6t"/>
+                            <constraint firstItem="PUR-r5-ySO" firstAttribute="centerY" secondItem="nKd-io-ud9" secondAttribute="centerY" priority="1" id="9AE-Fh-N6t"/>
                             <constraint firstItem="d8e-Bu-nij" firstAttribute="trailing" secondItem="wSn-mE-2UN" secondAttribute="trailing" id="C0F-Ak-Sqo"/>
                             <constraint firstItem="OvE-wK-XoH" firstAttribute="leading" secondItem="wSn-mE-2UN" secondAttribute="leading" id="DNq-Sb-Jb0"/>
                             <constraint firstItem="IaK-Ab-3Lb" firstAttribute="bottom" secondItem="wSn-mE-2UN" secondAttribute="top" constant="44" id="Jg6-aV-vNI"/>
@@ -278,16 +281,28 @@
                             <constraint firstItem="iDT-Xi-tM5" firstAttribute="top" secondItem="OvE-wK-XoH" secondAttribute="bottom" id="eyy-cg-VrQ"/>
                             <constraint firstItem="kP9-VZ-fcb" firstAttribute="width" secondItem="iUU-8s-ns4" secondAttribute="width" multiplier="1:2" priority="1" id="gZf-j7-f3B"/>
                             <constraint firstItem="wSn-mE-2UN" firstAttribute="bottom" secondItem="OvE-wK-XoH" secondAttribute="bottom" priority="1" constant="8" id="iqI-U6-AGc"/>
-                            <constraint firstItem="FyF-vn-V6o" firstAttribute="centerY" secondItem="nKd-io-ud9" secondAttribute="centerY" id="p7G-IF-Rkt"/>
+                            <constraint firstItem="FyF-vn-V6o" firstAttribute="centerY" secondItem="nKd-io-ud9" secondAttribute="centerY" priority="1" id="p7G-IF-Rkt"/>
                             <constraint firstItem="kP9-VZ-fcb" firstAttribute="bottom" secondItem="OvE-wK-XoH" secondAttribute="top" id="rDl-W6-qPg"/>
                             <constraint firstItem="wSn-mE-2UN" firstAttribute="trailing" secondItem="iDT-Xi-tM5" secondAttribute="trailing" id="thd-wQ-VbB"/>
                             <constraint firstItem="kP9-VZ-fcb" firstAttribute="height" secondItem="wSn-mE-2UN" secondAttribute="height" multiplier="16:38" id="tur-6Y-zoB"/>
                             <constraint firstItem="wSn-mE-2UN" firstAttribute="trailing" secondItem="OvE-wK-XoH" secondAttribute="trailing" id="vAv-Rh-sZW"/>
                             <constraint firstItem="iDT-Xi-tM5" firstAttribute="top" secondItem="IaK-Ab-3Lb" secondAttribute="bottom" priority="1" id="vOh-uC-3Bq"/>
-                            <constraint firstItem="kP9-VZ-fcb" firstAttribute="bottom" secondItem="iUU-8s-ns4" secondAttribute="bottom" id="vcf-GF-4Hd"/>
+                            <constraint firstItem="kP9-VZ-fcb" firstAttribute="bottom" secondItem="iUU-8s-ns4" secondAttribute="bottom" priority="1" id="vcf-GF-4Hd"/>
                             <constraint firstItem="wSn-mE-2UN" firstAttribute="bottom" secondItem="d8e-Bu-nij" secondAttribute="bottom" id="w4F-yQ-SEh"/>
                             <constraint firstItem="iDT-Xi-tM5" firstAttribute="leading" secondItem="kP9-VZ-fcb" secondAttribute="trailing" priority="1" id="xs9-hc-6ab"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="p7G-IF-Rkt"/>
+                                <exclude reference="9AE-Fh-N6t"/>
+                            </mask>
+                        </variation>
+                        <variation key="heightClass=compact">
+                            <mask key="constraints">
+                                <include reference="p7G-IF-Rkt"/>
+                                <include reference="9AE-Fh-N6t"/>
+                            </mask>
+                        </variation>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="bOf-Ep-qSS" appends="YES" id="CeK-Fw-ThR"/>
                         </connections>

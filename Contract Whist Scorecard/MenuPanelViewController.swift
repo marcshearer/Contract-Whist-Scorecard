@@ -31,8 +31,10 @@ class Option {
     fileprivate let spaceBefore: CGFloat
     fileprivate var pressed: Bool
     fileprivate var id: AnyHashable?
+    fileprivate var autoExpand: Bool
+    fileprivate var baseSuboption: Bool
     
-    init(title: String, releaseTitle: String? = nil, titleColor: UIColor? = nil, menuOption: MenuOption? = nil, spaceBefore:CGFloat = 0.0, id: AnyHashable? = nil, action: (()->())? = nil, releaseAction: (()->())? = nil) {
+    init(title: String, releaseTitle: String? = nil, titleColor: UIColor? = nil, menuOption: MenuOption? = nil, spaceBefore:CGFloat = 0.0, id: AnyHashable? = nil, autoExpand: Bool = false, baseSuboption: Bool = false, action: (()->())? = nil, releaseAction: (()->())? = nil) {
         self.title = title
         self.releaseTitle = releaseTitle
         self.titleColor = titleColor
@@ -42,6 +44,8 @@ class Option {
         self.action = action
         self.releaseAction = releaseAction
         self.pressed = false
+        self.autoExpand = autoExpand
+        self.baseSuboption = baseSuboption
     }
 }
 
@@ -74,6 +78,8 @@ protocol MenuController {
     func getSuboptionView(id: AnyHashable?) -> (view: UITableView, item: Int, title: NSAttributedString, positionSort: CGFloat)?
     
     func showHelp(helpElement: HelpViewElement, showNext: Bool, completion: @escaping (Bool)->())
+    
+    func swipeGesture(direction: UISwipeGestureRecognizer.Direction )
 }
 
 class MenuPanelViewController : ScorecardViewController, MenuController, UITableViewDelegate, UITableViewDataSource {
@@ -93,7 +99,6 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
     private var suboptionMenuOption: MenuOption!
     private var suboptionContainer: Container!
     private var suboptionHighlight: Int? = nil
-    private var resultsHighlight: Int? = nil
     private var optionMap: [OptionMap] = []
     internal var currentOption: MenuOption = .playGame
     private var screenshotImageView = UIImageView()
@@ -280,10 +285,44 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
             self.suboptionHighlight = nil
             self.disableOptions = false
             if self.currentOption != .playGame {
-                self.addSuboptions(option: self.currentOption, highlight: self.resultsHighlight)
+                self.addSuboptions(option: self.currentOption, highlight: self.suboptionHighlight)
             }
             self.setupOptionMap()
             self.reloadData()
+        }
+    }
+    
+    func swipeGesture(direction: UISwipeGestureRecognizer.Direction) {
+        if !disableAll && !disableOptions {
+            
+            if var currentRow = self.optionMap.firstIndex(where: { optionFromMap($0).menuOption == self.currentOption }) {
+                let optionMap = self.optionMap[currentRow]
+                let option = self.optionFromMap(optionMap)
+                if option.autoExpand {
+                    currentRow += self.suboptionHighlight! + 1
+                }
+                
+                let offset = (direction == .left ? 1 : -1)
+                var nextRow = currentRow + offset
+                while nextRow >= 0 && nextRow < self.optionMap.count {
+                    let optionMap = self.optionMap[nextRow]
+                    let option = self.optionFromMap(optionMap)
+                    if (!option.autoExpand || self.currentOption != option.menuOption) && (optionMap.mainOption || option.baseSuboption) {
+                        // Select this option
+                        _ = self.tableView(self.optionsTableView, willSelectRowAt: IndexPath(row: nextRow, section: 0))
+                        break
+                    }
+                    nextRow = nextRow + offset
+                }
+            }
+        }
+    }
+    
+    func optionFromMap(_ optionMap: OptionMap) -> Option {
+        if optionMap.mainOption {
+            return options[optionMap.index]
+        } else {
+            return suboptions[optionMap.index]
         }
     }
     
@@ -307,7 +346,7 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
             return nil
         }
     }
-    
+        
     func showHelp(helpElement: HelpViewElement, showNext: Bool, completion: @escaping (Bool)->()) {
         self.view.superview?.bringSubviewToFront(self.view)
         self.helpView.showMenuElement(element: helpElement, showNext: showNext, completion: { (finishPressed) in
@@ -370,7 +409,7 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
     private func setupOptions() {
         self.options = [
             Option(title: "Play Game", menuOption: .playGame),
-            Option(title: "Results", menuOption: .personalResults),
+            Option(title: "Results", menuOption: .personalResults, autoExpand: true),
             Option(title: "Awards", menuOption: .awards),
             Option(title: "Profiles", menuOption: .profiles),
         ]
@@ -473,12 +512,14 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
             if changed {
                 // Update menu
                 if mainOption {
-                    self.addSuboptions(option: option.menuOption)
-                    self.setupOptionMap()
+                    if option.autoExpand {
+                        self.addSuboptions(option: option.menuOption)
+                        self.setupOptionMap()
+                    }
                 } else if self.suboptionHighlight != nil {
                     self.suboptionHighlight = index
                     if option.menuOption == .personalResults {
-                        self.resultsHighlight = index
+                        self.suboptionHighlight = index
                     }
                 }
                 self.reloadData()
@@ -542,8 +583,8 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
             switch option {
             case .personalResults, .everyoneResults:
                 self.add(suboptions: [
-                    Option(title: "Personal", action: { self.dismissAndSelectOption(option: .personalResults, changeOption: false)}),
-                    Option(title: "Everyone", action: { self.dismissAndSelectOption(option: .everyoneResults, changeOption: false)})],
+                            Option(title: "Personal", baseSuboption: true, action: { self.dismissAndSelectOption(option: .personalResults, changeOption: false)}),
+                            Option(title: "Everyone", baseSuboption: true, action: { self.dismissAndSelectOption(option: .everyoneResults, changeOption: false)})],
                          to: option, on: self.container!, highlight: highlight ?? 0)
             default:
                 self.suboptions = []

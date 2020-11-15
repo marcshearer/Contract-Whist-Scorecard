@@ -176,6 +176,7 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
         self.elements = []
         self.parentView = parentViewController.view
         self.tapGesture = UITapGestureRecognizer(target: self, action: #selector(HelpView.wasTapped))
+        self.tapGesture.cancelsTouchesInView = true
         self.tapGesture.delegate = self
         parentView.addSubview(self)
         parentViewController.rootViewController?.view.bringSubviewToFront(self)

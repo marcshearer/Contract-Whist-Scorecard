@@ -538,7 +538,10 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
                         // Remote has disconnected intentionally - go back to home screen and reset recovery
                         self.controllerStateChange(to: .notConnected, startTimers: false)
                         Utility.debugMessage("controller \(self.uuid)", "Intentional disconnect (\(reason ?? "")) - exit")
-                        self.present(nextView: .exit, willDismiss: true)
+                        if !Scorecard.game.gameComplete() {
+                            // Don't exit if just finished a game
+                            self.present(nextView: .exit, willDismiss: true)
+                        }
                     }
                     
                     // Flush the queue
@@ -952,7 +955,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
             
             if state == .finished {
                 self.present(nextView: .exit, willDismiss: true)
-            } else if state == .notConnected {
+            } else if state == .notConnected && !Scorecard.game.gameComplete() {
                 self.present(nextView: .none, willDismiss: true)
             }
         }

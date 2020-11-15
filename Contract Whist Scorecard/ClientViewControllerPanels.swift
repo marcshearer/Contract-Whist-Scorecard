@@ -240,7 +240,6 @@ extension ClientViewController : PanelContainer {
                     case .right:
                         containerView = self.rightContainer
                     case .rightInset:
-                        rightInsetContainerUsed = true
                         containerView = self.rightInsetContainer
                     case .mainRight:
                         containerView = self.mainRightContainer

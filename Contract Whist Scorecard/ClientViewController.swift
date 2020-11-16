@@ -1080,6 +1080,8 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
             self.robotItem = self.hostingOptions
             self.hostingOptions += 1
         }
+        
+        self.hostCollectionView.isScrollEnabled =  (hostingOptions > (ScorecardUI.phoneSize() ? 3 : 4))
     }
     
     private func setupThisPlayer() {

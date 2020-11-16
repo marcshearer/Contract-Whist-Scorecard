@@ -233,7 +233,7 @@ Played</string>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FhF-F8-jiI" userLabel="Host Collection Content View">
                                                         <rect key="frame" x="0.0" y="0.0" width="1154" height="175"/>
                                                         <subviews>
-                                                            <collectionView multipleTouchEnabled="YES" tag="1" contentMode="scaleToFill" alwaysBounceHorizontal="YES" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="QLu-uS-rp7">
+                                                            <collectionView multipleTouchEnabled="YES" tag="1" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="QLu-uS-rp7">
                                                                 <rect key="frame" x="0.0" y="0.0" width="1154" height="175"/>
                                                                 <color key="backgroundColor" name="Clear"/>
                                                                 <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="e6U-UB-5RB">

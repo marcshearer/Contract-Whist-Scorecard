@@ -10,7 +10,7 @@ import UIKit
 
 class FocusView : UIView {
     
-    private var aroundFrame: CGRect!
+    private(set) var aroundFrame: CGRect!
     private var radius: CGFloat!
     private var parentViewController: ScorecardViewController!
     private var parentView: UIView!

@@ -23,8 +23,9 @@ class HelpViewElement {
     fileprivate let radius: CGFloat
     fileprivate let shrink: Bool
     fileprivate let direction: SpeechBubbleArrowDirection?
+    fileprivate let viewTapAction: (()->())?
     
-    init(text: (()->String)? = nil, attributedText: (()->NSAttributedString)? = nil, descriptor: NSAttributedString? = nil, views: [UIView?]? = nil, callback: ((Int, UIView)->CGRect?)? = nil, condition: (()->Bool)? = nil, section: Int = 0, item: Int? = nil, itemTo: Int? = nil, bannerId: AnyHashable? = nil, border: CGFloat = 0, horizontalBorder: CGFloat? = nil, verticalBorder: CGFloat? = nil, radius: CGFloat = 8.0, shrink: Bool = false, direction: SpeechBubbleArrowDirection? = nil) {
+    init(text: (()->String)? = nil, attributedText: (()->NSAttributedString)? = nil, descriptor: NSAttributedString? = nil, views: [UIView?]? = nil, callback: ((Int, UIView)->CGRect?)? = nil, condition: (()->Bool)? = nil, section: Int = 0, item: Int? = nil, itemTo: Int? = nil, bannerId: AnyHashable? = nil, border: CGFloat = 0, horizontalBorder: CGFloat? = nil, verticalBorder: CGFloat? = nil, radius: CGFloat = 8.0, shrink: Bool = false, direction: SpeechBubbleArrowDirection? = nil, viewTapAction: (()->())? = nil) {
         
         if let attributedText = attributedText {
             self.text = attributedText
@@ -58,6 +59,7 @@ class HelpViewElement {
         self.radius = radius
         self.shrink = shrink
         self.direction = direction
+        self.viewTapAction = viewTapAction
         
         assert(self.views?.count ?? 0 == 1 || itemFrom == nil, "items are only relevant for a single view")
     }
@@ -197,14 +199,14 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
         self.elements = []
     }
     
-    public func add(_ text: @escaping @autoclosure ()->String, descriptor: String? = nil, views: [UIView?]? = nil, callback: ((Int, UIView)->CGRect?)? = nil, condition: (()->Bool)? = nil, section: Int = 0, item: Int? = nil, itemTo: Int? = nil, bannerId: AnyHashable? = nil, border: CGFloat = 0, horizontalBorder: CGFloat? = nil, verticalBorder: CGFloat? = nil, radius: CGFloat = 8.0, shrink: Bool = false, direction: SpeechBubbleArrowDirection? = nil) {
+    public func add(_ text: @escaping @autoclosure ()->String, descriptor: String? = nil, views: [UIView?]? = nil, callback: ((Int, UIView)->CGRect?)? = nil, condition: (()->Bool)? = nil, section: Int = 0, item: Int? = nil, itemTo: Int? = nil, bannerId: AnyHashable? = nil, border: CGFloat = 0, horizontalBorder: CGFloat? = nil, verticalBorder: CGFloat? = nil, radius: CGFloat = 8.0, shrink: Bool = false, direction: SpeechBubbleArrowDirection? = nil, viewTapAction: (()->())? = nil) {
         
-        self.add(HelpViewElement(text: text, descriptor: (descriptor != nil ? NSAttributedString(markdown: descriptor!) : nil), views: views, callback: callback, condition: condition, section: section, item: item, itemTo: itemTo, bannerId: bannerId, border: border, horizontalBorder: horizontalBorder, verticalBorder: verticalBorder, radius: radius, shrink: shrink, direction: direction))
+        self.add(HelpViewElement(text: text, descriptor: (descriptor != nil ? NSAttributedString(markdown: descriptor!) : nil), views: views, callback: callback, condition: condition, section: section, item: item, itemTo: itemTo, bannerId: bannerId, border: border, horizontalBorder: horizontalBorder, verticalBorder: verticalBorder, radius: radius, shrink: shrink, direction: direction, viewTapAction: viewTapAction))
     }
     
-    public func add(_ attributedText: @escaping @autoclosure ()->NSAttributedString, descriptor: NSAttributedString? = nil, views: [UIView?]? = nil, callback: ((Int, UIView)->CGRect?)? = nil, condition: (()->Bool)? = nil, section: Int = 0, item: Int? = nil, itemTo: Int? = nil, bannerId: AnyHashable? = nil, border: CGFloat = 0, horizontalBorder: CGFloat? = nil, verticalBorder: CGFloat? = nil, radius: CGFloat = 8, shrink: Bool = false, direction: SpeechBubbleArrowDirection? = nil) {
+    public func add(_ attributedText: @escaping @autoclosure ()->NSAttributedString, descriptor: NSAttributedString? = nil, views: [UIView?]? = nil, callback: ((Int, UIView)->CGRect?)? = nil, condition: (()->Bool)? = nil, section: Int = 0, item: Int? = nil, itemTo: Int? = nil, bannerId: AnyHashable? = nil, border: CGFloat = 0, horizontalBorder: CGFloat? = nil, verticalBorder: CGFloat? = nil, radius: CGFloat = 8, shrink: Bool = false, direction: SpeechBubbleArrowDirection? = nil, viewTapAction: (()->())? = nil) {
         
-        self.add(HelpViewElement(attributedText: attributedText, descriptor: descriptor, views: views, callback: callback, condition: condition, section: section, item: item, itemTo: itemTo, bannerId: bannerId, border: border, horizontalBorder: horizontalBorder, verticalBorder: verticalBorder, radius: radius, shrink: shrink, direction: direction))
+        self.add(HelpViewElement(attributedText: attributedText, descriptor: descriptor, views: views, callback: callback, condition: condition, section: section, item: item, itemTo: itemTo, bannerId: bannerId, border: border, horizontalBorder: horizontalBorder, verticalBorder: verticalBorder, radius: radius, shrink: shrink, direction: direction, viewTapAction: viewTapAction))
     }
     
     private func add(_ element: HelpViewElement) {
@@ -637,7 +639,15 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
         if self.finishButton.frame.contains(gesture.location(in: self)) {
             self.finished()
         } else {
-            self.next()
+            if self.focus.aroundFrame.contains(gesture.location(in: self.focus)) {
+                if let viewTapAction = self.activeElements[self.currentElement].element.viewTapAction {
+                    self.finished(true, action: viewTapAction)
+                } else {
+                    self.next()
+                }
+            } else {
+                self.next()
+            }
         }
     }
     
@@ -656,10 +666,11 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
         self.next()
     }
     
-    public func finished(_ finishPressed: Bool = true) {
+    public func finished(_ finishPressed: Bool = true, action: (()->())? = nil) {
         self.removeTapGesture()
         self.isHidden = true
         self.isHidden(true)
+        action?()
         self.completion?(finishPressed)
     }
     

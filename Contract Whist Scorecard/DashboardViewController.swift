@@ -94,6 +94,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     internal var awardDetail: AwardDetail?
     private var bottomInset: CGFloat?
     private var menuFinishText: String?
+    private lazy var entryHelpView = HelpView(in: self)
     
     private var firstTime = true
     private var rotated = false
@@ -205,8 +206,17 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
         self.dashboardContainerBottomConstraint.constant = self.bottomInset ?? (bottomSafeArea == 0 ? 16 : bottomSafeArea)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        let games = CoreData.fetch(from: "Game", filter: NSPredicate(format: "temporary == false"), limit: 1)
+        if games.isEmpty {
+            let gamesPlayed = Scorecard.shared.playerList.reduce(0, {$0 + $1.gamesPlayed})
+            if gamesPlayed > 0 {
+                // Looks like we haven't done a sync yet
+                self.entryHelpView.show()
+            }
+        }
     }
     
     override func rightPanelDidDisappear() {
@@ -649,6 +659,10 @@ extension DashboardViewController {
         self.helpView.add("The {} will take you back to the previous view.", bannerId: Banner.finishButton, horizontalBorder: 8, verticalBorder: 4)
         
         self.helpView.add(dashboardView: view)
+        
+        self.entryHelpView.reset()
+        
+        self.entryHelpView.add("You do not appear to have synced the local database with the iCloud database. The iCloud database contains all of the game history for the players on this device.\n\nIt is advisable to do this before looking at @*/Results@*/ as otherwise the values may not be complete.\n\nTap the {} to sync now.", bannerId: "sync", horizontalBorder: (ScorecardUI.smallPhoneSize() ? 4 : 0), viewTapAction: self.syncPressed)
     }
     
     private func dashboardHelp() -> String {

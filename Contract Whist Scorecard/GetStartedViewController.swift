@@ -24,6 +24,8 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
     private var firstTime = true
     private var imageObserver: NSObjectProtocol?
     private var bubbleView = BubbleView()
+    private var entryHelpView: HelpView!
+    private var entryHelpShown = false
     private var selectingPlayer = false
     
     private let separatorHeight: CGFloat = 20.0

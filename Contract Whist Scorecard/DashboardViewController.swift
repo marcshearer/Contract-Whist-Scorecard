@@ -104,6 +104,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     private var observer: NSObjectProtocol?
 
     @IBOutlet private weak var banner: Banner!
+    @IBOutlet private weak var bannerContinuation: UIView!
     @IBOutlet private var topSectionProportionalHeightConstraint: [NSLayoutConstraint]!
     @IBOutlet private var topSectionHeightConstraint: [NSLayoutConstraint]!
     @IBOutlet private weak var carouselCollectionView: UICollectionView!
@@ -479,6 +480,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
                 self.banner.set(title: subTitle)
             }
         }
+        self.bannerContinuation.isHidden = self.dashboardViewInfo.count == 1 || !ScorecardUI.phoneSize()
     }
     
     private func networkEnableSyncButton() {
@@ -582,6 +584,7 @@ extension DashboardViewController {
     
     private func defaultViewColors() {
         self.view.backgroundColor = self.backgroundColor.background
+        self.bannerContinuation.backgroundColor = Palette.banner.background
     }
 
     private func defaultCellColors(_ cell: DashboardScrollCell) {

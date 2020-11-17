@@ -125,6 +125,8 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
     private var focus: FocusView!
     private var nextButton: ShadowButton!
     private var finishButton: ShadowButton!
+    private var finishTitle = "Exit"
+    private var focusBackgroundColor: UIColor?
     private var tapGesture: UITapGestureRecognizer!
     private var parentViewController: ScorecardViewController!
     private var parentView: UIView!
@@ -141,7 +143,7 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
     private let buttonSpacing: CGFloat = 10
     private let border: CGFloat = 8
     private let arrowHeight: CGFloat = 40
-    private let minVisibleHeight: CGFloat = 20
+    private let minVisibleDimension: CGFloat = 20
     
     private static var _helpContext: String?
     public static var helpContext: String? { _helpContext }
@@ -215,9 +217,11 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
         }
     }
     
-    public func show(alwaysNext: Bool = false, completion: ((Bool)->())? = nil) {
+    public func show(alwaysNext: Bool = false, finishTitle: String = "Exit", focusBackgroundColor: UIColor? = nil, completion: ((Bool)->())? = nil) {
         self.alwaysNext = alwaysNext
         self.completion = completion
+        self.finishTitle = finishTitle
+        self.focusBackgroundColor = focusBackgroundColor
         
         HelpView._helpContext = UUID().uuidString
         self.layoutSubviews()
@@ -330,7 +334,7 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
                     }
                     if !activeFrames.isEmpty {
                         let superFrame = self.superFrame(frames: activeFrames.map{$0.frame})
-                        if superFrame.height >= self.minVisibleHeight {
+                        if superFrame.height >= self.minVisibleDimension && super.frame.width >= self.minVisibleDimension {
                             self.activeElements.append(HelpViewActiveElement(element: element, frame: superFrame, views: activeFrames.map{$0.view}))
                         }
                     }
@@ -496,7 +500,7 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
             self.nextPressed(self.nextButton)
         } else {
             // Draw focus frame
-            self.focus.set(around: focusFrame, radius: activeElement.radius)
+            self.focus.set(around: focusFrame, radius: activeElement.radius, fillColor: self.focusBackgroundColor)
             
             // Show bubble
             self.speechBubble.show(text, point: point, direction: direction, width: requiredWidth, color: Palette.helpBubble, arrowHeight: (activeElement.source == .message ? 0 : arrowHeight), arrowWidth: 0)
@@ -513,8 +517,10 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
             }
             let minY = (buttonsBelow ? self.speechBubble.frame.maxY + self.buttonSpacing : self.speechBubble.frame.minY - self.buttonSpacing - self.buttonHeight)
                 
-            let offset = (showNext ? self.buttonWidth + self.buttonSpacing : (self.buttonWidth / 2))
-            self.finishButton.frame = CGRect(x: self.speechBubble.labelFrame.midX - offset, y: minY, width: self.buttonWidth, height: self.buttonHeight)
+            let buttonWidth = max(self.buttonWidth, self.finishTitle.labelWidth() + 32)
+            let offset = (showNext ? buttonWidth + self.buttonSpacing : (buttonWidth / 2))
+            self.finishButton.setTitle(self.finishTitle, for: .normal)
+            self.finishButton.frame = CGRect(x: self.speechBubble.labelFrame.midX - offset, y: minY, width: buttonWidth, height: self.buttonHeight)
             
             self.nextButton.isHidden = !showNext
             if showNext {
@@ -532,7 +538,7 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
         case .down:
             let deficit = self.parentView.safeAreaInsets.top + requiredHeight - point.y
             if deficit > 0 {
-                if shrink && focusFrame.height - deficit > self.minVisibleHeight {
+                if shrink && focusFrame.height - deficit > self.minVisibleDimension {
                     focusFrame = CGRect(x: focusFrame.minX, y: focusFrame.minY + deficit, width: focusFrame.width, height: focusFrame.height - deficit)
                     point = CGPoint(x: focusFrame.midX, y: focusFrame.minY)
                 } else {
@@ -543,7 +549,7 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
         case .up:
             let deficit = point.y - (self.frame.height - self.parentView.safeAreaInsets.bottom - requiredHeight)
             if deficit > 0 {
-                if shrink && focusFrame.height - deficit > self.minVisibleHeight {
+                if shrink && focusFrame.height - deficit > self.minVisibleDimension {
                     focusFrame = CGRect(x: focusFrame.minX, y: focusFrame.minY, width: focusFrame.width, height: focusFrame.height - deficit)
                     point = CGPoint(x: focusFrame.midX, y: focusFrame.maxY)
                 } else {
@@ -554,7 +560,7 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
         case .right:
             let deficit = self.parentView.safeAreaInsets.left + requiredWidth - point.x
             if deficit > 0 {
-                if shrink && focusFrame.width - deficit > self.minVisibleHeight {
+                if shrink && focusFrame.width - deficit > self.minVisibleDimension {
                     focusFrame = CGRect(x: focusFrame.minX + deficit, y: focusFrame.minY, width: focusFrame.width - deficit, height: focusFrame.height)
                     point = CGPoint(x: focusFrame.minX, y: focusFrame.midY)
                 } else {
@@ -565,7 +571,7 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
         case .left:
             let deficit = point.x - (self.frame.width - self.parentView.safeAreaInsets.right - requiredWidth)
             if deficit > 0 {
-                if shrink && focusFrame.width - deficit > self.minVisibleHeight {
+                if shrink && focusFrame.width - deficit > self.minVisibleDimension {
                     focusFrame = CGRect(x: focusFrame.minX, y: focusFrame.minY, width: focusFrame.width - deficit, height: focusFrame.height)
                     point = CGPoint(x: focusFrame.maxX, y: focusFrame.midY)
                 } else {

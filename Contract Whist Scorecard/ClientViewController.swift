@@ -1500,20 +1500,25 @@ extension ClientViewController {
         
         self.helpView.add("This area will show you details if another player starts hosting a game nearby, or an online game that you are invited to.", views: [self.peerCollectionView], condition: { !self.playerSelectionVisible }, item: 0)
         
-        var text: String?
         for button in self.actionButtons {
+            var text: String?
+            var border: CGFloat = 0
+
             switch button.tag {
             case playersItem:
                 text = "The @*/Profiles@*/ button allows you to add/remove players from this device or to view/modify the details of an existing player"
             case resultsItem:
                 text = "The @*/Results@*/ button allows you to view dashboards showing your own history and statistics, your awards, and history and statistics for all players on this device. You can drill into each tile in the dashboard to see supporting data."
             case settingsItem:
-                text = "The @*/Settings@*/ button allows you to customise the Whist app to meet your individual requirements. Options include choosing a colour theme for your device."
+                let notify = Scorecard.settings.notifyCount() > 0
+                text = "The @*/Settings@*/ button allows you to customise the Whist app to meet your individual requirements. Options include choosing a colour theme for your device.\(notify ? "\n\nThe badge indicates that your settings might not be optimal or new settings are available. Go into @*/Settings@*/ to get more details." : "")"
+                border = (notify ? 8 : 0)
             default:
                 break
             }
+            
             if let text = text {
-                self.helpView.add(text, views: [button], condition: { !self.playerSelectionVisible })
+                self.helpView.add(text, views: [button], condition: { !self.playerSelectionVisible }, border: border)
             }
         }        
     }

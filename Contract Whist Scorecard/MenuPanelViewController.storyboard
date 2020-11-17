@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="ipad11_0rounded" orientation="portrait" layout="fullscreen" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -112,7 +112,7 @@
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="njw-JR-F2N">
-                                                            <rect key="frame" x="0.0" y="0.0" width="710" height="27"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="54.5" height="27"/>
                                                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="22"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
@@ -136,7 +136,6 @@
                                                     <constraints>
                                                         <constraint firstAttribute="trailing" secondItem="hJD-RF-VuY" secondAttribute="trailing" id="IYm-Z3-zwu"/>
                                                         <constraint firstAttribute="bottom" secondItem="njw-JR-F2N" secondAttribute="bottom" id="R1z-4Q-pud"/>
-                                                        <constraint firstItem="hJD-RF-VuY" firstAttribute="leading" secondItem="njw-JR-F2N" secondAttribute="trailing" constant="8" id="TsY-Qb-WE8"/>
                                                         <constraint firstItem="hJD-RF-VuY" firstAttribute="centerY" secondItem="eSB-0r-Uhw" secondAttribute="centerY" id="qh3-sT-OX2"/>
                                                         <constraint firstItem="njw-JR-F2N" firstAttribute="top" secondItem="eSB-0r-Uhw" secondAttribute="top" id="sKr-rI-b2H"/>
                                                         <constraint firstItem="njw-JR-F2N" firstAttribute="leading" secondItem="eSB-0r-Uhw" secondAttribute="leading" id="zUP-AW-iVf"/>
@@ -183,11 +182,25 @@
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="HpQ-kL-YL6">
-                                                            <rect key="frame" x="0.0" y="0.0" width="710" height="26.5"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="54.5" height="26.5"/>
                                                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="22"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="l5a-SN-ieI" customClass="ShadowButton" customModule="Whist" customModuleProvider="target">
+                                                            <rect key="frame" x="62.5" y="-5" width="20" height="20.5"/>
+                                                            <color key="backgroundColor" name="Banner"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" constant="20" id="1xF-WN-kc2"/>
+                                                                <constraint firstAttribute="height" constant="20" id="Yc5-Cw-M9V"/>
+                                                            </constraints>
+                                                            <state key="normal" title="1"/>
+                                                            <userDefinedRuntimeAttributes>
+                                                                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                                    <real key="value" value="10"/>
+                                                                </userDefinedRuntimeAttribute>
+                                                            </userDefinedRuntimeAttributes>
+                                                        </button>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d1j-sg-4Sc" customClass="HelpButton" customModule="Whist" customModuleProvider="target">
                                                             <rect key="frame" x="718" y="-1" width="28" height="28.5"/>
                                                             <constraints>
@@ -207,15 +220,17 @@
                                                     <constraints>
                                                         <constraint firstAttribute="trailing" secondItem="d1j-sg-4Sc" secondAttribute="trailing" id="IgI-CJ-SUv"/>
                                                         <constraint firstItem="HpQ-kL-YL6" firstAttribute="top" secondItem="igM-PG-Fey" secondAttribute="top" id="J6L-jn-x1f"/>
+                                                        <constraint firstItem="l5a-SN-ieI" firstAttribute="centerY" secondItem="igM-PG-Fey" secondAttribute="centerY" constant="-8" id="JaW-aq-S7I"/>
                                                         <constraint firstAttribute="bottom" secondItem="HpQ-kL-YL6" secondAttribute="bottom" id="KOd-ML-7TG"/>
                                                         <constraint firstItem="d1j-sg-4Sc" firstAttribute="centerY" secondItem="igM-PG-Fey" secondAttribute="centerY" id="KwK-tK-SnT"/>
-                                                        <constraint firstItem="d1j-sg-4Sc" firstAttribute="leading" secondItem="HpQ-kL-YL6" secondAttribute="trailing" constant="8" id="L6B-FD-AcM"/>
+                                                        <constraint firstItem="l5a-SN-ieI" firstAttribute="leading" secondItem="HpQ-kL-YL6" secondAttribute="trailing" constant="8" id="tom-vc-t2P"/>
                                                         <constraint firstItem="HpQ-kL-YL6" firstAttribute="leading" secondItem="igM-PG-Fey" secondAttribute="leading" id="yXK-aH-ZwG"/>
                                                     </constraints>
                                                 </tableViewCellContentView>
                                                 <color key="backgroundColor" name="Clear"/>
                                                 <connections>
                                                     <outlet property="helpButton" destination="d1j-sg-4Sc" id="qyx-zB-gAj"/>
+                                                    <outlet property="settingsBadgeButton" destination="l5a-SN-ieI" id="P7m-BI-7bF"/>
                                                     <outlet property="titleLabel" destination="HpQ-kL-YL6" id="FIr-fd-cu4"/>
                                                     <outlet property="titleLabelTopConstraint" destination="J6L-jn-x1f" id="OuO-0Q-GDP"/>
                                                 </connections>
@@ -339,6 +354,9 @@
     <resources>
         <image name="equal.square" catalog="system" width="128" height="114"/>
         <image name="questionmark" catalog="system" width="96" height="128"/>
+        <namedColor name="Banner">
+            <color red="0.89800000190734863" green="0.74900001287460327" blue="0.37299999594688416" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <namedColor name="Clear">
             <color red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>

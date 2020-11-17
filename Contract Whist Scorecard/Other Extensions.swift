@@ -244,6 +244,7 @@ extension NSAttributedString {
                       "*/",
                       "@/",
                       "@*",
+                      "^^"
                       ]
         let pointSize = font.fontDescriptor.pointSize
         let boldItalicFont = UIFont(descriptor: font.fontDescriptor.withSymbolicTraits([.traitItalic, .traitBold])! , size: pointSize)
@@ -263,7 +264,10 @@ extension NSAttributedString {
              NSAttributedString.Key.font: UIFont.italicSystemFont(ofSize: pointSize)],
             
             [NSAttributedString.Key.foregroundColor: Palette.normal.themeText,
-             NSAttributedString.Key.font: UIFont.systemFont(ofSize: pointSize, weight: .bold)]
+             NSAttributedString.Key.font: UIFont.systemFont(ofSize: pointSize, weight: .bold)],
+            
+            [NSAttributedString.Key.foregroundColor: Palette.normal.themeText,
+             NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24, weight: .bold)]
         ]
         self.init(attributedString: NSAttributedString.replace(in: string, tokens: tokens, with: attributes))
     }

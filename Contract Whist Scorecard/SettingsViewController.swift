@@ -43,6 +43,8 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     private var thisPlayerHeight: CGFloat = 0.0
     private var lastMenuVisible: Bool?
     private var topSectionCompressed = false
+    private var highlightConfettiWin = false
+    private var observer: NSObjectProtocol?
     
     // Sections
     private enum Sections: Int, CaseIterable {
@@ -180,7 +182,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
         self.facetimeEnabled = Scorecard.settings.syncEnabled && Scorecard.settings.onlineGamesEnabled && Scorecard.settings.faceTimeAddress != ""
         
         // Set observer for entering foreground
-        NotificationCenter.default.addObserver(self, selector: #selector(willEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
+        self.observer = NotificationCenter.default.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: nil, using: self.willEnterForeground)
             
         // Setup color themes
         self.setupThemes()
@@ -191,15 +193,15 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
         // Setup banner
         self.setupBanner()
 
+        // Check notifications
         self.checkReceiveNotifications()
-        
         
         if Scorecard.settings.saveLocation {
             self.checkUseLocation(message: "You have blocked access to the current location for this app. Therefore the save location setting has been reset. To change this please allow location access 'While Using the App' in the Whist section of the main Settings App", prompt: false)
         }
     }
     
-    @objc internal func willEnterForeground() {
+    @objc internal func willEnterForeground(notification: Notification) {
         // Check if can receive notifications and switch off options dependent on it if not available
         self.checkReceiveNotifications()
     }
@@ -611,7 +613,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                         cell.labelLeadingConstraint.constant = 20.0
                         cell.toggleSwitch.addTarget(self, action: #selector(SettingsViewController.confettiWinChanged(_:)), for: .valueChanged)
                         cell.toggleSwitch.isOn = Scorecard.settings.confettiWin
-                        
+                                                
                     case .spacer1, .spacer2:
                         cell = tableView.dequeueReusableCell(withIdentifier: "Spacer") as? SettingsTableCell
                         // Setup default colors (previously done in StoryBoard)
@@ -799,6 +801,23 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
         }
     }
     
+    internal func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        if self.highlightConfettiWin {
+            let indexPath = IndexPath(row: InGameOptions.confettiWin.rawValue, section: Sections.inGame.section)
+            if let cell = self.settingsTableView.cellForRow(at: indexPath) as? SettingsTableCell {
+                self.highlightConfettiWin = false
+                let transform = cell.label.transform
+                Utility.animate(duration: 1.0, completion: {
+                    Utility.animate(duration: 1.0, animations: {
+                        cell.label.transform = transform
+                    })
+                }, animations: {
+                    cell.label.transform = transform.scaledBy(x: 1.2, y: 1.2)
+                })
+            }
+        }
+    }
+        
     private func setTopSectionHeight(force: Bool = false) {
         if self.settingsTableView.contentOffset.y > 10.0 && (!self.topSectionCompressed || force) {
             Utility.animate(if: !force, view: self.view, duration: 0.3) {
@@ -1610,20 +1629,12 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                 self.showSettingsNotifications()
             })
         } else if Scorecard.settings.confettiWinSettingState == .availableNotify {
-            self.alertMessage("You have now achieved the loyalty card award. This has enabled a new setting to allow you to have a confetti storm on your device every time you win a game!", okHandler: {
+            self.alertMessage("You have now achieved the loyalty card award. This has enabled a new setting to allow you to have a confetti storm on your device every time you win a game!", title: "Congratulations", okHandler: {
                 Scorecard.settings.confettiWinSettingState = .available
+                self.highlightConfettiWin = true
                 let indexPath = IndexPath(row: InGameOptions.confettiWin.rawValue, section: Sections.inGame.section)
-                let cell = self.settingsTableView.cellForRow(at: indexPath) as! SettingsTableCell
                 self.settingsTableView.scrollToRow(at: indexPath, at: .top, animated: true)
-                self.settingsTableView.layoutIfNeeded()
-                UIView.animate(withDuration: 1.0, animations: {
-                       cell.label.font = UIFont.systemFont(ofSize: 20.0, weight: .regular)
-                    }, completion: { (_) in
-                       UIView.animate(withDuration: 1.0, animations: {
-                          cell.label.font = UIFont.systemFont(ofSize: 17.0, weight: .regular)
-                          self.showSettingsNotifications()
-                       })
-                })
+                
             })
         }
     }
@@ -1691,6 +1702,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     }
     
     override internal func willDismiss() {
+        self.observer = nil
         Scorecard.settings.save()
         
         // Save to iCloud
@@ -1943,4 +1955,8 @@ extension SettingsViewController {
         
         self.helpView.add("This section shows you information about the Whist app installed on your phone.", views: [self.settingsTableView], section: Sections.generalInfo.section, item: -1, itemTo: GeneralInfoOptions.database.rawValue, horizontalBorder: -16)
     }
+}
+
+extension Notification.Name {
+    static let highlightConfettiWin = Notification.Name("highlightConfettiWin")
 }

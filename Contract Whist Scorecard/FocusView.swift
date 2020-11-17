@@ -12,6 +12,7 @@ class FocusView : UIView {
     
     private(set) var aroundFrame: CGRect!
     private var radius: CGFloat!
+    private var fillColor: UIColor!
     private var parentViewController: ScorecardViewController!
     private var parentView: UIView!
     
@@ -39,9 +40,10 @@ class FocusView : UIView {
         super.layoutSubviews()
     }
     
-    public func set(around aroundFrame: CGRect, radius: CGFloat = 8) {
+    public func set(around aroundFrame: CGRect, radius: CGFloat = 8, fillColor: UIColor? = nil) {
         self.aroundFrame = aroundFrame
         self.radius = radius
+        self.fillColor = fillColor
         self.removeShapeLayers()
         self.createShapeLayers()
     }
@@ -62,7 +64,7 @@ class FocusView : UIView {
         self.draw(frame: self.aroundFrame, in: path, radius: self.radius)
         let layer = CAShapeLayer()
         layer.fillRule = .evenOdd
-        layer.fillColor = UIColor.black.withAlphaComponent(0.6).cgColor
+        layer.fillColor = (self.fillColor ?? UIColor.black.withAlphaComponent(0.6)).cgColor
         layer.lineWidth = 0
         layer.path = path.cgPath
         self.layer.insertSublayer(layer, at: 0)

@@ -465,8 +465,17 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
                 cell.titleLabel.font = UIFont.systemFont(ofSize: 24, weight: .semibold)
                 cell.helpButton.isHidden = (option.menuOption != self.currentOption)
                 cell.helpButton.addTarget(self, action: #selector(MenuPanelViewController.menuPanelHelpPressed), for: .touchUpInside)
+                cell.settingsBadgeButton?.isHidden = true
                 if option.menuOption == .playGame {
                     self.setOther(isEnabled: !disabled)
+                } else if option.menuOption == .settings {
+                    let count = Scorecard.settings.notifyCount()
+                    if count > 0 {
+                        cell.settingsBadgeButton.setTitle("\(count)", for: .normal)
+                        cell.settingsBadgeButton.setBackgroundColor(Palette.alwaysTheme.background)
+                        cell.settingsBadgeButton.setTitleColor(Palette.alwaysTheme.text, for: .normal)
+                        cell.settingsBadgeButton.isHidden = false
+                    }
                 }
             } else {
                 let disabled = self.disableAll
@@ -816,6 +825,7 @@ class MenuPanelTableCell: UITableViewCell {
     @IBOutlet fileprivate weak var titleLabel: UILabel!
     @IBOutlet fileprivate weak var titleLabelTopConstraint: NSLayoutConstraint!
     @IBOutlet fileprivate weak var helpButton: HelpButton!
+    @IBOutlet fileprivate weak var settingsBadgeButton: ShadowButton!
 }
 
 extension MenuPanelViewController {
@@ -846,7 +856,8 @@ extension MenuPanelViewController {
             }
         }
             
-        self.helpViewAfterPlayGame.add("The @*/Settings@*/ menu option allows you to customise the Whist app to meet your individual requirements. Options include choosing a colour theme for your device.", views: [self.settingsTableView], item: 0, horizontalBorder: 16)
+        let notify = Scorecard.settings.notifyCount() > 0
+        self.helpViewAfterPlayGame.add("The @*/Settings@*/ menu option allows you to customise the Whist app to meet your individual requirements. Options include choosing a colour theme for your device.\(notify ? "\n\nThe badge indicates that your settings might not be optimal or new settings are available. Go into @*/Settings@*/ to get more details." : "")", views: [self.settingsTableView], item: 0, horizontalBorder: 16)
     
         self.helpViewAfterOther.reset()
         

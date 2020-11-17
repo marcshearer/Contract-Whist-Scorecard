@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -261,7 +261,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="dkH-H9-R1t">
-                                                    <rect key="frame" x="24" y="70" width="268" height="0.0"/>
+                                                    <rect key="frame" x="24" y="70" width="0.0" height="0.0"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" name="Text"/>
                                                     <nil key="highlightedColor"/>
@@ -277,7 +277,6 @@
                                                 </switch>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="bRF-L9-XRt" firstAttribute="leading" secondItem="dkH-H9-R1t" secondAttribute="trailing" constant="8" id="GZt-0F-Izo"/>
                                                 <constraint firstItem="bRF-L9-XRt" firstAttribute="centerY" secondItem="51C-ed-ZoD" secondAttribute="centerY" id="Ub3-b1-h27"/>
                                                 <constraint firstItem="dkH-H9-R1t" firstAttribute="leading" secondItem="51C-ed-ZoD" secondAttribute="leadingMargin" constant="8" id="oU9-Bv-BRZ"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="bRF-L9-XRt" secondAttribute="trailing" constant="12" id="pFk-wL-SpD"/>

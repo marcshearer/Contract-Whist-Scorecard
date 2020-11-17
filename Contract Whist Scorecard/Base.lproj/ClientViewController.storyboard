@@ -113,7 +113,7 @@ Played</string>
                                                 <rect key="frame" x="0.0" y="0.0" width="1194" height="120"/>
                                                 <subviews>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qjq-rE-5ew" customClass="ThumbnailView" customModule="Whist" customModuleProvider="target">
-                                                        <rect key="frame" x="565" y="23" width="64" height="86"/>
+                                                        <rect key="frame" x="561.5" y="14.5" width="71" height="95"/>
                                                         <color key="backgroundColor" name="Clear"/>
                                                         <gestureRecognizers/>
                                                         <constraints>
@@ -127,9 +127,9 @@ Played</string>
                                                 <color key="backgroundColor" name="Clear"/>
                                                 <accessibility key="accessibilityConfiguration" identifier="thisPlayerContainer"/>
                                                 <constraints>
-                                                    <constraint firstItem="Qjq-rE-5ew" firstAttribute="height" secondItem="XTv-6o-LLq" secondAttribute="height" multiplier="1:1.4" id="7Tq-nc-kgx"/>
+                                                    <constraint firstItem="Qjq-rE-5ew" firstAttribute="height" secondItem="XTv-6o-LLq" secondAttribute="height" multiplier="1:1.6" constant="20" id="7Tq-nc-kgx"/>
                                                     <constraint firstItem="Qjq-rE-5ew" firstAttribute="centerX" secondItem="XTv-6o-LLq" secondAttribute="centerX" id="HXe-JG-JIu"/>
-                                                    <constraint firstItem="Qjq-rE-5ew" firstAttribute="centerY" secondItem="XTv-6o-LLq" secondAttribute="centerY" constant="6" id="pao-W5-HZc"/>
+                                                    <constraint firstItem="Qjq-rE-5ew" firstAttribute="centerY" secondItem="XTv-6o-LLq" secondAttribute="centerY" constant="2" id="pao-W5-HZc"/>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="x7j-7w-yJj">

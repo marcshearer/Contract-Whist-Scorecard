@@ -78,6 +78,7 @@ class DashboardView : UIView, DashboardActionDelegate {
     private var statisticsViewer: StatisticsViewer!
     private var title: String?
     private var returnTo: String?
+    private(set) var id: String!
 
     @IBOutlet public weak var delegate: DashboardActionDelegate?
     @IBOutlet public weak var parentViewController: DashboardViewController?
@@ -93,6 +94,7 @@ class DashboardView : UIView, DashboardActionDelegate {
     
     convenience init(withNibName nibName: String, frame: CGRect, parent: DashboardViewController?, title: String? = nil, returnTo: String? = nil, delegate: DashboardActionDelegate?) {
         self.init(frame: frame)
+        self.id = nibName
         self.parentViewController = parent
         self.delegate = delegate
         self.title = title

@@ -163,6 +163,15 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
             self.showPlayerSelection()
         }
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if !self.entryHelpShown {
+            self.entryHelpView.show(finishTitle: "Continue", focusBackgroundColor: UIColor.black.withAlphaComponent(0.7))
+            self.entryHelpShown = true
+        }
+    }
         
     // MARK: - Form handling ===================================================================== -
     
@@ -611,7 +620,7 @@ extension GetStartedViewController {
         
         self.helpView.reset()
                 
-        self.helpView.add(NSAttributedString("Welcome to Whist!", color: Palette.normal.themeText, font: UIFont.systemFont(ofSize: 24, weight: .bold)) + NSAttributedString(markdown: "\n\nTo get started you need to create some players.\n\nIf you have played before on another device, you can download players from iCloud by entering your Unique Id.\n\nIf you have not played before tap the @*/Create New Player@*/ button to create a new player from scratch.\n\nOn nearly every screen in the @*/Whist app@*/ you will find a ") + NSAttributedString(imageName: "system.questionmark.circle.fill", color: Palette.bannerShadow.background) + " button. Tapping it will display help for the screen you are on.")
+        self.addIntroduction(helpView: self.helpView)
         
         self.helpView.add("Once you have created some players the @*/Home@*/ button will become enabled.\n\nTap it to start playing Whist.", views: [self.smallFormatHomeButton], horizontalBorder: 8, verticalBorder: 4)
         
@@ -642,7 +651,15 @@ extension GetStartedViewController {
         self.addSaveLocationHelp(section: .createPlayerSettings)
 
         self.addHomeButtonHelp(section: .createPlayerSettings)
+        
+        self.entryHelpView = HelpView(in: self)
 
+        self.addIntroduction(helpView: self.entryHelpView)
+
+    }
+    
+    private func addIntroduction(helpView: HelpView) {
+        helpView.add("^^Welcome to Whist!^^\n\nTo get started you need to create some players.\n\nIf you have played before on another device, you can download players from iCloud by entering your Unique Id.\n\nIf you have not played before tap the @*/Create New Player@*/ button to create a new player from scratch.\n\nOn nearly every screen in the @*/Whist app@*/ you will find a " + NSAttributedString(imageName: "system.questionmark.circle.fill", color: Palette.bannerShadow.background) + " button. Tapping it will display help for the screen.")
     }
     
     private func addOnlineGamesSwitchHelp(section: Section) {

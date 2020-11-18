@@ -536,6 +536,7 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
                         action = option.action
                     }
                 } else if self.suboptionHighlight != nil {
+                    self.setCurrentOption(option: option.menuOption!)
                     self.suboptionHighlight = index
                 }
                 self.reloadData()

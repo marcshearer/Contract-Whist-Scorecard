@@ -98,6 +98,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     private var entryHelpView: HelpView!
     private static var entryHelpShown: Date?
     private var helpViewId: String?
+    private var bannerColor: PaletteColor!
     
     private var firstTime = true
     private var rotated = false
@@ -489,9 +490,9 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
             if self.container == .main || self.container == .mainRight {
                 self.subtitleLabel.text = subTitle
                 self.subtitleViewHeightConstraint.constant = 30
-                self.subtitleView.backgroundColor = self.defaultBannerColor.background
+                self.subtitleView.backgroundColor = self.bannerColor.background
                 self.subtitleLabel.textAlignment = self.defaultBannerAlignment
-                self.subtitleLabel.textColor = self.defaultBannerTextColor()
+                self.subtitleLabel.textColor = self.bannerColor.text
             } else {
                 self.banner.set(title: subTitle)
             }
@@ -540,7 +541,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
             rightButtons: [
                 BannerButton(action: self.helpPressed, type: .help),
                 BannerButton(title: title, image: image, width: width, action: self.syncPressed, type: type, menuHide: false, font: UIFont.systemFont(ofSize: 14), id: "sync")],
-            disableOptions: (leftButtons != nil))
+            backgroundColor: self.bannerColor, disableOptions: (leftButtons != nil))
     }
 
     // MARK: - Functions to present other views ========================================================== -
@@ -599,8 +600,9 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
 extension DashboardViewController {
     
     private func defaultViewColors() {
+        self.bannerColor = (self.container == .mainRight ? Palette.banner : self.defaultBannerColor)
         self.view.backgroundColor = self.backgroundColor.background
-        self.bannerContinuation.backgroundColor = Palette.banner.background
+        self.bannerContinuation.backgroundColor = self.bannerColor.background
     }
 
     private func defaultCellColors(_ cell: DashboardScrollCell) {

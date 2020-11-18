@@ -578,10 +578,10 @@ class Utility {
     }
     
     public static func screenshot(view: UIView? = nil) -> UIImage? {
-        let layer = view?.layer ?? UIApplication.shared.keyWindow!.layer
+        let view = view ?? UIApplication.shared.keyWindow!
         let scale = UIScreen.main.scale
-        UIGraphicsBeginImageContextWithOptions(layer.frame.size, false, scale)
-        layer.render(in: UIGraphicsGetCurrentContext()!)
+        UIGraphicsBeginImageContextWithOptions(view.bounds.size, false, scale)
+        view.drawHierarchy(in: view.bounds, afterScreenUpdates: true)
         let screenshot = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         return screenshot

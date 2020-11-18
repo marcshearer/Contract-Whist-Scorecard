@@ -80,6 +80,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     }
     
     private var currentPage = -1
+    private var currentView: DashboardView?
     
     private var dashboardViewInfo: [Int:DashboardViewInfo] = [:]
     private var dashboardInfo: [DashboardName] = []
@@ -95,7 +96,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     private var bottomInset: CGFloat?
     private var menuFinishText: String?
     private var entryHelpView: HelpView!
-    private var entryHelpShown = false
+    private static var entryHelpShown: Date?
     private var helpViewId: String?
     
     private var firstTime = true
@@ -190,7 +191,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
             self.carouselCollectionView.layoutIfNeeded()
             self.carouselCollectionView.contentOffset = CGPoint(x: self.carouselCollectionView.bounds.width / 4.0, y: 0.0)
             let selectedPage = (self.firstTime ? Int(self.dashboardViewInfo.count / 2) : self.currentPage)
-            self.changed(self.carouselCollectionView, itemAtCenter: selectedPage, forceScroll: true)
+            self.changed(self.carouselCollectionView, itemAtCenter: selectedPage, forceScroll: true, animated: false)
             self.carouselCollectionView.reloadData()
             if self.rotated {
                 self.reloadData()
@@ -224,6 +225,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
                     }
                 }
             }
+            Utility.debugMessage("Reload", "Stop")
         }
     }
     
@@ -336,24 +338,29 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
         }
     }
         
-    internal func changed(_ collectionView: UICollectionView, itemAtCenter: Int, forceScroll: Bool) {
+    internal func changed(_ collectionView: UICollectionView, itemAtCenter: Int, forceScroll: Bool, animated: Bool = true) {
         Utility.mainThread {
-            let changed = self.currentPage != itemAtCenter
+            let currentPage = self.currentPage
+            let changed = currentPage != itemAtCenter
             if changed || forceScroll == true {
-                let oldView = self.getView(page: self.currentPage)
+                // Select cell
+                self.currentPage = itemAtCenter
+                let oldView = (changed ? self.currentView : nil)
                 let newView = self.getView(page: itemAtCenter)
-                self.setupHelpView(view: newView)
-                newView.isHidden = false
-                Utility.animate(duration: self.firstTime ? 0.0 : 0.5,
+                self.currentView = newView
+                // self.setupHelpView(view: newView) //TODO
+                let direction: Direction = (currentPage < itemAtCenter ? .left : .right)
+                let screenShot = self.animatePrepare(from: oldView, to: newView, direction: direction)
+                Utility.animate(if: animated, duration: 0.25,
                     completion: {
-                        if changed {
-                            oldView.isHidden = true
-                        }
+                        self.animateCompletion(from: screenShot, to: newView)
                     },
                     animations: {
+                        // Animate the main view move
+                        self.animateExecute(from: screenShot, to: newView, direction: direction)
                         // Unhighlight the cell leaving the center
-                        if let cell = self.carouselCollectionView.cellForItem(at: IndexPath(item: self.currentPage, section: 0)) as? DashboardCarouselCell {
-                            if self.currentPage != itemAtCenter {
+                        if let cell = self.carouselCollectionView.cellForItem(at: IndexPath(item: currentPage, section: 0)) as? DashboardCarouselCell {
+                            if currentPage != itemAtCenter {
                                 cell.containerView.backgroundColor = Palette.carouselUnselected.background
                                 cell.backgroundImageView.tintColor = Palette.carouselUnselected.faintText
                                 cell.titleLabel.textColor = Palette.carouselUnselected.text
@@ -361,30 +368,51 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
                             }
                         }
                         
-                        // Select cell
-                        self.currentPage = itemAtCenter
-                     
                         if forceScroll {
-                            collectionView.scrollToItem(at: IndexPath(item: itemAtCenter, section: 0), at: .centeredHorizontally, animated: !self.firstTime)
+                            collectionView.scrollToItem(at: IndexPath(item: itemAtCenter, section: 0), at: .centeredHorizontally, animated: animated)
                         }
                         
                         // Highlight new cell at center
-                        if let cell = self.carouselCollectionView.cellForItem(at: IndexPath(item: self.currentPage, section: 0)) as? DashboardCarouselCell {
+                        if let cell = self.carouselCollectionView.cellForItem(at: IndexPath(item: currentPage, section: 0)) as? DashboardCarouselCell {
                             cell.containerView.backgroundColor = Palette.carouselSelected.background
                             cell.backgroundImageView.tintColor = Palette.carouselSelected.contrastText
                             cell.titleLabel.textColor = Palette.carouselSelected.text
                             cell.titleLabel.alpha = 1.0
                         }
                         self.scrollCollectionView.reloadData()
-                        if changed {
-                            oldView.alpha = 0.0
-                        }
-                        newView.alpha = 1.0
                     })
                         
             }
         }
     }
+    
+    enum Direction: CGFloat {
+        case left = 1
+        case right = -1
+    }
+    
+    private func animatePrepare(from oldView: DashboardView?, to newView: DashboardView, direction: Direction) -> UIImageView {
+        let screenShot = Utility.screenshot(view: self.dashboardContainerView)
+        let imageView = UIImageView(frame: self.dashboardContainerView.bounds)
+        imageView.image = screenShot
+        self.dashboardContainerView.addSubview(imageView)
+        self.dashboardContainerView.bringSubviewToFront(imageView)
+        oldView?.isHidden = true
+        newView.frame = self.dashboardContainerView.bounds.offsetBy(dx: self.dashboardContainerView.frame.width * direction.rawValue, dy: 0)
+        newView.isHidden = false
+        return imageView
+    }
+    
+    private func animateExecute(from screenShot: UIImageView, to newView: DashboardView, direction: Direction) {
+        newView.frame = screenShot.frame
+        screenShot.frame = screenShot.frame.offsetBy(dx: screenShot.frame.width * -direction.rawValue, dy: 0)
+    }
+    
+    private func animateCompletion(from screenShot: UIImageView, to newView: DashboardView) {
+        screenShot.removeFromSuperview()
+    }
+    
+    
 
     // MARK: - Add dashboard views ================================================================== -
     
@@ -416,7 +444,6 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
         for (page, viewInfo) in self.dashboardViewInfo {
             for (orientation, view) in viewInfo.views {
                 if orientation != notOrientation {
-                    view.alpha = 0.0
                     view.isHidden = true
                     self.willDisappear(for: view)
                     view.removeFromSuperview()
@@ -438,19 +465,19 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     
     
     private func getView(page: Int) -> DashboardView {
+        Utility.debugMessage("Page-\(page)", "Start")
         var view: DashboardView?
         if let viewInfo = self.dashboardViewInfo[page] {
             view = viewInfo.views[self.currentOrientation]
             if view == nil {
                 if let nibName = viewInfo.nibNames[self.currentOrientation] {
                     view = DashboardView(withNibName: nibName, frame: self.dashboardContainerView.frame, parent: self, title: viewInfo.title, returnTo: viewInfo.returnTo, delegate: self)
-                    view!.alpha = 0.0
                     self.dashboardViewInfo[page]!.views[self.currentOrientation] = view
                     self.dashboardContainerView.addSubview(view!)
-                    Constraint.anchor(view: self.dashboardContainerView, control: view!, attributes: .leading, .trailing, .top, .bottom)
                 }
             }
         }
+        Utility.debugMessage("Page-\(page)", "Stop")
         return view!
     }
     
@@ -480,7 +507,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
                 self.banner.set(title: subTitle)
             }
         }
-        self.bannerContinuation.isHidden = self.dashboardViewInfo.count == 1 || !ScorecardUI.phoneSize()
+        self.bannerContinuation.isHidden = self.dashboardViewInfo.count == 1
     }
     
     private func networkEnableSyncButton() {
@@ -681,8 +708,8 @@ extension DashboardViewController {
     }
     
     private func showEntryHelp() {
-        if !entryHelpShown {
-
+        // Only show if not shown in last hour
+        if DashboardViewController.entryHelpShown == nil || Date().timeIntervalSince(DashboardViewController.entryHelpShown!) > (60 * 60) {
             let games = CoreData.fetch(from: "Game", filter: NSPredicate(format: "temporary == false"), limit: 1)
             if games.isEmpty {
                 let gamesPlayed = Scorecard.shared.playerList.reduce(0, {$0 + $1.gamesPlayed})
@@ -694,6 +721,6 @@ extension DashboardViewController {
                 }
             }
         }
-        entryHelpShown = true
+        DashboardViewController.entryHelpShown = Date()
     }
 }

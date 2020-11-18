@@ -906,7 +906,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         }
     }
     
-    internal func changed(_ collectionView: UICollectionView, itemAtCenter: Int, forceScroll: Bool) {
+    internal func changed(_ collectionView: UICollectionView, itemAtCenter: Int, forceScroll: Bool, animated: Bool = true) {
         Utility.mainThread {
             self.displayingPeer = itemAtCenter
             self.peerScrollCollectionView.reloadData()

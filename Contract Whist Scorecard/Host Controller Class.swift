@@ -390,6 +390,10 @@ enum InviteStatus {
              (Scorecard.game.location.description == nil || Scorecard.game.location.description == "") {
             self.present(nextView: .location)
         } else {
+            if self.connectionMode == .online {
+                Scorecard.game.location = GameLocation(description: "Online")
+                Scorecard.shared.sendLocation()
+            }
             self.present(nextView: .hand)
         }
         

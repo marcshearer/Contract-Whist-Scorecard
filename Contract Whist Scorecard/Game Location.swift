@@ -19,7 +19,7 @@ class GameLocation {
     init() {
     }
     
-    init(latitude: CLLocationDegrees!, longitude: CLLocationDegrees, description: String, subDescription: String = "") {
+    init(latitude: CLLocationDegrees! = 0, longitude: CLLocationDegrees = 0, description: String, subDescription: String = "") {
         self.latitude = latitude
         self.longitude = longitude
         self.description = description

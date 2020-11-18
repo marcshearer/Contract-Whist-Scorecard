@@ -498,7 +498,7 @@ class ScorepadViewController: ScorecardViewController,
         self.banner.set(
             menuTitle: "Scorepad",
             leftButtons: [
-                BannerButton(image: UIImage(named: "home"), width: 22, action: self.finishPressed, menuHide: true, menuText: "Abandon game", id: Banner.finishButton),
+                BannerButton(image: UIImage(named: "home"), width: 22, action: self.finishPressed, menuHide: true, menuText: "Abandon game", menuSpaceBefore: 20, id: Banner.finishButton),
                 BannerButton(action: self.helpPressed, type: .help)],
             leftSpacing: 16,
             rightButtons: [

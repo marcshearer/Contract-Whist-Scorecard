@@ -1029,10 +1029,11 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
             // Not setting faceTime address till later now
             Scorecard.game.faceTimeAddress = nil
             Scorecard.recovery.saveFaceTimeAddress()
+            
+            // Move menu to in-game mode
+            self.menuController?.set(playingGame: true)
         }
         
-        // Move menu to in-game mode
-        self.menuController?.set(playingGame: true)
     }
     
     // MARK: - Utility Routines ======================================================================== -
@@ -1149,6 +1150,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
 
             self.appState = newState
             self.checkPlayingGame()
+            self.updateMenuNotifications()
         }
     }
     
@@ -1325,7 +1327,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
             var deviceName: String?
             if !self.recoveryMode {
                 for available in self.availablePeers {
-                    if available.state == .notConnected {
+                    if available.state == .notConnected && available.oldState == .notConnected {
                         count += 1
                         if available.purpose == .sharing {
                             message = "View scorecard on \(available.deviceName!)"

@@ -91,7 +91,7 @@ class AwardDetailView: UIView {
         self.nameLabel.text = award.name
         self.titleLabel.text = award.title
         self.exitButton.isHidden = !dismiss
-        let alpha: CGFloat = (mode == .toBeAwarded ? 0.5 : 1.0)
+        let alpha: CGFloat = (mode == .toBeAwarded ? 0.3 : 1.0)
         self.awardView.set(award: award, alpha: alpha, showBadge: false)
         switch mode {
         case .awarding:

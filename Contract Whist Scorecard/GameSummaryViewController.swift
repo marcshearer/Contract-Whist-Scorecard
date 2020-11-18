@@ -387,7 +387,7 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
                 BannerButton(action: self.helpPressed, type: .help)],
             nonBannerButtonsAfter: [
                 BannerButton(action: playAgainPressed, menuText: "Play Again", menuSpaceBefore: 20, id: playAgainTag),
-                BannerButton(action: stopPlayingPressed, menuText: "Stop Playing", id: stopPlayingTag)],
+                BannerButton(action: stopPlayingPressed, menuText: "Stop Playing", menuSpaceBefore: (self.gameMode == GameMode.joining ? 20 : 0), id: stopPlayingTag)],
             backgroundColor: Palette.roomInterior,
             titleFont: UIFont.systemFont(ofSize: 18),
             titleAlignment: .center,

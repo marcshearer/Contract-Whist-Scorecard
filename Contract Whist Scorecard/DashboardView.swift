@@ -119,7 +119,7 @@ class DashboardView : UIView, DashboardActionDelegate {
                 self.delegate?.reloadData?()
             }
         case .statistics:
-            if personal {
+            if false && personal {
                 if let playerMO = Scorecard.shared.findPlayerByPlayerUUID(Scorecard.activeSettings.thisPlayerUUID) {
                     let playerDetail = PlayerDetail()
                     playerDetail.fromManagedObject(playerMO: playerMO)

@@ -1,17 +1,15 @@
 {
   "images" : [
     {
-      "filename" : "awards 50~universal@1x.png",
+      "filename" : "awards 50.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "awards 50~universal@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "awards 50~universal@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

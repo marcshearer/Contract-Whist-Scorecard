@@ -432,6 +432,7 @@ class Utility {
             animation.startAnimation(afterDelay: afterDelay ?? 0.01)
         } else {
             animations()
+            completion?()
         }
     }
     

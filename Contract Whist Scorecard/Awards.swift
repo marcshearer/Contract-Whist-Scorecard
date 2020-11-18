@@ -204,7 +204,7 @@ public class Awards {
             for awardLevel in config.awardLevels {
                 if self.hasAchieved(playerAchieved, code: config.code, awardLevel: awardLevel) == nil {
                     toAchieve.append(Award(from: config, awardLevel: awardLevel))
-                    break
+                    break // Comment this out to see all levels
                 }
             }
         }
@@ -220,6 +220,9 @@ public class Awards {
     public func getAchieved(playerUUID: String) -> [AwardMO] {
         if playerUUID != self.playerUUID || self.achieved == nil {
             self.achieved = CoreData.fetch(from: "Award", filter: NSPredicate(format: "playerUUID = %@", playerUUID), sort: ("dateAwarded", .descending)) as? [AwardMO]
+            // Get rid of any where code or award level no longer in config
+            self.achieved = self.achieved?.filter( { self.checkConfig($0) } )
+            
             if self.achieved?.isEmpty ?? true {
                 let achieved = self.defaultAchieved(playerUUID: playerUUID)
                 self.achieved = achieved
@@ -227,6 +230,19 @@ public class Awards {
             self.playerUUID = playerUUID
         }
         return self.achieved!
+    }
+    
+    /// Check config to see if this award is still valid
+    /// - Parameter achieved: achieved award
+    /// - Returns: true / false if award still valid
+    private func checkConfig(_ achieved: AwardMO) -> Bool {
+        var result = false
+        if let config = self.config.first(where: { $0.code == achieved.code }) {
+            if config.awardLevels.first(where: { $0 == achieved.awardLevel }) != nil {
+                result = true
+            }
+        }
+        return result
     }
     
     /// Get a specific achieved award
@@ -633,7 +649,7 @@ public class Awards {
                    compare: .equal, source: .player, key: "gamesWon",
                    imageName: "award games won %d"),
             AwardConfig(code: "handsMade", name: "%d Contracts", shortName: "%d Contracts", title: "Make %d contracts",
-                   awardLevels: [50, 100, 250, 500, 750, 1000], repeatable: false,
+                   awardLevels: [100, 250, 500, 1000, 2000, 3000], repeatable: false,
                    compare: .equal, source: .player, key: "handsMade",
                    imageName: "award hands made %d"),
             AwardConfig(code: "twosMade", name: "%d Twos", shortName: "%d Twos", title: "Win %d tricks with a two",

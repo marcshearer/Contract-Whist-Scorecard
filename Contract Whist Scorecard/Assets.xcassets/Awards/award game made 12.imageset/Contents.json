@@ -1,17 +1,15 @@
 {
   "images" : [
     {
-      "filename" : "award game made 12~universal@1x.png",
+      "filename" : "award game made 12.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "award game made 12~universal@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "award game made 12~universal@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

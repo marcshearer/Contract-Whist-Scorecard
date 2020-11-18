@@ -57,7 +57,7 @@
                                 <rect key="frame" x="0.0" y="88" width="414" height="180"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cof-rK-ydt">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="90"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="120"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     </view>
                                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="1" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="gyh-A2-DhL">
@@ -186,7 +186,7 @@
                                     </constraint>
                                     <constraint firstItem="gyh-A2-DhL" firstAttribute="leading" secondItem="TXF-Mu-K4x" secondAttribute="leading" id="4f5-h9-91X"/>
                                     <constraint firstAttribute="bottom" secondItem="skN-et-kCR" secondAttribute="bottom" id="5eO-TN-x7a"/>
-                                    <constraint firstItem="cof-rK-ydt" firstAttribute="height" secondItem="TXF-Mu-K4x" secondAttribute="height" multiplier="0.5" id="Spl-ER-Zmt"/>
+                                    <constraint firstItem="cof-rK-ydt" firstAttribute="height" secondItem="TXF-Mu-K4x" secondAttribute="height" multiplier="2:3" id="Spl-ER-Zmt"/>
                                     <constraint firstItem="skN-et-kCR" firstAttribute="centerX" secondItem="TXF-Mu-K4x" secondAttribute="centerX" id="Swi-m2-kAm"/>
                                     <constraint firstAttribute="trailing" secondItem="gyh-A2-DhL" secondAttribute="trailing" id="WfQ-7n-ycV"/>
                                     <constraint firstAttribute="height" priority="1" id="fHs-c1-VgI"/>

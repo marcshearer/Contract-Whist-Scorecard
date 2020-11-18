@@ -282,7 +282,7 @@ class AwardsTileView: DashboardTileView, AwardCollectionDelegate, UICollectionVi
         if indexPath.section == self.achievedSection {
             cell.bind(award: achieved[indexPath.row])
         } else {
-            cell.bind(award: toAchieve[indexPath.row], alpha: 0.5)
+            cell.bind(award: toAchieve[indexPath.row], alpha: 0.3)
         }
         cell.tag = (1000000 * indexPath.section) + indexPath.row
         

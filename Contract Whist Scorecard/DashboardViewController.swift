@@ -225,7 +225,6 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
                     }
                 }
             }
-            Utility.debugMessage("Reload", "Stop")
         }
     }
     
@@ -348,16 +347,16 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
                 let oldView = (changed ? self.currentView : nil)
                 let newView = self.getView(page: itemAtCenter)
                 self.currentView = newView
-                // self.setupHelpView(view: newView) //TODO
+                self.setupHelpView(view: newView)
                 let direction: Direction = (currentPage < itemAtCenter ? .left : .right)
-                let screenShot = self.animatePrepare(from: oldView, to: newView, direction: direction)
-                Utility.animate(if: animated, duration: 0.25,
+                self.animatePrepare(from: oldView, to: newView, direction: direction)
+                Utility.animate(if: animated, view: self.view, duration: 0.25,
                     completion: {
-                        self.animateCompletion(from: screenShot, to: newView)
+                        self.animateCompletion(from: oldView, to: newView)
                     },
                     animations: {
                         // Animate the main view move
-                        self.animateExecute(from: screenShot, to: newView, direction: direction)
+                        self.animateExecute(from: oldView, to: newView, direction: direction)
                         // Unhighlight the cell leaving the center
                         if let cell = self.carouselCollectionView.cellForItem(at: IndexPath(item: currentPage, section: 0)) as? DashboardCarouselCell {
                             if currentPage != itemAtCenter {
@@ -391,25 +390,18 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
         case right = -1
     }
     
-    private func animatePrepare(from oldView: DashboardView?, to newView: DashboardView, direction: Direction) -> UIImageView {
-        let screenShot = Utility.screenshot(view: self.dashboardContainerView)
-        let imageView = UIImageView(frame: self.dashboardContainerView.bounds)
-        imageView.image = screenShot
-        self.dashboardContainerView.addSubview(imageView)
-        self.dashboardContainerView.bringSubviewToFront(imageView)
-        oldView?.isHidden = true
+    private func animatePrepare(from oldView: DashboardView?, to newView: DashboardView, direction: Direction) {
         newView.frame = self.dashboardContainerView.bounds.offsetBy(dx: self.dashboardContainerView.frame.width * direction.rawValue, dy: 0)
-        newView.isHidden = false
-        return imageView
+        self.dashboardContainerView.addSubview(newView)
     }
     
-    private func animateExecute(from screenShot: UIImageView, to newView: DashboardView, direction: Direction) {
-        newView.frame = screenShot.frame
-        screenShot.frame = screenShot.frame.offsetBy(dx: screenShot.frame.width * -direction.rawValue, dy: 0)
+    private func animateExecute(from oldView: DashboardView?, to newView: DashboardView, direction: Direction) {
+        newView.frame = self.dashboardContainerView.bounds
+        oldView?.frame = self.dashboardContainerView.bounds.offsetBy(dx: self.dashboardContainerView.bounds.width * -direction.rawValue, dy: 0)
     }
     
-    private func animateCompletion(from screenShot: UIImageView, to newView: DashboardView) {
-        screenShot.removeFromSuperview()
+    private func animateCompletion(from oldView: DashboardView?, to newView: DashboardView) {
+        oldView?.removeFromSuperview()
     }
     
     
@@ -465,7 +457,6 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     
     
     private func getView(page: Int) -> DashboardView {
-        Utility.debugMessage("Page-\(page)", "Start")
         var view: DashboardView?
         if let viewInfo = self.dashboardViewInfo[page] {
             view = viewInfo.views[self.currentOrientation]
@@ -473,11 +464,9 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
                 if let nibName = viewInfo.nibNames[self.currentOrientation] {
                     view = DashboardView(withNibName: nibName, frame: self.dashboardContainerView.frame, parent: self, title: viewInfo.title, returnTo: viewInfo.returnTo, delegate: self)
                     self.dashboardViewInfo[page]!.views[self.currentOrientation] = view
-                    self.dashboardContainerView.addSubview(view!)
                 }
             }
         }
-        Utility.debugMessage("Page-\(page)", "Stop")
         return view!
     }
     

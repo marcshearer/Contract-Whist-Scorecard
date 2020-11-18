@@ -1,17 +1,15 @@
 {
   "images" : [
     {
-      "filename" : "lose ahead 30~universal@1x.png",
+      "filename" : "lose ahead 30.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "lose ahead 30~universal@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "lose ahead 30~universal@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

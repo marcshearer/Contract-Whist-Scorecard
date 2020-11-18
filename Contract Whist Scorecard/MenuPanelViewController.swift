@@ -101,6 +101,7 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
     private var suboptionHighlight: Int? = nil
     private var optionMap: [OptionMap] = []
     internal var currentOption: MenuOption = .playGame
+    internal var lastOption: MenuOption?
     private var screenshotImageView = UIImageView()
     private var changingPlayer = false
     private var disableOptions: Bool = false
@@ -309,7 +310,7 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
                     let option = self.optionFromMap(optionMap)
                     if (!option.autoExpand || self.currentOption != option.menuOption) && (optionMap.mainOption || option.baseSuboption) {
                         // Select this option
-                        _ = self.tableView(self.optionsTableView, willSelectRowAt: IndexPath(row: nextRow, section: 0))
+                        self.selectRow(tableView: .options, row: nextRow, forwards: direction == .left)
                         break
                     }
                     nextRow = nextRow + offset
@@ -444,7 +445,7 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch TableView(rawValue: tableView.tag)! {
         case .options:
-            if let (option, mainOption, _) = self.getOption(tag: tableView.tag, row: indexPath.row) {
+            if let (option, mainOption, _) = self.getOption(tableView: .options, row: indexPath.row) {
                 return (mainOption ? 40 : 35) + option.spaceBefore
             } else {
                 return 40
@@ -457,7 +458,7 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Option") as! MenuPanelTableCell
         
-        if let (option, mainOption, index) = self.getOption(tag: tableView.tag, row: indexPath.row) {
+        if let (option, mainOption, index) = self.getOption(tableView: TableView(rawValue: tableView.tag)!, row: indexPath.row) {
             if mainOption {
                 let disabled = self.disableOptions || self.disableAll
                 cell.titleLabel.text = (self.playingGame && self.gamePlayingTitle != nil ? self.gamePlayingTitle! : option.title)
@@ -494,8 +495,13 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
     }
     
     func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        if let (option, mainOption, index) = self.getOption(tag: tableView.tag, row: indexPath.row) {
-            
+        self.selectRow(tableView: TableView(rawValue: tableView.tag)!, row: indexPath.row)
+        return nil
+    }
+
+    func selectRow(tableView: TableView, row: Int, forwards: Bool = true) {
+        if let (option, mainOption, index) = self.getOption(tableView: tableView, row: row) {
+            var option = option
             var changed = false
             var action = option.action
             if !self.disableAll {
@@ -524,12 +530,13 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
                     if option.autoExpand {
                         self.addSuboptions(option: option.menuOption)
                         self.setupOptionMap()
+                        self.setCurrentOption(option: option.menuOption!)
+                        option = (forwards ? self.suboptions.first! : self.suboptions.last!)
+                        self.suboptionHighlight = (forwards ? 0 : self.suboptions.count - 1)
+                        action = option.action
                     }
                 } else if self.suboptionHighlight != nil {
                     self.suboptionHighlight = index
-                    if option.menuOption == .personalResults {
-                        self.suboptionHighlight = index
-                    }
                 }
                 self.reloadData()
                 
@@ -541,14 +548,13 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
                 }
             }
         }
-        return nil
     }
     
-    private func getOption(tag: Int, row: Int) -> (option: Option, mainOption: Bool, index: Int)? {
+    private func getOption(tableView: TableView, row: Int) -> (option: Option, mainOption: Bool, index: Int)? {
         var option: Option
         var mainOption: Bool
         var index: Int
-        switch TableView(rawValue: tag)! {
+        switch tableView {
         case .options:
             mainOption = self.optionMap[row].mainOption
             index = optionMap[row].index
@@ -591,10 +597,11 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
         if let option = option {
             switch option {
             case .personalResults, .everyoneResults:
-                self.add(suboptions: [
-                            Option(title: "Personal", baseSuboption: true, action: { self.dismissAndSelectOption(option: .personalResults, changeOption: false)}),
-                            Option(title: "Everyone", baseSuboption: true, action: { self.dismissAndSelectOption(option: .everyoneResults, changeOption: false)})],
-                         to: option, on: self.container!, highlight: highlight ?? 0)
+                let suboptions = [
+                    Option(title: "Personal", baseSuboption: true, action: { self.dismissAndSelectOption(option: .personalResults, changeOption: false)}),
+                    Option(title: "Everyone", baseSuboption: true, action: { self.dismissAndSelectOption(option: .everyoneResults, changeOption: false)})]
+                self.add(suboptions: suboptions,
+                         to: option, on: self.container!, highlight: 0)
             default:
                 self.suboptions = []
             }
@@ -642,14 +649,13 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
         if option == .changePlayer || option == .playGame || option == .settings {
             self.showLastGame()
         }
-        let lastOption = self.currentOption
         if changeOption {
             self.setCurrentOption(option: option)
         }
 
         self.rootViewController.rightPanelDefaultScreenColors(rightInsetColor: (option == .profiles ? Palette.normal.background : Palette.banner.background))
 
-        if lastOption != .playGame {
+        if self.lastOption != .playGame {
             // Show a screenshot and dismiss current view to leave the screenshot showing before showing new screens on top of it
             if let items = self.currentContainerItems {
                 // Hide any inset container views to avoid dodgy transitions
@@ -685,6 +691,7 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
     }
     
     private func setCurrentOption(option: MenuOption) {
+        self.lastOption = self.currentOption
         if option == .changePlayer || option == .playGame {
             self.currentOption = .playGame
         } else {

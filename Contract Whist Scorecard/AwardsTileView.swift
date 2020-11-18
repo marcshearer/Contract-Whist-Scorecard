@@ -280,7 +280,7 @@ class AwardsTileView: DashboardTileView, AwardCollectionDelegate, UICollectionVi
         
         cell = AwardCollectionCell.dequeue(collectionView, for: indexPath, mode: self.mode)
         if indexPath.section == self.achievedSection {
-            cell.bind(award: achieved[indexPath.row])
+            cell.bind(award: achieved[indexPath.row], alpha: 1.0)
         } else {
             cell.bind(award: toAchieve[indexPath.row], alpha: 0.3)
         }

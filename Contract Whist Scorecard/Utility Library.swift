@@ -587,7 +587,9 @@ class Utility {
         return screenshot
     }
     
-
+    public static func snapshot(view: UIView) -> UIView? {
+        return view.snapshotView(afterScreenUpdates: false)
+    }
 
     // MARK: - FaceTime ======================================================================== -
 

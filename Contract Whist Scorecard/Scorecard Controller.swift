@@ -68,7 +68,7 @@ protocol ScorecardAppControllerDelegate : class {
     
     func robotAction(playerNumber: Int!, action: RobotAction)
     
-    func set(noHideDismissImageView: Bool)
+    func set(nohideDismissSnapshot: Bool)
 }
 
 extension ScorecardAppControllerDelegate {
@@ -129,7 +129,7 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
     internal var queue: [ScorecardAppQueue] = []
     private var clientHandlerObserver: NSObjectProtocol?
     internal var uuid: String
-    fileprivate var noHideDismissImageView: Bool = false
+    fileprivate var nohideDismissSnapshot: Bool = false
     fileprivate var invokedViews: [(view: ScorecardView, viewController: ScorecardViewController?, uuid: String)] = []
     private var whisper: [String : Whisper] = [:]
     private var gameDetailPanelViewController: GameDetailPanelViewController!
@@ -165,8 +165,8 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
     internal func stop() {
         Utility.debugMessage("appController \(self.uuid)", "Stop \(debugReference)")
         clearViewPresentingCompleteNotification(observer: clientHandlerObserver)
-        if !noHideDismissImageView {
-            self.parentViewController.hideDismissImageView(animated: false)
+        if !nohideDismissSnapshot {
+            self.parentViewController.hideDismissSnapshot(animated: false)
         }
         clientHandlerObserver = nil
     }
@@ -214,7 +214,7 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
                     // Dismissing this view to present another but want it to look like new view is presenting (animated) on top of this one
                     // Put up a screenshot of this view behind it on the parent, dismiss this one without animation, and then when next view is visible
                     // remove the screenshot from behind it
-                    self.parentViewController.createDismissImageView()
+                    self.parentViewController.createDismissSnapshot()
                     self.parentViewController.dismissView = self.activeView
                     animated = false
                 }
@@ -274,8 +274,8 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
         invokedViews[invokedViews.count - 1].viewController = invokedViewController
     }
     
-    internal func set(noHideDismissImageView: Bool) {
-        self.noHideDismissImageView = noHideDismissImageView
+    internal func set(nohideDismissSnapshot: Bool) {
+        self.nohideDismissSnapshot = nohideDismissSnapshot
     }
 
     private func nextView(view nextView: ScorecardView, context: [String:Any?]? = nil) {
@@ -834,47 +834,46 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
             
             super.present(viewControllerToPresent, animated: animated) {
                 // Clean up any screenshot that was used to tidy up the dismiss animation of the previous view presented on this view controller
-                self.hideDismissImageView()
+                self.hideDismissSnapshot()
                 completion?()
             }
         }
     }
     
-    internal func createDismissImageView() {
-        if var rootViewController = self.rootViewController {
+    internal func createDismissSnapshot(container: Container? = nil) {
+        if var rootViewController = self.rootViewController, let view = rootViewController.view {
             Utility.debugMessage("Scorecard", "Creating dismiss image view on \(self.className)")
-            let dismissImageView = UIImageView(frame: UIScreen.main.bounds)
-            rootViewController.view.addSubview(dismissImageView)
-            dismissImageView.accessibilityIdentifier = "dismissImageView"
-            dismissImageView.image = Utility.screenshot()
-            dismissImageView.frame = rootViewController.view.convert(rootViewController.view.frame, to: nil)
-            rootViewController.view.bringSubviewToFront(dismissImageView)
-            rootViewController.dismissImageViewStack.append(dismissImageView)
+            let dismissSnapshotView = Utility.snapshot(view: view)!
+            view.addSubview(dismissSnapshotView)
+            view.bringSubviewToFront(dismissSnapshotView)
+            dismissSnapshotView.accessibilityIdentifier = "dismissSnapshot"
+            dismissSnapshotView.frame = view.frame
+            rootViewController.dismissSnapshotStack.append(dismissSnapshotView)
         }
     }
     
-    internal func hideDismissImageView(animated: Bool = false, completion: (()->())? = nil) {
+    internal func hideDismissSnapshot(animated: Bool = false, completion: (()->())? = nil) {
         
-        let dismissImageView = self.rootViewController.dismissImageViewStack.last
+        let dismissSnapshot = self.rootViewController.dismissSnapshotStack.last
         
         func hide() {
-            if dismissImageView != nil {
-                dismissImageView?.removeFromSuperview()
-                self.rootViewController?.dismissImageViewStack.removeLast()
+            if dismissSnapshot != nil {
+                dismissSnapshot?.removeFromSuperview()
+                self.rootViewController?.dismissSnapshotStack.removeLast()
             }
             self.rootViewController?.dismissView = .none
             completion?()
         }
         
-        if dismissImageView != nil {
+        if dismissSnapshot != nil {
             Utility.debugMessage("Scorecard", "Removing dismiss image view")
             if animated {
-                dismissImageView?.alpha = 1.0
+                dismissSnapshot?.alpha = 1.0
                 Utility.animate(duration: 0.5, completion: {
-                    dismissImageView?.alpha = 1.0
+                    dismissSnapshot?.alpha = 1.0
                     hide()
                 }, animations: {
-                    dismissImageView?.alpha = 0.0
+                    dismissSnapshot?.alpha = 0.0
                 })
             } else {
                 hide()
@@ -891,18 +890,18 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
                     
                     // Trying to dismiss the root view controller, but others are still there - dismiss them instead?
                     // Seems to happen when click outside a non-modal popover
-                    rootViewController.viewControllerStack.last?.viewController.dismiss(animated: animated, hideDismissImageView: false, completion: completion)
+                    rootViewController.viewControllerStack.last?.viewController.dismiss(animated: animated, hideDismissSnapshot: false, completion: completion)
                     break
                 }
             }
             
             // All ok - proceed
-            self.dismiss(animated: animated, hideDismissImageView: false, completion: completion)
+            self.dismiss(animated: animated, hideDismissSnapshot: false, completion: completion)
             
         } while false
     }
     
-    internal func dismiss(animated flag: Bool, hideDismissImageView: Bool, removeSuboptions: Bool = true, completion: (() -> Void)? = nil) {
+    internal func dismiss(animated flag: Bool, hideDismissSnapshot: Bool, removeSuboptions: Bool = true, completion: (() -> Void)? = nil) {
         // Check if this is an invoked view dismissing and if so pop it and unlock
         
         func popAndComplete() {
@@ -938,8 +937,8 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
             self.container = .none
             self.view.removeFromSuperview()
             self.removeFromParent()
-            if hideDismissImageView {
-                self.hideDismissImageView() {
+            if hideDismissSnapshot {
+                self.hideDismissSnapshot() {
                     popAndComplete()
                 }
             } else {

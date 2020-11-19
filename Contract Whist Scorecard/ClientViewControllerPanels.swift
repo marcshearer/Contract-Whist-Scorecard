@@ -15,12 +15,14 @@ struct PanelContainerItem {
 
 protocol PanelContainer {
     
-    var dismissImageViewStack: [UIImageView] {get set}
+    var dismissSnapshotStack: [UIView] {get set}
     var viewControllerStack: [(uniqueID: String, viewController: ScorecardViewController)] {get set}
     var containers: Bool {get}
     var detailDelegate: DetailDelegate? {get set}
     
     func isVisible(container: Container) -> Bool
+    
+    func view(container: Container) -> UIView
     
     func panelLayoutSubviews()
     
@@ -192,6 +194,28 @@ extension ClientViewController : PanelContainer {
         }
     }
     
+    internal func view(container: Container) -> UIView {
+        var containerView: UIView
+        switch container {
+        case .left:
+            containerView = self.leftContainer
+        case .right:
+            containerView = self.rightContainer
+        case .rightInset:
+            containerView = self.rightInsetContainer
+        case .mainRight:
+            containerView = self.mainRightContainer
+        case .main:
+            containerView = self.mainContainer
+        }
+        return containerView
+    }
+    
+    internal func frame(container: Container) -> CGRect {
+        let view = self.view(container: container)
+        return view.frame
+    }
+    
     internal func rightPanelDefaultScreenColors(rightInsetColor: UIColor) {
         self.rightContainer.backgroundColor = Palette.banner.background
         self.rightPanelTitleLabel.textColor = Palette.banner.text
@@ -234,47 +258,34 @@ extension ClientViewController : PanelContainer {
                 viewController.menuController = self.rootViewController.menuController
                 viewController.container = container
                 if let view = viewController.view {
-                    switch container {
-                    case .left:
-                        containerView = self.leftContainer
-                    case .right:
-                        containerView = self.rightContainer
-                    case .rightInset:
-                        containerView = self.rightInsetContainer
-                    case .mainRight:
-                        containerView = self.mainRightContainer
-                    default:
-                        containerView = self.mainContainer
-                    }
-                    if let containerView = containerView {
-                        // Got a container - add view controller / view to container
-                        rootViewController.addChild(viewController)
-                        view.frame = rootView.convert(containerView.frame, to: rootView)
-                        rootView.addSubview(view)
-                        viewController.didMove(toParent: rootViewController)
-                        if container == .rightInset {
-                            // Bring right view forward and animate in later
-                            rootView.bringSubviewToFront(self.rightContainer)
-                            if animated {
-                                self.rightContainer.alpha = 0.0
-                            }
-                        }
-                        rootView.bringSubviewToFront(view)
-                        
-                        // Add layout constraints
-                        view.translatesAutoresizingMaskIntoConstraints = false
-                        Constraint.anchor(view: rootView, control: containerView, to: view)
-                        if container == .rightInset {
-                            self.rightInsetRoundedView.roundCorners(cornerRadius: 12.0)
-                        }
+                    let containerView = self.view(container: container)
+                    // Got a container - add view controller / view to container
+                    rootViewController.addChild(viewController)
+                    view.frame = rootView.convert(containerView.frame, to: rootView)
+                    rootView.addSubview(view)
+                    viewController.didMove(toParent: rootViewController)
+                    if container == .rightInset {
+                        // Bring right view forward and animate in later
+                        rootView.bringSubviewToFront(self.rightContainer)
                         if animated {
-                            view.alpha = 0.0
-                            animateViews.append((view, container))
+                            self.rightContainer.alpha = 0.0
                         }
-                        if container == .main || container == .mainRight {
-                            // Add to controller stack
-                            self.rootViewController?.viewControllerStack.append((viewController.uniqueID, viewController))
-                        }
+                    }
+                    rootView.bringSubviewToFront(view)
+                    
+                    // Add layout constraints
+                    view.translatesAutoresizingMaskIntoConstraints = false
+                    Constraint.anchor(view: rootView, control: containerView, to: view)
+                    if container == .rightInset {
+                        self.rightInsetRoundedView.roundCorners(cornerRadius: 12.0)
+                    }
+                    if animated {
+                        view.alpha = 0.0
+                        animateViews.append((view, container))
+                    }
+                    if container == .main || container == .mainRight {
+                        // Add to controller stack
+                        self.rootViewController?.viewControllerStack.append((viewController.uniqueID, viewController))
                     }
                 }
             }
@@ -289,8 +300,9 @@ extension ClientViewController : PanelContainer {
                             if viewElement.container == .rightInset {
                                 self.rightContainer.alpha = 1.0
                             }
-                            viewElement.view.alpha = 1.0 }
-                        })
+                            viewElement.view.alpha = 1.0
+                        }
+                    })
             } else {
                 self.presentInContainersCompletion(completion: completion)
             }
@@ -298,7 +310,7 @@ extension ClientViewController : PanelContainer {
     }
     
     private func presentInContainersCompletion(completion: (() -> ())?) {
-        self.hideDismissImageView()
+        self.hideDismissSnapshot()
         completion?()
     }
     

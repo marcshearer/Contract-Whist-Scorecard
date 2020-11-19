@@ -42,8 +42,8 @@ class ScorecardAnimator: NSObject, UIViewControllerAnimatedTransitioning {
                 var fromView = transitionContext.view(forKey: .from) ?? fromViewController.view {
                 
                 if let rootViewController = fromViewController as? PanelContainer {
-                    if let dismissImageView = rootViewController.dismissImageViewStack.last {
-                        fromView = dismissImageView
+                    if let dismissSnapshotView = rootViewController.dismissSnapshotStack.last {
+                        fromView = dismissSnapshotView
                     }
                 }
                 

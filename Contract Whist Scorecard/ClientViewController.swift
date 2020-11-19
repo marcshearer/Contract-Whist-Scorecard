@@ -51,7 +51,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     public var thisPlayerName: String!
     private var thisPlayerBeforeSettings: String!
     private var displayingPeer = 0
-    public var dismissImageViewStack: [UIImageView] = []
+    public var dismissSnapshotStack: [UIView] = []
     internal var viewControllerStack: [(uniqueID: String, viewController: ScorecardViewController)] = []
     internal var detailDelegate: DetailDelegate?
     private var playerSelectionVisible = false
@@ -400,11 +400,11 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     
     private func showLaunchScreen() {
         self.showLaunchScreenView() {
-            self.clientController?.set(noHideDismissImageView: true) // Suppress hiding of screenview since will do it later ourselves
+            self.clientController?.set(nohideDismissSnapshot: true) // Suppress hiding of screenview since will do it later ourselves
             if !self.recoveryMode {
                 self.showSettingsCompletion()
             }
-            self.clientController?.set(noHideDismissImageView: false)
+            self.clientController?.set(nohideDismissSnapshot: false)
             if !Scorecard.settings.syncEnabled {
                 self.showGetStarted()
             }

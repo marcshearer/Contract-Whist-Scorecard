@@ -157,6 +157,17 @@ extension UIImage {
     public var asTemplate: UIImage {
         return self.withRenderingMode(UIImage.RenderingMode.alwaysTemplate)
     }
+    
+    public func crop(to frame: CGRect) -> UIImage? {
+        let scaledFrame = CGRect(x: frame.origin.x * self.scale, y: frame.origin.y * self.scale, width: frame.size.width * self.scale, height: frame.size.height * self.scale)
+        
+        if let coreImage = self.cgImage?.cropping(to: scaledFrame) {
+            let croppedImage = UIImage(cgImage: coreImage, scale: self.scale, orientation: self.imageOrientation)
+            return croppedImage
+        } else {
+            return nil
+        }
+    }
 }
 
 extension Array {

@@ -665,7 +665,7 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
                         item.viewController.view.isHidden = true
                     }
                 }
-                self.createDismissImageView()
+                self.createDismissSnapshot(container: .mainRight)
                 self.dismissItems(items, removeSuboptions: changeOption) {
                     self.dismissAndSelectCompletion(option: option, completion: completion)
                 }
@@ -683,7 +683,7 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
     private func dismissItems(_ items: [PanelContainerItem], sequence: Int = 0, removeSuboptions: Bool = true, completion: (()->())? = nil) {
         let viewController = items[sequence].viewController
         viewController.willDismiss()
-        viewController.dismiss(animated: false, hideDismissImageView: false, removeSuboptions: removeSuboptions, completion: viewController.didDismiss)
+        viewController.dismiss(animated: false, hideDismissSnapshot: false, removeSuboptions: removeSuboptions, completion: viewController.didDismiss)
         if sequence < items.count - 1 {
             self.dismissItems(items, sequence: sequence + 1, removeSuboptions: removeSuboptions, completion: completion)
         } else {
@@ -708,7 +708,7 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
         }
         if option == .playGame || option == .changePlayer {
             // Returning home - hide the disimiss view
-            self.hideDismissImageView()
+            self.hideDismissSnapshot()
             self.rootViewController.view.isUserInteractionEnabled = true
         }
         completion?()

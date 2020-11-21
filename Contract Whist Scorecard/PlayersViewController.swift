@@ -218,7 +218,6 @@ class PlayersViewController: ScorecardViewController, PlayersViewDelegate, UICol
     func amendPlayer(at indexPath: IndexPath) {
         let playerDetail = self.playerDetailList[indexPath.row]
         if let playerDetailView = self.playerDetailView {
-            self.rootViewController.rightPanelDefaultScreenColors(rightInsetColor: Palette.normal.background)
             self.setRightPanel(title: playerDetail.name, caption: "")
             playerDetailView.refresh(playerDetail: playerDetail, mode: .amend)
         } else {
@@ -345,7 +344,6 @@ class PlayersViewController: ScorecardViewController, PlayersViewDelegate, UICol
     private func hideDetail() {
         self.playerDetailView?.hide()
         self.setRightPanel(title: "", caption: "")
-        self.rootViewController.rightPanelDefaultScreenColors(rightInsetColor: Palette.banner.background)
     }
     
     private func forEachCell(_ action: (String, PlayerCell)->()) {

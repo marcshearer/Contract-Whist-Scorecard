@@ -83,6 +83,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     private var isConnected = false
     private var imageObserver: NSObjectProtocol?
     private var whisper: Whisper!
+    internal var menuPanelViewController: MenuPanelViewController!
     
     private var hostingOptions: Int = 0
     private var onlineItem: Int?
@@ -109,8 +110,6 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     @IBOutlet internal weak var leftContainer: UIView!
     @IBOutlet internal weak var mainContainer: UIView!
     @IBOutlet internal weak var rightContainer: UIView!
-    @IBOutlet internal weak var rightInsetContainer: UIView!
-    @IBOutlet internal weak var rightInsetRoundedView: UIView!
     @IBOutlet internal weak var mainRightContainer: UIView!
     @IBOutlet internal weak var leftPanelTrailingConstraint: NSLayoutConstraint!
     @IBOutlet internal weak var leftPanelWidthConstraint: NSLayoutConstraint!
@@ -226,9 +225,9 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         // Show menu container if necessary
         self.allocateContainerSizes()
         if self.containers {
-            let menuPanelViewController = MenuPanelViewController.create()
-            self.menuController = menuPanelViewController
-            self.presentInContainers([PanelContainerItem(viewController: menuPanelViewController, container: Container.left)], animated: false, completion: nil)
+            self.menuPanelViewController = MenuPanelViewController.create()
+            self.menuController = self.menuPanelViewController
+            self.presentInContainers([PanelContainerItem(viewController: self.menuPanelViewController, container: Container.left)], animation: .none, completion: nil)
         }
         
         self.hideNavigationBar()
@@ -415,10 +414,10 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         GetStartedViewController.show(from: self, completion: {self.restart()})
     }
         
-    @discardableResult internal func showSettings(presentCompletion: (()->())? = nil) -> ScorecardViewController {
+    @discardableResult internal func showSettings(animation: ViewAnimation? = nil, presentCompletion: (()->())? = nil) -> ScorecardViewController {
         self.thisPlayerBeforeSettings = Scorecard.settings.thisPlayerUUID
         let settingsViewController = SettingsViewController.create(backText: "", backImage: "home", completion: self.showSettingsCompletion)
-        self.present(settingsViewController, animated: true, container: .mainRight, completion: presentCompletion)
+        self.present(settingsViewController, animated: true, container: .mainRight, animation: animation, completion: presentCompletion)
         return settingsViewController
     }
     
@@ -434,6 +433,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         peerCollectionView.reloadData()
         self.menuController?.refresh()
         if !self.noSettingsRestart {
+            self.clientController?.set(nohideDismissSnapshot: true)
             self.restart()
         } else {
             self.noSettingsRestart = false

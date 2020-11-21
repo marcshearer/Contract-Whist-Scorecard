@@ -111,9 +111,16 @@ class PlayerDetailViewController: ScorecardViewController, PlayerDetailViewDeleg
 
     // MARK: - IB Outlets ============================================================================== -
     @IBOutlet private weak var banner: Banner!
+    @IBOutlet private weak var playerNameLabel: UILabel!
+    @IBOutlet private weak var tableViewContainer: UIView!
     @IBOutlet private weak var tableView: UITableView!
-    @IBOutlet private weak var tableViewLeadingConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var tableViewTrailingConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var tableViewContainerLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var tableViewContainerTrailingConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var tableViewTopConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var tableViewContainerRightPanelTopConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var tableViewContainerBottomConstraint: NSLayoutConstraint!
+    @IBOutlet private var tableViewInsets: [NSLayoutConstraint]!
+    
     // MARK: - IB Actions ============================================================================== -
         
     internal func finishPressed() {
@@ -140,25 +147,34 @@ class PlayerDetailViewController: ScorecardViewController, PlayerDetailViewDeleg
         self.setupSections()
         self.setupBanner()
                
-        // Setup table view
-        self.tableView.contentInset = UIEdgeInsets(top: (ScorecardUI.landscapePhone() ? 0 : 10.0), left: 0.0, bottom: 0.0, right: 0.0)
-        self.tableView.contentInsetAdjustmentBehavior = .never
-        
         // Setup observer for image download changes
         self.imageObserver = setPlayerDownloadNotification(name: .playerImageDownloaded)
         
         // Save copy to a managed object
         self.originalPlayer = playerDetail.copy()
         
+        // Set player title
+        self.playerNameLabel.text = self.playerDetail.name
+        
         // Hide banner if in a right-hand container
-        if self.container == .rightInset {
+        if self.container == .right {
             self.banner.set(normalOverrideHeight: 0)
             self.banner.isHidden = true
-            self.tableViewLeadingConstraint.constant = 10
-            self.tableViewTrailingConstraint.constant = 10
+            self.tableViewContainerLeadingConstraint.constant = 30
+            self.tableViewContainerTrailingConstraint.constant = 30
+            self.tableViewContainerBottomConstraint.constant = 50
+            Constraint.setActive([self.tableViewTopConstraint], to: false)
+            Constraint.setActive([self.tableViewContainerRightPanelTopConstraint], to: true)
+            self.tableViewInsets.forEach{ (inset) in inset.constant = 10}
             self.labelFontSize = 10
             self.textFieldFontSize = 12
             self.heightFactor = 0.8
+        } else {
+            self.tableViewContainerLeadingConstraint.constant = ScorecardUI.smallPhoneSize() ? 16 : 30
+            self.tableViewInsets.forEach{ (inset) in inset.constant = 0}
+            self.tableView.contentInset = UIEdgeInsets(top: (ScorecardUI.landscapePhone() ? 0 : 10.0), left: 0.0, bottom: 0.0, right: 0.0)
+            self.tableView.contentInsetAdjustmentBehavior = .never
+            self.playerNameLabel.isHidden = true
         }
         
         // Enable buttons
@@ -168,16 +184,25 @@ class PlayerDetailViewController: ScorecardViewController, PlayerDetailViewDeleg
         self.setupHelpView()
     }
     
+    internal override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        if self.container == .right {
+            self.tableViewContainer.layoutIfNeeded()
+            self.tableViewContainer.roundCorners(cornerRadius: 20)
+        }
+    }
+    
     // MARK: - Player Detail View Delegate ============================================================= -
     
     internal func hide() {
-        self.view.isHidden = true
+        self.tableViewContainer.isHidden = true
     }
     
     internal func refresh(playerDetail: PlayerDetail, mode: DetailMode) {
         self.playerDetail = playerDetail
+        self.playerNameLabel.text = self.playerDetail.name
         self.mode = mode
-        self.view.isHidden = false
+        self.tableViewContainer.isHidden = false
         self.setupBanner()
         self.tableView.reloadData()
     }
@@ -610,9 +635,7 @@ class PlayerDetailViewController: ScorecardViewController, PlayerDetailViewDeleg
                     if let playerMO = Scorecard.shared.findPlayerByPlayerUUID(self.playerDetail.playerUUID) {
                         self.playerDetail.toManagedObject(playerMO: playerMO)
                         self.playersViewDelegate?.refresh()
-                        if self.container == .rightInset {
-                            self.setRightPanel(title: self.playerDetail.name, caption: "")
-                        }
+                        self.playerNameLabel.text = self.playerDetail.name
                         if self.dismissOnSave {
                             self.dismiss(animated: true)
                         }
@@ -683,7 +706,7 @@ class PlayerDetailViewController: ScorecardViewController, PlayerDetailViewDeleg
             }
         }
          
-        self.banner.setButton(Banner.finishButton, isHidden: (self.mode == .amending || self.container == .rightInset))
+        self.banner.setButton(Banner.finishButton, isHidden: (self.mode == .amending || self.container == .right))
         
         if let view = tableView.headerView(forSection: nameSection) as? PlayerDetailHeaderFooterView {
             if let cell = view.cell {
@@ -715,7 +738,7 @@ class PlayerDetailViewController: ScorecardViewController, PlayerDetailViewDeleg
     }
     
     func setupBanner() {
-        if self.container == .rightInset {
+        if self.container == .right {
             self.banner.set(leftButtons: [])
         } else {
             self.banner.set(title: playerDetail.name,
@@ -756,9 +779,7 @@ class PlayerDetailViewController: ScorecardViewController, PlayerDetailViewDeleg
                 if self.dismissOnSave {
                     self.dismiss(animated: true)
                 } else {
-                    if self.container == .rightInset {
-                        self.setRightPanel(title: "", caption: "")
-                    }
+                    self.playerNameLabel.text = ""
                     self.hide()
                 }
                 
@@ -887,7 +908,9 @@ extension PlayerDetailViewController {
 
     private func defaultViewColors() {
 
-        self.view.backgroundColor = (self.container == .rightInset ? UIColor.clear :  Palette.normal.background)
+        self.view.backgroundColor = (self.container == .right ? Palette.banner.background :  Palette.normal.background)
+        self.tableViewContainer.backgroundColor = (self.container == .right ? Palette.normal.background : UIColor.clear)
+        self.playerNameLabel.textColor = Palette.banner.text
     }
 
     private func defaultCellColors(cell: PlayerDetailCell) {

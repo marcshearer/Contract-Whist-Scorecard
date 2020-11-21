@@ -181,8 +181,8 @@
 		B2A9096524A1BBEC00B35B69 /* DataTableTileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2A9096424A1BBEC00B35B69 /* DataTableTileView.swift */; };
 		B2A9096724A1C15700B35B69 /* DataTableTileTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2A9096624A1C15700B35B69 /* DataTableTileTableViewCell.xib */; };
 		B2A9096924A1C3A000B35B69 /* DataTableTileCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2A9096824A1C3A000B35B69 /* DataTableTileCollectionViewCell.xib */; };
-		B2B180122110128C008D3BAA /* BuildFile in Sources */ = {isa = PBXBuildFile; };
-		B2B180142114AD92008D3BAA /* BuildFile in Sources */ = {isa = PBXBuildFile; };
+		B2B180122110128C008D3BAA /* (null) in Sources */ = {isa = PBXBuildFile; };
+		B2B180142114AD92008D3BAA /* (null) in Sources */ = {isa = PBXBuildFile; };
 		B2B1801D21195FB0008D3BAA /* Robot Bidding.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B1801C21195FB0008D3BAA /* Robot Bidding.swift */; };
 		B2B1801F21195FBC008D3BAA /* Robot Player Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B1801E21195FBC008D3BAA /* Robot Player Class.swift */; };
 		B2B1802121195FFA008D3BAA /* Contract Whist Scorecard.pages in Resources */ = {isa = PBXBuildFile; fileRef = B2B1802021195FFA008D3BAA /* Contract Whist Scorecard.pages */; };
@@ -206,6 +206,7 @@
 		B2C054781FB8B55700846F6E /* ConfirmCountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C054771FB8B55700846F6E /* ConfirmCountViewController.swift */; };
 		B2C0966B24616E4900C19447 /* Player Managed Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C0966A24616E4900C19447 /* Player Managed Object.swift */; };
 		B2C19E932370541E009485E0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B2C19E922370541E009485E0 /* Assets.xcassets */; };
+		B2C5840E2567BFD6009E0478 /* Custom View Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C5840D2567BFD5009E0478 /* Custom View Animations.swift */; };
 		B2CB5C5224669CDA009B44C5 /* Client Controller Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2CB5C5124669CDA009B44C5 /* Client Controller Class.swift */; };
 		B2CBB81724A9D71400B336CB /* CreatePlayerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2CBB81624A9D71400B336CB /* CreatePlayerView.xib */; };
 		B2CBB81924A9D81500B336CB /* CreatePlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2CBB81824A9D81500B336CB /* CreatePlayerView.swift */; };
@@ -508,6 +509,7 @@
 		B2C054771FB8B55700846F6E /* ConfirmCountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmCountViewController.swift; sourceTree = "<group>"; };
 		B2C0966A24616E4900C19447 /* Player Managed Object.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Player Managed Object.swift"; sourceTree = "<group>"; };
 		B2C19E922370541E009485E0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		B2C5840D2567BFD5009E0478 /* Custom View Animations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Custom View Animations.swift"; sourceTree = "<group>"; };
 		B2CB5C5124669CDA009B44C5 /* Client Controller Class.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Client Controller Class.swift"; sourceTree = "<group>"; };
 		B2CBB81624A9D71400B336CB /* CreatePlayerView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CreatePlayerView.xib; sourceTree = "<group>"; };
 		B2CBB81824A9D81500B336CB /* CreatePlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePlayerView.swift; sourceTree = "<group>"; };
@@ -1240,6 +1242,7 @@
 				B2BC51C61F7B5E8C0065F07D /* String Extensions.swift */,
 				B2F41B221FB6BBA70043F974 /* Other Extensions.swift */,
 				B2519456230C4284006240DE /* Custom Transitions.swift */,
+				B2C5840D2567BFD5009E0478 /* Custom View Animations.swift */,
 				B247A72E2483657600591BBA /* Shadow View.swift */,
 				B2784DB5248607A5006E49F0 /* Custom Collection View Flow.swift */,
 				B2A44F272503F2740071F899 /* Centered Collection View Flow.swift */,
@@ -1990,6 +1993,7 @@
 				B23D46FC2514AB130018E954 /* NextHandViewController.swift in Sources */,
 				B2144C5124653BF900CF56B7 /* Game Location.swift in Sources */,
 				B202551F22B13A560074310A /* Constraint.swift in Sources */,
+				B2C5840E2567BFD6009E0478 /* Custom View Animations.swift in Sources */,
 				B2B755051E58A2D900B1313B /* HistoryDetailViewController.swift in Sources */,
 				B221EED7210B0E2D00F7FBA0 /* HandViewController.swift in Sources */,
 				B28DDAA024A3259E0029FE36 /* HighScoreTileView.swift in Sources */,
@@ -2040,7 +2044,7 @@
 				B20A66FE1E24002400E75190 /* GameSummaryViewController.swift in Sources */,
 				B202552122BCCE220074310A /* ScrollView.swift in Sources */,
 				CC4CC0FB1DEADC32007FB24F /* ScorepadViewController.swift in Sources */,
-				B2B180142114AD92008D3BAA /* BuildFile in Sources */,
+				B2B180142114AD92008D3BAA /* (null) in Sources */,
 				B2021D7E247FEA1900A82EBB /* LaunchScreenView.swift in Sources */,
 				49075FFC1E0E578E008E06FA /* PlayersViewController.swift in Sources */,
 				B250610020CD7F480030EE8F /* Recovery.swift in Sources */,
@@ -2075,7 +2079,7 @@
 				B2B755091E5B363200B1313B /* History Class.swift in Sources */,
 				B2BC51C71F7B5E8C0065F07D /* String Extensions.swift in Sources */,
 				CC4CC1161DEAF0F9007FB24F /* GamePreviewViewController.swift in Sources */,
-				B2B180122110128C008D3BAA /* BuildFile in Sources */,
+				B2B180122110128C008D3BAA /* (null) in Sources */,
 				B2F7281B1F6D74F9006F0941 /* Invite.swift in Sources */,
 				B20A66FA1E2385B500E75190 /* Reachability.swift in Sources */,
 				B247A72D24835A7C00591BBA /* TitleBar.swift in Sources */,

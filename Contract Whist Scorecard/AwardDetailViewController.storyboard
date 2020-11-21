@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="ipad11_0rounded" orientation="portrait" layout="fullscreen" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -17,8 +17,17 @@
                         <rect key="frame" x="0.0" y="0.0" width="834" height="1194"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Oxb-qe-5W0">
+                                <rect key="frame" x="32" y="85" width="770" height="79"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="79" id="X3H-pR-Wdd"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="33"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wnV-SE-WTy" customClass="AwardDetailView" customModule="Whist" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="64" width="834" height="350"/>
+                                <rect key="frame" x="0.0" y="244" width="834" height="350"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <accessibility key="accessibilityConfiguration" identifier="awardDetailView"/>
                                 <constraints>
@@ -32,11 +41,15 @@
                         <constraints>
                             <constraint firstItem="wnV-SE-WTy" firstAttribute="trailing" secondItem="zQz-XC-dns" secondAttribute="trailing" id="Gwo-Bn-Z24"/>
                             <constraint firstItem="wnV-SE-WTy" firstAttribute="leading" secondItem="zQz-XC-dns" secondAttribute="leading" id="Ioe-xH-ZE7"/>
-                            <constraint firstItem="wnV-SE-WTy" firstAttribute="top" secondItem="zQz-XC-dns" secondAttribute="top" constant="64" id="sZ4-E7-2aD"/>
+                            <constraint firstItem="wnV-SE-WTy" firstAttribute="top" secondItem="Oxb-qe-5W0" secondAttribute="bottom" constant="80" id="LXS-g4-Oa0"/>
+                            <constraint firstItem="WuP-LG-Wre" firstAttribute="trailing" secondItem="Oxb-qe-5W0" secondAttribute="trailing" constant="32" id="PfN-wl-3aE"/>
+                            <constraint firstItem="Oxb-qe-5W0" firstAttribute="top" secondItem="WuP-LG-Wre" secondAttribute="top" constant="85" id="SYy-HP-Fww"/>
+                            <constraint firstItem="Oxb-qe-5W0" firstAttribute="leading" secondItem="WuP-LG-Wre" secondAttribute="leading" constant="32" id="YO3-K6-90E"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="awardDetailView" destination="wnV-SE-WTy" id="MUT-SK-r5j"/>
+                        <outlet property="awardTitleLabel" destination="Oxb-qe-5W0" id="dHe-4O-ehz"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iul-IK-qAd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

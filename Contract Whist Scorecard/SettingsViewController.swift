@@ -1460,7 +1460,6 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
         self.view.layoutIfNeeded()
         self.settingsTableView.reloadData()
         self.menuController?.refresh()
-        self.rootViewController.rightPanelDefaultScreenColors()
     }
     
     // MARK: - Utility Routines ======================================================================== -

@@ -411,10 +411,10 @@ class Utility {
     
     public class func animate(if animate: Bool = true, view: UIView? = nil, duration: TimeInterval = 0.5, curve: UIView.AnimationCurve = .linear, afterDelay: TimeInterval? = 0.0, layout: Bool = true, completion: (()->())? = nil, animations: @escaping ()->()) {
         var view = view
-        if view == nil {
-            view = Utility.getActiveViewController()!.view!
-        }
         if animate {
+            if view == nil {
+                view = Utility.getActiveViewController()!.view!
+            }
             if layout {
                 view?.layoutIfNeeded()
             }
@@ -577,18 +577,30 @@ class Utility {
         publicDatabase.add(queryOperation)
     }
     
-    public static func screenshot(view: UIView? = nil) -> UIImage? {
-        let view = view ?? UIApplication.shared.keyWindow!
+    public static func screenshot(frame: CGRect? = nil) -> UIImage? {
+        let view = UIApplication.shared.keyWindow!
         let scale = UIScreen.main.scale
         UIGraphicsBeginImageContextWithOptions(view.bounds.size, false, scale)
-        view.drawHierarchy(in: view.bounds, afterScreenUpdates: true)
+        view.drawHierarchy(in: view.bounds, afterScreenUpdates: false)
         let screenshot = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         return screenshot
     }
     
-    public static func snapshot(view: UIView) -> UIView? {
-        return view.snapshotView(afterScreenUpdates: false)
+    public static func snapshot(view: UIView, frame: CGRect? = nil) -> UIView? {
+        let snapshot = view.snapshotView(afterScreenUpdates: true)
+        if let snapshot = snapshot, let frame = frame {
+            if frame != view.frame {
+                let croppingContainer = UIView(frame: frame)
+                croppingContainer.clipsToBounds = true
+                croppingContainer.addSubview(snapshot)
+                snapshot.frame = CGRect(x: view.frame.minX - frame.minX, y: view.frame.minY - frame.minY, width: snapshot.frame.width, height: snapshot.frame.height)
+                let clippedSnapshot = croppingContainer.snapshotView(afterScreenUpdates: true)
+                return clippedSnapshot
+                
+            }
+        }
+        return snapshot
     }
 
     // MARK: - FaceTime ======================================================================== -

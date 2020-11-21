@@ -10,7 +10,7 @@ import UIKit
 
 protocol AwardDetail {
     
-    func show(awards: Awards, playerUUID: String, award: Award, mode: AwardDetailMode)
+    func show(title: String, awards: Awards, playerUUID: String, award: Award, mode: AwardDetailMode)
     
 }
 
@@ -19,10 +19,12 @@ class AwardDetailViewController: ScorecardViewController, AwardDetail, DetailDel
     var isVisible: Bool { return true }
     var detailView: UIView { return self.view }
     
+    @IBOutlet private weak var awardTitleLabel: UILabel!
     @IBOutlet private weak var awardDetailView: AwardDetailView!
         
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.awardTitleLabel.textColor = Palette.banner.text
         self.awardDetailView.set(backgroundColor: Palette.banner.background, textColor: Palette.banner.text, detailFont: UIFont.systemFont(ofSize: 17), shadow: false, dismiss: false, widthPercent: 100)
     }
     
@@ -36,7 +38,8 @@ class AwardDetailViewController: ScorecardViewController, AwardDetail, DetailDel
         
     }
     
-    internal func show(awards: Awards, playerUUID: String, award: Award, mode: AwardDetailMode) {
+    internal func show(title: String, awards: Awards, playerUUID: String, award: Award, mode: AwardDetailMode) {
+        self.awardTitleLabel.text = title
         self.awardDetailView.set(awards: awards, playerUUID: playerUUID, award: award, mode: mode)
     }
     

@@ -22,17 +22,15 @@ protocol PanelContainer {
     
     func isVisible(container: Container) -> Bool
     
-    func view(container: Container) -> UIView
+    func view(container: Container?) -> UIView
     
     func panelLayoutSubviews()
     
     func allocateContainerSizes()
     
-    func presentInContainers(_ items: [PanelContainerItem], rightPanelTitle: String?, animated: Bool, completion: (() -> ())?)
+    func presentInContainers(_ items: [PanelContainerItem], rightPanelTitle: String?, animation: ViewAnimation, duration: TimeInterval?, completion: (() -> ())?)
         
-    @discardableResult func invokeOption(_ option: MenuOption, completion: (()->())?) -> ScorecardViewController?
-    
-    func rightPanelDefaultScreenColors(rightInsetColor: UIColor)
+    @discardableResult func invokeOption(_ option: MenuOption, animation: ViewAnimation, completion: (()->())?) -> ScorecardViewController?
     
     func selectAvailableDevice(deviceName: String)
     
@@ -42,12 +40,16 @@ protocol PanelContainer {
 }
 
 extension PanelContainer {
-    func presentInContainers(_ items: [PanelContainerItem], animated: Bool, completion: (() -> ())?) {
-        presentInContainers(items, rightPanelTitle: nil, animated: animated, completion: completion)
+    func presentInContainers(_ items: [PanelContainerItem], animation: ViewAnimation, completion: (() -> ())?) {
+        presentInContainers(items, rightPanelTitle: nil, animation: animation, duration: nil, completion: completion)
     }
     
-    func rightPanelDefaultScreenColors() {
-        rightPanelDefaultScreenColors(rightInsetColor: Palette.banner.background)
+    func presentInContainers(_ items: [PanelContainerItem], rightPanelTitle: String?, animation: ViewAnimation, completion: (() -> ())?) {
+        presentInContainers(items, rightPanelTitle: rightPanelTitle, animation: animation, duration: nil, completion: completion)
+    }
+    
+    func invokeOption(_ option: MenuOption, completion: (()->())?) -> ScorecardViewController? {
+        invokeOption(option, animation: .none, completion: completion)
     }
 }
 
@@ -176,7 +178,6 @@ extension ClientViewController : PanelContainer {
         
         self.leftContainer?.setNeedsLayout()
         self.rightContainer?.setNeedsLayout()
-        self.rightInsetContainer?.setNeedsLayout()
     }
     
     internal func isVisible(container: Container) -> Bool {
@@ -188,25 +189,25 @@ extension ClientViewController : PanelContainer {
                 return self.leftPanelTrailingConstraint.constant > 0
             case .main:
                 return true
-            case .right, .rightInset, .mainRight:
+            case .right, .mainRight:
                 return self.rightPanelLeadingConstraint.constant < 0
             }
         }
     }
     
-    internal func view(container: Container) -> UIView {
+    internal func view(container: Container?) -> UIView {
         var containerView: UIView
         switch container {
         case .left:
             containerView = self.leftContainer
         case .right:
             containerView = self.rightContainer
-        case .rightInset:
-            containerView = self.rightInsetContainer
-        case .mainRight:
+         case .mainRight:
             containerView = self.mainRightContainer
         case .main:
             containerView = self.mainContainer
+        default:
+            containerView = self.view
         }
         return containerView
     }
@@ -216,19 +217,18 @@ extension ClientViewController : PanelContainer {
         return view.frame
     }
     
-    internal func rightPanelDefaultScreenColors(rightInsetColor: UIColor) {
+    internal func rightPanelDefaultScreenColors() {
         self.rightContainer.backgroundColor = Palette.banner.background
         self.rightPanelTitleLabel.textColor = Palette.banner.text
         self.rightPanelCaptionLabel.textColor = Palette.banner.text
-        self.rightInsetRoundedView.backgroundColor = rightInsetColor
     }
         
-    public func invokeOption(_ option: MenuOption, completion: (()->())?) -> ScorecardViewController? {
+    public func invokeOption(_ option: MenuOption, animation: ViewAnimation, completion: (()->())?) -> ScorecardViewController? {
         var viewController: ScorecardViewController?
         
         switch option {
         case .settings:
-            viewController = self.showSettings(presentCompletion: completion)
+            viewController = self.showSettings(animation: animation, presentCompletion: completion)
             
         case .changePlayer:
             self.showPlayerSelection(completion: completion)
@@ -243,10 +243,15 @@ extension ClientViewController : PanelContainer {
         return viewController
     }
     
-    public func presentInContainers(_ items: [PanelContainerItem], rightPanelTitle: String? = nil, animated: Bool, completion: (() -> ())?) {
+    public func presentInContainers(_ items: [PanelContainerItem], rightPanelTitle: String? = nil, animation: ViewAnimation = .fade, duration: TimeInterval? = nil, completion: (() -> ())?) {
         if let rootViewController = self.rootViewController, let rootView = self.view {
-            var containerView: UIView?
-            var animateViews: [(view: UIView, container: Container)] = []
+            let duration = duration ?? 0.5
+            var animateViews: [(view: UIView, container: Container, frame: CGRect)] = []
+            
+            let animateRightPanel = (animation.leftMovement || animation.rightMovement) && animation.newEnters && self.isVisible(container: .right)
+            if animateRightPanel {
+                rootView.bringSubviewToFront(self.rightContainer)
+            }
             if let title = rightPanelTitle {
                 self.setRightPanel(title: title, caption: "")
             }
@@ -261,51 +266,53 @@ extension ClientViewController : PanelContainer {
                     let containerView = self.view(container: container)
                     // Got a container - add view controller / view to container
                     rootViewController.addChild(viewController)
-                    view.frame = rootView.convert(containerView.frame, to: rootView)
+                    view.frame = containerView.superview!.convert(containerView.frame, to: rootView)
                     rootView.addSubview(view)
                     viewController.didMove(toParent: rootViewController)
-                    if container == .rightInset {
-                        // Bring right view forward and animate in later
-                        rootView.bringSubviewToFront(self.rightContainer)
-                        if animated {
-                            self.rightContainer.alpha = 0.0
-                        }
-                    }
                     rootView.bringSubviewToFront(view)
                     
-                    // Add layout constraints
-                    view.translatesAutoresizingMaskIntoConstraints = false
-                    Constraint.anchor(view: rootView, control: containerView, to: view)
-                    if container == .rightInset {
-                        self.rightInsetRoundedView.roundCorners(cornerRadius: 12.0)
-                    }
-                    if animated {
-                        view.alpha = 0.0
-                        animateViews.append((view, container))
-                    }
+                    animateViews.append((view, container, view.frame))
                     if container == .main || container == .mainRight {
                         // Add to controller stack
                         self.rootViewController?.viewControllerStack.append((viewController.uniqueID, viewController))
                     }
                 }
             }
-            if animated {
-                // Need to animate - just dissolve for now
-                Utility.animate(duration: 0.25,
-                    completion: {
-                        self.presentInContainersCompletion(completion: completion)
-                    },
-                    animations: {
-                        animateViews.forEach{ (viewElement) in
-                            if viewElement.container == .rightInset {
-                                self.rightContainer.alpha = 1.0
-                            }
-                            viewElement.view.alpha = 1.0
-                        }
-                    })
-            } else {
-                self.presentInContainersCompletion(completion: completion)
+            
+            // Need to animate - position new views to right
+            let rightPanelLeading = self.rightPanelLeadingConstraint.constant
+            if animateRightPanel {
+                self.rightPanelLeadingConstraint.constant += animation.offset(by: self.mainRightContainer.frame.size).x
             }
+            
+            var oldViews: [UIView] = []
+            if let snapshot = self.rootViewController.dismissSnapshotStack.last {
+                if let snapshotClippingView = snapshot.superview {
+                    // Bring clipping view to front if necessary
+                    if animation.oldLeaves {
+                        rootView.bringSubviewToFront(snapshotClippingView)
+                    }
+                }
+                oldViews.append(snapshot)
+            }
+            
+            rootView.bringSubviewToFront(self.menuPanelViewController.view)
+            ViewAnimator.animate(rootView: rootView, clippingView: self.mainRightContainer, oldViews: oldViews, newViews: animateViews.map{$0.view}, animation: animation, duration: duration, layout: animateRightPanel,
+                additionalAnimations: {
+                    if animateRightPanel {
+                        self.rightPanelLeadingConstraint.constant = rightPanelLeading
+                    }
+                },
+                completion: {
+                    self.presentInContainersCompletion(completion: completion)
+                    animateViews.forEach { (viewElement) in
+                        // Add constraints
+                        let containerView = self.view(container: viewElement.container)
+                        viewElement.view.translatesAutoresizingMaskIntoConstraints = false
+                        Constraint.anchor(view: rootView, control: containerView, to: viewElement.view)
+                    }
+                }
+            )
         }
     }
     

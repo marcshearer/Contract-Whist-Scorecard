@@ -214,7 +214,7 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
                     // Dismissing this view to present another but want it to look like new view is presenting (animated) on top of this one
                     // Put up a screenshot of this view behind it on the parent, dismiss this one without animation, and then when next view is visible
                     // remove the screenshot from behind it
-                    self.parentViewController.createDismissSnapshot()
+                    self.parentViewController.createDismissSnapshot(needScreenshot: true)
                     self.parentViewController.dismissView = self.activeView
                     animated = false
                 }
@@ -495,7 +495,7 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
             self.gameDetailPanelViewController.controllerDelegate = self
             self.gameDetailPanelViewController.rootViewController = parentViewController.rootViewController
             self.gameDetailPanelViewController.rootViewController.detailDelegate = gameDetailPanelViewController
-            self.parentViewController?.rootViewController.presentInContainers([PanelContainerItem(viewController: gameDetailPanelViewController, container: .right)], animated: true, completion: nil)
+            self.parentViewController?.rootViewController.presentInContainers([PanelContainerItem(viewController: gameDetailPanelViewController, container: .right)], animation: .none, completion: nil)
             self.gameDetailDelegate = self.gameDetailPanelViewController
         }
     }
@@ -606,7 +606,6 @@ public enum Container {
     case left
     case main
     case right
-    case rightInset
     case mainRight
 }
 
@@ -773,7 +772,7 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
         
     // MARK: - View tweaks ========================================================================== -
     
-    internal func present(_ viewControllerToPresent: ScorecardViewController, appController: ScorecardAppController? = nil, popoverSize: CGSize? = nil, sourceView: UIView? = nil, verticalOffset: CGFloat = 0.5, animated: Bool, container: Container? = .main, completion: (() -> Void)? = nil) {
+    internal func present(_ viewControllerToPresent: ScorecardViewController, appController: ScorecardAppController? = nil, popoverSize: CGSize? = nil, sourceView: UIView? = nil, verticalOffset: CGFloat = 0.5, animated: Bool, container: Container? = .main, animation: ViewAnimation? = nil, completion: (() -> Void)? = nil) {
 
         func hideAndComplete() {
             completion?()
@@ -790,7 +789,7 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
         
         if self.rootViewController?.containers ?? false && (self.container == .main || self.container == .mainRight || self == self.rootViewController) && popoverSize == nil && container != nil {
             // Working in containers
-            self.rootViewController?.presentInContainers([PanelContainerItem(viewController: viewControllerToPresent, container: container!)], animated: true, completion: completion)
+            self.rootViewController?.presentInContainers([PanelContainerItem(viewController: viewControllerToPresent, container: container!)], animation: animation ?? .fade, completion: completion)
             
         } else {
             
@@ -840,15 +839,36 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
         }
     }
     
-    internal func createDismissSnapshot(container: Container? = nil) {
+    internal func createDismissSnapshot(container: Container? = nil, needScreenshot: Bool = false) {
         if var rootViewController = self.rootViewController, let view = rootViewController.view {
             Utility.debugMessage("Scorecard", "Creating dismiss image view on \(self.className)")
-            let dismissSnapshotView = Utility.snapshot(view: view)!
-            view.addSubview(dismissSnapshotView)
-            view.bringSubviewToFront(dismissSnapshotView)
+            
+            let containerFrame = self.rootViewController.view(container: container).frame
+            // Need a real screen shot when doing view controller transitions
+            let dismissSnapshotView = (needScreenshot ?
+                                        UIImageView(image: Utility.screenshot()) :
+                                        Utility.snapshot(view: self.rootViewController.view, frame: containerFrame) ?? UIView()) // TODO
             dismissSnapshotView.accessibilityIdentifier = "dismissSnapshot"
-            dismissSnapshotView.frame = view.frame
             rootViewController.dismissSnapshotStack.append(dismissSnapshotView)
+            
+            if container == nil {
+                // Just return snapshot
+                view.addSubview(dismissSnapshotView)
+                view.bringSubviewToFront(dismissSnapshotView)
+                dismissSnapshotView.frame = view.frame
+            } else {
+                // Wrap snapshot in a clipping container
+                let clippingContainer = UIView(frame: containerFrame)
+                dismissSnapshotView.accessibilityIdentifier = "dismissSnapshot"
+                
+                clippingContainer.clipsToBounds = true
+                clippingContainer.accessibilityIdentifier = "dismissClippingContainer"
+                clippingContainer.addSubview(dismissSnapshotView)
+                
+                view.addSubview(clippingContainer)
+                dismissSnapshotView.frame = clippingContainer.bounds
+                view.bringSubviewToFront(clippingContainer)
+            }
         }
     }
     
@@ -858,6 +878,14 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
         
         func hide() {
             if dismissSnapshot != nil {
+                if let clippingContainer = dismissSnapshot?.superview {
+                    // Remove clipping container
+                    if clippingContainer != self.rootViewController.view {
+                        // Make sure there was a clipping container - don't remove root view
+                        clippingContainer.removeFromSuperview() // Clipping container
+                    }
+                }
+                    
                 dismissSnapshot?.removeFromSuperview()
                 self.rootViewController?.dismissSnapshotStack.removeLast()
             }

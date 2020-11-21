@@ -205,6 +205,7 @@
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="c6O-8s-uBR"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <accessibility key="accessibilityConfiguration" identifier="dashboardView"/>
                         <constraints>
                             <constraint firstAttribute="bottom" secondItem="hiY-hK-Vax" secondAttribute="bottom" constant="34" id="1KP-tb-Eog"/>
                             <constraint firstItem="TXF-Mu-K4x" firstAttribute="trailing" secondItem="qLc-Of-9eu" secondAttribute="trailing" id="8lO-Jc-ddV"/>

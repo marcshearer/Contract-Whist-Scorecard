@@ -27,27 +27,10 @@
                                     <constraint firstAttribute="width" constant="300" id="rFr-J4-RNI"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hbD-Y0-uhD" userLabel="Right Container">
+                            <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hbD-Y0-uhD" userLabel="Right Container">
                                 <rect key="frame" x="1194" y="0.0" width="300" height="834"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Liw-Kx-YGP" userLabel="Right Inset Container">
-                                        <rect key="frame" x="30" y="172" width="240" height="612"/>
-                                        <subviews>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Wv8-xT-NCE">
-                                                <rect key="frame" x="0.0" y="0.0" width="240" height="612"/>
-                                                <color key="backgroundColor" name="Clear"/>
-                                            </view>
-                                        </subviews>
-                                        <color key="backgroundColor" name="Clear"/>
-                                        <accessibility key="accessibilityConfiguration" identifier="rightInsetContainer"/>
-                                        <constraints>
-                                            <constraint firstItem="Wv8-xT-NCE" firstAttribute="leading" secondItem="Liw-Kx-YGP" secondAttribute="leading" id="Fap-29-WA2"/>
-                                            <constraint firstItem="Wv8-xT-NCE" firstAttribute="top" secondItem="Liw-Kx-YGP" secondAttribute="top" id="Sf4-7l-YBk"/>
-                                            <constraint firstAttribute="bottom" secondItem="Wv8-xT-NCE" secondAttribute="bottom" id="YHq-qE-Zhy"/>
-                                            <constraint firstAttribute="trailing" secondItem="Wv8-xT-NCE" secondAttribute="trailing" id="l3e-4m-tVb"/>
-                                        </constraints>
-                                    </view>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="6vV-nZ-CxI">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" insetsLayoutMarginsFromSafeArea="NO" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="6vV-nZ-CxI">
                                         <rect key="frame" x="32" y="85" width="236" height="79"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="79" id="Yls-fF-Yhj"/>
@@ -58,7 +41,7 @@ Played</string>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NeI-VM-vAB">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" insetsLayoutMarginsFromSafeArea="NO" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NeI-VM-vAB">
                                         <rect key="frame" x="32" y="214" width="63" height="34"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="34" id="RLy-UJ-l1h"/>
@@ -71,15 +54,11 @@ Played</string>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <accessibility key="accessibilityConfiguration" identifier="rightContainer"/>
                                 <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="Liw-Kx-YGP" secondAttribute="trailing" constant="30" id="2mB-ik-fz0"/>
-                                    <constraint firstItem="Liw-Kx-YGP" firstAttribute="leading" secondItem="hbD-Y0-uhD" secondAttribute="leading" constant="30" id="8QS-m6-YIR"/>
                                     <constraint firstItem="6vV-nZ-CxI" firstAttribute="top" secondItem="hbD-Y0-uhD" secondAttribute="top" constant="85" id="AeP-uB-Q2V"/>
-                                    <constraint firstItem="Liw-Kx-YGP" firstAttribute="top" secondItem="6vV-nZ-CxI" secondAttribute="bottom" constant="8" id="IpI-Ob-wc1"/>
-                                    <constraint firstAttribute="bottom" secondItem="Liw-Kx-YGP" secondAttribute="bottom" constant="50" id="Qnj-60-cMU"/>
-                                    <constraint firstAttribute="trailing" secondItem="6vV-nZ-CxI" secondAttribute="trailing" constant="32" id="X7h-rN-0jg"/>
+                                    <constraint firstAttribute="trailing" secondItem="6vV-nZ-CxI" secondAttribute="trailing" constant="32" id="Ugc-dN-pJa"/>
+                                    <constraint firstItem="6vV-nZ-CxI" firstAttribute="leading" secondItem="hbD-Y0-uhD" secondAttribute="leading" constant="32" id="X7h-rN-0jg"/>
                                     <constraint firstItem="NeI-VM-vAB" firstAttribute="top" secondItem="6vV-nZ-CxI" secondAttribute="bottom" constant="50" id="awB-C4-kAz"/>
                                     <constraint firstItem="NeI-VM-vAB" firstAttribute="leading" secondItem="hbD-Y0-uhD" secondAttribute="leading" constant="32" id="yAK-Kp-pdE"/>
-                                    <constraint firstItem="6vV-nZ-CxI" firstAttribute="leading" secondItem="hbD-Y0-uhD" secondAttribute="leading" constant="32" id="yti-85-jya"/>
                                     <constraint firstAttribute="width" constant="300" id="zzI-c7-daZ"/>
                                 </constraints>
                             </view>
@@ -925,8 +904,6 @@ Played</string>
                         <outlet property="playerSelectionViewHeightConstraint" destination="zrf-Q7-qL5" id="uoi-bn-2wi"/>
                         <outlet property="playerSelectionViewWidthConstraint" destination="9iF-tu-zqC" id="wtR-cS-jcm"/>
                         <outlet property="rightContainer" destination="hbD-Y0-uhD" id="STO-dg-ncT"/>
-                        <outlet property="rightInsetContainer" destination="Liw-Kx-YGP" id="i2h-99-OZB"/>
-                        <outlet property="rightInsetRoundedView" destination="Wv8-xT-NCE" id="ryo-8D-g9a"/>
                         <outlet property="rightPanelCaptionLabel" destination="NeI-VM-vAB" id="9zx-PG-6H4"/>
                         <outlet property="rightPanelLeadingConstraint" destination="8XD-KB-E92" id="nEp-tA-L0P"/>
                         <outlet property="rightPanelTitleLabel" destination="6vV-nZ-CxI" id="rxt-8n-33b"/>
@@ -980,7 +957,7 @@ Played</string>
                     </connections>
                 </swipeGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="6034.7826086956529" y="1441.7410714285713"/>
+            <point key="canvasLocation" x="6034.6733668341712" y="1441.7266187050361"/>
         </scene>
     </scenes>
     <resources>

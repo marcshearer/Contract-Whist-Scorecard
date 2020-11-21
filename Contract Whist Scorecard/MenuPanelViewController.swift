@@ -31,10 +31,8 @@ class Option {
     fileprivate let spaceBefore: CGFloat
     fileprivate var pressed: Bool
     fileprivate var id: AnyHashable?
-    fileprivate var autoExpand: Bool
-    fileprivate var baseSuboption: Bool
     
-    init(title: String, releaseTitle: String? = nil, titleColor: UIColor? = nil, menuOption: MenuOption? = nil, spaceBefore:CGFloat = 0.0, id: AnyHashable? = nil, autoExpand: Bool = false, baseSuboption: Bool = false, action: (()->())? = nil, releaseAction: (()->())? = nil) {
+    init(title: String, releaseTitle: String? = nil, titleColor: UIColor? = nil, menuOption: MenuOption? = nil, spaceBefore:CGFloat = 0.0, id: AnyHashable? = nil, action: (()->())? = nil, releaseAction: (()->())? = nil) {
         self.title = title
         self.releaseTitle = releaseTitle
         self.titleColor = titleColor
@@ -44,9 +42,13 @@ class Option {
         self.action = action
         self.releaseAction = releaseAction
         self.pressed = false
-        self.autoExpand = autoExpand
-        self.baseSuboption = baseSuboption
     }
+}
+
+
+
+protocol MenuSwipeDelegate : class {
+    func swipeGesture(direction: UISwipeGestureRecognizer.Direction) -> Bool
 }
 
 protocol MenuController {
@@ -54,6 +56,10 @@ protocol MenuController {
     var currentOption: MenuOption {get}
     
     var isVisible: Bool {get}
+    
+    var swipeDelegate: MenuSwipeDelegate? {get set}
+    
+    func highlightSuboption(id: AnyHashable)
     
     func menuDidDisappear()
     
@@ -79,7 +85,7 @@ protocol MenuController {
     
     func showHelp(helpElement: HelpViewElement, showNext: Bool, completion: @escaping (Bool)->())
     
-    func swipeGesture(direction: UISwipeGestureRecognizer.Direction )
+    func swipeGesture(direction: UISwipeGestureRecognizer.Direction)
 }
 
 class MenuPanelViewController : ScorecardViewController, MenuController, UITableViewDelegate, UITableViewDataSource {
@@ -87,6 +93,15 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
     struct OptionMap {
         let mainOption: Bool
         let index: Int
+        let id: AnyHashable?
+        var highlight: Bool
+        
+        init(mainOption: Bool, index: Int, id: AnyHashable? = nil, highlight: Bool = false) {
+            self.mainOption = mainOption
+            self.index = index
+            self.id = id
+            self.highlight = highlight
+        }
     }
     
     enum TableView: Int {
@@ -94,11 +109,11 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
         case settings = 2
     }
     
+    internal weak var swipeDelegate: MenuSwipeDelegate?
     private var options: [Option] = []
     private var suboptions: [Option] = []
     private var suboptionMenuOption: MenuOption!
     private var suboptionContainer: Container!
-    private var suboptionHighlight: Int? = nil
     private var optionMap: [OptionMap] = []
     internal var currentOption: MenuOption = .playGame
     internal var lastOption: MenuOption?
@@ -256,7 +271,7 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
         var dismissItems: [PanelContainerItem] = []
         if let items = self.currentContainerItems {
             for (index, item) in items.reversed().enumerated() {
-                if item.container == .right || item.container == .rightInset {
+                if item.container == .right {
                     dismissItems.append(item)
                     self.currentContainerItems?.remove(at: index)
                 } else {
@@ -266,7 +281,6 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
         }
         if !dismissItems.isEmpty {
             self.dismissItems(dismissItems, completion: completion)
-            self.rootViewController.rightPanelDefaultScreenColors(rightInsetColor: Palette.banner.background)
             self.rootViewController.showLastGame()
         } else {
             completion?()
@@ -283,40 +297,53 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
             self.suboptions = []
             self.suboptionMenuOption = nil
             self.suboptionContainer = nil
-            self.suboptionHighlight = nil
             self.disableOptions = false
-            if self.currentOption != .playGame {
-                self.addSuboptions(option: self.currentOption, highlight: self.suboptionHighlight)
-            }
             self.setupOptionMap()
             self.reloadData()
         }
     }
     
     func swipeGesture(direction: UISwipeGestureRecognizer.Direction) {
-        if !disableAll && !disableOptions {
-            
-            if var currentRow = self.optionMap.firstIndex(where: { optionFromMap($0).menuOption == self.currentOption }) {
-                let optionMap = self.optionMap[currentRow]
-                let option = self.optionFromMap(optionMap)
-                if option.autoExpand {
-                    currentRow += self.suboptionHighlight! + 1
-                }
+        
+        if self.gameMode == .none {
+            // First check if delegate wants to handle a left swipe
+            if direction == .right || !(self.swipeDelegate?.swipeGesture(direction: direction) ?? false) {
                 
-                let offset = (direction == .left ? 1 : -1)
-                var nextRow = currentRow + offset
-                while nextRow >= 0 && nextRow < self.optionMap.count {
-                    let optionMap = self.optionMap[nextRow]
-                    let option = self.optionFromMap(optionMap)
-                    if (!option.autoExpand || self.currentOption != option.menuOption) && (optionMap.mainOption || option.baseSuboption) {
-                        // Select this option
-                        self.selectRow(tableView: .options, row: nextRow, forwards: direction == .left)
-                        break
+                if !disableAll && !disableOptions {
+                    
+                    if let currentRow = self.optionMap.firstIndex(where: { optionFromMap($0).menuOption == self.currentOption }) {
+                        
+                        if direction == .right && currentRow != 0 {
+                            self.selectRow(tableView: .options, row: 0, animation: .uncoverToRight)
+                        } else {
+                            
+                            let offset = (direction == .left ? 1 : -1)
+                            var nextRow = currentRow + offset
+                            while nextRow >= 0 && nextRow < self.optionMap.count {
+                                let optionMap = self.optionMap[nextRow]
+                                let option = self.optionFromMap(optionMap)
+                                if (self.currentOption != option.menuOption && optionMap.mainOption) {
+                                    // Select this option
+                                    self.selectRow(tableView: .options, row: nextRow, animation: direction == .right ? .uncoverToRight : .coverFromRight)
+                                    break
+                                }
+                                nextRow = nextRow + offset
+                            }
+                        }
                     }
-                    nextRow = nextRow + offset
                 }
             }
         }
+    }
+    
+    func highlightSuboption(id: AnyHashable) {
+        for index in 0..<self.optionMap.count {
+            self.optionMap[index].highlight = false
+        }
+        if let index = self.optionMap.firstIndex(where: {$0.id == id}) {
+            self.optionMap[index].highlight = true
+        }
+        self.reloadData()
     }
     
     func optionFromMap(_ optionMap: OptionMap) -> Option {
@@ -327,11 +354,14 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
         }
     }
     
+    private func optionRow(_ menuOption: MenuOption?) -> Int? {
+        return self.optionMap.firstIndex(where: {self.optionFromMap($0).menuOption == menuOption})
+    }
+    
     func add(suboptions: [Option], to option: MenuOption, on container: Container, highlight: Int?, disableOptions: Bool = false) {
         if !suboptions.isEmpty || option != self.suboptionMenuOption {
             self.suboptions = suboptions
             self.suboptions.forEach{(suboption) in suboption.menuOption = option}
-            self.suboptionHighlight = highlight
         }
         self.suboptionMenuOption = option
         self.suboptionContainer = container
@@ -410,7 +440,7 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
     private func setupOptions() {
         self.options = [
             Option(title: "Play Game", menuOption: .playGame),
-            Option(title: "Results", menuOption: .personalResults, autoExpand: true),
+            Option(title: "Results", menuOption: .personalResults),
             Option(title: "Awards", menuOption: .awards),
             Option(title: "Profiles", menuOption: .profiles),
         ]
@@ -423,8 +453,8 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
             if !self.playingGame || option.menuOption == .playGame {
                 self.optionMap.append(OptionMap(mainOption: true, index: index))
                 if suboptionMenuOption == option.menuOption {
-                    for (index, _) in self.suboptions.enumerated() {
-                        self.optionMap.append(OptionMap(mainOption: false, index: index))
+                    for (index, suboption) in self.suboptions.enumerated() {
+                        self.optionMap.append(OptionMap(mainOption: false, index: index, id: suboption.id))
                     }
                 }
             }
@@ -458,7 +488,7 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Option") as! MenuPanelTableCell
         
-        if let (option, mainOption, index) = self.getOption(tableView: TableView(rawValue: tableView.tag)!, row: indexPath.row) {
+        if let (option, mainOption, _) = self.getOption(tableView: TableView(rawValue: tableView.tag)!, row: indexPath.row) {
             if mainOption {
                 let disabled = self.disableOptions || self.disableAll
                 cell.titleLabel.text = (self.playingGame && self.gamePlayingTitle != nil ? self.gamePlayingTitle! : option.title)
@@ -481,7 +511,7 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
             } else {
                 let disabled = self.disableAll
                 cell.titleLabel.text = "      \((option.pressed ? option.releaseTitle! : option.title))"
-                cell.titleLabel.textColor = option.titleColor ?? (self.suboptionHighlight == index ? Palette.leftSidePanel.themeText : (disabled ? Palette.normal.faintText : Palette.leftSidePanel.text))
+                cell.titleLabel.textColor = option.titleColor ?? (self.optionMap[indexPath.row].highlight ? Palette.leftSidePanel.themeText : (disabled ? Palette.normal.faintText : Palette.leftSidePanel.text))
                 cell.titleLabel.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
                 cell.helpButton.isHidden = true
             }
@@ -499,9 +529,8 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
         return nil
     }
 
-    func selectRow(tableView: TableView, row: Int, forwards: Bool = true) {
-        if let (option, mainOption, index) = self.getOption(tableView: tableView, row: row) {
-            var option = option
+    func selectRow(tableView: TableView, row: Int, animation: ViewAnimation? = nil) {
+        if let (option, mainOption, _) = self.getOption(tableView: tableView, row: row) {
             var changed = false
             var action = option.action
             if !self.disableAll {
@@ -518,35 +547,21 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
                             option.pressed.toggle()
                             changed = true
                         } else {
-                            changed = (self.suboptionHighlight == nil || self.suboptionHighlight != index)
+                            changed = true
                         }
                     }
                 }
             }
             
             if changed {
-                // Update menu
-                if mainOption {
-                    if option.autoExpand {
-                        self.addSuboptions(option: option.menuOption)
-                        self.setupOptionMap()
-                        self.setCurrentOption(option: option.menuOption!)
-                        option = (forwards ? self.suboptions.first! : self.suboptions.last!)
-                        self.suboptionHighlight = (forwards ? 0 : self.suboptions.count - 1)
-                        action = option.action
-                    }
-                } else if self.suboptionHighlight != nil {
-                    self.setCurrentOption(option: option.menuOption!)
-                    self.suboptionHighlight = index
-                }
-                self.reloadData()
-                
                 // Execute option/action
                 if action != nil {
                     action?()
                 } else if let menuOption = option.menuOption {
-                    self.dismissAndSelectOption(option: menuOption, changeOption: mainOption)
+                    self.dismissAndSelectOption(option: menuOption, changeOption: mainOption, animation: animation)
                 }
+                // Update menu
+                self.reloadData()
             }
         }
     }
@@ -594,21 +609,6 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
         self.thisPlayerThumbnail.alpha = (isEnabled ? 1.0 : 0.6)
     }
     
-    private func addSuboptions(option: MenuOption?, highlight: Int? = nil) {
-        if let option = option {
-            switch option {
-            case .personalResults, .everyoneResults:
-                let suboptions = [
-                    Option(title: "Personal", baseSuboption: true, action: { self.dismissAndSelectOption(option: .personalResults, changeOption: false)}),
-                    Option(title: "Everyone", baseSuboption: true, action: { self.dismissAndSelectOption(option: .everyoneResults, changeOption: false)})]
-                self.add(suboptions: suboptions,
-                         to: option, on: self.container!, highlight: 0)
-            default:
-                self.suboptions = []
-            }
-        }
-    }
-    
     private func defaultScreenColors() {
         Palette.ignoringGameBanners {
             self.view.backgroundColor = Palette.leftSidePanel.background
@@ -645,51 +645,78 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
     
     // MARK: - Dismiss / select option =========================================================== -
     
-    private func dismissAndSelectOption(option: MenuOption, changeOption: Bool = true, completion: (()->())? = nil) {
-        self.rootViewController.view.isUserInteractionEnabled = false
-        if option == .changePlayer || option == .playGame || option == .settings {
-            self.showLastGame()
-        }
+    private func dismissAndSelectOption(option: MenuOption, changeOption: Bool = true, animation: ViewAnimation? = nil, completion: (()->())? = nil) {
+        
         if changeOption {
             self.setCurrentOption(option: option)
         }
+        
+        var animation: ViewAnimation! = animation
+        if animation == nil {
+            if option == .settings {
+                animation = .coverFromBottom
+            } else if self.lastOption == .settings {
+                animation = .uncoverToBottom
+            } else {
+                if let currentRow = self.optionRow(self.currentOption), let lastRow = self.optionRow(self.lastOption) {
+                    if currentRow > lastRow {
+                        animation = .coverFromRight
+                    } else {
+                        animation = .uncoverToRight
+                    }
+                } else {
+                    animation = .coverFromRight
+                }
+            }
+        }
+      
+        self.rootViewController.view.isUserInteractionEnabled = false
+        let returningHome = (option == .changePlayer || option == .playGame)
+        let dismissAnimation: ViewAnimation = (returningHome ? (self.lastOption == .settings ? .uncoverToBottom : .uncoverToRight) : .none)
+        
+        if returningHome {
+            self.showLastGame()
+        }
 
-        self.rootViewController.rightPanelDefaultScreenColors(rightInsetColor: (option == .profiles ? Palette.normal.background : Palette.banner.background))
-
+        if !returningHome {
+            self.createDismissSnapshot(container: .mainRight)
+        }
+        
         if self.lastOption != .playGame {
             // Show a screenshot and dismiss current view to leave the screenshot showing before showing new screens on top of it
             if let items = self.currentContainerItems {
-                // Hide any inset container views to avoid dodgy transitions
-                for item in items {
-                    if item.container == .rightInset {
-                        item.viewController.view.isHidden = true
-                    }
-                }
-                self.createDismissSnapshot(container: .mainRight)
-                self.dismissItems(items, removeSuboptions: changeOption) {
-                    self.dismissAndSelectCompletion(option: option, completion: completion)
+                self.dismissItems(items, animation: dismissAnimation, removeSuboptions: changeOption) {
+                    self.dismissAndSelectCompletion(option: option, animation: animation, completion: completion)
                 }
             } else {
-                self.dismissAndSelectCompletion(option: option, completion: completion)
+                self.dismissAndSelectCompletion(option: option, animation: animation, completion: completion)
             }
         } else {
             if self.changingPlayer {
                 self.playerPressed()
             }
-            self.dismissAndSelectCompletion(option: option, completion: completion)
+            self.dismissAndSelectCompletion(option: option, animation: animation, completion: completion)
         }
     }
     
-    private func dismissItems(_ items: [PanelContainerItem], sequence: Int = 0, removeSuboptions: Bool = true, completion: (()->())? = nil) {
+    private func dismissItems(_ items: [PanelContainerItem], animation: ViewAnimation = .none, sequence: Int = 0, removeSuboptions: Bool = true, completion: (()->())? = nil) {
         let viewController = items[sequence].viewController
         viewController.willDismiss()
-        viewController.dismiss(animated: false, hideDismissSnapshot: false, removeSuboptions: removeSuboptions, completion: viewController.didDismiss)
-        if sequence < items.count - 1 {
-            self.dismissItems(items, sequence: sequence + 1, removeSuboptions: removeSuboptions, completion: completion)
-        } else {
-            completion?()
-        }
+        // Animate views before dismissing view controller
+        ViewAnimator.animate(rootView: self.rootViewController.view,
+            clippingView: self.rootViewController.view(container: .mainRight),
+            oldViews: items.map{$0.viewController.view}, animation: animation, layout: true,
+             completion: {
+                viewController.dismiss(animated: false, hideDismissSnapshot: false, removeSuboptions: removeSuboptions, completion: viewController.didDismiss)
+                if sequence < items.count - 1 {
+                    self.dismissItems(items, sequence: sequence + 1, removeSuboptions: removeSuboptions, completion: completion)
+                } else {
+                    completion?()
+                }
+             }
+        )
     }
+
     
     private func setCurrentOption(option: MenuOption) {
         self.lastOption = self.currentOption
@@ -701,82 +728,81 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
         self.showNotification()
     }
     
-    private func dismissAndSelectCompletion(option: MenuOption, completion: (()->())? = nil) {
+    private func dismissAndSelectCompletion(option: MenuOption, animation: ViewAnimation, completion: (()->())? = nil) {
         self.currentContainerItems = []
-        self.invokeOption(option) {
+        self.invokeOption(option, animation: animation) {
             self.rootViewController.view.isUserInteractionEnabled = true
+            completion?()
         }
-        if option == .playGame || option == .changePlayer {
-            // Returning home - hide the disimiss view
-            self.hideDismissSnapshot()
-            self.rootViewController.view.isUserInteractionEnabled = true
-        }
-        completion?()
     }
     
-    private func invokeOption(_ option: MenuOption, completion: (()->())?) {
+    private func invokeOption(_ option: MenuOption, animation: ViewAnimation, completion: (()->())?) {
+        
+        self.swipeDelegate = nil
         
         switch option {
         case .playGame:
-            break
+            completion?()
 
         case .personalResults, .everyoneResults:
-            let title = (option == .personalResults ? "Personal" : "Everyone")
-            let filename = "\(title)Dashboard"
             let viewController = DashboardViewController.create(
-                dashboardNames: [DashboardName(title: title, returnTo: title, fileName: filename, helpId: "\(title.lowercased())Results")], completion: self.optionCompletion)
-            self.presentInContainers([PanelContainerItem(viewController: viewController, container: .mainRight)], animated: true, completion: completion)
+                dashboardNames: [
+                    DashboardName(title: "Personal", returnTo: "Personal", fileName: "PersonalDashboard", helpId: "ersonalResults"),
+                    DashboardName(title: "Everyone", returnTo: "Everyone", fileName: "EveryoneDashboard", helpId: "everyoneResults")],
+                showCarousel: false, initialPage: (animation.leftMovement ? 0 : 1),
+                completion: self.optionCompletion)
+            self.presentInContainers([PanelContainerItem(viewController: viewController, container: .mainRight)], animation: animation, completion: completion)
             
         case .highScores:
             let viewController = DashboardViewController.create(
-                dashboardNames: [DashboardName(title: "High Scores", fileName: "HighScoresDashboard", helpId: "highScores")], completion: self.optionCompletion)
-            self.presentInContainers([PanelContainerItem(viewController: viewController, container: .mainRight)], animated: true, completion: completion)
+                dashboardNames: [DashboardName(title: "High Scores", fileName: "HighScoresDashboard", helpId: "highScores")], showCarousel: false, completion: self.optionCompletion)
+            self.presentInContainers([PanelContainerItem(viewController: viewController, container: .mainRight)], animation: animation, completion: completion)
             
         case .awards:
             let viewController = DashboardViewController.create( title: "Awards",
                  dashboardNames: [DashboardName(title: "Awards",  fileName: "AwardsDashboard",  helpId: "awards")],
-                 allowSync: false, backgroundColor: Palette.normal, bottomInset: 0, completion: self.optionCompletion)
+                 allowSync: false, backgroundColor: Palette.normal, bottomInset: 0,
+                 showCarousel: false, completion: self.optionCompletion)
             var items = [PanelContainerItem(viewController: viewController, container: .main)]
             
-            if self.rootViewController.isVisible(container: .rightInset) {
+            if self.rootViewController.isVisible(container: .right) {
                 let detailViewController = AwardDetailViewController.create()
                 detailViewController.rootViewController = self.rootViewController
                 detailViewController.rootViewController.detailDelegate = detailViewController
                 viewController.awardDetail = detailViewController
-                items.append(PanelContainerItem(viewController: detailViewController, container: .rightInset))
+                items.append(PanelContainerItem(viewController: detailViewController, container: .right))
             }
             
-            self.presentInContainers(items, rightPanelTitle: "", animated: true, completion: completion)
+            self.presentInContainers(items, rightPanelTitle: "", animation: animation, completion: completion)
             
         case .profiles:
             let viewController = PlayersViewController.create(completion: self.optionCompletion)
             var items = [PanelContainerItem(viewController: viewController, container: .main)]
             var title = ""
             
-            if self.rootViewController.isVisible(container: .rightInset) {
+            if self.rootViewController.isVisible(container: .right) {
                 let playerMO = Scorecard.shared.findPlayerByPlayerUUID(Scorecard.settings.thisPlayerUUID)!
                 let playerDetail = PlayerDetail()
                 playerDetail.fromManagedObject(playerMO: playerMO)
-                self.rootViewController.rightPanelDefaultScreenColors(rightInsetColor: Palette.normal.background)
                 let detailViewController = PlayerDetailViewController.create(playerDetail: playerDetail, mode: .amend, playersViewDelegate: viewController, dismissOnSave: false)
                 detailViewController.rootViewController = self.rootViewController
                 detailViewController.rootViewController.detailDelegate = detailViewController
                 viewController.playerDetailView = detailViewController
-                items.append(PanelContainerItem(viewController: detailViewController, container: .rightInset))
+                items.append(PanelContainerItem(viewController: detailViewController, container: .right))
                 title = playerDetail.name
             }
             
-            self.presentInContainers(items, rightPanelTitle: title, animated: true, completion: completion)
+            self.presentInContainers(items, rightPanelTitle: title, animation: animation, completion: completion)
             
         case .settings:
             // Need to invoke settings from root view controller
-            if let settingsViewController = self.rootViewController.invokeOption(option, completion: completion) {
+            if let settingsViewController = self.rootViewController.invokeOption(option, animation: animation, completion: completion) {
                 self.currentContainerItems = [PanelContainerItem(viewController: settingsViewController, container: .mainRight)]
             }
             
         default:
             // Not a genuine new option - execute via root view controller
-            self.rootViewController.invokeOption(option, completion: completion)
+            self.rootViewController.invokeOption(option, animation: animation, completion: completion)
         }
     }
     
@@ -788,9 +814,9 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
         }
     }
     
-    private func presentInContainers(_ items: [PanelContainerItem], rightPanelTitle: String? = nil, animated: Bool, completion: (() -> ())?) {
+    private func presentInContainers(_ items: [PanelContainerItem], rightPanelTitle: String? = nil, animation: ViewAnimation, completion: (() -> ())?) {
         self.currentContainerItems = items
-        self.rootViewController.presentInContainers(items, rightPanelTitle: rightPanelTitle, animated: animated, completion: completion)
+        self.rootViewController.presentInContainers(items, rightPanelTitle: rightPanelTitle, animation: animation, completion: completion)
     }
     
     // MARK: - Function to present and dismiss this view ==============================================================

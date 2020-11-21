@@ -314,8 +314,7 @@ class AwardsTileView: DashboardTileView, AwardCollectionDelegate, UICollectionVi
         var shown = false
         if let viewController = self.parentDashboardView?.parentViewController {
             if let awardDetail = viewController.awardDetail {
-                viewController.setRightPanel(title: (overrideTitle ?? mode.rawValue), caption: "")
-                awardDetail.show(awards: self.awards, playerUUID: Scorecard.settings.thisPlayerUUID, award: award, mode: mode)
+                awardDetail.show(title: (overrideTitle ?? mode.rawValue), awards: self.awards, playerUUID: Scorecard.settings.thisPlayerUUID, award: award, mode: mode)
                 shown = true
             }
         }

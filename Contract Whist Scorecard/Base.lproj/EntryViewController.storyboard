@@ -375,6 +375,7 @@
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="etq-le-R2n"/>
                         <color key="backgroundColor" name="Background"/>
+                        <accessibility key="accessibilityConfiguration" identifier="entryView"/>
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstAttribute="top" secondItem="Weo-LM-Q3A" secondAttribute="top" id="2Ss-G3-OwK"/>

@@ -78,7 +78,7 @@ extension CGRect {
         }
     }
 
-    func offsetBy(dx: CGFloat, dy: CGFloat) -> CGRect {
+    func offsetBy(dx: CGFloat = 0.0, dy: CGFloat = 0.0) -> CGRect {
         return CGRect(x: self.minX + dx, y: self.minY + dy, width: self.width, height: self.height)
     }
     
@@ -86,7 +86,7 @@ extension CGRect {
         return CGRect(x: self.minX + offset.x, y: self.minY + offset.y, width: self.width, height: self.height)
     }
     
-    func grownBy(dx: CGFloat, dy: CGFloat) -> CGRect {
+    func grownBy(dx: CGFloat = 0.0, dy: CGFloat = 0.0) -> CGRect {
         return CGRect(x: self.minX - dx, y: self.minY - dy, width: self.width + (2 * dx), height: self.height + (2 * dy))
     }
 }

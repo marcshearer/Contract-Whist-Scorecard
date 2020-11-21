@@ -264,7 +264,6 @@ class SelectPlayersViewController: ScorecardViewController, SyncDelegate, Button
                     }
                 }
                 if let playerDetailView = self.playerDetailView, let playerDetail = returnedList.first {
-                    self.setRightPanel(title: playerDetail.name, caption: "")
                     playerDetailView.refresh(playerDetail: playerDetail, mode: .display)
                 }
             }

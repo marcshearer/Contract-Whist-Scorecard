@@ -399,7 +399,6 @@ class RelatedPlayersView : UIView, UITableViewDelegate, UITableViewDataSource, S
         let selectedIndex = button.tag
         let playerDetail = self.playerDetailList[selectedIndex].playerDetail
         if let playerDetailView = self.playerDetailView {
-            self.parent.setRightPanel(title: playerDetail.name, caption: "")
             playerDetailView.refresh(playerDetail: playerDetail, mode: .display)
         } else {
             PlayerDetailViewController.show(from: self.parent, playerDetail: playerDetail, mode: .display, sourceView: self)

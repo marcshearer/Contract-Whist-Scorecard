@@ -218,7 +218,6 @@ class PlayersViewController: ScorecardViewController, PlayersViewDelegate, UICol
     func amendPlayer(at indexPath: IndexPath) {
         let playerDetail = self.playerDetailList[indexPath.row]
         if let playerDetailView = self.playerDetailView {
-            self.setRightPanel(title: playerDetail.name, caption: "")
             playerDetailView.refresh(playerDetail: playerDetail, mode: .amend)
         } else {
             PlayerDetailViewController.show(from: self, playerDetail: playerDetail, mode: .amend, sourceView: self.view, playersViewDelegate: self, returnTo: "Return to Profiles")
@@ -343,7 +342,6 @@ class PlayersViewController: ScorecardViewController, PlayersViewDelegate, UICol
     
     private func hideDetail() {
         self.playerDetailView?.hide()
-        self.setRightPanel(title: "", caption: "")
     }
     
     private func forEachCell(_ action: (String, PlayerCell)->()) {

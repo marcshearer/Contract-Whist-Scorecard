@@ -1105,11 +1105,6 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
     
     // MARK: - Utility routines ======================================================================== -
     
-    public func setRightPanel(title: String, caption: String) {
-        self.rootViewController?.rightTitleLabel?.text = title
-        self.rootViewController?.rightCaptionLabel.text = caption
-    }
-    
     public func showLastGame() {
         let title = "Last Game\nPlayed"
         var caption = ""
@@ -1124,6 +1119,11 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
             caption = Utility.dateString(datePlayed, format: format, localized: false)
         }
         self.setRightPanel(title: title, caption: caption)
+    }
+    
+    public func setRightPanel(title: String, caption: String) {
+        self.rootViewController?.rightTitleLabel?.text = title
+        self.rootViewController?.rightCaptionLabel.text = caption
     }
     
     public var containerBanner: Bool {

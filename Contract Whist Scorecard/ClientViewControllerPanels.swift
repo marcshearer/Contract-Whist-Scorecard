@@ -28,7 +28,7 @@ protocol PanelContainer {
     
     func allocateContainerSizes()
     
-    func presentInContainers(_ items: [PanelContainerItem], rightPanelTitle: String?, animation: ViewAnimation, duration: TimeInterval?, completion: (() -> ())?)
+    func presentInContainers(_ items: [PanelContainerItem], animation: ViewAnimation, duration: TimeInterval?, completion: (() -> ())?)
         
     @discardableResult func invokeOption(_ option: MenuOption, animation: ViewAnimation, completion: (()->())?) -> ScorecardViewController?
     
@@ -41,13 +41,9 @@ protocol PanelContainer {
 
 extension PanelContainer {
     func presentInContainers(_ items: [PanelContainerItem], animation: ViewAnimation, completion: (() -> ())?) {
-        presentInContainers(items, rightPanelTitle: nil, animation: animation, duration: nil, completion: completion)
+        presentInContainers(items, animation: animation, duration: nil, completion: completion)
     }
-    
-    func presentInContainers(_ items: [PanelContainerItem], rightPanelTitle: String?, animation: ViewAnimation, completion: (() -> ())?) {
-        presentInContainers(items, rightPanelTitle: rightPanelTitle, animation: animation, duration: nil, completion: completion)
-    }
-    
+        
     func invokeOption(_ option: MenuOption, completion: (()->())?) -> ScorecardViewController? {
         invokeOption(option, animation: .none, completion: completion)
     }
@@ -243,18 +239,12 @@ extension ClientViewController : PanelContainer {
         return viewController
     }
     
-    public func presentInContainers(_ items: [PanelContainerItem], rightPanelTitle: String? = nil, animation: ViewAnimation = .fade, duration: TimeInterval? = nil, completion: (() -> ())?) {
+    public func presentInContainers(_ items: [PanelContainerItem], animation: ViewAnimation = .fade, duration: TimeInterval? = nil, completion: (() -> ())?) {
         if let rootViewController = self.rootViewController, let rootView = self.view {
             let duration = duration ?? 0.5
             var animateViews: [(view: UIView, container: Container, frame: CGRect)] = []
             
             let animateRightPanel = (animation.leftMovement || animation.rightMovement) && animation.newEnters && self.isVisible(container: .right)
-            if animateRightPanel {
-                rootView.bringSubviewToFront(self.rightContainer)
-            }
-            if let title = rightPanelTitle {
-                self.setRightPanel(title: title, caption: "")
-            }
             for item in items {
                 Utility.debugMessage("Client", "Show \(item.viewController.className)")
                 let container = item.container

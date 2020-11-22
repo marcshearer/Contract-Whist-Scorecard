@@ -24,6 +24,7 @@ class AwardDetailViewController: ScorecardViewController, AwardDetail, DetailDel
         
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.view.backgroundColor = Palette.banner.background
         self.awardTitleLabel.textColor = Palette.banner.text
         self.awardDetailView.set(backgroundColor: Palette.banner.background, textColor: Palette.banner.text, detailFont: UIFont.systemFont(ofSize: 17), shadow: false, dismiss: false, widthPercent: 100)
     }

@@ -674,15 +674,15 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
         let returningHome = (option == .changePlayer || option == .playGame)
         let dismissAnimation: ViewAnimation = (returningHome ? (self.lastOption == .settings ? .uncoverToBottom : .uncoverToRight) : .none)
         
+       if !returningHome {
+            self.createDismissSnapshot(container: .mainRight)
+        }
+        
         if returningHome {
             self.showLastGame()
         }
 
-        if !returningHome {
-            self.createDismissSnapshot(container: .mainRight)
-        }
-        
-        if self.lastOption != .playGame {
+         if self.lastOption != .playGame {
             // Show a screenshot and dismiss current view to leave the screenshot showing before showing new screens on top of it
             if let items = self.currentContainerItems {
                 self.dismissItems(items, animation: dismissAnimation, removeSuboptions: changeOption) {
@@ -773,12 +773,11 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
                 items.append(PanelContainerItem(viewController: detailViewController, container: .right))
             }
             
-            self.presentInContainers(items, rightPanelTitle: "", animation: animation, completion: completion)
+            self.presentInContainers(items, animation: animation, completion: completion)
             
         case .profiles:
             let viewController = PlayersViewController.create(completion: self.optionCompletion)
             var items = [PanelContainerItem(viewController: viewController, container: .main)]
-            var title = ""
             
             if self.rootViewController.isVisible(container: .right) {
                 let playerMO = Scorecard.shared.findPlayerByPlayerUUID(Scorecard.settings.thisPlayerUUID)!
@@ -789,10 +788,9 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
                 detailViewController.rootViewController.detailDelegate = detailViewController
                 viewController.playerDetailView = detailViewController
                 items.append(PanelContainerItem(viewController: detailViewController, container: .right))
-                title = playerDetail.name
             }
             
-            self.presentInContainers(items, rightPanelTitle: title, animation: animation, completion: completion)
+            self.presentInContainers(items, animation: animation, completion: completion)
             
         case .settings:
             // Need to invoke settings from root view controller
@@ -814,9 +812,9 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
         }
     }
     
-    private func presentInContainers(_ items: [PanelContainerItem], rightPanelTitle: String? = nil, animation: ViewAnimation, completion: (() -> ())?) {
+    private func presentInContainers(_ items: [PanelContainerItem], animation: ViewAnimation, completion: (() -> ())?) {
         self.currentContainerItems = items
-        self.rootViewController.presentInContainers(items, rightPanelTitle: rightPanelTitle, animation: animation, completion: completion)
+        self.rootViewController.presentInContainers(items, animation: animation, completion: completion)
     }
     
     // MARK: - Function to present and dismiss this view ==============================================================

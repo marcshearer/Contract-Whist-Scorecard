@@ -139,6 +139,7 @@ class ViewAnimator {
                         if animation.oldLeaves {
                             oldView.frame = oldFrame[index]
                         }
+                        oldView.isHidden = true
                     }
                     completion?()
                 },

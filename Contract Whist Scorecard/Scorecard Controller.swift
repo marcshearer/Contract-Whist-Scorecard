@@ -214,7 +214,7 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
                     // Dismissing this view to present another but want it to look like new view is presenting (animated) on top of this one
                     // Put up a screenshot of this view behind it on the parent, dismiss this one without animation, and then when next view is visible
                     // remove the screenshot from behind it
-                    self.parentViewController.createDismissSnapshot(needScreenshot: true)
+                    self.parentViewController.createDismissSnapshot()
                     self.parentViewController.dismissView = self.activeView
                     animated = false
                 }
@@ -381,9 +381,9 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
         let existingViewController = self.scorepadViewController != nil
         
         if let parentViewController = self.fromViewController() {
-            self.scorepadViewController = ScorepadViewController.show(from: parentViewController, appController: self, existing: self.scorepadViewController)
+            self.scorepadViewController = ScorepadViewController.show(from: parentViewController, appController: self) // TODO Reuse , existing: self.scorepadViewController)
             if existingViewController {
-                self.scorepadViewController.reloadScorepad()
+                // self.scorepadViewController.reloadScorepad() TODO
             }
         }
         return self.scorepadViewController
@@ -839,15 +839,13 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
         }
     }
     
-    internal func createDismissSnapshot(container: Container? = nil, needScreenshot: Bool = false) {
+    internal func createDismissSnapshot(container: Container? = nil) {
         if var rootViewController = self.rootViewController, let view = rootViewController.view {
             Utility.debugMessage("Scorecard", "Creating dismiss image view on \(self.className)")
             
             let containerFrame = self.rootViewController.view(container: container).frame
             // Need a real screen shot when doing view controller transitions
-            let dismissSnapshotView = (needScreenshot ?
-                                        UIImageView(image: Utility.screenshot()) :
-                                        Utility.snapshot(view: self.rootViewController.view, frame: containerFrame) ?? UIView()) // TODO
+            let dismissSnapshotView = Utility.snapshot(view: self.rootViewController.view, frame: containerFrame) ?? UIView()
             dismissSnapshotView.accessibilityIdentifier = "dismissSnapshot"
             rootViewController.dismissSnapshotStack.append(dismissSnapshotView)
             

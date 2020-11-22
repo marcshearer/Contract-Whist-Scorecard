@@ -288,9 +288,11 @@ extension ClientViewController : PanelContainer {
             var oldViews: [UIView] = []
             if let snapshot = self.rootViewController.dismissSnapshotStack.last {
                 if let snapshotClippingView = snapshot.superview {
-                    // Bring clipping view to front if necessary
-                    if animation.oldLeaves {
-                        rootView.bringSubviewToFront(snapshotClippingView)
+                    if snapshotClippingView != rootView {
+                        // Bring clipping view to front if necessary
+                        if animation.oldLeaves {
+                            rootView.bringSubviewToFront(snapshotClippingView)
+                        }
                     }
                 }
                 oldViews.append(snapshot)

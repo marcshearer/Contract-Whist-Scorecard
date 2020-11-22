@@ -135,12 +135,10 @@ class ViewAnimator {
                 completion: {
                     clippingView.clipsToBounds = clipToBounds
                     for (index, oldView) in oldViews.enumerated() {
-                        // Reposition old views and hide them
+                        // Reposition old views back to where they were - assume caller removes or hides them
                         if animation.oldLeaves {
                             oldView.frame = oldFrame[index]
                         }
-                        oldView.isHidden = true
-                        oldView.alpha = 1.0
                     }
                     completion?()
                 },
@@ -159,9 +157,6 @@ class ViewAnimator {
                         if animation.oldLeaves {
                             // Move old off screen
                             oldView.frame = oldView.frame.offsetBy(offset: animation.offset(by: clippingView.frame.size, multiplier: -1))
-                        }
-                        if animation.fades {
-                            oldView.alpha = 0.0
                         }
                     }
                 }

@@ -9,8 +9,9 @@
 import Foundation
 import UIKit
 import CloudKit
-
-class GameLocation {
+import MapKit 
+class GameLocation: Equatable {
+        
     var latitude: CLLocationDegrees!
     var longitude: CLLocationDegrees!
     var description: String!
@@ -24,6 +25,10 @@ class GameLocation {
         self.longitude = longitude
         self.description = description
         self.subDescription = subDescription
+    }
+    
+    static func == (lhs: GameLocation, rhs: GameLocation) -> Bool {
+        return lhs.latitude == rhs.latitude && lhs.longitude == rhs.longitude && lhs.description == rhs.description && lhs.subDescription == rhs.subDescription
     }
     
     public func setLocation(latitude: CLLocationDegrees!, longitude: CLLocationDegrees) {
@@ -54,4 +59,23 @@ class GameLocation {
         return thisLocation.distance(from: location)
     }
     
+    public static func dropPin(_ mapView: MKMapView, location: GameLocation) {
+        // Create map annotation - don't do it in test mode since upsets tests
+        let annotation = MKPointAnnotation()
+        
+        // Remove existing pins
+        let allAnnotations = mapView.annotations
+        mapView.removeAnnotations(allAnnotations)
+        
+        if location.locationSet {
+            if let latitude = location.latitude, let longitude = location.longitude {
+                annotation.coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+                mapView.addAnnotation(annotation)
+                
+                // Set the zoom level
+                let region = MKCoordinateRegion.init(center: annotation.coordinate, latitudinalMeters: 2e5, longitudinalMeters: 2e5)
+                mapView.setRegion(region, animated: false)
+            }
+        }
+    }
 }

@@ -73,6 +73,9 @@ class GameDetailPanelViewController: ScorecardViewController, UITableViewDataSou
         
         // Setup help
         self.setupHelpView()
+        
+        // Register cell
+        GameDetailCell.register(playerTableView)
     }
     
     override internal func didDismiss() {
@@ -216,18 +219,19 @@ class GameDetailPanelViewController: ScorecardViewController, UITableViewDataSou
     }
     
     internal func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 60
+        return GameDetailCell.heightForRow()
     }
     
     internal func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Player", for: indexPath) as! GameDetailPlayerCell
+        let cell = GameDetailCell.dequeue(tableView, for: indexPath)
         
         var score: Int?
         let playerNumber = self.sortedScores[indexPath.row].playerNumber
         if Scorecard.game.roundComplete(1) {
             score = self.latestScores[playerNumber]
         }
-        cell.set(playerNumber: playerNumber, score: score)
+        let playerMO = Scorecard.game.player(enteredPlayerNumber: playerNumber).playerMO!
+        cell.set(playerName: playerMO.name!, playerThumbnail: playerMO.thumbnail, score: score)
         
         return cell
     }
@@ -242,25 +246,6 @@ class GameDetailPanelViewController: ScorecardViewController, UITableViewDataSou
         return gameDetailPanelViewController
     }
     
-}
-
-class GameDetailPlayerCell: UITableViewCell {
-    @IBOutlet fileprivate weak var thumbnailView: ThumbnailView!
-    @IBOutlet fileprivate weak var nameLabel: UILabel!
-    @IBOutlet fileprivate weak var scoreLabel: UILabel!
-    
-    override func awakeFromNib() {
-        self.thumbnailView.set(frame: CGRect(x: 0, y: 16, width: 44, height: 44))
-        self.nameLabel.textColor = Palette.rightGameDetailPanel.text
-        self.scoreLabel.textColor = Palette.rightGameDetailPanel.text
-    }
-    
-    fileprivate func set(playerNumber: Int, score: Int?) {
-        let playerMO = Scorecard.game.player(enteredPlayerNumber: playerNumber).playerMO!
-        self.thumbnailView.set(playerMO: playerMO, nameHeight: 0)
-        self.nameLabel.text = playerMO.name
-        self.scoreLabel.text = (score == nil ? "-" : "\(score!)")
-    }
 }
 
 extension GameDetailPanelViewController {

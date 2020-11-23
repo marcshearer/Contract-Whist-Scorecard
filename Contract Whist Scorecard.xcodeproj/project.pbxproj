@@ -207,6 +207,9 @@
 		B2C0966B24616E4900C19447 /* Player Managed Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C0966A24616E4900C19447 /* Player Managed Object.swift */; };
 		B2C19E932370541E009485E0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B2C19E922370541E009485E0 /* Assets.xcassets */; };
 		B2C5840E2567BFD6009E0478 /* Custom View Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C5840D2567BFD5009E0478 /* Custom View Animations.swift */; };
+		B2CAAEEB256A6BC900B35F6F /* GameDetailCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2CAAEEA256A6BC900B35F6F /* GameDetailCell.xib */; };
+		B2CAAEF1256A6D0E00B35F6F /* GameDetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2CAAEF0256A6D0E00B35F6F /* GameDetailCell.swift */; };
+		B2CAAEFF256A743D00B35F6F /* ClientViewControllerLastGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2CAAEFE256A743D00B35F6F /* ClientViewControllerLastGame.swift */; };
 		B2CB5C5224669CDA009B44C5 /* Client Controller Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2CB5C5124669CDA009B44C5 /* Client Controller Class.swift */; };
 		B2CBB81724A9D71400B336CB /* CreatePlayerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2CBB81624A9D71400B336CB /* CreatePlayerView.xib */; };
 		B2CBB81924A9D81500B336CB /* CreatePlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2CBB81824A9D81500B336CB /* CreatePlayerView.swift */; };
@@ -510,6 +513,9 @@
 		B2C0966A24616E4900C19447 /* Player Managed Object.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Player Managed Object.swift"; sourceTree = "<group>"; };
 		B2C19E922370541E009485E0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B2C5840D2567BFD5009E0478 /* Custom View Animations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Custom View Animations.swift"; sourceTree = "<group>"; };
+		B2CAAEEA256A6BC900B35F6F /* GameDetailCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GameDetailCell.xib; sourceTree = "<group>"; };
+		B2CAAEF0256A6D0E00B35F6F /* GameDetailCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameDetailCell.swift; sourceTree = "<group>"; };
+		B2CAAEFE256A743D00B35F6F /* ClientViewControllerLastGame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientViewControllerLastGame.swift; sourceTree = "<group>"; };
 		B2CB5C5124669CDA009B44C5 /* Client Controller Class.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Client Controller Class.swift"; sourceTree = "<group>"; };
 		B2CBB81624A9D71400B336CB /* CreatePlayerView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CreatePlayerView.xib; sourceTree = "<group>"; };
 		B2CBB81824A9D81500B336CB /* CreatePlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePlayerView.swift; sourceTree = "<group>"; };
@@ -668,6 +674,8 @@
 			isa = PBXGroup;
 			children = (
 				B204A75F250DF1B100248915 /* GameDetailPanelViewController.storyboard */,
+				B2CAAEEA256A6BC900B35F6F /* GameDetailCell.xib */,
+				B2CAAEF0256A6D0E00B35F6F /* GameDetailCell.swift */,
 				B204A762250DF1FA00248915 /* GameDetailPanelViewController.swift */,
 			);
 			name = "Game Detail Panel";
@@ -823,6 +831,7 @@
 				B22789221FB882F7009BABCA /* ClientViewController.storyboard */,
 				B2D2D2DB1ED9975A00CA7B3A /* ClientViewController.swift */,
 				B285C88524EE59F700ABFC04 /* ClientViewControllerPanels.swift */,
+				B2CAAEFE256A743D00B35F6F /* ClientViewControllerLastGame.swift */,
 			);
 			name = Client;
 			sourceTree = "<group>";
@@ -1871,6 +1880,7 @@
 				B247A72B248359F500591BBA /* TitleBar.xib in Resources */,
 				B243385922E0A6C3002EBD40 /* SelectedPlayersView.xib in Resources */,
 				B22789001FB83AA7009BABCA /* GetStartedViewController.storyboard in Resources */,
+				B2CAAEEB256A6BC900B35F6F /* GameDetailCell.xib in Resources */,
 				B2BE8690234C6BF000766CF2 /* PlayerSelectionView.xib in Resources */,
 				B24C5A5124C3165E0069759A /* AwardsTileView.xib in Resources */,
 				B227893F1FB893C9009BABCA /* SettingsViewController.storyboard in Resources */,
@@ -2065,6 +2075,7 @@
 				B2DA893E1F3CC89C008EE96C /* Comms Handler.swift in Sources */,
 				B206A1381E50526100E26E96 /* LocationViewController.swift in Sources */,
 				B2144C4F2465334200CF56B7 /* Version.swift in Sources */,
+				B2CAAEF1256A6D0E00B35F6F /* GameDetailCell.swift in Sources */,
 				B2B1802821196166008D3BAA /* Contract_Whist_Scorecard.xcdatamodeld in Sources */,
 				B2C0966B24616E4900C19447 /* Player Managed Object.swift in Sources */,
 				B23970D324AF511900E3C2A9 /* DataTableTileHighScoreDataSource.swift in Sources */,
@@ -2109,6 +2120,7 @@
 				B235D78E2510829C002F5BB6 /* DealView.swift in Sources */,
 				B2C054781FB8B55700846F6E /* ConfirmCountViewController.swift in Sources */,
 				B2519457230C4284006240DE /* Custom Transitions.swift in Sources */,
+				B2CAAEFF256A743D00B35F6F /* ClientViewControllerLastGame.swift in Sources */,
 				CC4CC0F91DEADC32007FB24F /* AppDelegate.swift in Sources */,
 				B260AAC3251E345800CD1EB3 /* LeaderboardView.swift in Sources */,
 				B2F7281D1F7199AE006F0941 /* RabbitMQ Class.swift in Sources */,

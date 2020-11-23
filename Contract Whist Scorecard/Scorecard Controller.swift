@@ -214,7 +214,7 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
                     // Dismissing this view to present another but want it to look like new view is presenting (animated) on top of this one
                     // Put up a screenshot of this view behind it on the parent, dismiss this one without animation, and then when next view is visible
                     // remove the screenshot from behind it
-                    self.parentViewController.createDismissSnapshot()
+                    self.parentViewController.createDismissSnapshot(requireScreenshot: true)
                     self.parentViewController.dismissView = self.activeView
                     animated = false
                 }
@@ -634,8 +634,6 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
     internal var container: Container? = .none
     internal var rootViewController: RootViewController!
     internal var menuController: MenuController!
-    internal var rightTitleLabel: UILabel!
-    internal var rightCaptionLabel: UILabel!
     internal var helpView: HelpView!
     internal var popoverSourceView: UIView!
     internal var popoverVerticalOffset: CGFloat!
@@ -839,14 +837,20 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
         }
     }
     
-    internal func createDismissSnapshot(container: Container? = nil) {
+    internal func createDismissSnapshot(container: Container? = nil, requireScreenshot: Bool = false) {
         if var rootViewController = self.rootViewController, let view = rootViewController.view {
             Utility.debugMessage("Scorecard", "Creating dismiss image view on \(self.className)")
             
             let containerFrame = self.rootViewController.view(container: container).frame
             // Need a real screen shot when doing view controller transitions
-            let dismissSnapshotView = Utility.snapshot(view: self.rootViewController.view, frame: containerFrame) ?? UIView()
-            dismissSnapshotView.accessibilityIdentifier = "dismissSnapshot"
+            var dismissSnapshotView: UIView
+            if requireScreenshot {
+                dismissSnapshotView = UIImageView(image: Utility.screenshot())
+                dismissSnapshotView.accessibilityIdentifier = "dismissScreenshot"
+            } else {
+                dismissSnapshotView = Utility.snapshot(view: self.rootViewController.view, frame: containerFrame) ?? UIView()
+                dismissSnapshotView.accessibilityIdentifier = "dismissSnapshot"
+            }
             rootViewController.dismissSnapshotStack.append(dismissSnapshotView)
             
             if container == nil {
@@ -1102,27 +1106,6 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
     }
     
     // MARK: - Utility routines ======================================================================== -
-    
-    public func showLastGame() {
-        let title = "Last Game\nPlayed"
-        var caption = ""
-        if let playerMO = Scorecard.shared.findPlayerByPlayerUUID(Scorecard.settings.thisPlayerUUID),
-            let datePlayed = playerMO.datePlayed {
-            var format: String
-            if Date.startOfYear(from: datePlayed) != Date.startOfYear() {
-                format = "dd MMM YYYY"
-            } else {
-                format = "dd MMM"
-            }
-            caption = Utility.dateString(datePlayed, format: format, localized: false)
-        }
-        self.setRightPanel(title: title, caption: caption)
-    }
-    
-    public func setRightPanel(title: String, caption: String) {
-        self.rootViewController?.rightTitleLabel?.text = title
-        self.rootViewController?.rightCaptionLabel.text = caption
-    }
     
     public var containerBanner: Bool {
         return self.menuController?.isVisible ?? false && (self.container == .main || self.container == .mainRight)

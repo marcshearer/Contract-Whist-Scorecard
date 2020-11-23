@@ -679,7 +679,7 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
         }
         
         if returningHome {
-            self.showLastGame()
+            self.rootViewController.showLastGame()
         }
 
          if self.lastOption != .playGame {
@@ -809,6 +809,7 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
             // Completing option but menu no longer visible - reset and re-allocate screen space
             self.reset()
             self.rootViewController.allocateContainerSizes()
+            self.rootViewController.showLastGame()
         }
     }
     

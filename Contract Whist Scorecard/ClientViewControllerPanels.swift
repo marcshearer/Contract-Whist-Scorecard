@@ -37,6 +37,8 @@ protocol PanelContainer {
     func panelhelpPressed(alwaysNext: Bool, completion: ((Bool)->())?)
     
     func setNoSettingsRestart()
+    
+    func showLastGame()
 }
 
 extension PanelContainer {
@@ -62,6 +64,9 @@ protocol DetailDelegate {
 extension ClientViewController : PanelContainer {
     
     internal func panelLayoutSubviews() {
+        
+        self.rightPanelLayoutSubviews()
+        
         let menuVisible = self.menuController?.isVisible ?? false
         self.topSection.isHidden = menuVisible
         self.thisPlayerThumbnail.isHidden = menuVisible

@@ -241,83 +241,83 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
                 // Check views
                 if let views = element.views {
                     for view in views {
-                        var cell: UIView?
-                        var frame: CGRect?
-                        if let from = element.itemFrom, let to = element.itemTo {
-                            for item in from...to {
-                                let indexPath = IndexPath(item: item, section: element.section)
-                                if let collectionView = view as? UICollectionView {
-                                    if indexPath.section < 0 || item > collectionView.numberOfItems(inSection: indexPath.section) {
-                                        break
-                                    }
-                                    let flowLayout = collectionView.collectionViewLayout
-                                    if indexPath.item < 0 {
-                                        let kind = UICollectionView.elementKindSectionHeader
-                                        let indexPath = IndexPath(item: 0, section: indexPath.section)
-                                        if let item = collectionView.supplementaryView(forElementKind: kind, at: indexPath) {
-                                            if let attributes = flowLayout.layoutAttributesForSupplementaryView(ofKind: kind, at: indexPath) {
-                                                frame = attributes.frame
-                                                if collectionView.bounds.intersects(frame!) {
-                                                    if !item.isHidden {
-                                                        cell = item
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    } else {
-                                        if let item = collectionView.cellForItem(at: indexPath) {
-                                            if let attributes = flowLayout.layoutAttributesForItem(at: indexPath) {
-                                                frame = attributes.frame
-                                                if collectionView.bounds.intersects(frame!) {
-                                                    if !item.isHidden {
-                                                        cell = item
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                } else if let tableView = view as? UITableView {
-                                    if indexPath.row < 0 {
-                                        let frame = tableView.rectForHeader(inSection: indexPath.section)
-                                        if tableView.bounds.intersects(frame) {
-                                            if let row = tableView.headerView(forSection: indexPath.section) {
-                                                if !row.isHidden {
-                                                    cell = row
-                                                }
-                                            }
-                                        }
-                                    } else {
-                                        if indexPath.section < 0 || item > tableView.numberOfRows(inSection: indexPath.section) {
+                        if !view.isHidden {
+                            var cell: UIView?
+                            var frame: CGRect?
+                            if let from = element.itemFrom, let to = element.itemTo {
+                                for item in from...to {
+                                    let indexPath = IndexPath(item: item, section: element.section)
+                                    if let collectionView = view as? UICollectionView {
+                                        if indexPath.section < 0 || item > collectionView.numberOfItems(inSection: indexPath.section) {
                                             break
                                         }
-                                        let frame = tableView.rectForRow(at: indexPath)
-                                        if tableView.bounds.intersects(frame) {
-                                            if let row = tableView.cellForRow(at: indexPath) {
-                                                if !row.isHidden {
-                                                    cell = row
+                                        let flowLayout = collectionView.collectionViewLayout
+                                        if indexPath.item < 0 {
+                                            let kind = UICollectionView.elementKindSectionHeader
+                                            let indexPath = IndexPath(item: 0, section: indexPath.section)
+                                            if let item = collectionView.supplementaryView(forElementKind: kind, at: indexPath) {
+                                                if let attributes = flowLayout.layoutAttributesForSupplementaryView(ofKind: kind, at: indexPath) {
+                                                    frame = attributes.frame
+                                                    if collectionView.bounds.intersects(frame!) {
+                                                        if !item.isHidden {
+                                                            cell = item
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        } else {
+                                            if let item = collectionView.cellForItem(at: indexPath) {
+                                                if let attributes = flowLayout.layoutAttributesForItem(at: indexPath) {
+                                                    frame = attributes.frame
+                                                    if collectionView.bounds.intersects(frame!) {
+                                                        if !item.isHidden {
+                                                            cell = item
+                                                        }
+                                                    }
                                                 }
                                             }
                                         }
-                                    }
-                                    frame = cell?.frame
-                                }
-                                if let cell = cell {
-                                    // Intersect the cell with the original collection / table to allow for partially hidden cells
-                                    if let callback = element.callback {
-                                        if let callbackFrame = callback(item, cell) {
-                                            frame = cell.superview!.convert(callbackFrame, from: cell)
+                                    } else if let tableView = view as? UITableView {
+                                        if indexPath.row < 0 {
+                                            let frame = tableView.rectForHeader(inSection: indexPath.section)
+                                            if tableView.bounds.intersects(frame) {
+                                                if let row = tableView.headerView(forSection: indexPath.section) {
+                                                    if !row.isHidden {
+                                                        cell = row
+                                                    }
+                                                }
+                                            }
                                         } else {
-                                            frame = nil
+                                            if indexPath.section < 0 || item > tableView.numberOfRows(inSection: indexPath.section) {
+                                                break
+                                            }
+                                            let frame = tableView.rectForRow(at: indexPath)
+                                            if tableView.bounds.intersects(frame) {
+                                                if let row = tableView.cellForRow(at: indexPath) {
+                                                    if !row.isHidden {
+                                                        cell = row
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        frame = cell?.frame
+                                    }
+                                    if let cell = cell {
+                                        // Intersect the cell with the original collection / table to allow for partially hidden cells
+                                        if let callback = element.callback {
+                                            if let callbackFrame = callback(item, cell) {
+                                                frame = cell.superview!.convert(callbackFrame, from: cell)
+                                            } else {
+                                                frame = nil
+                                            }
+                                        }
+                                        if let frame = frame {
+                                            let cellFrame = view.convert(frame, to: view.superview!)
+                                            activeFrames.append((frame: cellFrame.intersection(view.frame), view: view))
                                         }
                                     }
-                                    if let frame = frame {
-                                        let cellFrame = view.convert(frame, to: view.superview!)
-                                        activeFrames.append((frame: cellFrame.intersection(view.frame), view: view))
-                                    }
                                 }
-                            }
-                        } else {
-                            if !view.isHidden {
+                            } else {
                                 var frame: CGRect? = view.frame
                                 if let callback = element.callback {
                                     if let callbackFrame = callback(0, view) {

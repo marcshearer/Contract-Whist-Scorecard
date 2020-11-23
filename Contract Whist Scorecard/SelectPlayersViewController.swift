@@ -115,11 +115,11 @@ class SelectPlayersViewController: ScorecardViewController, SyncDelegate, Button
             self.roundCorners()
         }
         self.rotated = false
+        self.firstTime = false
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        self.firstTime = false
     }
     
     // MARK: - Form Presentation / Handling Routines =================================================== -

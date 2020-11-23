@@ -190,24 +190,7 @@ class HistoryDetailViewController: ScorecardViewController, UITableViewDataSourc
     }
     
     func dropPin() {
-        // Create map annotation
-        let annotation = MKPointAnnotation()
-        
-        // Remove existing pins
-        let allAnnotations = self.mapView.annotations
-        self.mapView.removeAnnotations(allAnnotations)
-        
-        if gameDetail.gameLocation.locationSet {
-            
-            let gameLocation = gameDetail.gameLocation
-        
-            annotation.coordinate = CLLocationCoordinate2D(latitude: gameLocation.latitude, longitude: gameLocation.longitude)
-            self.mapView.addAnnotation(annotation)
-            
-            // Set the zoom level
-            let region = MKCoordinateRegion.init(center: annotation.coordinate, latitudinalMeters: 2e5, longitudinalMeters: 2e5)
-            self.mapView.setRegion(region, animated: false)
-        }
+        GameLocation.dropPin(self.mapView, location: self.gameDetail.gameLocation)
     }
     
     func saveLocation() {

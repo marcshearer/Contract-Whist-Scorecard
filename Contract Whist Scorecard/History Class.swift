@@ -113,12 +113,12 @@ class History {
         return results
     }
     
-    func getParticipants(index: Int) {
+    private func getParticipants(index: Int) {
         // Fetch list of participants for a specific game in the games array from data store
         self.games[index].participant = History.loadParticipants(gameUUID: self.games[index].gameUUID)
     }
     
-    func loadAllParticipants() {
+    public func loadAllParticipants() {
         // Load all participants for all loaded history games
         for historyGame in self.games {
             if historyGame.participant == nil {

@@ -10,6 +10,7 @@ import UIKit
 import Combine
 import MessageUI
 import CoreData
+import MapKit
 
 struct MenuAction {
     var tag: Int
@@ -102,6 +103,8 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     internal var centeredFlowLayout = CenteredCollectionViewLayout()
     private var lastWidth: CGFloat?
     internal var noSettingsRestart = false
+    internal var lastGame: HistoryGame!
+    internal var lastGameUUID: String!
     
     internal var containers = false
     
@@ -115,9 +118,6 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     @IBOutlet internal weak var leftPanelWidthConstraint: NSLayoutConstraint!
     @IBOutlet internal weak var rightPanelLeadingConstraint: NSLayoutConstraint!
     @IBOutlet internal weak var rightPanelWidthConstraint: NSLayoutConstraint!
-
-    @IBOutlet internal weak var rightPanelTitleLabel: UILabel!
-    @IBOutlet internal weak var rightPanelCaptionLabel: UILabel!
 
     @IBOutlet internal weak var topSection: UIView!
     @IBOutlet internal weak var upperMiddleSection: UIView!
@@ -154,6 +154,14 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     @IBOutlet internal var menuHeightConstraints: [NSLayoutConstraint]!
     @IBOutlet internal var noMenuHeightConstraints: [NSLayoutConstraint]!
     @IBOutlet private weak var settingsBadgeButton: ShadowButton!
+    
+    @IBOutlet internal weak var rightPanelTitleLabel: UILabel!
+    @IBOutlet internal weak var rightPanelCaptionLabel: UILabel!
+    @IBOutlet internal weak var rightPanelPlayerTableView: UITableView!
+    @IBOutlet internal weak var rightPanelPlayerTableViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet internal weak var rightPanelLocationContainerView: UIView!
+    @IBOutlet internal weak var rightPanelMapView: MKMapView!
+    @IBOutlet internal weak var rightPanelLocationLabel: UILabel!
 
     // MARK: - IB Actions ============================================================================== -
         
@@ -217,17 +225,14 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Patch in right panel label
-        self.rightTitleLabel = self.rightPanelTitleLabel
-        self.rightCaptionLabel = self.rightPanelCaptionLabel
-        self.showLastGame()
-        
         // Show menu container if necessary
         self.allocateContainerSizes()
         if self.containers {
             self.menuPanelViewController = MenuPanelViewController.create()
             self.menuController = self.menuPanelViewController
             self.presentInContainers([PanelContainerItem(viewController: self.menuPanelViewController, container: Container.left)], animation: .none, completion: nil)
+            // Setup right panel last game
+            self.rightPanelViewDidLoad()
         }
         
         self.hideNavigationBar()
@@ -357,7 +362,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         Palette.ignoringGameBanners {
             
             self.panelLayoutSubviews()
-
+            
             if firstLayout || rotated {
                 self.setupBanner()
                 self.showThisPlayer()
@@ -506,7 +511,6 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         if self.containers {
             self.banner.set(title: self.containerTitle)
         }
-        self.showLastGame()
     }
     
     internal func didSelect(playerMO: PlayerMO) {
@@ -520,6 +524,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         self.createClientController()
         self.hidePlayerSelection()
         self.menuController?.refresh()
+        self.showLastGame()
     }
     
     internal func resizeView() {
@@ -612,6 +617,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         self.peerReloadData()
         self.updateSettingsBadge()
         self.menuController?.set(playingGame: false)
+        self.showLastGame()
         
         if createController {
             // Create controller after short delay

@@ -535,20 +535,8 @@ class LocationViewController: ScorecardViewController, UITableViewDataSource, UI
     
     private func dropPin() {
         // Create map annotation - don't do it in test mode since upsets tests
-        if self.newLocation.locationSet {
-            
-            let annotation = MKPointAnnotation()
-            
-            // Remove existing pins
-            let allAnnotations = self.locationMapView.annotations
-            self.locationMapView.removeAnnotations(allAnnotations)
-            
-            annotation.coordinate = CLLocationCoordinate2D(latitude: self.newLocation.latitude, longitude: self.newLocation.longitude)
-            self.locationMapView.addAnnotation(annotation)
-            
-            // Set the zoom level
-            let region = MKCoordinateRegion.init(center: annotation.coordinate, latitudinalMeters: 2e5, longitudinalMeters: 2e5)
-            self.locationMapView.setRegion(region, animated: false)
+        if self.newLocation.locationSet {            
+            GameLocation.dropPin(locationMapView, location: self.newLocation)
         }
     }
     

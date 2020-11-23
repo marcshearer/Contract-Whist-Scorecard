@@ -195,14 +195,18 @@ class PlayerDetailViewController: ScorecardViewController, PlayerDetailViewDeleg
     // MARK: - Player Detail View Delegate ============================================================= -
     
     internal func hide() {
+        self.playerNameLabel.isHidden = true
         self.tableViewContainer.isHidden = true
+        self.tableView.isHidden = true
     }
     
     internal func refresh(playerDetail: PlayerDetail, mode: DetailMode) {
         self.playerDetail = playerDetail
+        self.playerNameLabel.isHidden = true
         self.playerNameLabel.text = self.playerDetail.name
         self.mode = mode
         self.tableViewContainer.isHidden = false
+        self.tableView.isHidden = false
         self.setupBanner()
         self.tableView.reloadData()
     }

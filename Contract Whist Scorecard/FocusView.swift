@@ -13,8 +13,8 @@ class FocusView : UIView {
     private(set) var aroundFrame: CGRect!
     private var radius: CGFloat!
     private var fillColor: UIColor!
-    private var parentViewController: ScorecardViewController!
-    private var parentView: UIView!
+    private weak var parentViewController: ScorecardViewController!
+    private weak var parentView: UIView!
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)

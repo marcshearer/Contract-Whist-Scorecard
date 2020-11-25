@@ -33,7 +33,6 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
     private var firstTime = true
     private var rotated = false
     private var lastViewSize: CGSize!
-    private var roundSummaryViewController: RoundSummaryViewController!
     private var smallScreen = false
     private var saveButton = 0
     private var errorsButton = 1

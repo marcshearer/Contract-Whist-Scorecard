@@ -18,8 +18,8 @@
                 <outlet property="lowerViewGroupHeightConstraint" destination="V9g-FF-vFH" id="rgy-tM-pSY"/>
                 <outlet property="rightViewGroup" destination="7vQ-Tb-bGS" id="4km-gw-tHX"/>
                 <outlet property="titleLabel" destination="Rat-5l-zqR" id="PhJ-XQ-haD"/>
-                <outletCollection property="titleLabelInset" destination="m6o-oV-h4M" collectionClass="NSMutableArray" id="bBw-yE-hmU"/>
-                <outletCollection property="titleLabelInset" destination="X6r-jd-uz0" collectionClass="NSMutableArray" id="JPd-Ba-9ul"/>
+                <outlet property="titleLabelLeadingConstraint" destination="m6o-oV-h4M" id="sZh-Cg-gZk"/>
+                <outlet property="titleLabelTrailingConstraint" destination="X6r-jd-uz0" id="FuP-r6-kkN"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>

@@ -54,8 +54,8 @@ class SpeechBubbleView : UIView {
     private var arrowHeight: CGFloat = 16
     private var arrowWidth: CGFloat = 16 * 2 / 3
     private let textInset: CGFloat = 8
-    private var parentViewController: ScorecardViewController!
-    private var parentView: UIView!
+    private weak var parentViewController: ScorecardViewController!
+    private weak var parentView: UIView!
     private var overrideWidth: CGFloat?
     private var color: PaletteColor = Palette.buttonFace
     

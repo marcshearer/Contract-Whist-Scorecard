@@ -196,6 +196,7 @@
 		B2B755091E5B363200B1313B /* History Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B755081E5B363200B1313B /* History Class.swift */; };
 		B2B7550B1E5DEA6A00B1313B /* Reconcile.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B7550A1E5DEA6A00B1313B /* Reconcile.swift */; };
 		B2B7550D1E619A3F00B1313B /* DataAdmin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B7550C1E619A3F00B1313B /* DataAdmin.swift */; };
+		B2B92056256B960B001AE83B /* Weak Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B92055256B960B001AE83B /* Weak Array.swift */; };
 		B2BB6C8D2521A85C001D7D70 /* LeaderboardViewHeaderFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2BB6C8C2521A85C001D7D70 /* LeaderboardViewHeaderFooterView.xib */; };
 		B2BBCCAA2327ECD0005678B2 /* HexagonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2BBCCA92327ECD0005678B2 /* HexagonView.swift */; };
 		B2BC51C71F7B5E8C0065F07D /* String Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2BC51C61F7B5E8C0065F07D /* String Extensions.swift */; };
@@ -502,6 +503,7 @@
 		B2B755081E5B363200B1313B /* History Class.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "History Class.swift"; sourceTree = "<group>"; };
 		B2B7550A1E5DEA6A00B1313B /* Reconcile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reconcile.swift; sourceTree = "<group>"; };
 		B2B7550C1E619A3F00B1313B /* DataAdmin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataAdmin.swift; sourceTree = "<group>"; };
+		B2B92055256B960B001AE83B /* Weak Array.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Weak Array.swift"; sourceTree = "<group>"; };
 		B2BB6C8C2521A85C001D7D70 /* LeaderboardViewHeaderFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LeaderboardViewHeaderFooterView.xib; sourceTree = "<group>"; };
 		B2BBCCA92327ECD0005678B2 /* HexagonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HexagonView.swift; sourceTree = "<group>"; };
 		B2BC51C61F7B5E8C0065F07D /* String Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String Extensions.swift"; sourceTree = "<group>"; };
@@ -1166,7 +1168,7 @@
 			children = (
 				B203ECCC24F8EC41001E2CED /* Banner */,
 				B24ABA3924B31B6700E3F130 /* Banner Logo */,
-				B2B3501A24BC53110004DCB1 /* Group View */,
+				B2B3501A24BC53110004DCB1 /* View Group */,
 				B283A1AE24AF43420065994B /* Bubble View */,
 				B25D761A253EFB90008D2B69 /* Help View */,
 				B2FFB62F253DBBFC00D1DCCA /* Speech Bubble */,
@@ -1276,6 +1278,7 @@
 				B2E9C75E22C1344C00B58BE5 /* Polygon.swift */,
 				B25FC7CC22D4868500D2E651 /* Rotation Gesture.swift */,
 				B267DF74211F41FC0086D521 /* Admin Menu.swift */,
+				B2B92055256B960B001AE83B /* Weak Array.swift */,
 			);
 			name = "Utility Classes";
 			sourceTree = "<group>";
@@ -1445,13 +1448,13 @@
 			name = "Robot player";
 			sourceTree = "<group>";
 		};
-		B2B3501A24BC53110004DCB1 /* Group View */ = {
+		B2B3501A24BC53110004DCB1 /* View Group */ = {
 			isa = PBXGroup;
 			children = (
 				B2B3501B24BC53590004DCB1 /* ViewGroup.xib */,
 				B2B3501D24BC539B0004DCB1 /* ViewGroup.swift */,
 			);
-			name = "Group View";
+			name = "View Group";
 			sourceTree = "<group>";
 		};
 		B2BE868E234C6BB600766CF2 /* Player Selection */ = {
@@ -2117,6 +2120,7 @@
 				B2A3D9A1248E2804008556B8 /* Location.swift in Sources */,
 				B29FFF31223BA302002C01FE /* Banners.swift in Sources */,
 				B23D9C6F24AE5132002C721B /* BubbleView.swift in Sources */,
+				B2B92056256B960B001AE83B /* Weak Array.swift in Sources */,
 				B235D78E2510829C002F5BB6 /* DealView.swift in Sources */,
 				B2C054781FB8B55700846F6E /* ConfirmCountViewController.swift in Sources */,
 				B2519457230C4284006240DE /* Custom Transitions.swift in Sources */,
@@ -2341,7 +2345,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 24;
+				CURRENT_PROJECT_VERSION = 25;
 				DEVELOPMENT_TEAM = 3T7CT2S464;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				IBSC_MODULE = Contract_Whist_Watch_Extension;
@@ -2367,7 +2371,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 24;
+				CURRENT_PROJECT_VERSION = 25;
 				DEVELOPMENT_TEAM = 3T7CT2S464;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				IBSC_MODULE = Contract_Whist_Watch_Extension;
@@ -2392,7 +2396,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 24;
+				CURRENT_PROJECT_VERSION = 25;
 				DEVELOPMENT_TEAM = 3T7CT2S464;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_WARN_PEDANTIC = NO;
@@ -2418,7 +2422,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 24;
+				CURRENT_PROJECT_VERSION = 25;
 				DEVELOPMENT_TEAM = 3T7CT2S464;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_WARN_PEDANTIC = NO;
@@ -2598,7 +2602,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Contract Whist Scorecard/Contract Whist Scorecard.entitlements";
-				CURRENT_PROJECT_VERSION = 24;
+				CURRENT_PROJECT_VERSION = 25;
 				DEVELOPMENT_TEAM = 3T7CT2S464;
 				GCC_WARN_PEDANTIC = NO;
 				INFOPLIST_FILE = "Contract Whist Scorecard/Info.plist";
@@ -2619,7 +2623,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Contract Whist Scorecard/Contract Whist Scorecard.entitlements";
-				CURRENT_PROJECT_VERSION = 24;
+				CURRENT_PROJECT_VERSION = 25;
 				DEVELOPMENT_TEAM = 3T7CT2S464;
 				GCC_WARN_PEDANTIC = NO;
 				INFOPLIST_FILE = "Contract Whist Scorecard/Info.plist";

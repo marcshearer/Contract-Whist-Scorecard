@@ -51,7 +51,7 @@ extension PanelContainer {
     }
 }
 
-protocol DetailDelegate {
+protocol DetailDelegate : class {
     
     var isVisible: Bool {get}
     var detailView: UIView {get}

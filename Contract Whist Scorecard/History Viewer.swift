@@ -28,7 +28,7 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
    
     private var history: History!
     private var winStreakPlayer: String?
-    private var sourceViewController: ScorecardViewController!
+    private weak var sourceViewController: ScorecardViewController!
     private var dataTableViewController: DataTableViewController!
     private var callerCompletion: (()->())?
     private var customView: UIView!

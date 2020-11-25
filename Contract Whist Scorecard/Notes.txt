@@ -32,7 +32,9 @@ Auto-sync when download players in Get Started?
 TODO
 ----
 Get rid of warnings in console
-Jumps to scorepad coming from hand for the second time. Probably due to the resizing problem (where we now do nothing till width is right in viewDidLayoutSubviews)
+Jumps to scorepad coming from hand for the second time. Probably due to the resizing problem (where we now do nothing till width is right in viewDidLayoutSubviews) - Made this not reuse scorepad to solve
+    but could cause memory problems
+Remove mallocStackLogging
 
 Jack
 ----

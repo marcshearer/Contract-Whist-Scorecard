@@ -51,7 +51,7 @@ protocol MenuSwipeDelegate : class {
     func swipeGesture(direction: UISwipeGestureRecognizer.Direction) -> Bool
 }
 
-protocol MenuController {
+protocol MenuController : class {
     
     var currentOption: MenuOption {get}
     

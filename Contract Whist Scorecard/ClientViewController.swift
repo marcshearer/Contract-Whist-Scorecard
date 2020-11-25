@@ -54,7 +54,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     private var displayingPeer = 0
     public var dismissSnapshotStack: [UIView] = []
     internal var viewControllerStack: [(uniqueID: String, viewController: ScorecardViewController)] = []
-    internal var detailDelegate: DetailDelegate?
+    internal weak var detailDelegate: DetailDelegate?
     private var playerSelectionVisible = false
 
     // Observers

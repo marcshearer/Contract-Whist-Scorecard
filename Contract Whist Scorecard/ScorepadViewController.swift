@@ -53,7 +53,6 @@ class ScorepadViewController: ScorecardViewController,
     private let thinLineWeight: CGFloat = 1.0
     
     // Local class variables
-    private var entryViewController: EntryViewController!
     private var lastBannerHeight:CGFloat = 0.0
     private var lastViewHeight:CGFloat = 0.0
     private var lastViewWidth: CGFloat = 0.0
@@ -386,7 +385,7 @@ class ScorepadViewController: ScorecardViewController,
         // Note headerHeight does not include the player name row since we haven't
         // worked this out yet
         
-        var floatCellHeight: CGFloat = (size.height - imageRowHeight - banner.height) / CGFloat(Scorecard.game.rounds + 2) // Adding 2 for name row in header and total row
+        var floatCellHeight: CGFloat = (size.height - imageRowHeight - self.banner.height) / CGFloat(Scorecard.game.rounds + 2) // Adding 2 for name row in header and total row
         floatCellHeight.round()
         
         cellHeight = CGFloat(Int(floatCellHeight))
@@ -396,7 +395,7 @@ class ScorepadViewController: ScorecardViewController,
             headerHeight += CGFloat(cellHeight)
             bannerContinuationHeight = 0.0
         } else {
-            headerHeight = size.height - (CGFloat(Scorecard.game.rounds + 1) * cellHeight) - banner.height
+            headerHeight = size.height - (CGFloat(Scorecard.game.rounds + 1) * cellHeight) - self.banner.height
             imageRowHeight = min(headerHeight - minCellHeight, 50.0)
             bannerContinuationHeight = headerHeight - imageRowHeight - minCellHeight
         }

@@ -107,7 +107,7 @@ class PlayerDetailViewController: ScorecardViewController, PlayerDetailViewDeleg
     private var heightFactor: CGFloat = 1.0
     
     // Players view delegate
-    internal var playersViewDelegate: PlayersViewDelegate?
+    internal weak var playersViewDelegate: PlayersViewDelegate?
 
     // MARK: - IB Outlets ============================================================================== -
     @IBOutlet private weak var banner: Banner!

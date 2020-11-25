@@ -11,7 +11,7 @@ import UIKit
 class HelpViewElement {
     fileprivate let text: ()->NSAttributedString
     fileprivate let descriptor: NSAttributedString?
-    fileprivate let views: [UIView]?
+    fileprivate let views: WeakArray<UIView>?
     fileprivate let callback: ((Int, UIView)->CGRect?)?
     fileprivate let condition: (()->Bool)?
     fileprivate let section: Int
@@ -42,7 +42,7 @@ class HelpViewElement {
                     liveViews.append(view)
                 }
             }
-            self.views = liveViews
+            self.views = WeakArray(liveViews)
         } else {
             self.views = nil
         }
@@ -89,7 +89,7 @@ fileprivate struct HelpViewActiveElement: Comparable {
     
     let element: HelpViewElement
     let frame: CGRect?
-    let views: [UIView]?
+    let views: WeakArray<UIView>?
     let source: HelpViewSource
     let descriptor: NSAttributedString?
     let sequence: Int
@@ -101,7 +101,7 @@ fileprivate struct HelpViewActiveElement: Comparable {
     init(element: HelpViewElement, frame: CGRect? = nil, views: [UIView]? = nil, source: HelpViewSource = .view, descriptor: NSAttributedString? = nil, radius: CGFloat? = nil, positionSort: CGFloat = 0) {
         self.element = element
         self.frame = frame
-        self.views = views
+        self.views = WeakArray(views)
         self.source = source
         self.descriptor = descriptor
         self.radius = radius ?? (source == .view ? element.radius : (source == .message ? 0 : 8))
@@ -121,15 +121,15 @@ fileprivate struct HelpViewActiveElement: Comparable {
 
 class HelpView : UIView, UIGestureRecognizerDelegate {
     
-    private var speechBubble: SpeechBubbleView!
-    private var focus: FocusView!
+    private weak var speechBubble: SpeechBubbleView!
+    private weak var focus: FocusView!
     private var nextButton: ShadowButton!
     private var finishButton: ShadowButton!
     private var finishTitle = "Exit"
     private var focusBackgroundColor: UIColor?
     private var tapGesture: UITapGestureRecognizer!
-    private var parentViewController: ScorecardViewController!
-    private var parentView: UIView!
+    private weak var parentViewController: ScorecardViewController!
+    private weak var parentView: UIView!
     
     private var elements: [HelpViewElement]!
     private var activeElements: [HelpViewActiveElement]!
@@ -239,7 +239,7 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
             if element.condition?() ?? true {
                 
                 // Check views
-                if let views = element.views {
+                if let views = element.views?.asArray {
                     for view in views {
                         if !view.isHidden {
                             var cell: UIView?
@@ -399,7 +399,7 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
             // Need to execute remotely in the menu controller
             if self.parentViewController.container != .none && self.parentViewController.menuController?.isVisible ?? false {
                 let sourceElement = activeElement.element
-                let menuElement = HelpViewElement(attributedText: sourceElement.text, descriptor: activeElement.descriptor, views: activeElement.views, horizontalBorder: sourceElement.horizontalBorder, verticalBorder: sourceElement.verticalBorder)
+                let menuElement = HelpViewElement(attributedText: sourceElement.text, descriptor: activeElement.descriptor, views: activeElement.views?.asArray, horizontalBorder: sourceElement.horizontalBorder, verticalBorder: sourceElement.verticalBorder)
                 
                 self.removeTapGesture()
                 self.isHidden(true)

@@ -438,7 +438,7 @@ class Utility {
     
     // MARK: - Functions to get view controllers, use main thread and wrapper system level stuff ==============
     
-    public static var appDelegate: AppDelegate? {
+    public static weak var appDelegate: AppDelegate? {
         get {
             if let delegate = UIApplication.shared.delegate as? AppDelegate {
                 return delegate

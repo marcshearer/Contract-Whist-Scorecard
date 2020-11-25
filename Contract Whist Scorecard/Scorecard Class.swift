@@ -74,7 +74,7 @@ class Scorecard {
     // Variables for online games
     public var viewPresenting = ScorecardView.none
     public var notificationSimulator: NotificationSimulator!
-    public var alertDelegate: ScorecardAlertDelegate?
+    public weak var alertDelegate: ScorecardAlertDelegate?
     internal var reminderTimer: Timer?
     internal var bidSubscription = PassthroughSubject<(Int, Int, Int), Never>()
 
@@ -105,11 +105,11 @@ class Scorecard {
     public var sharingService: CommsHostServiceDelegate?
     internal weak var _commsDelegate: CommsServiceDelegate?
     internal var _commsPurpose: CommsPurpose?
-    internal var _commsPlayerDelegate: ScorecardAppPlayerDelegate?
+    internal weak var _commsPlayerDelegate: ScorecardAppPlayerDelegate?
     internal var commsScoresSubscription: AnyCancellable?
     public weak var commsDelegate: CommsServiceDelegate? { get { return _commsDelegate } }
     public var commsPurpose: CommsPurpose? { get { return _commsPurpose } }
-    public var commsPlayerDelegate: ScorecardAppPlayerDelegate? { get { return _commsPlayerDelegate }}
+    public weak var commsPlayerDelegate: ScorecardAppPlayerDelegate? { get { return _commsPlayerDelegate }}
     internal var appController: ScorecardAppController?
     internal var lastRefresh: Date?
     internal var lastPeerRefresh: [String : Date] = [:]

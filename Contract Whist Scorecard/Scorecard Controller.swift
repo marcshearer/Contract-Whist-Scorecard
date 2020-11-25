@@ -102,7 +102,7 @@ extension ScorecardAppControllerDelegate {
 
 }
 
-public protocol ScorecardAppPlayerDelegate {
+public protocol ScorecardAppPlayerDelegate : class {
     
     // Can be implemented by server controllers to allow them to override the players to be sent to remotes
     
@@ -133,7 +133,7 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
     fileprivate var invokedViews: [(view: ScorecardView, viewController: ScorecardViewController?, uuid: String)] = []
     private var whisper: [String : Whisper] = [:]
     private var gameDetailPanelViewController: GameDetailPanelViewController!
-    internal var gameDetailDelegate: GameDetailDelegate?
+    internal weak var gameDetailDelegate: GameDetailDelegate?
     
     // Properties for shared methods (client and server)
     internal weak var scorepadViewController: ScorepadViewController!
@@ -632,10 +632,10 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
     private var invokedUUID: String?
     internal var launchScreenView: LaunchScreenView?
     internal var container: Container? = .none
-    internal var rootViewController: RootViewController!
-    internal var menuController: MenuController!
+    internal weak var rootViewController: RootViewController!
+    internal weak var menuController: MenuController!
     internal var helpView: HelpView!
-    internal var popoverSourceView: UIView!
+    internal weak var popoverSourceView: UIView!
     internal var popoverVerticalOffset: CGFloat!
     internal var popoverDepth = 0
     private var baseFirstTime = true

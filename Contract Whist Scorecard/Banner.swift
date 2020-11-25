@@ -17,7 +17,7 @@ public enum BannerButtonType {
 }
 
 public class BannerButton: NSObject {
-    fileprivate var banner: Banner?
+    fileprivate weak var banner: Banner?
     fileprivate var title: String?
     fileprivate var attributedTitle: NSAttributedString?
     fileprivate var image: UIImage?
@@ -136,7 +136,7 @@ class Banner : UIView {
     private let buttonHeight: CGFloat = 30.0
     private var buttonIds: [AnyHashable : BannerButton] = [:]
     private var menuOption: MenuOption?
-    private var menuController: MenuController? { self.parentViewController?.menuController }
+    private weak var menuController: MenuController? { self.parentViewController?.menuController }
     private var normalOverrideHeight: CGFloat?
     private var containerOverrideHeight: CGFloat?
     private var attributedTitle: NSAttributedString?
@@ -153,11 +153,12 @@ class Banner : UIView {
     @IBOutlet private weak var leftViewGroup: ViewGroup!
     @IBOutlet private weak var rightViewGroup: ViewGroup!
     @IBOutlet private weak var lowerViewGroup: ViewGroup!
-    @IBOutlet private var titleLabelInset: [NSLayoutConstraint]!
+    @IBOutlet private weak var titleLabelLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var titleLabelTrailingConstraint: NSLayoutConstraint!
     @IBOutlet private weak var lowerViewGroupHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var parentViewController: ScorecardViewController!
     @IBOutlet private weak var delegate: BannerDelegate?
-    @IBOutlet private var bannerHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var bannerHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var bannerTopConstraint: NSLayoutConstraint!
     
     required init?(coder: NSCoder) {
@@ -237,7 +238,8 @@ class Banner : UIView {
         } else {
             inset = max(self.leftViewGroup.frame.width + 8, self.rightViewGroup.frame.width + 8)
         }
-        self.titleLabelInset.forEach{(constraint) in constraint.constant = inset}
+        self.titleLabelLeadingConstraint.constant = inset
+        self.titleLabelTrailingConstraint.constant = inset
     }
     
     public func set(title: String? = nil, attributedTitle: NSAttributedString? = nil, menuTitle: String? = nil, leftButtons: [BannerButton]? = nil, leftSpacing: CGFloat? = nil, rightButtons: [BannerButton]? = nil, rightSpacing: CGFloat? = nil, lowerButtons: [BannerButton]? = nil, lowerSpacing: CGFloat? = nil, nonBannerButtonsBefore: [BannerButton]? = nil, nonBannerButtonsAfter: [BannerButton]? = nil, menuOption: MenuOption? = nil, backgroundColor: PaletteColor? = nil, titleFont: UIFont? = nil, titleColor: UIColor? = nil, titleAlignment: NSTextAlignment? = nil, disableOptions: Bool? = nil, updateMenuTitle: Bool = true, normalOverrideHeight: CGFloat? = nil, containerOverrideHeight: CGFloat? = nil, forceArrange: Bool = false) {

@@ -221,10 +221,10 @@ class LoopbackPeer {
 
 class LoopbackDelegates {
     public var peer: LoopbackPeer
-    public var connectionDelegate: CommsConnectionDelegate?
-    public var stateDelegate: CommsStateDelegate?
-    public var dataDelegate: CommsDataDelegate?
-    public var loopbackServiceDelegate: LoopbackServiceDelegate?
+    public weak var connectionDelegate: CommsConnectionDelegate?
+    public weak var stateDelegate: CommsStateDelegate?
+    public weak var dataDelegate: CommsDataDelegate?
+    public weak var loopbackServiceDelegate: LoopbackServiceDelegate?
 
     init(peer: LoopbackPeer, connectionDelegate: CommsConnectionDelegate?, stateDelegate: CommsStateDelegate?, dataDelegate: CommsDataDelegate?, loopbackServiceDelegate: LoopbackServiceDelegate) {
         self.peer = peer

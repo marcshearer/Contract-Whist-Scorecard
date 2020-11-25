@@ -1,5 +1,5 @@
 //
-//  ButtonGroupView.swift
+//  View Group.swift
 //  Contract Whist Scorecard
 //
 //  Created by Marc Shearer on 13/07/2020.
@@ -15,13 +15,19 @@ class ViewGroup: UIView {
     @IBInspectable internal var spacing: CGFloat = 4.0
     
     struct Item {
-        let view: UIView
+        weak var view: UIView!
         let width: CGFloat
-        var widthConstraint: NSLayoutConstraint?
+        weak var widthConstraint: NSLayoutConstraint?
+        
+        init(view: UIView, width: CGFloat, widthConstraint: NSLayoutConstraint?) {
+            self.view = view
+            self.width = width
+            self.widthConstraint = widthConstraint
+        }
     }
     
     private var itemList: [Item] = []
-    private var constraintList: [NSLayoutConstraint] = []
+    private var constraintList = WeakArray<NSLayoutConstraint>()
     public var count: Int { self.itemList.count }
     public var visibleCount: Int {
         get {
@@ -110,10 +116,10 @@ class ViewGroup: UIView {
         var lastView: UIView?
         
         // Remove previously created constraints
-        for constraint in self.constraintList {
+        for constraint in self.constraintList.asArray {
             self.contentView.removeConstraint(constraint)
         }
-        self.constraintList = []
+        self.constraintList.clear()
         if false && layout { // Not sure we can do this
             self.contentView.setNeedsLayout()
             self.contentView.layoutIfNeeded()
@@ -151,7 +157,7 @@ class ViewGroup: UIView {
         }
         
         // Set total width
-        self.constraintList.append(Constraint.setWidth(control: self.contentView, width: width))
+         self.constraintList.append(Constraint.setWidth(control: self.contentView, width: width))
         
         if layout {
             self.contentView.setNeedsUpdateConstraints()

@@ -9,7 +9,7 @@
 import UIKit
 import Combine
 
-protocol GameDetailPanelInvokeDelegate {
+protocol GameDetailPanelInvokeDelegate : class {
     
     func invoke(_ view: ScorecardView)    
 }
@@ -40,7 +40,7 @@ class GameDetailPanelViewController: ScorecardViewController, UITableViewDataSou
     private var latestRound: Int?
     private var gameComplete: Bool = false
     private var thisPlayer: Int?
-    internal var invokeDelegate: GameDetailPanelInvokeDelegate?
+    internal weak var invokeDelegate: GameDetailPanelInvokeDelegate?
     internal var detailView: UIView { return self.view }
     
     @IBOutlet private weak var roundLabel: UILabel!

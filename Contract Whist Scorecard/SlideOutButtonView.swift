@@ -20,7 +20,7 @@ class SlideOutButtonView: UIView {
     @IBInspectable var buttonTextColor: UIColor!
     @IBInspectable var viewBackgroundColor: UIColor!
     
-    @IBOutlet public var delegate: SlideOutButtonDelegate?
+    @IBOutlet public weak var delegate: SlideOutButtonDelegate?
     
     @IBOutlet private var contentView: UIView!
     @IBOutlet private weak var toolbar: UIView!

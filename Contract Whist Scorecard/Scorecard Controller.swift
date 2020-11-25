@@ -643,7 +643,7 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
     
     internal var uniqueID: String!
     internal weak var bannerClass: Banner!
-    internal var gameDetailDelegate: GameDetailDelegate? { return self.appController?.gameDetailDelegate }
+    internal weak var gameDetailDelegate: GameDetailDelegate? { return self.appController?.gameDetailDelegate }
     
     internal var screenBounds: CGRect {
         if let rootView = self.rootViewController?.view {

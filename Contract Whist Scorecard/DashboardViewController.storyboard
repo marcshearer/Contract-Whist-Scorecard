@@ -199,7 +199,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hiY-hK-Vax" userLabel="Dashboard">
                                 <rect key="frame" x="0.0" y="268" width="414" height="594"/>
                                 <color key="backgroundColor" name="Clear"/>
-                                <accessibility key="accessibilityConfiguration" identifier="Dashboard"/>
+                                <accessibility key="accessibilityConfiguration" identifier="DashboardContainer"/>
                                 <gestureRecognizers/>
                             </view>
                         </subviews>

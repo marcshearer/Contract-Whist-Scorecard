@@ -233,7 +233,7 @@ class DashboardView : UIView, DashboardActionDelegate {
     
     public static func showHighScores(from parentViewController: ScorecardViewController, allowSync: Bool = false, returnTo: String? = nil, completion: (()->())? = nil) {
         DashboardViewController.show(from: parentViewController,
-                                     dashboardNames: [DashboardName(title: "High Scores",  fileName: "HighScoresDashboard", helpId: "highScores")], allowSync: allowSync, backImage: "cross white", backgroundColor: Palette.banner, container: parentViewController.container, menuFinishText: "Back to \(returnTo ?? "Results")") {
+                                     dashboardNames: [DashboardName(title: "High Scores",  fileName: "HighScoresDashboard", helpId: "highScores")], allowSync: allowSync, backImage: "cross white", backgroundColor: Palette.banner, container: parentViewController.container, menuFinishText: "Back to \(returnTo ?? "Results")", showCarousel: false) {
             completion?()
         }
     }

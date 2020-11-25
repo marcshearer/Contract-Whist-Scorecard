@@ -713,6 +713,11 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
             // New active view - notify app controller that view display complete
             self.appController?.setViewPresentingComplete()
         }
+        
+        if self.container == nil {
+            // Animation won't finish so call it here
+            self.animationDidFinish()
+        }
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -1103,6 +1108,10 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
     }
     
     internal func rightPanelDidDisappear() {
+    }
+    
+    internal func animationDidFinish() {
+        
     }
     
     // MARK: - Utility routines ======================================================================== -

@@ -301,20 +301,24 @@ extension ClientViewController : PanelContainer {
                     }
                 },
                 completion: {
-                    self.presentInContainersCompletion(completion: completion)
                     animateViews.forEach { (viewElement) in
                         // Add constraints
                         let containerView = self.view(container: viewElement.container)
                         viewElement.view.translatesAutoresizingMaskIntoConstraints = false
                         Constraint.anchor(view: rootView, control: containerView, to: viewElement.view)
                     }
+                    self.presentInContainersCompletion(items: items, completion: completion)
                 }
             )
         }
     }
     
-    private func presentInContainersCompletion(completion: (() -> ())?) {
+    private func presentInContainersCompletion(items: [PanelContainerItem], completion: (() -> ())?) {
         self.hideDismissSnapshot()
+        for item in items {
+            let viewController = item.viewController
+            viewController.animationDidFinish()
+        }
         completion?()
     }
     

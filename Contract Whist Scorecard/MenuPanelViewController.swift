@@ -815,7 +815,9 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
     
     private func presentInContainers(_ items: [PanelContainerItem], animation: ViewAnimation, completion: (() -> ())?) {
         self.currentContainerItems = items
-        self.rootViewController.presentInContainers(items, animation: animation, completion: completion)
+        self.rootViewController.presentInContainers(items, animation: animation, completion: {
+            completion?()
+        })
     }
     
     // MARK: - Function to present and dismiss this view ==============================================================

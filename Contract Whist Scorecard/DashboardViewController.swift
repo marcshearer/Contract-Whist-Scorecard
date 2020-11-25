@@ -236,6 +236,10 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
         // Configure bottom
         let bottomSafeArea = self.view.safeAreaInsets.bottom
         self.dashboardContainerBottomConstraint.constant = self.bottomInset ?? (bottomSafeArea == 0 ? 16 : bottomSafeArea)
+    }
+
+    override func animationDidFinish() {
+        super.animationDidFinish()
         self.showEntryHelp()
     }
     
@@ -376,7 +380,11 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
             if changed || forceScroll == true {
                 // Select cell
                 self.currentPage = itemAtCenter
-                let oldViews = (changed && self.currentView != nil ? [self.currentView!] : [])
+                var oldViews: [DashboardView] = []
+                if changed && self.currentView != nil {
+                    self.willDisappear(for: self.currentView!)
+                    oldViews = [self.currentView!]
+                }
                 let newView = self.getView(page: itemAtCenter)
                 self.currentView = newView
                 newView.backgroundColor = self.backgroundColor.background

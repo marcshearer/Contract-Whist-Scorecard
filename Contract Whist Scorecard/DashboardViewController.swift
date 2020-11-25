@@ -175,8 +175,6 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
             self.carouselCollectionViewFlowLayout.delegate = self
             self.carouselCollectionView.decelerationRate = UIScrollView.DecelerationRate.fast
             self.currentPage = Int(self.dashboardViewInfo.count / 2)
-        } else {
-            self.changed(self.carouselCollectionView, itemAtCenter: self.initialPage ?? 0, forceScroll: true, animated: false)
         }
         self.setupSubtitle()
         
@@ -222,10 +220,14 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
                     self.reloadData()
                     self.didRotate()
                 }
-                self.firstTime = false
-                self.rotated = false
+            }
+        } else {
+            if self.firstTime || self.rotated {
+                self.changed(self.carouselCollectionView, itemAtCenter: self.initialPage ?? 0, forceScroll: true, animated: false)
             }
         }
+        self.firstTime = false
+        self.rotated = false
     }
 
     override func viewDidLayoutSubviews() {

@@ -144,7 +144,7 @@ class Banner : UIView {
     private var rightSpacing: CGFloat?
     private var lowerSpacing: CGFloat?
 
-    public var height: CGFloat = 44 // TODO { return self.bannerHeightConstraint?.constant ?? self.frame.height }
+    public var height: CGFloat { return self.bannerHeightConstraint?.constant ?? self.frame.height }
     public var titleWidth: CGFloat { self.titleLabel.frame.width }
     
     @IBOutlet private weak var contentView: UIView!
@@ -157,10 +157,8 @@ class Banner : UIView {
     @IBOutlet private weak var lowerViewGroupHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var parentViewController: ScorecardViewController!
     @IBOutlet private weak var delegate: BannerDelegate?
-    /*
     @IBOutlet private weak var bannerHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var bannerTopConstraint: NSLayoutConstraint!
-    TODO */
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
@@ -212,7 +210,6 @@ class Banner : UIView {
         self.lowerViewGroupHeightConstraint.constant = (self.lowerViewGroup.visibleCount == 0 ? 0 : self.lowerViewHeight)
         self.lowerViewGroup.layoutIfNeeded()
         
-        /*
         // Adjust height
         if !(self.parentViewController?.containerBanner ?? false) {
             self.bannerHeightConstraint?.constant = self.normalOverrideHeight ?? self.parentViewController?.defaultBannerHeight ?? 44
@@ -227,7 +224,7 @@ class Banner : UIView {
                 self.bannerTopConstraint.constant = height - self.titleLabel.frame.height - self.lowerViewGroupHeightConstraint.constant
             }
         }
-        TODO */
+        
         self.showHideButtons()
         self.leftViewGroup.layoutIfNeeded()
         self.rightViewGroup.layoutIfNeeded()

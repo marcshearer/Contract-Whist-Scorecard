@@ -615,4 +615,27 @@ class Banner : UIView {
         contentView.frame = self.bounds
         contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
     }
+    
+    public func deallocate() {
+        self.contentView.removeFromSuperview()
+        self.contentView = nil
+        self.leftViewGroup.removeFromSuperview()
+        self.leftViewGroup = nil
+        self.rightViewGroup.removeFromSuperview()
+        self.rightViewGroup = nil
+        self.lowerViewGroup.removeFromSuperview()
+        self.lowerViewGroup = nil
+        self.titleLabel.removeFromSuperview()
+        self.titleLabel = nil
+        self.remove(self.bannerHeightConstraint)
+        self.remove(self.bannerTopConstraint)
+        self.delegate = nil
+        self.parentViewController = nil
+    }
+    
+    func remove(_ constraint: NSLayoutConstraint?) {
+        if let constraint = constraint {
+            self.removeConstraint(constraint)
+        }
+    }
 }

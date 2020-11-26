@@ -1183,7 +1183,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
         }
     }
     
-    internal func changed(_ collectionView: UICollectionView, itemAtCenter: Int, forceScroll: Bool, animated: Bool = true) {
+    internal func changed(_ collectionView: UICollectionView?, itemAtCenter: Int, forceScroll: Bool, animated: Bool = true) {
         Utility.mainThread {
             if itemAtCenter != self.currentThemeIndex {
                 // Rotate cells to give infinite feeling
@@ -1195,11 +1195,11 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                     self.currentThemeIndex = itemAtCenter
                 }
                 if forceScroll {
-                    collectionView.scrollToItem(at: IndexPath(item: itemAtCenter, section: 0), at: .centeredHorizontally, animated: animated)
+                    collectionView?.scrollToItem(at: IndexPath(item: itemAtCenter, section: 0), at: .centeredHorizontally, animated: animated)
                 }
                 Utility.executeAfter(delay: forceScroll ? 0.3 : 0.0) {
                     if self.currentThemeIndex != itemAtCenter {
-                        collectionView.scrollToItem(at: IndexPath(item: self.currentThemeIndex, section: 0), at: .centeredHorizontally, animated: false)
+                        collectionView?.scrollToItem(at: IndexPath(item: self.currentThemeIndex, section: 0), at: .centeredHorizontally, animated: false)
                     }
                 }
                 self.selectColorTheme(item: self.currentThemeIndex)

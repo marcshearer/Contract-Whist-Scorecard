@@ -239,7 +239,7 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
             if element.condition?() ?? true {
                 
                 // Check views
-                if let views = element.views?.asArray {
+                if let views = element.views {
                     for view in views {
                         if !view.isHidden {
                             var cell: UIView?

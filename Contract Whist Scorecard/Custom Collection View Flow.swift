@@ -10,12 +10,12 @@ import UIKit
 
 protocol CustomCollectionViewLayoutDelegate : class {
     
-    func changed(_ collectionView: UICollectionView, itemAtCenter: Int, forceScroll: Bool, animated: Bool)
+    func changed(_ collectionView: UICollectionView?, itemAtCenter: Int, forceScroll: Bool, animated: Bool)
 }
 
 extension CustomCollectionViewLayoutDelegate {
     
-    func changed(_ collectionView: UICollectionView, itemAtCenter: Int, forceScroll: Bool) {
+    func changed(_ collectionView: UICollectionView?, itemAtCenter: Int, forceScroll: Bool) {
         changed(collectionView, itemAtCenter: itemAtCenter, forceScroll: forceScroll, animated: true)
     }
 }

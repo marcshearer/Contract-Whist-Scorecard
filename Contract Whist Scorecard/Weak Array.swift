@@ -15,9 +15,26 @@ class Weak<T: AnyObject> {
     }
 }
 
+struct WeakArrayIterator<T: AnyObject>: IteratorProtocol {
+    private var elements: [Weak<T>]
+    
+    init(elements: [Weak<T>]) {
+        self.elements = elements
+    }
+    
+    mutating func next() -> T? {
+        var result: T?
+        while !elements.isEmpty && result == nil {
+            // Skip over any nil elements
+            result = elements.first?.value
+            elements.remove(at: 0)
+        }
+        return result
+    }
+}
 
-class WeakArray<T: AnyObject> {
-    var values: Array<Weak<T>>
+class WeakArray<T: AnyObject>: Sequence {
+    private var values: [Weak<T>]
 
     init() {
         self.values = Array<Weak<T>>([])
@@ -29,6 +46,14 @@ class WeakArray<T: AnyObject> {
         } else {
             return nil
         }
+    }
+    
+    init(_ array: [T]) {
+        self.values = array.map{Weak<T>($0)}
+    }
+    
+    func makeIterator() -> WeakArrayIterator<T> {
+        return WeakArrayIterator(elements: self.values)
     }
     
     public func clear() {
@@ -43,20 +68,34 @@ class WeakArray<T: AnyObject> {
         return self.values.isEmpty
     }
     
-    public var first: T? {
-        return values.first?.value
+    public func value(_ element: Int) -> T {
+        return self.values[element].value!
     }
 
+    public var first: T? {
+        return self.values.first?.value
+    }
+    
     public var last: T? {
-        return values.last?.value
+        return self.values.last?.value
     }
 
     public func append(_ value: T) {
-        // TODO values.append(Weak(value))
+         values.append(Weak(value))
     }
     
-    public func append(contentsOf: [T]) {
-        for element in contentsOf {
+    public func remove(at index: Int) {
+        values.remove(at: index)
+    }
+    
+    public func append(contentsOf array: [T]) {
+        for element in array {
+            self.append(element)
+        }
+    }
+    
+    public func append(contentsOf array: WeakArray<T>) {
+        for element in array {
             self.append(element)
         }
     }

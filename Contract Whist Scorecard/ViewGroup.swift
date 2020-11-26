@@ -14,7 +14,7 @@ class ViewGroup: UIView {
     
     @IBInspectable internal var spacing: CGFloat = 4.0
     
-    struct Item {
+    class Item {
         weak var view: UIView!
         let width: CGFloat
         weak var widthConstraint: NSLayoutConstraint?
@@ -26,13 +26,13 @@ class ViewGroup: UIView {
         }
     }
     
-    private var itemList: [Item] = []
+    private var itemList = WeakArray<Item>()
     private var constraintList = WeakArray<NSLayoutConstraint>()
     public var count: Int { self.itemList.count }
     public var visibleCount: Int {
         get {
             var count = 0
-            self.itemList.forEach{ (item) in
+            for item in itemList {
                 if !item.view.isHidden {
                     count += 1
                 }
@@ -74,7 +74,7 @@ class ViewGroup: UIView {
         for item in itemList {
             item.view.removeFromSuperview()
         }
-        self.itemList = []
+        self.itemList.clear()
     }
     
     public func add(views: [UIView]) {
@@ -116,7 +116,7 @@ class ViewGroup: UIView {
         var lastView: UIView?
         
         // Remove previously created constraints
-        for constraint in self.constraintList.asArray {
+        for constraint in self.constraintList {
             self.contentView.removeConstraint(constraint)
         }
         self.constraintList.clear()
@@ -157,7 +157,7 @@ class ViewGroup: UIView {
         }
         
         // Set total width
-         self.constraintList.append(Constraint.setWidth(control: self.contentView, width: width))
+        self.constraintList.append(Constraint.setWidth(control: self.contentView, width: width))
         
         if layout {
             self.contentView.setNeedsUpdateConstraints()

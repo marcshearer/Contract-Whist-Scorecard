@@ -223,7 +223,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
             }
         } else {
             if self.firstTime || self.rotated {
-                self.changed(self.carouselCollectionView, itemAtCenter: self.initialPage ?? 0, forceScroll: true, animated: false)
+                self.changed(itemAtCenter: self.initialPage ?? 0, forceScroll: true, animated: false)
             }
         }
         self.firstTime = false
@@ -373,7 +373,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
         }
     }
         
-    internal func changed(_ collectionView: UICollectionView, itemAtCenter: Int, forceScroll: Bool, animated: Bool = true) {
+    internal func changed(_ collectionView: UICollectionView? = nil, itemAtCenter: Int, forceScroll: Bool, animated: Bool = true) {
         Utility.mainThread {
             let currentPage = self.currentPage
             let changed = currentPage != itemAtCenter
@@ -413,7 +413,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
                             }
                             
                             if forceScroll {
-                                collectionView.scrollToItem(at: IndexPath(item: itemAtCenter, section: 0), at: .centeredHorizontally, animated: animated)
+                                collectionView?.scrollToItem(at: IndexPath(item: itemAtCenter, section: 0), at: .centeredHorizontally, animated: animated)
                             }
                             
                             // Highlight new cell at center

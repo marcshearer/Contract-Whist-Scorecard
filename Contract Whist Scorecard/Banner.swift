@@ -17,13 +17,12 @@ public enum BannerButtonType {
 }
 
 public class BannerButton: NSObject {
-    fileprivate weak var banner: Banner?
     fileprivate var title: String?
     fileprivate var attributedTitle: NSAttributedString?
     fileprivate var image: UIImage?
     fileprivate let asTemplate: Bool
     fileprivate var width: CGFloat?
-    fileprivate let action: (()->())?
+    fileprivate var action: (()->())?
     fileprivate let releaseAction: (()->())?
     fileprivate let type: BannerButtonType
     fileprivate let menuHide: Bool
@@ -145,7 +144,7 @@ class Banner : UIView {
     private var rightSpacing: CGFloat?
     private var lowerSpacing: CGFloat?
 
-    public var height: CGFloat { return self.bannerHeightConstraint?.constant ?? self.frame.height }
+    public var height: CGFloat = 44 // TODO { return self.bannerHeightConstraint?.constant ?? self.frame.height }
     public var titleWidth: CGFloat { self.titleLabel.frame.width }
     
     @IBOutlet private weak var contentView: UIView!
@@ -158,8 +157,10 @@ class Banner : UIView {
     @IBOutlet private weak var lowerViewGroupHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var parentViewController: ScorecardViewController!
     @IBOutlet private weak var delegate: BannerDelegate?
+    /*
     @IBOutlet private weak var bannerHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var bannerTopConstraint: NSLayoutConstraint!
+    TODO */
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
@@ -211,6 +212,7 @@ class Banner : UIView {
         self.lowerViewGroupHeightConstraint.constant = (self.lowerViewGroup.visibleCount == 0 ? 0 : self.lowerViewHeight)
         self.lowerViewGroup.layoutIfNeeded()
         
+        /*
         // Adjust height
         if !(self.parentViewController?.containerBanner ?? false) {
             self.bannerHeightConstraint?.constant = self.normalOverrideHeight ?? self.parentViewController?.defaultBannerHeight ?? 44
@@ -225,7 +227,7 @@ class Banner : UIView {
                 self.bannerTopConstraint.constant = height - self.titleLabel.frame.height - self.lowerViewGroupHeightConstraint.constant
             }
         }
-        
+        TODO */
         self.showHideButtons()
         self.leftViewGroup.layoutIfNeeded()
         self.rightViewGroup.layoutIfNeeded()
@@ -465,7 +467,6 @@ class Banner : UIView {
             buttons[index].control = buttonControl
             self.updateButtonControlColors(button: buttons[index])
             buttons[index].viewGroup = viewGroup
-            buttons[index].banner = self
             self.buttonIds[button.id] = buttons[index]
         }
         viewGroup.add(views: views)
@@ -475,7 +476,6 @@ class Banner : UIView {
         
         for (index, button) in buttons.enumerated() {
             button.control?.addTarget(self, action: #selector(Banner.buttonClicked(_:)), for: .touchUpInside)
-            buttons[index].banner = self
             self.buttonIds[button.id] = buttons[index]
         }
     }
@@ -617,25 +617,39 @@ class Banner : UIView {
     }
     
     public func deallocate() {
-        self.contentView.removeFromSuperview()
-        self.contentView = nil
         self.leftViewGroup.removeFromSuperview()
-        self.leftViewGroup = nil
         self.rightViewGroup.removeFromSuperview()
-        self.rightViewGroup = nil
         self.lowerViewGroup.removeFromSuperview()
-        self.lowerViewGroup = nil
         self.titleLabel.removeFromSuperview()
         self.titleLabel = nil
-        self.remove(self.bannerHeightConstraint)
-        self.remove(self.bannerTopConstraint)
         self.delegate = nil
         self.parentViewController = nil
+        self.removeButtons(self.leftButtons)
+        self.removeButtons(self.rightButtons)
+        self.removeButtons(self.lowerButtons)
+        self.removeButtons(self.nonBannerButtonsBefore)
+        self.removeButtons(self.nonBannerButtonsAfter)
+        self.leftButtons = []
+        self.rightButtons = []
+        self.lowerButtons = []
+        self.nonBannerButtonsAfter = []
+        self.nonBannerButtonsBefore = []
+        self.buttonIds = [:]
+        self.contentView.removeFromSuperview()
+    }
+    
+    private func removeButtons(_ buttons: [BannerButton]) {
+        for button in buttons {
+            button.control?.removeFromSuperview()
+            button.control = nil
+            button.action = nil
+            button.viewGroup = nil
+        }
     }
     
     func remove(_ constraint: NSLayoutConstraint?) {
         if let constraint = constraint {
-            self.removeConstraint(constraint)
+            self.contentView.removeConstraint(constraint)
         }
     }
 }

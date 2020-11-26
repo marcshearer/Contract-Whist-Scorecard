@@ -37,7 +37,7 @@ class WeakArray<T: AnyObject>: Sequence {
     private var values: [Weak<T>]
 
     init() {
-        self.values = Array<Weak<T>>([])
+        self.values = []
     }
     
     init?(_ array: [T]?) {
@@ -79,7 +79,15 @@ class WeakArray<T: AnyObject>: Sequence {
     public var last: T? {
         return self.values.last?.value
     }
-
+    
+    public func firstIndex(where condition: (T) -> Bool) -> Int? {
+        return self.asArray.firstIndex(where: {condition($0)})
+    }
+    
+    public func first(where condition: (T) -> Bool) -> T? {
+        return self.asArray.first(where: {condition($0)})
+    }
+    
     public func append(_ value: T) {
          values.append(Weak(value))
     }

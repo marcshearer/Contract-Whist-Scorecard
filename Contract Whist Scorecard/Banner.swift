@@ -124,11 +124,11 @@ class Banner : UIView {
     public static let containerHeight: CGFloat = 150
     public static let normalHeight: CGFloat = 44
 
-    private var leftButtons = WeakArray<BannerButton>()
-    private var rightButtons = WeakArray<BannerButton>()
-    private var lowerButtons = WeakArray<BannerButton>()
-    private var nonBannerButtonsBefore = WeakArray<BannerButton>()
-    private var nonBannerButtonsAfter = WeakArray<BannerButton>()
+    private var leftButtons: [BannerButton] = []
+    private var rightButtons: [BannerButton] = []
+    private var lowerButtons: [BannerButton] = []
+    private var nonBannerButtonsBefore: [BannerButton] = []
+    private var nonBannerButtonsAfter: [BannerButton] = []
     private var overrideColor: PaletteColor?
     private var titleFont = Banner.defaultFont
     private var titleColor: UIColor?
@@ -183,7 +183,7 @@ class Banner : UIView {
         }
         
         if finishText != nil || finishImage != nil {
-            self.leftButtons = WeakArray([BannerButton(title: self.finishText, image: self.finishImage?.asTemplate, width: (self.finishText == nil ? 22 : 100), action: self.delegate?.finishPressed, menuHide: self.menuHide, menuText: self.menuText, menuSpaceBefore: self.menuSpaceBefore, id: Banner.finishButton)])
+            self.leftButtons = [BannerButton(title: self.finishText, image: self.finishImage?.asTemplate, width: (self.finishText == nil ? 22 : 100), action: self.delegate?.finishPressed, menuHide: self.menuHide, menuText: self.menuText, menuSpaceBefore: self.menuSpaceBefore, id: Banner.finishButton)]
             arrange = true
         }
         
@@ -259,14 +259,14 @@ class Banner : UIView {
                 self.menuController?.set(gamePlayingTitle: menuTitle)
             }
         }
-        if let leftButtons = leftButtons           { self.leftButtons = WeakArray(leftButtons) ; arrange = true }
+        if let leftButtons = leftButtons           { self.leftButtons = leftButtons ; arrange = true }
         if let leftSpacing = leftSpacing           { self.leftSpacing = leftSpacing ; arrange = true }
-        if let rightButtons = rightButtons         { self.rightButtons = WeakArray(rightButtons) ; arrange = true }
+        if let rightButtons = rightButtons         { self.rightButtons = rightButtons ; arrange = true }
         if let rightSpacing = rightSpacing         { self.rightSpacing = rightSpacing ; arrange = true }
-        if let lowerButtons = lowerButtons         { self.lowerButtons = WeakArray(lowerButtons) ; arrange = true }
+        if let lowerButtons = lowerButtons         { self.lowerButtons = lowerButtons ; arrange = true }
         if let lowerSpacing = lowerSpacing         { self.lowerSpacing = lowerSpacing ; arrange = true }
-        if let nonBannerButtonsBefore = nonBannerButtonsBefore { self.nonBannerButtonsBefore = WeakArray(nonBannerButtonsBefore) ; arrange = true }
-        if let nonBannerButtonsAfter = nonBannerButtonsAfter { self.nonBannerButtonsAfter = WeakArray(nonBannerButtonsAfter) ; arrange = true }
+        if let nonBannerButtonsBefore = nonBannerButtonsBefore { self.nonBannerButtonsBefore = nonBannerButtonsBefore ; arrange = true }
+        if let nonBannerButtonsAfter = nonBannerButtonsAfter { self.nonBannerButtonsAfter = nonBannerButtonsAfter ; arrange = true }
         if let menuOption = menuOption             { self.menuOption = menuOption ; arrange = true }
         if let backgroundColor = backgroundColor   { self.overrideColor = backgroundColor ; self.updateBackgroundColor() }
         if let titleFont = titleFont               { self.titleFont = titleFont ; self.titleLabel.font = titleFont}
@@ -405,7 +405,7 @@ class Banner : UIView {
         self.layoutSubviews()
     }
     
-    private func createBannerButtons(buttons: inout WeakArray<BannerButton>, viewGroup: ViewGroup, defaultAlignment: UIControl.ContentHorizontalAlignment, spacing: CGFloat? = nil) {
+    private func createBannerButtons(buttons: inout [BannerButton], viewGroup: ViewGroup, defaultAlignment: UIControl.ContentHorizontalAlignment, spacing: CGFloat? = nil) {
         
         viewGroup.clear()
         var views: [UIView] = []
@@ -462,21 +462,21 @@ class Banner : UIView {
                 buttonControl.addTarget(self, action: #selector(Banner.buttonClicked(_:)), for: .touchUpInside)
             }
             views.append(buttonControl)
-            buttons.value(index).control = buttonControl
-            self.updateButtonControlColors(button: buttons.value(index))
-            buttons.value(index).viewGroup = viewGroup
-            buttons.value(index).banner = self
-            self.buttonIds[button.id] = buttons.value(index)
+            buttons[index].control = buttonControl
+            self.updateButtonControlColors(button: buttons[index])
+            buttons[index].viewGroup = viewGroup
+            buttons[index].banner = self
+            self.buttonIds[button.id] = buttons[index]
         }
         viewGroup.add(views: views)
     }
         
-    private func createNonBannerButtons(buttons: inout WeakArray<BannerButton>) {
+    private func createNonBannerButtons(buttons: inout [BannerButton]) {
         
         for (index, button) in buttons.enumerated() {
             button.control?.addTarget(self, action: #selector(Banner.buttonClicked(_:)), for: .touchUpInside)
-            buttons.value(index).banner = self
-            self.buttonIds[button.id] = buttons.value(index)
+            buttons[index].banner = self
+            self.buttonIds[button.id] = buttons[index]
         }
     }
     
@@ -566,11 +566,11 @@ class Banner : UIView {
                     if menuController?.isVisible ?? false {
                         // A menu panel exists - update it
                         var menuSuboptions: [Option] = []
-                        menuSuboptions.append(contentsOf: self.setupMenuEntries(buttons: rightButtons.asArray))
-                        menuSuboptions.append(contentsOf: self.setupMenuEntries(buttons: lowerButtons.asArray))
-                        menuSuboptions.append(contentsOf: self.setupMenuEntries(buttons: nonBannerButtonsBefore.asArray))
-                        menuSuboptions.append(contentsOf: self.setupMenuEntries(buttons: leftButtons.asArray))
-                        menuSuboptions.append(contentsOf: self.setupMenuEntries(buttons: nonBannerButtonsAfter.asArray))
+                        menuSuboptions.append(contentsOf: self.setupMenuEntries(buttons: rightButtons))
+                        menuSuboptions.append(contentsOf: self.setupMenuEntries(buttons: lowerButtons))
+                        menuSuboptions.append(contentsOf: self.setupMenuEntries(buttons: nonBannerButtonsBefore))
+                        menuSuboptions.append(contentsOf: self.setupMenuEntries(buttons: leftButtons))
+                        menuSuboptions.append(contentsOf: self.setupMenuEntries(buttons: nonBannerButtonsAfter))
                         
                         menuController?.add(suboptions: menuSuboptions, to: menuOption, on: container, highlight: nil, disableOptions: self.disableOptions)
                     }

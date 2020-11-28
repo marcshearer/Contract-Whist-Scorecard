@@ -640,7 +640,7 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
     internal var popoverDepth = 0
     private var baseFirstTime = true
     private var baseRotated = false
-    
+    internal static var existingViewControllers: [String: String] = [:]
     internal var uniqueID: String!
     internal weak var bannerClass: Banner!
     internal weak var gameDetailDelegate: GameDetailDelegate? { return self.appController?.gameDetailDelegate }
@@ -690,11 +690,29 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
         return result
     }
     
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        self.initialise()
+    }
+    
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        self.initialise()
+    }
+    
+    private func initialise() {
+        self.uniqueID = UUID().uuidString
+        ScorecardViewController.existingViewControllers[self.uniqueID] = self.className
+    }
+    
+    deinit {
+        ScorecardViewController.existingViewControllers[self.uniqueID] = nil
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
                         
         self.presentationController?.delegate = self
-        self.uniqueID = self.uniqueID ?? UUID().uuidString
         
         self.helpView = HelpView(in: self)
         
@@ -784,7 +802,6 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
         viewControllerToPresent.container = container
         viewControllerToPresent.rootViewController = self.rootViewController
         viewControllerToPresent.menuController = self.rootViewController?.menuController
-        viewControllerToPresent.uniqueID = viewControllerToPresent.uniqueID ?? UUID().uuidString
         
         if self.rootViewController?.containers ?? false && (self.container == .main || self.container == .mainRight || self == self.rootViewController) && popoverSize == nil && container != nil {
             // Working in containers
@@ -955,7 +972,20 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
                     viewController.bannerClass?.restored()
                 }
             }
-            
+            if Utility.isDevelopment {
+                // Check that all view controllers have been deinited correctly
+                if let rootViewController = self.rootViewController {
+                    Utility.executeAfter(delay: 0.1) {
+                        if (rootViewController.viewControllerStack.isEmpty) {
+                            let active = ScorecardViewController.existingViewControllers.filter({$0.value != "Client"})
+                            if !active.isEmpty {
+                                Utility.debugMessage("ViewController", "The following are still active:\n \(active.map({$0.value}).toNaturalString())")
+                                rootViewController.alertSound(sound: .alarm)
+                            }
+                        }
+                    }
+                }
+            }
             completion?()
         }
         

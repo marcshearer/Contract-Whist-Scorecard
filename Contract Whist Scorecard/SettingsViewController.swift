@@ -1471,7 +1471,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     
     private func setupBanner() {
         self.banner.set(rightButtons: [
-            BannerButton(action: self.helpPressed, type: .help),
+            BannerButton(action: {[weak self] in self?.helpPressed()}, type: .help),
         ])
     }
     

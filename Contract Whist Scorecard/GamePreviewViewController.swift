@@ -442,7 +442,7 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
         var nonBannerButtonsAfter: [BannerButton] = []
              
         var rightButtons = [
-            BannerButton(action: self.helpPressed, type: .help)]
+            BannerButton(action: {[weak self] in self?.helpPressed()}, type: .help)]
         if self.readOnly {
             self.continueButton.isHidden = true
             self.cutForDealerButton.isEnabled = false
@@ -456,20 +456,20 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
             if (self.delegate?.gamePreviewHosting ?? false) {
                 self.selectedPlayersView.setEnabled(slot: 0, enabled: false)
             }
-            rightButtons.append(contentsOf: [BannerButton(title: "Continue", image: UIImage(named: "forward"), width: 100, action: self.continuePressed, menuHide: true, menuText: "Start Game", id: "continue")])
+            rightButtons.append(contentsOf: [BannerButton(title: "Continue", image: UIImage(named: "forward"), width: 100, action: {[weak self] in self?.continuePressed()}, menuHide: true, menuText: "Start Game", id: "continue")])
         }
         
         let leftButtons = [
-            BannerButton(image: UIImage(named: (self.backText == nil ? "home" : "back")), width: 30, action: self.finishPressed, menuHide: true, menuText: self.backText ?? "Abandon Game", menuSpaceBefore: (self.backText == nil ? 20.0 : 0.0), id: "cancel")]
+            BannerButton(image: UIImage(named: (self.backText == nil ? "home" : "back")), width: 30, action: {[weak self] in self?.finishPressed()}, menuHide: true, menuText: self.backText ?? "Abandon Game", menuSpaceBefore: (self.backText == nil ? 20.0 : 0.0), id: "cancel")]
         
         let nonBannerButtonsBefore = [
-            BannerButton(control: self.overrideSettingsButton, action: self.overrideSettingsPressed, menuHide: true, menuText: "Override settings", id: "override"),
+            BannerButton(control: self.overrideSettingsButton, action: {[weak self] in self?.overrideSettingsPressed()}, menuHide: true, menuText: "Override settings", id: "override"),
         ]
         
         if self.backText != nil {
             // Add a home menu item as well
             nonBannerButtonsAfter.append(
-                BannerButton(action: self.returnHomePressed, menuHide: true, menuText: "Abandon Game", menuSpaceBefore: 20.0, id: "home"))
+                BannerButton(action: {[weak self] in self?.returnHomePressed()}, menuHide: true, menuText: "Abandon Game", menuSpaceBefore: 20.0, id: "home"))
         }
         
         self.banner.set(
@@ -851,6 +851,7 @@ extension GamePreviewViewController {
 extension GamePreviewViewController {
     
     internal func setupHelpView() {
+        weak var weakSelf = self
         
         self.helpView.reset()
         
@@ -904,11 +905,11 @@ extension GamePreviewViewController {
             self.helpView.add("The @*/Next Dealer@*/ button allows you to move the dealer manually around the players (clockwise). You can also do this by using a rotate gesture with your finger and thumb.", views: [self.nextDealerButton])
             
             let canStartGame = self.controllerDelegate?.canProceed ?? true || self.gameMode == .playingComputer
-            self.helpView.add("\(canStartGame ? "" : "When all the players have joined the {} will be enabled.") Tap the {} to \((self.gameMode == .scoring || self.gameMode == .hostingNearby) && Scorecard.activeSettings.saveLocation ? "enter the current location and " : "")start the game.", descriptor: "@*/Continue@*/ button", views: [self.continueButton], bannerId: "continue", radius: self.continueButton.frame.height / 2)
+            self.helpView.add("\(canStartGame ? "" : "When all the players have joined the {} will be enabled.") Tap the {} to \((weakSelf?.gameMode == .scoring || weakSelf?.gameMode == .hostingNearby) && Scorecard.activeSettings.saveLocation ? "enter the current location and " : "")start the game.", descriptor: "@*/Continue@*/ button", views: [self.continueButton], bannerId: "continue", radius: self.continueButton.frame.height / 2)
 
         }
         
-        self.helpView.add("Tapping the @*/Request FaceTime Call@*/ button will request the host (\((self.selectedPlayers[0]?.name)!)) to include you in a FaceTime call so that you can chat while you play Whist. Once you tap the button it becomes a @*/Cancel FaceTime Call@*/ button which allows you to cancel the request.", views: [self.faceTimeButton], radius: 12)
+        self.helpView.add("Tapping the @*/Request FaceTime Call@*/ button will request the host (\((weakSelf?.selectedPlayers[0]?.name)!)) to include you in a FaceTime call so that you can chat while you play Whist. Once you tap the button it becomes a @*/Cancel FaceTime Call@*/ button which allows you to cancel the request.", views: [self.faceTimeButton], radius: 12)
         
         self.helpView.add("The {} takes you back to the selection screen and allows you to change the players in the game", bannerId: "cancel", horizontalBorder: 8, verticalBorder: 4)
 

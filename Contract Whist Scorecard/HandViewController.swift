@@ -669,18 +669,19 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
     public func setupBanner() {
         let roundSuit = Scorecard.game.roundSuit(self.round).toAttributedString()
         let roundWidth = roundSuit.labelWidth(font: Banner.defaultFont)
+        
         self.banner.set(title: "Play Hand",
-                        leftButtons: [
-                            BannerButton(image: UIImage(named: "back"), action: self.finishPressed, menuHide: true, menuText: "Show Scorepad", id: finishButton),
-                            BannerButton(image: UIImage(named: "two"), asTemplate: false, action: self.lastHandPressed, releaseAction: self.lastHandReleased, menuHide: true, menuText: "Show last trick", releaseMenuText: "Hide last trick", id: lastHandButton)],
-                        rightButtons: [
-                            BannerButton(action: self.helpPressed, type: .help),
-                            BannerButton(width: 60, action: self.showScorepadPressed, gameDetailHide: true, font: Banner.defaultFont, id: overUnderButton),
-                            BannerButton(attributedTitle: roundSuit, width: roundWidth, action: self.showScorepadPressed, gameDetailHide: true, font: Banner.defaultFont, id: roundSummaryButton)],
-                        nonBannerButtonsAfter: [
-                            BannerButton(action: self.homePressed, menuText: "Abandon Game", menuSpaceBefore: 20.0, id: homeButton)],
-                        menuOption: .playGame,
-                        normalOverrideHeight: 50)
+            leftButtons: [
+                BannerButton(image: UIImage(named: "back"), action: {[weak self] in self?.finishPressed()}, menuHide: true, menuText: "Show Scorepad", id: finishButton),
+                BannerButton(image: UIImage(named: "two"), asTemplate: false, action: {[weak self] in self?.lastHandPressed()}, releaseAction: {[weak self] in self?.lastHandReleased()}, menuHide: true, menuText: "Show last trick", releaseMenuText: "Hide last trick", id: lastHandButton)],
+            rightButtons: [
+                BannerButton(action: {[weak self] in self?.helpPressed()}, type: .help),
+                BannerButton(width: 60, action: {[weak self] in self?.showScorepadPressed()}, gameDetailHide: true, font: Banner.defaultFont, id: overUnderButton),
+                BannerButton(attributedTitle: roundSuit, width: roundWidth, action: {[weak self] in self?.showScorepadPressed()}, gameDetailHide: true, font: Banner.defaultFont, id: roundSummaryButton)],
+            nonBannerButtonsAfter: [
+                BannerButton(action: {[weak self] in self?.homePressed()}, menuText: "Abandon Game", menuSpaceBefore: 20.0, id: homeButton)],
+            menuOption: .playGame,
+            normalOverrideHeight: 50)
     }
     
     public func refreshAll() {
@@ -1376,10 +1377,11 @@ extension HandViewController {
 extension HandViewController {
     
     internal func setupHelpView() {
+        weak var weakSelf = self
         
         self.helpView.reset()
                 
-        self.helpView.add("This screen allows you to play a hand of Whist. It operates in 2 modes.\n\n \(self.bidMode ? "You are currently in" : "In" ) @*/Bid@*/ mode \(self.bidMode ? "where " : "")each player enters their bid in turn.\n\n\(!self.bidMode ? "You are currently in" : "In" ) @*/Play@*/ mode \(!self.bidMode ? "where " : "")you play the cards.\n\nIf the network hangs for any reason during bid or play you can shake your device to reset the connection.")
+        self.helpView.add("This screen allows you to play a hand of Whist. It operates in 2 modes.\n\n \((weakSelf?.bidMode ?? true) ? "You are currently in" : "In" ) @*/Bid@*/ mode \((weakSelf?.bidMode ?? true) ? "where " : "")each player enters their bid in turn.\n\n\(!(weakSelf?.bidMode ?? true) ? "You are currently in" : "In" ) @*/Play@*/ mode \(!(weakSelf?.bidMode ?? true) ? "where " : "")you play the cards.\n\nIf the network hangs for any reason during bid or play you can shake your device to reset the connection.")
         
         self.helpView.add("Tap the {} to go to the @*/Scorepad@*/ screen where you can check the score in detail or review previous hands.", bannerId: Banner.finishButton)
         
@@ -1391,11 +1393,11 @@ extension HandViewController {
         
         self.helpView.add("The @*/Trump Suit@*/ for the current round is displayed here.", bannerId: roundSummaryButton, horizontalBorder: 8, verticalBorder: 4)
         
-        self.helpView.add("During bidding the current number of cards in the round and the trump suit are displayed here.", views: [self.statusRoundLabel], condition: { self.bidMode && !self.moreMode }, horizontalBorder: 4)
+        self.helpView.add("During bidding the current number of cards in the round and the trump suit are displayed here.", views: [self.statusRoundLabel], condition: { (weakSelf?.bidMode ?? true) && !(weakSelf?.moreMode ?? false) }, horizontalBorder: 4)
         
-        self.helpView.add("Once bids have been made you can see how the total of all bids compares to the number of cards in this round.\n\nFor example " + NSAttributedString("1 Under", color: Palette.contractUnder) + " means that the total of all bids is 1 less that the number of tricks in the round.\n\nIn this case players will probably be trying to lose tricks, whereas when the total is more than the number of cards, players will be trying to win tricks.", views: [self.statusOverUnderLabel], condition: { Scorecard.game.roundStarted(Scorecard.game.selectedRound) && self.bidMode && !self.moreMode }, horizontalBorder: 4)
+        self.helpView.add("Once bids have been made you can see how the total of all bids compares to the number of cards in this round.\n\nFor example " + NSAttributedString("1 Under", color: Palette.contractUnder) + " means that the total of all bids is 1 less that the number of tricks in the round.\n\nIn this case players will probably be trying to lose tricks, whereas when the total is more than the number of cards, players will be trying to win tricks.", views: [self.statusOverUnderLabel], condition: { Scorecard.game.roundStarted(Scorecard.game.selectedRound) && (weakSelf?.bidMode ?? true) && !(weakSelf?.moreMode ?? false) }, horizontalBorder: 4)
         
-        self.helpView.add("The players' names in the order they should bid are displayed here.\n\nAs they bid their bids are displayed alongside their name.", views: [self.statusPlayer1BidLabel, self.statusPlayer2BidLabel, self.statusPlayer3BidLabel, self.statusPlayer4BidLabel], condition: { self.bidMode && !self.moreMode }, horizontalBorder: 4)
+        self.helpView.add("The players' names in the order they should bid are displayed here.\n\nAs they bid their bids are displayed alongside their name.", views: [self.statusPlayer1BidLabel, self.statusPlayer2BidLabel, self.statusPlayer3BidLabel, self.statusPlayer4BidLabel], condition: { (weakSelf?.bidMode ?? true) && !(weakSelf?.moreMode ?? false) }, horizontalBorder: 4)
         
         var text: NSAttributedString
         if ScorecardUI.smallPhoneSize() {
@@ -1404,7 +1406,7 @@ extension HandViewController {
             text = "When it is your turn to bid, tap on a bid button and then tap the confirm button to make your bid.\n\nIf not all bids are shown, then the " + NSAttributedString(imageName: "forward", color: Palette.normal.themeText) + " button can be tapped to show higher bid values.\nTap the " + NSAttributedString(imageName: "back", color: Palette.normal.themeText) + " button to return from the extended bid input mode\n\nIf you are the last person to bid, then you cannot make the total of the bids equal the number of tricks and one of the buttons will be disabled."
         }
         
-        self.helpView.add(text, views: [self.bidCollectionView], condition: { self.bidMode }, border: 4)
+        self.helpView.add(text, views: [self.bidCollectionView], condition: { (weakSelf?.bidMode ?? true) }, border: 4)
         
         self.helpView.add("During play the current trick will be displayed here.\n\nUnderneath each card will be the name of the player who played it. Underneath their name is their bid for this round and, if they have won any tricks, the number of tricks they have won.\n\nThe winner of the current trick is highlighted.", views: [self.tabletopView])
         

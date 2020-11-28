@@ -276,15 +276,15 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
     private func setupBanner() {
          
         let leftButtons = [
-            BannerButton(image: UIImage(named: "back"), action: self.finishPressed, menuHide: true, menuText: "Show Scorepad", id: saveButton),
-            BannerButton(image: UIImage(systemName: "exclamationmark"), action: self.finishPressed, type: .rounded, menuHide: true, menuText: "Fix Errors to Enable Exit!", menuTextColor: Palette.errorCondition, backgroundColor: .error, id: errorsButton)]
+            BannerButton(image: UIImage(named: "back"), action: {[weak self] in self?.finishPressed()}, menuHide: true, menuText: "Show Scorepad", id: saveButton),
+            BannerButton(image: UIImage(systemName: "exclamationmark"), action: {[weak self] in self?.finishPressed()}, type: .rounded, menuHide: true, menuText: "Fix Errors to Enable Exit!", menuTextColor: Palette.errorCondition, backgroundColor: .error, id: errorsButton)]
         
         let rightButtons = [
-            BannerButton(action: self.helpPressed, type: .help),
-            BannerButton(image: UIImage(named: "forward"), action: self.summaryClicked, menuHide: true, id: roundSummaryButton)]
+            BannerButton(action: {[weak self] in self?.helpPressed()}, type: .help),
+            BannerButton(image: UIImage(named: "forward"), action: {[weak self] in self?.summaryClicked()}, menuHide: true, id: roundSummaryButton)]
         
         let nonBannerButtonsAfter = [
-            BannerButton(action: self.homePressed, menuText: "Abandon Game", menuSpaceBefore: 20, id: homeButton)]
+            BannerButton(action: {[weak self] in self?.homePressed()}, menuText: "Abandon Game", menuSpaceBefore: 20, id: homeButton)]
         
         self.banner.set(
             menuTitle: "Score Entry",
@@ -1095,12 +1095,13 @@ extension EntryViewController {
 extension EntryViewController {
     
     internal func setupHelpView() {
+        weak var weakSelf = self
         
         self.helpView.reset()
                 
         self.helpView.add("This screen allows the bids and scores for a hand to be entered")
         
-        self.helpView.add("This area shows the current \(self.bidOnlyMode ? "bids" : "bids and scores").\nThe cursor shows the value that will be input if you tap the @*/Numeric Buttons@*/.\n\(Scorecard.game.scores.error(round: Scorecard.game.selectedRound) ? "Errors in the current round are highlighted. You must correct any errors before saving." : "")", views: [self.playerTableView], shrink: true)
+        self.helpView.add("This area shows the current \((weakSelf?.bidOnlyMode ?? true) ? "bids" : "bids and scores").\nThe cursor shows the value that will be input if you tap the @*/Numeric Buttons@*/.\n\(Scorecard.game.scores.error(round: Scorecard.game.selectedRound) ? "Errors in the current round are highlighted. You must correct any errors before saving." : "")", views: [self.playerTableView], shrink: true)
         
         self.helpView.add("This area shows instructions on what to do next.", views: [self.instructionContainerView], radius: 12)
         

@@ -188,16 +188,18 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
     }
     
     internal func addHelp(to helpView: HelpView, header: UITableView, body: UITableView) {
+        weak var weakSelf = self
         
-        helpView.add("The @*/\(self.viewTitle)@*/ screen \(self.winStreakPlayer != nil ? "shows you the games that make up a win streak" : "allows you to review the game history for all players on this device, or for a single player").")
         
-        helpView.add("The @*/Filter@*/ button allows you to view the game history for a specific player.\n\n\(self.filterState == .notFiltered ? "If you tap it you will see a list of players.\n\nTap a player to show only their history" : (self.filterState == .selecting ? "When you are filtering the filter button becomes a cancel button.\n\nTap it to return to showing all players' history" : "When you are filtering the player's name will appear on the filter button with a cross beside it.\n\nTap it to stop filtering and return to all players' history")).", views: [self.filterButton], bannerId: self.customButtonId)
+        helpView.add("The @*/\(weakSelf?.viewTitle ?? "History")@*/ screen \(weakSelf?.winStreakPlayer != nil ? "shows you the games that make up a win streak" : "allows you to review the game history for all players on this device, or for a single player").")
+        
+        helpView.add("The @*/Filter@*/ button allows you to view the game history for a specific player.\n\n\(weakSelf?.filterState == .notFiltered ? "If you tap it you will see a list of players.\n\nTap a player to show only their history" : (weakSelf?.filterState == .selecting ? "When you are filtering the filter button becomes a cancel button.\n\nTap it to return to showing all players' history" : "When you are filtering the player's name will appear on the filter button with a cross beside it.\n\nTap it to stop filtering and return to all players' history")).", views: [self.filterButton], bannerId: self.customButtonId)
         
         if let syncButton = self.syncButton {
             helpView.add("The @*/Sync@*/ button allows you to synchronize the data on this device with the data in iCloud.", views: [syncButton])
         }
         
-        helpView.add("As you have tapped the filter button you have a list of current players on the device to select from to start filtering.\n\nTap a player to view their history.\n\nTap the cancel button to return to showing all players' history.", views: [self.filterSelectionView], condition: { self.filterState == .selecting })
+        helpView.add("As you have tapped the filter button you have a list of current players on the device to select from to start filtering.\n\nTap a player to view their history.\n\nTap the cancel button to return to showing all players' history.", views: [self.filterSelectionView], condition: { [weak self] in self?.filterState == .selecting })
         
         helpView.add("The header row contains the column titles.\n\nTap on a column title to sort the data by that column's value.\n\nTap the same column again to reverse the order of the sort.\n\nThe up / down arrow shows the order of the sort.", views: [header])
         

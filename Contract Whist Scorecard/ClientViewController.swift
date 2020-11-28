@@ -631,7 +631,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         // Check network
         self.isConnected = Scorecard.reachability.isConnected
         self.observer = Scorecard.reachability.startMonitor { (isConnected) in
-            if (self.isConnected != Scorecard.reachability.isConnected) {
+            if (self.isConnected != isConnected) {
                 self.isConnected = isConnected
                 self.setupHostingOptions()
                 self.hostCollectionView.reloadData()
@@ -1226,7 +1226,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         self.banner.set(
             title: title,
             rightButtons: [
-                BannerButton(image: UIImage(systemName: "line.horizontal.3"), width: 30, action: self.adminButtonPressed, menuHide: false, id: "admin")],
+                BannerButton(image: UIImage(systemName: "line.horizontal.3"), width: 30, action: {[weak self] in self?.adminButtonPressed()}, menuHide: false, id: "admin")],
             titleFont: titleFont,
             titleColor: titleColor,
             normalOverrideHeight: 75)

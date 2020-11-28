@@ -145,7 +145,7 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
         // Setup help
         self.setupHelpView()
 
-        var gameDetailDelegate = self.gameDetailDelegate
+        let gameDetailDelegate = self.gameDetailDelegate
         gameDetailDelegate?.invokeDelegate = self
     }
     
@@ -384,10 +384,10 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
         self.banner.set(
             menuTitle: "Game Summary",
             rightButtons: [
-                BannerButton(action: self.helpPressed, type: .help)],
+                BannerButton(action: {[weak self] in self?.helpPressed()}, type: .help)],
             nonBannerButtonsAfter: [
-                BannerButton(action: playAgainPressed, menuText: "Play Again", menuSpaceBefore: 20, id: playAgainTag),
-                BannerButton(action: stopPlayingPressed, menuText: "Stop Playing", menuSpaceBefore: (self.gameMode == GameMode.joining ? 20 : 0), id: stopPlayingTag)],
+                BannerButton(action: {[weak self] in self?.playAgainPressed()}, menuText: "Play Again", menuSpaceBefore: 20, id: playAgainTag),
+                BannerButton(action: {[weak self] in self?.stopPlayingPressed()}, menuText: "Stop Playing", menuSpaceBefore: (self.gameMode == GameMode.joining ? 20 : 0), id: stopPlayingTag)],
             backgroundColor: Palette.roomInterior,
             titleFont: UIFont.systemFont(ofSize: 18),
             titleAlignment: .center,
@@ -756,18 +756,19 @@ extension GameSummaryViewController {
 extension GameSummaryViewController {
     
     internal func setupHelpView() {
+        weak var weakSelf = self
         
         self.helpView.reset()
                 
         self.helpView.add("This screen shows the results of the game.\n\nYou can see all the players' scores and any awards you have achieved during the game.")
         
-        self.helpView.add("The @*/Winner\(self.winners == 1 ? "" : "s")@*/ \(self.winners == 1 ? "is" : "are") shown at the top of the screen", views: [self.winnerCollectionView], border: 8)
+        self.helpView.add("The @*/Winner\(weakSelf?.winners == 1 ? "" : "s")@*/ \(weakSelf?.winners == 1 ? "is" : "are") shown at the top of the screen", views: [self.winnerCollectionView], border: 8)
         
         self.helpView.add("The other players scores are shown below (in sequence)", views: [self.otherCollectionView], border: 8)
         
-        self.helpView.add("If you have achieved any awards they are shown in this area.\(self.awardList.isEmpty ? "" : " Tap on an award to see details.")", views: [self.awardsTitleBar])
+        self.helpView.add("If you have achieved any awards they are shown in this area.\((weakSelf?.awardList.isEmpty ?? true) ? "" : " Tap on an award to see details.")", views: [self.awardsTitleBar])
         
-        self.helpView.add("The {} takes you back to the @*/Scorepad@*/ screen where you can look at \(self.gameMode == .scoring || self.gameMode == .viewing ? "the scores for each round" : "the hands for each round")", bannerId: Banner.finishButton)
+        self.helpView.add("The {} takes you back to the @*/Scorepad@*/ screen where you can look at \(weakSelf?.gameMode == .scoring || weakSelf?.gameMode == .viewing ? "the scores for each round" : "the hands for each round")", bannerId: Banner.finishButton)
         
         self.actionButtons.forEach{ (button) in
             var text = ""

@@ -107,8 +107,9 @@ class StatisticsViewer : NSObject, DataTableViewerDelegate {
     }
     
     internal func addHelp(to helpView: HelpView, header: UITableView, body: UITableView) {
+        weak var weakSelf = self
         
-        helpView.add("The @*/\(self.viewTitle)@*/ screen allows you to review the key statistics for all players on this device.")
+        helpView.add("The @*/\(weakSelf?.viewTitle ?? "Statistics")@*/ screen allows you to review the key statistics for all players on this device.")
         
         helpView.add("The header row contains the column titles.\n\nTap on a column title to sort the data by that column's value.\n\nTap the same column again to reverse the order of the sort.\n\nThe up / down arrow shows the order of the sort.", views: [header])
         
@@ -117,7 +118,7 @@ class StatisticsViewer : NSObject, DataTableViewerDelegate {
         let image = NSMutableAttributedString(attachment: NSTextAttachment(image: UIImage(systemName: "info.circle.fill")!))
         image.addAttribute(NSAttributedString.Key.foregroundColor, value: Palette.otherButton.background, range: NSRange(0...image.length - 1))
         let text = NSAttributedString("Tap on the ") + image + NSAttributedString(" button in a row to show that player's details.")
-        helpView.add(text, views: [body], callback: self.infoButton, item: 0)
+        helpView.add(text, views: [body], callback: {[weak self] (item, view) in self?.infoButton(item: item, view: view)}, item: 0)
     }
     
     private func infoButton(item: Int, view: UIView) -> CGRect? {

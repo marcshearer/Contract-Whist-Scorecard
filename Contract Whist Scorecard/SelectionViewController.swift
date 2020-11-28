@@ -417,8 +417,8 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
     private func setupButtons() {
         
         self.banner.set(rightButtons: [
-            BannerButton(action: self.helpPressed, type: .help),
-            BannerButton(title: "Continue", image: UIImage(named: "forward"), width: 100, action: self.continuePressed, menuHide: true, id: "continue")])
+                            BannerButton(action: {[weak self] in self?.helpPressed()}, type: .help),
+                            BannerButton(title: "Continue", image: UIImage(named: "forward"), width: 100, action: {[weak self] in self?.continuePressed()}, menuHide: true, id: "continue")])
         
         // Set cancel button and title
         self.continueButton.toCircle()
@@ -890,20 +890,21 @@ extension SelectionViewController {
 extension SelectionViewController {
     
     internal func setupHelpView() {
+        weak var weakSelf = self
         
         let plusButton = NSAttributedString("+", color: Palette.continueButton.background, font: UIFont.systemFont(ofSize: 24, weight: .black)) + " button"
         
         self.helpView.reset()
 
-        self.helpView.add("This screen allows you to select players \(self.gameMode == .scoring ? "for your game" : "to invite to your online game").\n\nTap (or drag) players in the list \(ScorecardUI.portraitPhone() ? "on the bottom" : "at the right") of the screen to add them to the game.\n\nTap (or drag) players in the room to remove them.\n\nTap on the " + plusButton + " to add a new player to your device")
+        self.helpView.add("This screen allows you to select players \(weakSelf?.gameMode == .scoring ? "for your game" : "to invite to your online game").\n\nTap (or drag) players in the list \(ScorecardUI.portraitPhone() ? "on the bottom" : "at the right") of the screen to add them to the game.\n\nTap (or drag) players in the room to remove them.\n\nTap on the " + plusButton + " to add a new player to your device")
         
-        self.helpView.add("The @*/Room@*/ contains the players who you select to take part in the game.\(self.gameMode == .scoring ? "" : " Your own player always appears at the bottom of the room.") Tap on a player to remove them from the room.", views: [self.selectedPlayersView], radius: 44)
+        self.helpView.add("The @*/Room@*/ contains the players who you select to take part in the game.\(weakSelf?.gameMode == .scoring ? "" : " Your own player always appears at the bottom of the room.") Tap on a player to remove them from the room.", views: [self.selectedPlayersView], radius: 44)
         
         self.helpView.add("You can use the " + plusButton + " to add a new player to the device (and hence to the available players).", views: [self.unselectedCollectionView], item: 0)
 
         self.helpView.add("This area contains other players on the device. Tap on a player to add them to the game (assuming there is a space in the room).", views: [self.unselectedCollectionView], item: 1, itemTo: 9999, border: 4)
                 
-        self.helpView.add("\((selectedList.count < 3 ? "When enough players have been added to the game, the {} will be enabled. ": ""))Tap the {} to \(self.gameMode == .scoring ? "review the selected players and set the dealer prior to starting the game" : "send invitations to the other players and start the game").", descriptor: "@*/Continue@*/ button", views: [self.continueButton], bannerId: "continue", radius: self.continueButton.frame.height / 2)
+        self.helpView.add("\(((weakSelf?.selectedList.count ?? 0) < 3 ? "When enough players have been added to the game, the {} will be enabled. ": ""))Tap the {} to \(weakSelf?.gameMode == .scoring ? "review the selected players and set the dealer prior to starting the game" : "send invitations to the other players and start the game").", descriptor: "@*/Continue@*/ button", views: [self.continueButton], bannerId: "continue", radius: self.continueButton.frame.height / 2)
         
         self.helpView.add("The {} abandons the game and takes you back to the @*/Home@*/ screen.", bannerId: Banner.finishButton, horizontalBorder: 8, verticalBorder: 4)
     }

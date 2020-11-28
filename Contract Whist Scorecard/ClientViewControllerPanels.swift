@@ -267,7 +267,6 @@ extension ClientViewController : PanelContainer {
                 viewController.rootViewController = self.rootViewController
                 viewController.menuController = self.rootViewController.menuController
                 viewController.container = container
-                viewController.uniqueID = viewController.uniqueID ?? UUID().uuidString
                 if let view = viewController.view {
                     let containerView = self.view(container: container)
                     // Got a container - add view controller / view to container

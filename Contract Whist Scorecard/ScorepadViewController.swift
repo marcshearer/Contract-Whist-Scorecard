@@ -158,7 +158,7 @@ class ScorepadViewController: ScorecardViewController,
         Scorecard.shared.alertDelegate = self
         
         // Setup invoke delegate
-        var gameDetailDelegate = self.gameDetailDelegate
+        let gameDetailDelegate = self.gameDetailDelegate
         gameDetailDelegate?.invokeDelegate = self
 
     }
@@ -497,11 +497,11 @@ class ScorepadViewController: ScorecardViewController,
         self.banner.set(
             menuTitle: "Scorepad",
             leftButtons: [
-                BannerButton(image: UIImage(named: "home"), width: 22, action: self.finishPressed, menuHide: true, menuText: "Abandon game", menuSpaceBefore: 20, id: Banner.finishButton),
-                BannerButton(action: self.helpPressed, type: .help)],
+                BannerButton(image: UIImage(named: "home"), width: 22, action: {[weak self] in self?.finishPressed()}, menuHide: true, menuText: "Abandon game", menuSpaceBefore: 20, id: Banner.finishButton),
+                BannerButton(action: {[weak self] in self?.helpPressed()}, type: .help)],
             leftSpacing: 16,
             rightButtons: [
-                BannerButton(title: scoreEntryButtonTitle, width: scoreEntryButtonWidth, action: self.scorePressed, type: .shadow, menuHide: true, menuText: menuText, id: scoreEntryButton)],
+                BannerButton(title: scoreEntryButtonTitle, width: scoreEntryButtonWidth, action: {[weak self] in self?.scorePressed()}, type: .shadow, menuHide: true, menuText: menuText, id: scoreEntryButton)],
             backgroundColor: Palette.banner,
             containerOverrideHeight: Banner.normalHeight)
     }
@@ -1051,19 +1051,20 @@ extension ScorepadViewController {
 extension ScorepadViewController {
     
     internal func setupHelpView() {
+        weak var weakSelf = self
         
         self.helpView.reset()
                 
-        self.helpView.add("This screen shows you a summary of the current score in the game.\n\nYou can tap on a row of the grid to \(self.gameMode == .scoring ? "see details of that round" : "review the hands for that round").")
+        self.helpView.add("This screen shows you a summary of the current score in the game.\n\nYou can tap on a row of the grid to \(weakSelf?.gameMode == .scoring ? "see details of that round" : "review the hands for that round").")
         
         self.helpView.add("The players are shown at the top of the grid. The current dealer is highlighted with a darker background", views: [self.headerTableView], verticalBorder: -0.5, radius: 0)
         
         let trickWith2 = (Scorecard.activeSettings.bonus2 ? "\nThe " + NSAttributedString(imageName: "two") + " image is shown beside the score if a trick was won with a 2." : NSAttributedString())
-        self.helpView.add("\(self.bodyColumns == 2 ? "The left hand column under each player shows the bid made by the player in each round. The right hand column" : "The value under each player") shows the score achieved for each round. The cell is shaded if the contract was made." + trickWith2, views: [self.bodyTableView], radius: 0, shrink: true, direction: .up)
+        self.helpView.add("\(weakSelf?.bodyColumns == 2 ? "The left hand column under each player shows the bid made by the player in each round. The right hand column" : "The value under each player") shows the score achieved for each round. The cell is shaded if the contract was made." + trickWith2, views: [self.bodyTableView], radius: 0, shrink: true, direction: .up)
         
         self.helpView.add("Totals for each player are shown at the bottom of the grid", views: [self.footerTableView], radius: 0)
 
-        self.helpView.add("The {} takes you to the \(Scorecard.game.gameComplete() ? "@*/Game Summary@*/" : (self.gameMode == .scoring || self.gameMode == .viewing ? "@*/Score Entry@*/" : "@*/Hand Playing@*/")) screen", bannerId: self.scoreEntryButton)
+        self.helpView.add("The {} takes you to the \(Scorecard.game.gameComplete() ? "@*/Game Summary@*/" : (weakSelf?.gameMode == .scoring || weakSelf?.gameMode == .viewing ? "@*/Score Entry@*/" : "@*/Hand Playing@*/")) screen", bannerId: self.scoreEntryButton)
 
         self.helpView.add("The {} abandons the game and takes you back to the @*/Home@*/ screen", bannerId: Banner.finishButton, horizontalBorder: 8, verticalBorder: 4)
         

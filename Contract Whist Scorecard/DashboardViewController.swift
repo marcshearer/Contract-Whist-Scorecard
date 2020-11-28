@@ -691,6 +691,7 @@ class Dashboard {
 extension DashboardViewController {
     
     internal func setupHelpView(view: DashboardView) {
+        weak var weakSelf = self
         
         if self.helpViewId != view.id {
             
@@ -700,9 +701,11 @@ extension DashboardViewController {
             
             var text = ""
             if self.dashboardInfo.count > 1 {
-                text = "The @*/\(self.banner.title ?? "Dashboard")@*/ screen contains \(self.dashboardInfo.count) dashboards.\n\nYou can switch between them using the carousel at the top of the screen or by swiping left or right.\n\n"
+                let title = self.banner.title ?? "Dashboard"
+                let count = self.dashboardInfo.count
+                text = "The @*/\(title)@*/ screen contains \(count) dashboards.\n\nYou can switch between them using the carousel at the top of the screen or by swiping left or right.\n\n"
             }
-            self.helpView.add("\(text)\(self.dashboardHelp())")
+            self.helpView.add("\(text)\(weakSelf?.dashboardHelp() ?? "")")
             
             self.helpView.add("The @*/Carousel@*/ allows you to switch between the different dashboard views. Either swipe it or tap on one of the tiles to navigate.", views: [self.carouselCollectionView, self.scrollCollectionView], verticalBorder: 4, radius: 0)
             

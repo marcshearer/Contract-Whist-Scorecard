@@ -257,8 +257,8 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
         // Add banner confirm button
         self.banner.set(
             rightButtons: [
-                BannerButton(action: self.helpPressed, type: .help),
-                BannerButton(title: "Confirm", image: UIImage(named: "forward"), width: 100, action: self.confirmPressed, menuHide: true, id: "confirm")])
+                BannerButton(action: {[weak self] in self?.helpPressed()}, type: .help),
+                BannerButton(title: "Confirm", image: UIImage(named: "forward"), width: 100, action: {[weak self] in self?.confirmPressed()}, menuHide: true, id: "confirm")])
         
         // Set confirm button and title
         self.confirmButton.toCircle()

@@ -79,9 +79,9 @@ class RoundSummaryViewController: ScorecardViewController, BannerDelegate {
     private func setupBanner() {
         self.banner.set(
             leftButtons: [
-                BannerButton(image: UIImage(named: "back"), width: 22, action: self.finishPressed, id: Banner.finishButton)],
+                BannerButton(image: UIImage(named: "back"), width: 22, action: {[weak self] in self?.finishPressed()}, id: Banner.finishButton)],
             rightButtons: [
-                BannerButton(action: self.helpPressed, type: .help)]
+                BannerButton(action: {[weak self] in self?.helpPressed()}, type: .help)]
         )
     }
     

@@ -339,8 +339,8 @@ class LocationViewController: ScorecardViewController, UITableViewDataSource, UI
         // Add banner continue button
         self.banner.set(
             rightButtons: [
-                BannerButton(action: self.helpPressed, type: .help),
-                BannerButton(title: "Continue", image: UIImage(named: "forward"), width: 100, action: self.continuePressed, menuHide: true, id: "continue")])
+                BannerButton(action: {[weak self] in self?.helpPressed()}, type: .help),
+                BannerButton(title: "Continue", image: UIImage(named: "forward"), width: 100, action: {[weak self] in self?.continuePressed()}, menuHide: true, id: "continue")])
         
         // Set continue button and title
         self.continueButton.toCircle()
@@ -609,18 +609,19 @@ extension LocationViewController {
 extension LocationViewController {
     
     internal func setupHelpView() {
+        weak var weakSelf = self
         
         self.helpView.reset()
           
-        self.helpView.add("The @*/Location@*/ screen allows you to \(self.updateMode ? "update the location for a game in your history" : "enter the current location which will be saved to the game history").\(self.useCurrentLocation ? "\nThe current location will be shown on entry if you have allowed the app access to your current location." : "")\nYou can select a recent location from a list (when the search bar is empty) or you can enter text in the search bar to search for a location.")
+        self.helpView.add("The @*/Location@*/ screen allows you to \((weakSelf?.updateMode ?? false) ? "update the location for a game in your history" : "enter the current location which will be saved to the game history").\((weakSelf?.useCurrentLocation ?? false) ? "\nThe current location will be shown on entry if you have allowed the app access to your current location." : "")\nYou can select a recent location from a list (when the search bar is empty) or you can enter text in the search bar to search for a location.")
         
         self.helpView.add("Enter text to search for the current location in the @*/Search@*/ bar or set to blank to see a list of recent locations.", views: [self.searchTextField], border: 0, radius: 8)
         
-        self.helpView.add("\((self.searchBar.text! != "" ? "Below the @*/Search@*/ bar you will see a list of matching locations. Blank out the search text to see recent locations from this device" : "When the @*/Search@*/ bar is empty you will see a list of the most recent locations where you have played. Enter some text to search for other locations")).", views: [self.locationTableView], radius: 0, shrink: true)
+        self.helpView.add("\(((weakSelf?.searchBar.text ?? "") != "" ? "Below the @*/Search@*/ bar you will see a list of matching locations. Blank out the search text to see recent locations from this device" : "When the @*/Search@*/ bar is empty you will see a list of the most recent locations where you have played. Enter some text to search for other locations")).", views: [self.locationTableView], radius: 0, shrink: true)
         
         self.helpView.add("The selected location will be shown on the map by a pin. You can zoom in and out using pinch gestures or swipe to move the map.\n\nYou **cannot** select a location from the map", views: [self.locationMapView], radius: 0, shrink: true)
         
-        self.helpView.add("\((self.canFinish ? "When you have specified a location the {} will be enabled. " : ""))Tap the {} to start the game.", descriptor: "@*/Continue@*/ button", views: [self.continueButton], bannerId: "continue", radius: self.continueButton.frame.height / 2)
+        self.helpView.add("\(((weakSelf?.canFinish ?? false) ? "When you have specified a location the {} will be enabled. " : ""))Tap the {} to start the game.", descriptor: "@*/Continue@*/ button", views: [self.continueButton], bannerId: "continue", radius: self.continueButton.frame.height / 2)
         
         self.helpView.add("The {} will abandon the game and take you back to the @*/Home@*/ screen.", bannerId: Banner.finishButton)
     }

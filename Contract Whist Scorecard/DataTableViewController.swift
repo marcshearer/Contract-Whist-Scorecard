@@ -153,15 +153,15 @@ class DataTableViewController: ScorecardViewController, UITableViewDataSource, U
         let syncWidth = (ScorecardUI.smallPhoneSize() ? 30 : max(syncTitle!.labelWidth(font: BannerButton.defaultFont) + 16, 60))
         
         var leftBannerButtons = [
-            BannerButton(title: finishTitle, image: finishImage, width: finishWidth, action: self.finishPressed, menuHide: true, id: finishButton)]
+            BannerButton(title: finishTitle, image: finishImage, width: finishWidth, action: {[weak self] in self?.finishPressed()}, menuHide: true, id: finishButton)]
         
         if let customBannerButton = self.delegate?.setupCustomButton?(id: customButton) {
             leftBannerButtons.append(customBannerButton)
         }
 
         let rightBannerButtons = [
-            BannerButton(action: self.helpPressed, type: .help),
-            BannerButton(title: syncTitle, image: syncImage, width: syncWidth, action: self.syncPressed, type: syncType, id: syncButton)]
+            BannerButton(action: {[weak self] in self?.helpPressed()}, type: .help),
+            BannerButton(title: syncTitle, image: syncImage, width: syncWidth, action: {[weak self] in self?.syncPressed()}, type: syncType, id: syncButton)]
         
         self.banner.set(
             title: (self.delegate?.viewTitle ?? ""),
@@ -830,6 +830,7 @@ extension DataTableViewController {
         
         helpView.add("Tap the @*/Sync@*/ button allows you to synchronize the data on this device with the data in iCloud.", bannerId: syncButton)
         
-        helpView.add("Tap the {} to exit from @*/\((self.delegate?.viewTitle)!)@*/ and return to the previous view.", bannerId: self.finishButton, horizontalBorder: 8, verticalBorder: 4)
+        let title = self.delegate?.viewTitle ?? ""
+        helpView.add("Tap the {} to exit from @*/\(title)@*/ and return to the previous view.", bannerId: self.finishButton, horizontalBorder: 8, verticalBorder: 4)
     }
 }

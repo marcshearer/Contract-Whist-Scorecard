@@ -200,7 +200,7 @@ class Scores {
         return bids
     }
         
-    public func subscribe(dedupPlayer: Bool = false, completion: @escaping (Int, Int)->()) -> AnyCancellable {
+    public func subscribe(completion: @escaping (Int, Int)->()) -> AnyCancellable {
         return self.changedRound
             .receive(on: RunLoop.main)
             .sink() { (round, player) in

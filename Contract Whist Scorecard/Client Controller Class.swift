@@ -436,7 +436,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
                             playerMO.thumbnailDate = Utility.dateFromString(thumbnailDate) as Date?
                         })
                         // And notify any views waiting for images
-                        NotificationCenter.default.post(name: .playerImageDownloaded, object: self, userInfo: ["playerObjectID": playerMO.objectID])
+                        Notifications.post(name: .playerImageDownloaded, object: self, userInfo: ["playerObjectID": playerMO.objectID])
                     }
                     
                 case "deal":
@@ -655,13 +655,15 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
     
     @objc private func checkConnecting(_ sender: Any? = nil) {
         // Periodically check that a peer that thinks it is connecting has not gone quiescent for more than 3 secs
-        Utility.mainThread { [unowned self] in
-            for available in self.available {
-                if available.connecting {
-                    if available.lastConnect?.timeIntervalSinceNow ?? TimeInterval(-4.0) < TimeInterval(-3.0) {
-                        Utility.mainThread {
-                            Utility.debugMessage("controller \(self.uuid)", "Firing connection timer")
-                            self.clientService?.reset()
+        Utility.mainThread { [weak self] in
+            if let availableList = self?.available {
+                for available in availableList {
+                    if available.connecting {
+                        if available.lastConnect?.timeIntervalSinceNow ?? TimeInterval(-4.0) < TimeInterval(-3.0) {
+                            Utility.mainThread {
+                                Utility.debugMessage("controller \(self?.uuid ?? "unknown")", "Firing connection timer")
+                                self?.clientService?.reset()
+                            }
                         }
                     }
                 }
@@ -876,9 +878,11 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
     
     @objc private func refreshInvites(_ sender: Any? = nil) {
         // Refresh online game invites
-        Utility.mainThread { [unowned self] in
-            if Scorecard.shared.onlineEnabled && (self.controllerState == .notConnected || self.controllerState == .reconnecting) {
-                self.onlineClientService?.checkOnlineInvites(playerUUID: self.thisPlayer)
+        Utility.mainThread { [weak self] in
+            if Scorecard.shared.onlineEnabled && (self?.controllerState == .notConnected || self?.controllerState == .reconnecting) {
+                if let thisPlayer = self?.thisPlayer {
+                    self?.onlineClientService?.checkOnlineInvites(playerUUID: thisPlayer)
+                }
             }
         }
     }

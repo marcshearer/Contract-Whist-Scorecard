@@ -145,8 +145,7 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
     private let arrowHeight: CGFloat = 40
     private let minVisibleDimension: CGFloat = 20
     
-    private static var _helpContext: String?
-    public static var helpContext: String? { _helpContext }
+    private(set) internal static var helpContext: String?
     
     public var isEmpty: Bool { return self.elements.isEmpty }
 
@@ -223,7 +222,7 @@ class HelpView : UIView, UIGestureRecognizerDelegate {
         self.finishTitle = finishTitle
         self.focusBackgroundColor = focusBackgroundColor
         
-        HelpView._helpContext = UUID().uuidString
+        HelpView.helpContext = UUID().uuidString
         self.layoutSubviews()
         
         self.isHidden = false

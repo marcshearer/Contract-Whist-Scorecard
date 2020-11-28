@@ -202,12 +202,12 @@ class ScorepadViewController: ScorecardViewController,
         // Tidy up before exiting
         self.cancelScoresSubscription()
         if observer != nil {
-            NotificationCenter.default.removeObserver(self.observer!)
+            Notifications.removeObserver(self.observer)
             observer = nil
         }
         UIApplication.shared.isIdleTimerDisabled = false
 
-        var gameDetailDelegate = self.gameDetailDelegate
+        let gameDetailDelegate = self.gameDetailDelegate
         gameDetailDelegate?.invokeDelegate = nil
     }
     
@@ -310,9 +310,9 @@ class ScorepadViewController: ScorecardViewController,
     
     private func setImageDownloadNotification() -> NSObjectProtocol? {
         // Set a notification for images downloaded
-        let observer = NotificationCenter.default.addObserver(forName: .playerImageDownloaded, object: nil, queue: nil) {
+        let observer = Notifications.addObserver(forName: .playerImageDownloaded) { [weak self]
             (notification) in
-            self.updateImage(objectID: notification.userInfo?["playerObjectID"] as! NSManagedObjectID)
+            self?.updateImage(objectID: notification.userInfo?["playerObjectID"] as! NSManagedObjectID)
         }
         return observer
     }

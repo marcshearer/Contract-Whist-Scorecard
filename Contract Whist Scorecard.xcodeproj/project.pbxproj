@@ -162,6 +162,7 @@
 		B28E8C1E24BEBFED0053E237 /* AwardCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28E8C1D24BEBFED0053E237 /* AwardCollectionCell.swift */; };
 		B28E8C2024BEBFFC0053E237 /* AwardListCollectionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B28E8C1F24BEBFFC0053E237 /* AwardListCollectionCell.xib */; };
 		B28E8C2324C03CC10053E237 /* Awards.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28E8C2224C03CC10053E237 /* Awards.swift */; };
+		B291D18825702860006A5E31 /* Weak Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = B291D18725702860006A5E31 /* Weak Dictionary.swift */; };
 		B298496924E6DF4400FADC06 /* LaunchScreenView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B298496824E6DF4400FADC06 /* LaunchScreenView.xib */; };
 		B29AD706224F88060087160B /* Whisper Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29AD705224F88060087160B /* Whisper Class.swift */; };
 		B29D675F253B1B99000CE151 /* appicon green@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = B29D6759253B1B98000CE151 /* appicon green@3x.png */; };
@@ -471,6 +472,7 @@
 		B28E8C1D24BEBFED0053E237 /* AwardCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AwardCollectionCell.swift; sourceTree = "<group>"; };
 		B28E8C1F24BEBFFC0053E237 /* AwardListCollectionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AwardListCollectionCell.xib; sourceTree = "<group>"; };
 		B28E8C2224C03CC10053E237 /* Awards.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Awards.swift; sourceTree = "<group>"; };
+		B291D18725702860006A5E31 /* Weak Dictionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Weak Dictionary.swift"; sourceTree = "<group>"; };
 		B298496824E6DF4400FADC06 /* LaunchScreenView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LaunchScreenView.xib; sourceTree = "<group>"; };
 		B29AD705224F88060087160B /* Whisper Class.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Whisper Class.swift"; sourceTree = "<group>"; };
 		B29D6759253B1B98000CE151 /* appicon green@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "appicon green@3x.png"; path = "../../Images/Media.xcassets/Appicon Green.imageset/appicon green@3x.png"; sourceTree = "<group>"; };
@@ -1279,6 +1281,7 @@
 				B25FC7CC22D4868500D2E651 /* Rotation Gesture.swift */,
 				B267DF74211F41FC0086D521 /* Admin Menu.swift */,
 				B2B92055256B960B001AE83B /* Weak Array.swift */,
+				B291D18725702860006A5E31 /* Weak Dictionary.swift */,
 			);
 			name = "Utility Classes";
 			sourceTree = "<group>";
@@ -2134,6 +2137,7 @@
 				B2372E282489353E00A6872D /* SampleTheme.swift in Sources */,
 				CC9EF3F21DFEE54A006E8930 /* DataTableViewController.swift in Sources */,
 				CCCA16631DEF9947006AA415 /* EntryViewController.swift in Sources */,
+				B291D18825702860006A5E31 /* Weak Dictionary.swift in Sources */,
 				B2B180252119611C008D3BAA /* ReviewViewController.swift in Sources */,
 				B2D8104E225AF7B6005A86A5 /* Multipeer logger.swift in Sources */,
 				CC8655861E036432000AF391 /* Player Detail Class.swift in Sources */,

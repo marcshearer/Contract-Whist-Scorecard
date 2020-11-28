@@ -42,13 +42,13 @@ class Location: NSObject, CLLocationManagerDelegate {
     }
     
     internal func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        Utility.mainThread { [unowned self] in
+        Utility.mainThread { [weak self] in
             if status == .authorizedWhenInUse {
                 // Authorization granted
-                self.successAction?()
+                self?.successAction?()
              } else {
                 // Permission to use location refused
-                self.failureAction?()
+                self?.failureAction?()
             }
         }
     }

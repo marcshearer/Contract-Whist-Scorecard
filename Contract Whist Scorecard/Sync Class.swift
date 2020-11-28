@@ -1567,7 +1567,7 @@ class Sync {
                         self.localPlayerMOList[playerNumber - 1].syncRecordID = self.localPlayerRecordList[playerNumber-1].syncRecordID
                     
                         // Notify observers this player has been updated
-                        NotificationCenter.default.post(name: .playerDownloaded, object: self, userInfo: ["playerObjectID": self.localPlayerMOList[playerNumber - 1].objectID])
+                        Notifications.post(name: .playerDownloaded, object: self, userInfo: ["playerObjectID": self.localPlayerMOList[playerNumber - 1].objectID])
                     }
                     // Clear sync in progress flag
                     self.localPlayerMOList[playerNumber - 1].syncInProgress = false
@@ -1639,7 +1639,7 @@ class Sync {
                 }
                 // Send a notification to any objects that might be interested with the object ID of the playerMO object ID
                 for objectId in playerObjectId {
-                    NotificationCenter.default.post(name: .playerImageDownloaded, object: self, userInfo: ["playerObjectID": objectId])
+                    Notifications.post(name: .playerImageDownloaded, object: self, userInfo: ["playerObjectID": objectId])
                 }
             }
             publicDatabase.add(fetchOperation)
@@ -1867,10 +1867,10 @@ class Sync {
         self.delegate = nil
         
         if self.observer != nil {
-            NotificationCenter.default.removeObserver(self.observer!)
+            Notifications.removeObserver(self.observer)
             self.observer = nil
         }
-        NotificationCenter.default.post(name: .syncCompletion, object: self, userInfo: nil)
+        Notifications.post(name: .syncCompletion, object: self)
     }
     
     private func syncReturnPlayers(_ playerList: [PlayerDetail]?, _ thisPlayer: String? = nil) {
@@ -1894,16 +1894,16 @@ class Sync {
     
     private func setSyncCompletionNotification(name: Notification.Name) -> NSObjectProtocol? {
         // Set a notification for background completion
-        self.observer = NotificationCenter.default.addObserver(forName: name, object: nil, queue: nil) { (notification) in
+        self.observer = Notifications.addObserver(forName: name) { [weak self] (notification) in
             if !Sync.syncInProgress {
                 Sync.syncInProgress = true
-                if let observer = self.observer {
-                    NotificationCenter.default.removeObserver(observer)
+                if let observer = self?.observer {
+                    Notifications.removeObserver(observer)
                 }
-                self.delegate?.syncStarted?()
-                self.delegate?.syncMessage?("Started...")
-                Utility.debugMessage("sync", "Starting queued task from \(self.delegate?.syncDelegateDescription ?? "Unknown") (\(self.uuid.right(4)))")
-                self.syncController()
+                self?.delegate?.syncStarted?()
+                self?.delegate?.syncMessage?("Started...")
+                Utility.debugMessage("sync", "Starting queued task from \(self?.delegate?.syncDelegateDescription ?? "Unknown") (\(self?.uuid.right(4) ?? ""))")
+                self?.syncController()
             }
         }
         return observer

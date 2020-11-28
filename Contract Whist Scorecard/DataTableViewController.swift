@@ -307,7 +307,7 @@ class DataTableViewController: ScorecardViewController, UITableViewDataSource, U
     
     private func dismiss() {
         if self.observer != nil {
-            NotificationCenter.default.removeObserver(self.observer!)
+            Notifications.removeObserver(self.observer)
             self.observer = nil
         }
         self.dismiss(animated: true, completion: self.delegate?.completion)

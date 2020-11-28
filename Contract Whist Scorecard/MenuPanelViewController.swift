@@ -624,9 +624,8 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
     
     func setPlayerDownloadNotification(name: Notification.Name) -> NSObjectProtocol? {
         // Set a notification for images downloaded
-        let observer = NotificationCenter.default.addObserver(forName: name, object: nil, queue: nil) {
-            (notification) in
-            self.updatePlayer(objectID: notification.userInfo?["playerObjectID"] as! NSManagedObjectID)
+        let observer = Notifications.addObserver(forName: name) { [weak self] (notification) in
+            self?.updatePlayer(objectID: notification.userInfo?["playerObjectID"] as! NSManagedObjectID)
         }
         return observer
     }

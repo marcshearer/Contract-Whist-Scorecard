@@ -158,7 +158,7 @@ class ViewGroup: UIView {
         
         // Set total width
         self.constraintList.append(Constraint.setWidth(control: self.contentView, width: width))
-        
+                
         if layout {
             self.contentView.setNeedsUpdateConstraints()
             self.contentView.updateConstraintsIfNeeded()

@@ -237,10 +237,10 @@ extension HandViewController {
     
     func setcheckAutoPlayInputNotification() {
         // Set a notification for handler complete
-        self.handTestData.observer = NotificationCenter.default.addObserver(forName: .checkAutoPlayInput, object: nil, queue: nil) {
+        self.handTestData.observer = Notifications.addObserver(forName: .checkAutoPlayInput) { [weak self]
             (notification) in
-            NotificationCenter.default.removeObserver(self.handTestData.observer!)
-            self.checkTestWait()
+            Notifications.removeObserver(self?.handTestData.observer)
+            self?.checkTestWait()
         }
     }
 }

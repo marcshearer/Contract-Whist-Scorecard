@@ -211,7 +211,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
         super.viewDidAppear(true)
         
         // Catch up on any auto bids that arrived too early
-        NotificationCenter.default.post(name: .checkAutoPlayInput, object: self, userInfo: nil)
+        Notifications.post(name: .checkAutoPlayInput, object: self)
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -485,7 +485,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
                 self.executeAfter(delay: 1.0) {
                     self.banner.setButton(self.finishButton, isHidden: false)
                     self.controllerDelegate?.lock(false)
-                    NotificationCenter.default.post(name: .checkAutoPlayInput, object: self, userInfo: nil)
+                    Notifications.post(name: .checkAutoPlayInput, object: self)
                     self.bidMode(newBidMode)
                     self.stateController()
                 }
@@ -544,7 +544,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
                         self.executeAfter(delay: 1.0) {
                             self.banner.setButton(self.finishButton, isHidden: false)
                             self.controllerDelegate?.lock(false)
-                            NotificationCenter.default.post(name: .checkAutoPlayInput, object: self, userInfo: nil)
+                            Notifications.post(name: .checkAutoPlayInput, object: self)
                         }
                     }	
                 } else {
@@ -654,8 +654,8 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
     // MARK: - Bid / card publisher subscription =========================================================== -
     
     private func setupBidSubscriptions() {
-        self.bidSubscription = Scorecard.shared.subscribeBid { [unowned self] (round, enteredPlayerNumber, bid) in
-            self.reflectBid(round: round, enteredPlayerNumber: enteredPlayerNumber)
+        self.bidSubscription = Scorecard.shared.subscribeBid { [weak self] (round, enteredPlayerNumber, bid) in
+            self?.reflectBid(round: round, enteredPlayerNumber: enteredPlayerNumber)
         }
     }
     

@@ -53,7 +53,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     private var thisPlayerBeforeSettings: String!
     private var displayingPeer = 0
     public var dismissSnapshotStack: [UIView] = []
-    internal var viewControllerStack: [(uniqueID: String, viewController: ScorecardViewController)] = []
+    internal var viewControllerStack: [ViewControllerStackElement] = []
     internal weak var detailDelegate: DetailDelegate?
     private var playerSelectionVisible = false
 
@@ -446,7 +446,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     }
     
     private func showPlayers() {
-        PlayersViewController.show(from: self, completion: {self.restart()})
+        PlayersViewController.show(from: self, completion: {[weak self] in self?.restart()})
     }
     
     private func showDashboard() {
@@ -1188,9 +1188,9 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     
     func setPlayerDownloadNotification(name: Notification.Name) -> NSObjectProtocol? {
         // Set a notification for images downloaded
-        let observer = NotificationCenter.default.addObserver(forName: name, object: nil, queue: nil) {
-            (notification) in
-            self.updatePlayer(objectID: notification.userInfo?["playerObjectID"] as! NSManagedObjectID)
+        let observer = Notifications.addObserver(forName: name) { [weak self] (notification) in
+            self?.updatePlayer(objectID: notification.userInfo?["playerObjectID"] as! NSManagedObjectID)
+            self?.playerSelectionView?.updatePlayer(objectID: notification.userInfo?["playerObjectID"] as! NSManagedObjectID)
         }
         return observer
     }

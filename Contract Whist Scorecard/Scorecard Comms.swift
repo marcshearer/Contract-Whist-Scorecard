@@ -88,15 +88,15 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
     
     public func didReceiveData(descriptor: String, data: [String : Any?]?, from commsPeer: CommsPeer) {
         
-        Utility.mainThread("didReceiveData", execute: { [unowned self] in
+        Utility.mainThread("didReceiveData", execute: { [weak self] in
             switch descriptor {
             case "refreshRequest":
                 // Remote device wants a refresh of the current state
-                self.sendScoringState(from: self.commsPlayerDelegate, to: commsPeer)
+                self?.sendScoringState(from: self?.commsPlayerDelegate, to: commsPeer)
             case "requestThumbnail":
-                self.sendPlayerThumbnail(playerUUID: data!["playerUUID"] as! String, to: commsPeer)
+                self?.sendPlayerThumbnail(playerUUID: data!["playerUUID"] as! String, to: commsPeer)
             case "testConnection":
-                self.commsDelegate?.send("testResponse", nil, to: commsPeer)
+                self?.commsDelegate?.send("testResponse", nil, to: commsPeer)
                 Utility.getActiveViewController()?.alertMessage("Connection test received from \(commsPeer.playerName!).\nResponse sent", title: "Connection Test")
             case "testResponse":
                 Utility.getActiveViewController()?.alertMessage("Connection test response received from \(commsPeer.playerName!)", title: "Connection Test")

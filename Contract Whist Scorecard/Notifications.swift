@@ -145,7 +145,7 @@ class Notifications {
             // Check that we're looking to play (rather than share) and playerUUIDs match
             if clientViewController.thisPlayer == args[3] {
                 // Already in the right place and right player - just send notification
-                NotificationCenter.default.post(name: .onlineInviteReceived, object: self, userInfo: nil)
+                Notifications.post(name: .onlineInviteReceived, object: self)
             }
             // Don't give alert if already joining an online game - even if player didn't match
             skipNotification = true
@@ -164,8 +164,8 @@ class Notifications {
                     viewController?.alertDecision(message, title: "Game Invitation", okButtonText: "Join", okHandler: {
                         let rootViewController = scorecardViewController.rootViewController!
                         var controllers: [ScorecardViewController] = []
-                        for (_, childViewController) in rootViewController.viewControllerStack.reversed() {
-                            controllers.append(childViewController)
+                        for element in rootViewController.viewControllerStack.reversed() {
+                            controllers.append(element.viewController)
                         }
                         self.dismissAll(controllers, completion: {
                             rootViewController.selectAvailableDevice(deviceName: args[2])
@@ -229,5 +229,24 @@ class Notifications {
                 }
             }
         }
+    }
+    
+    public class func addObserver(forName name: NSNotification.Name,
+                                       using block: @escaping (Notification) -> Void) -> NSObjectProtocol? {
+        // let observer = NotificationCenter.default.addObserver(forName: name, object: nil, queue: nil, using: block)
+        // Utility.debugMessage("Notifications", "Add \(name) \(observer.description)")
+        return nil // observer
+    }
+    
+    public class func removeObserver(_ observer: NSObjectProtocol?) {
+        if let observer = observer {
+            Utility.debugMessage("Notifications", "Remove \(observer.description)")
+            NotificationCenter.default.removeObserver(observer)
+        }
+    }
+    
+    public class func post(name: NSNotification.Name, object: Any? = nil, userInfo: [AnyHashable:Any]? = nil) {
+        // Utility.debugMessage("Notifications", "Post to \(name)")
+        // NotificationCenter.default.post(name: name, object: object, userInfo: userInfo)
     }
 }

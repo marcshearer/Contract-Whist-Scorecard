@@ -229,9 +229,9 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
     
     func setPlayerDownloadNotification(name: Notification.Name) -> NSObjectProtocol? {
         // Set a notification for images downloaded
-        let observer = NotificationCenter.default.addObserver(forName: name, object: nil, queue: nil) {
-            (notification) in
-            self.updatePlayer(objectID: notification.userInfo?["playerObjectID"] as! NSManagedObjectID)
+        let observer = Notifications.addObserver(forName: name) { [weak self] (notification) in
+            self?.updatePlayer(objectID: notification.userInfo?["playerObjectID"] as! NSManagedObjectID)
+            self?.playerSelectionView?.updatePlayer(objectID: notification.userInfo?["playerObjectID"] as! NSManagedObjectID)
         }
         return observer
     }
@@ -601,6 +601,7 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
     }
     
     private func dismiss() {
+        Notifications.removeObserver(self.imageObserver)
         self.imageObserver = nil
         Scorecard.settings.syncEnabled = true
         Scorecard.settings.save()

@@ -18,11 +18,25 @@ public class Reachability {
     private var _isLoggedIn: Bool?
     public var isLoggedIn: Bool { self._isLoggedIn ?? false }
     public var isConnected: Bool { self.isNetworkAvailable && self.isLoggedIn }
+    private var observer: NSObjectProtocol?
     
     init() {
+        self.start()
+    }
+    
+    public func start() {
         self.monitor.pathUpdateHandler = self.pathUpdateHandler
         self.monitor.start(queue: DispatchQueue.main)
-        NotificationCenter.default.addObserver(self, selector: #selector(accountStatusUpdateHandler(_:)), name: Notification.Name.CKAccountChanged, object: nil)
+        self.observer = Notifications.addObserver(forName: Notification.Name.CKAccountChanged) { [weak self] (notification) in
+            self?.accountStatusUpdateHandler(notification)
+        }
+    }
+    
+    public func stop() {
+        self.monitor.cancel()
+        self.monitor.pathUpdateHandler = nil
+        Notifications.removeObserver(self.observer)
+        self.observer = nil
     }
     
     private func pathUpdateHandler(path: NWPath) {
@@ -40,7 +54,7 @@ public class Reachability {
             } else {
                 self._isLoggedIn = false
             }
-            NotificationCenter.default.post(name: .connectivityChanged, object: self, userInfo: ["isConnected" : self.isConnected])
+            Notifications.post(name: .connectivityChanged, object: self, userInfo: ["isConnected" : self.isConnected])
         }
     }
     
@@ -54,18 +68,18 @@ public class Reachability {
             if newValue != self._isLoggedIn {
                 // Changed - update it and reawaken listeners
                 self._isLoggedIn = newValue
-                NotificationCenter.default.post(name: .connectivityChanged, object: self, userInfo: ["isConnected" : self.isConnected])
+                Notifications.post(name: .connectivityChanged, object: self, userInfo: ["isConnected" : self.isConnected])
             }
         })
     }
         
     public func startMonitor(action: @escaping (Bool)->()) -> NSObjectProtocol? {
-        let observer = NotificationCenter.default.addObserver(forName: .connectivityChanged, object: nil, queue: nil) { (notification) in
-            let info = notification.userInfo
-            let available = info?["isConnected"] as! Bool?
-            Utility.mainThread {
-                action(available ?? false)
-            }
+        let observer = Notifications.addObserver(forName: .connectivityChanged) { (notification) in
+                let info = notification.userInfo
+                let available = info?["isConnected"] as! Bool?
+                Utility.mainThread {
+                    action(available ?? false)
+                }
         }
         return observer
     }

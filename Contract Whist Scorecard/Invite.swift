@@ -150,18 +150,18 @@ class Invite {
         }
         
         queryOperation.queryCompletionBlock = { (cursor, error) -> Void in
-            Utility.mainThread { [unowned self] in
+            Utility.mainThread { [weak self] in
                 if error != nil || cursor != nil {
                     var message = "Unable to connect to cloud"
                     if Scorecard.adminMode {
                         message = message + " " + error.debugDescription
                     }
-                    self.completion(false, message)
+                    self?.completion(false, message)
                     return
                 }
                 
                 // Link back to controller for next phase
-                self.controller()
+                self?.controller()
             }
         }
         

@@ -9,6 +9,7 @@
 import UIKit
 import UserNotifications
 import GameKit
+import CoreData
 
 
 class SettingsViewController: ScorecardViewController, UITableViewDataSource, UITableViewDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, CustomCollectionViewLayoutDelegate, PlayerSelectionViewDelegate, BannerDelegate {
@@ -45,6 +46,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     private var topSectionCompressed = false
     private var highlightConfettiWin = false
     private var observer: NSObjectProtocol?
+    private var imageObserver: NSObjectProtocol?
     
     // Sections
     private enum Sections: Int, CaseIterable {
@@ -182,8 +184,11 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
         self.facetimeEnabled = Scorecard.settings.syncEnabled && Scorecard.settings.onlineGamesEnabled && Scorecard.settings.faceTimeAddress != ""
         
         // Set observer for entering foreground
-        self.observer = NotificationCenter.default.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: nil, using: self.willEnterForeground)
-            
+        self.observer = Notifications.addObserver(forName: UIApplication.willEnterForegroundNotification, using: self.willEnterForeground)
+        
+        // Set image observer
+        imageObserver = setPlayerDownloadNotification(name: .playerImageDownloaded)
+        
         // Setup color themes
         self.setupThemes()
         
@@ -1652,6 +1657,14 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
         }
     }
     
+    private func setPlayerDownloadNotification(name: Notification.Name) -> NSObjectProtocol? {
+        // Set a notification for images downloaded
+        let observer = Notifications.addObserver(forName: name) { [weak self] (notification) in
+            self?.playerSelectionView?.updatePlayer(objectID: notification.userInfo?["playerObjectID"] as! NSManagedObjectID)
+        }
+        return observer
+    }
+    
     // MARK: - Online game methods ========================================================== -
     
     private func setOnlinePlayerUUID(playerUUID: String!) {
@@ -1701,7 +1714,10 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     }
     
     override internal func willDismiss() {
+        Notifications.removeObserver(self.observer)
         self.observer = nil
+        Notifications.removeObserver(self.imageObserver)
+        self.imageObserver = nil
         Scorecard.settings.save()
         
         // Save to iCloud

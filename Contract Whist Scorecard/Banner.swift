@@ -182,7 +182,7 @@ class Banner : UIView {
         }
         
         if finishText != nil || finishImage != nil {
-            self.leftButtons = [BannerButton(title: self.finishText, image: self.finishImage?.asTemplate, width: (self.finishText == nil ? 22 : 100), action: self.delegate?.finishPressed, menuHide: self.menuHide, menuText: self.menuText, menuSpaceBefore: self.menuSpaceBefore, id: Banner.finishButton)]
+            self.leftButtons = [BannerButton(title: self.finishText, image: self.finishImage?.asTemplate, width: (self.finishText == nil ? 22 : 100), action: {[weak self] in self?.delegate?.finishPressed()}, menuHide: self.menuHide, menuText: self.menuText, menuSpaceBefore: self.menuSpaceBefore, id: Banner.finishButton)]
             arrange = true
         }
         

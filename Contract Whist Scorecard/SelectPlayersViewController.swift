@@ -32,7 +32,6 @@ class SelectPlayersViewController: ScorecardViewController, SyncDelegate, Button
     private let separatorHeight: CGFloat = 20.0
     private let titleOverlap: CGFloat = 25.0
     private var containerHeight: CGFloat = 0.0
-    private var playerSelectionViewHeight: CGFloat = 0.0
 
     // Other properties
     private var rotated = false

@@ -118,7 +118,7 @@ public struct ScorecardAppQueue {
 
 class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate {
 
-    internal var activeViewController: ScorecardViewController?
+    internal weak var activeViewController: ScorecardViewController?
     internal weak var parentViewController: ScorecardViewController!
     internal var _controllerType: ControllerType
     private static var references: [ControllerType:Int] = [:]
@@ -519,7 +519,7 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
     
     private func clearViewPresentingCompleteNotification(observer: NSObjectProtocol?) {
         if let observer = observer {
-            NotificationCenter.default.removeObserver(observer)
+            Notifications.removeObserver(observer)
         }
     }
     
@@ -777,10 +777,6 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
     
     internal func present(_ viewControllerToPresent: ScorecardViewController, appController: ScorecardAppController? = nil, popoverSize: CGSize? = nil, sourceView: UIView? = nil, verticalOffset: CGFloat = 0.5, animated: Bool, container: Container? = .main, animation: ViewAnimation? = nil, completion: (() -> Void)? = nil) {
 
-        func hideAndComplete() {
-            completion?()
-        }
-        
         // Fill in controller information
         viewControllerToPresent.controllerDelegate = appController
         viewControllerToPresent.appController = appController ?? self.appController
@@ -800,7 +796,7 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
             viewControllerToPresent.container = .none
             
             // Add to view stack
-            self.rootViewController?.viewControllerStack.append((viewControllerToPresent.uniqueID, viewControllerToPresent))
+            self.rootViewController?.viewControllerStack.append(ViewControllerStackElement(uniqueID: viewControllerToPresent.uniqueID, viewController: viewControllerToPresent))
             
             // Use custom animation
             viewControllerToPresent.transitioningDelegate = self
@@ -830,8 +826,8 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
                 
                 ScorecardViewController.recenterPopup(viewControllerToPresent)
             } else {
-                // Make full screen
-                viewControllerToPresent.modalPresentationStyle = .fullScreen
+                // Make full screen - Note .fullScreen causes all view controllers to be retained by ARC
+                viewControllerToPresent.modalPresentationStyle = .currentContext
             }
             
             super.present(viewControllerToPresent, animated: animated) {

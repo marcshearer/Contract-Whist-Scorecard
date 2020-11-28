@@ -202,7 +202,7 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
     
     override internal func willDismiss() {
         if observer != nil {
-            NotificationCenter.default.removeObserver(observer!)
+            Notifications.removeObserver(self.observer)
             observer = nil
         }
     }
@@ -280,9 +280,9 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
     
     func setImageDownloadNotification() -> NSObjectProtocol? {
         // Set a notification for images downloaded
-        let observer = NotificationCenter.default.addObserver(forName: .playerImageDownloaded, object: nil, queue: nil) {
+        let observer = Notifications.addObserver(forName: .playerImageDownloaded) { [weak self]
             (notification) in
-            self.updateImage(objectID: notification.userInfo?["playerObjectID"] as! NSManagedObjectID)
+            self?.updateImage(objectID: notification.userInfo?["playerObjectID"] as! NSManagedObjectID)
         }
         return observer
     }
@@ -848,7 +848,7 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
     }
     
     override internal func didDismiss() {
-        NotificationCenter.default.removeObserver(observer!)
+        Notifications.removeObserver(self.observer)
         self.completion?(false, nil)
     }
 }

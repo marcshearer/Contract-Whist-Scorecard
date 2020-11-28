@@ -21,10 +21,14 @@ public class ThumbnailView: UIView {
     @IBOutlet public weak var name: UILabel!
     @IBOutlet public weak var nameHeightConstraint: NSLayoutConstraint!
     @IBOutlet public weak var additionalImage: UIImageView!
-    @IBOutlet private var haloConstraints: [NSLayoutConstraint]!
-    @IBOutlet private var imageConstraints: [NSLayoutConstraint]!
-    @IBOutlet private var initialsConstraints: [NSLayoutConstraint]!
+    @IBOutlet private var haloConstraintsArray: [NSLayoutConstraint]!
+    @IBOutlet private var imageConstraintsArray: [NSLayoutConstraint]!
+    @IBOutlet private var initialsConstraintsArray: [NSLayoutConstraint]!
     
+    private var haloConstraints = WeakArray<NSLayoutConstraint>()
+    private var imageConstraints = WeakArray<NSLayoutConstraint>()
+    private var initialsConstraints = WeakArray<NSLayoutConstraint>()
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.loadThumbnailView()
@@ -39,6 +43,13 @@ public class ThumbnailView: UIView {
     convenience init(frame: CGRect, haloWidth: CGFloat, allowHaloWidth: CGFloat = 0.0) {
         self.init(frame: frame)
         self.set(haloWidth: haloWidth, allowHaloWidth: allowHaloWidth)
+    }
+    
+    public override func awakeFromNib() {
+        super.awakeFromNib()
+        haloConstraints.replace(&haloConstraintsArray)
+        imageConstraints.replace(&imageConstraintsArray)
+        initialsConstraints.replace(&initialsConstraintsArray)
     }
     
     public override func layoutSubviews() {

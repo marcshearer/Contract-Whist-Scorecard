@@ -52,6 +52,11 @@ class WeakArray<T: AnyObject>: Sequence {
         self.values = array.map{Weak<T>($0)}
     }
     
+    public func replace(_ array: inout [T]) {
+        self.values = array.map{Weak<T>($0)}
+        array = []
+    }
+    
     func makeIterator() -> WeakArrayIterator<T> {
         return WeakArrayIterator(elements: self.values)
     }
@@ -70,6 +75,12 @@ class WeakArray<T: AnyObject>: Sequence {
     
     public func value(_ element: Int) -> T {
         return self.values[element].value!
+    }
+    
+    public func forEach(_ execute: ((T)->())) {
+        for value in self {
+            execute(value)
+        }
     }
 
     public var first: T? {

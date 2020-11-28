@@ -285,9 +285,9 @@ class PlayersViewController: ScorecardViewController, PlayersViewDelegate, UICol
     
     func setPlayerDownloadNotification(name: Notification.Name) -> NSObjectProtocol? {
         // Set a notification for images downloaded
-        let observer = NotificationCenter.default.addObserver(forName: name, object: nil, queue: nil) {
+        let observer = Notifications.addObserver(forName: name) { [weak self]
             (notification) in
-            self.updatePlayer(objectID: notification.userInfo?["playerObjectID"] as! NSManagedObjectID)
+            self?.updatePlayer(objectID: notification.userInfo?["playerObjectID"] as! NSManagedObjectID)
         }
         return observer
     }
@@ -313,11 +313,11 @@ class PlayersViewController: ScorecardViewController, PlayersViewDelegate, UICol
         let font = UIFont.systemFont(ofSize: 16)
         self.banner.set(
             rightButtons: [
-                BannerButton(action: self.helpPressed, type: .help)],
+                BannerButton(action: {[weak self] in self?.helpPressed()}, type: .help)],
             lowerButtons: [
-                BannerButton(title: "Add", width: 140, action: self.addPlayerPressed, type: .shadow, menuHide: true, menuText: "Add Players", font: font, id: "add"),
-                BannerButton(title: "Remove", width: 140, action: self.removePlayerPressed, type: .shadow, menuHide: true, menuText: "Remove Players", font: font, id: "remove"),
-                BannerButton(title: "Finish", width: 140, action: self.removePlayerCancelPressed, type: .shadow, menuHide: true, menuText: "End Removing Players", font: font, id: "cancel")],
+                BannerButton(title: "Add", width: 140, action: {[weak self] in self?.addPlayerPressed()}, type: .shadow, menuHide: true, menuText: "Add Players", font: font, id: "add"),
+                BannerButton(title: "Remove", width: 140, action: {[weak self] in self?.removePlayerPressed()}, type: .shadow, menuHide: true, menuText: "Remove Players", font: font, id: "remove"),
+                BannerButton(title: "Finish", width: 140, action: {[weak self] in self?.removePlayerCancelPressed()}, type: .shadow, menuHide: true, menuText: "End Removing Players", font: font, id: "cancel")],
             menuOption: .profiles,
             normalOverrideHeight: 120)
     }
@@ -397,8 +397,10 @@ class PlayersViewController: ScorecardViewController, PlayersViewDelegate, UICol
     }
     
     private func dismissAction() {
-        NotificationCenter.default.removeObserver(playerObserver!)
-        NotificationCenter.default.removeObserver(imageObserver!)
+        Notifications.removeObserver(playerObserver)
+        playerObserver = nil
+        Notifications.removeObserver(imageObserver)
+        imageObserver = nil
     }
 }
 

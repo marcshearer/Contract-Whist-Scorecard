@@ -562,20 +562,20 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
         var leftButtons: [BannerButton]?
         if let menuFinishText = self.menuFinishText {
             leftButtons = [
-                BannerButton(title: self.backText, image: UIImage(named: self.backImage ?? "back"), action: finishPressed, menuHide: true, menuText: menuFinishText, id: Banner.finishButton)]
+                BannerButton(title: self.backText, image: UIImage(named: self.backImage ?? "back"), action: { [weak self] in self?.finishPressed()}, menuHide: true, menuText: menuFinishText, id: Banner.finishButton)]
         }
         
         var nonBannerButtons: [BannerButton] = []
         if self.dashboardInfo.count > 1 {
             for (index, info) in self.dashboardInfo.enumerated() {
-                nonBannerButtons.append(BannerButton(action: {self.changed(self.carouselCollectionView, itemAtCenter: index, forceScroll: false)}, menuText: info.title, id: info.fileName))
+                nonBannerButtons.append(BannerButton(action: { [weak self] in self?.changed(self?.carouselCollectionView, itemAtCenter: index, forceScroll: false)}, menuText: info.title, id: info.fileName))
             }
         }
         self.banner.set(
             leftButtons: leftButtons,
             rightButtons: [
-                BannerButton(action: self.helpPressed, type: .help),
-                BannerButton(title: title, image: image, width: width, action: self.syncPressed, type: type, menuHide: false, font: UIFont.systemFont(ofSize: 14), id: "sync")],
+                BannerButton(action: { [weak self] in self?.helpPressed()}, type: .help),
+                BannerButton(title: title, image: image, width: width, action: { [weak self] in self?.syncPressed()}, type: type, menuHide: false, font: UIFont.systemFont(ofSize: 14), id: "sync")],
             nonBannerButtonsAfter: nonBannerButtons,
             backgroundColor: self.bannerColor, disableOptions: (leftButtons != nil))
     }
@@ -628,10 +628,8 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     }
     
     override internal func didDismiss() {
-        if self.observer != nil {
-            NotificationCenter.default.removeObserver(self.observer!)
-            self.observer = nil
-        }
+        Notifications.removeObserver(self.observer)
+        self.observer = nil
     }
 }
 
@@ -745,7 +743,7 @@ extension DashboardViewController {
                 if gamesPlayed > 0 {
                     // Looks like we haven't done a sync yet
                     self.banner.layoutIfNeeded()
-                    self.entryHelpView.add("^^Sync with iCloud^^\n\nYou do not appear to have synced the local database with the iCloud database yet. The iCloud database contains all of the game history for the players on this device.\n\nIt is advisable to do this before looking at @*/Results@*/ as otherwise the values may not be complete.\n\nTap the {} to sync now.", bannerId: "sync", horizontalBorder: (ScorecardUI.smallPhoneSize() ? 4 : 0), viewTapAction: self.syncPressed)
+                    self.entryHelpView.add("^^Sync with iCloud^^\n\nYou do not appear to have synced the local database with the iCloud database yet. The iCloud database contains all of the game history for the players on this device.\n\nIt is advisable to do this before looking at @*/Results@*/ as otherwise the values may not be complete.\n\nTap the {} to sync now.", bannerId: "sync", horizontalBorder: (ScorecardUI.smallPhoneSize() ? 4 : 0), viewTapAction: { [weak self] in self?.syncPressed() })
                     self.entryHelpView.show()
                 }
             }

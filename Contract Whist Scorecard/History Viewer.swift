@@ -48,6 +48,7 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
     private var syncButton: ShadowButton!
     private var customButtonId: AnyHashable?
     private var landscape = false
+    private var imageObserver: NSObjectProtocol?
     
     // Local class variables
     let availableFields: [DataTableField] = [
@@ -93,6 +94,9 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
         self.dataTableViewController = DataTableViewController.create(delegate: self, recordList: history.games)
         
         DataTableViewController.show(self.dataTableViewController, from: viewController)
+        
+        // Set image observer
+        self.imageObserver = setPlayerDownloadNotification(name: .playerImageDownloaded)
     }
     
     func setupCustomControls(completion: ()->()) {
@@ -166,11 +170,21 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
     }
     
     internal func completion() {
+        Notifications.removeObserver(self.imageObserver)
+        self.imageObserver = nil
         self.callerCompletion?()
     }
     
     internal func syncButtons(enabled: Bool) {
         self.syncButton?.isEnabled = enabled
+    }
+    
+    private func setPlayerDownloadNotification(name: Notification.Name) -> NSObjectProtocol? {
+        // Set a notification for images downloaded
+        let observer = Notifications.addObserver(forName: name) { [weak self] (notification) in
+            self?.filterSelectionView?.updatePlayer(objectID: notification.userInfo?["playerObjectID"] as! NSManagedObjectID)
+        }
+        return observer
     }
     
     internal func addHelp(to helpView: HelpView, header: UITableView, body: UITableView) {

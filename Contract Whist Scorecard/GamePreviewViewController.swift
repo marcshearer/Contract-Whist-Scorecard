@@ -260,19 +260,17 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
     }
     
     override internal func willDismiss() {
-        if observer != nil {
-            NotificationCenter.default.removeObserver(observer!)
-            observer = nil
-        }
+        Notifications.removeObserver(self.observer)
+        observer = nil
     }
     
     // MARK: - Image download handlers =================================================== -
     
     func setImageDownloadNotification() -> NSObjectProtocol? {
         // Set a notification for images downloaded
-        let observer = NotificationCenter.default.addObserver(forName: .playerImageDownloaded, object: nil, queue: nil) { [unowned self]
+        let observer = Notifications.addObserver(forName: .playerImageDownloaded) { [weak self]
             (notification) in
-            self.updateImage(objectID: notification.userInfo?["playerObjectID"] as! NSManagedObjectID)
+            self?.updateImage(objectID: notification.userInfo?["playerObjectID"] as! NSManagedObjectID)
         }
         return observer
     }
@@ -591,12 +589,12 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
             Scorecard.shared.sendCut(cutCards: cutCards, playerNames: self.selectedPlayers.map{ $0!.name! })
         }
         
-       self.animateDealCards(cards: cutCards, afterDuration: 0.2, stepDuration: 0.3, completion: { [unowned self] in
-            self.animateTurnCards(afterDuration: 0.3, stepDuration: 0.5, completion: { [unowned self] in
-                self.animateHideOthers(afterDuration: 0.5, stepDuration: 0.5, completion: { [unowned self] in
-                    self.animateOutcome(cards: cutCards, afterDuration: 0.0, stepDuration: 1.0, completion: { [unowned self] in
-                        self.animateClear(afterDuration: 2.0, stepDuration: 0.5, completion: { [unowned self] in
-                            self.animateResume(statusIsHidden: statusIsHidden)
+       self.animateDealCards(cards: cutCards, afterDuration: 0.2, stepDuration: 0.3, completion: { [weak self] in
+            self?.animateTurnCards(afterDuration: 0.3, stepDuration: 0.5, completion: { [weak self] in
+                self?.animateHideOthers(afterDuration: 0.5, stepDuration: 0.5, completion: { [weak self] in
+                    self?.animateOutcome(cards: cutCards, afterDuration: 0.0, stepDuration: 1.0, completion: { [weak self] in
+                        self?.animateClear(afterDuration: 2.0, stepDuration: 0.5, completion: { [weak self] in
+                            self?.animateResume(statusIsHidden: statusIsHidden)
                         })
                     })
                 })
@@ -690,10 +688,10 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
                 cardView.frame = CGRect(origin: CGPoint(x: origin.x + ((self.thumbnailWidth - cardView.frame.width) / 2.0), y: origin.y), size: cardView.frame.size)
             }
             if slot == 0 {
-                animation.addCompletion({ [unowned self] _ in
+                animation.addCompletion({ [weak self] _ in
                     // Fade buttons
-                    if !self.readOnly {
-                        self.actionButtons.forEach{(button) in button.alpha = 0.7}
+                    if !(self?.readOnly ?? true) {
+                        self?.actionButtons.forEach{(button) in button.alpha = 0.7}
                     }
                     completion()
                 })
@@ -716,12 +714,12 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
             // Hide card back (revealing front)
             self.cutCardView[slot].subviews.first!.alpha = 0.0
         }
-        animation.addCompletion({ [unowned self] _ in
+        animation.addCompletion({ [weak self] _ in
             if slot == 0 {
                 completion()
             } else {
                 // Next card
-                self.animateTurnCards(afterDuration: afterDuration, stepDuration: stepDuration, slot: (slot + 1) % self.self.selectedPlayers.count, completion: completion)
+                self?.animateTurnCards(afterDuration: afterDuration, stepDuration: stepDuration, slot: (slot + 1) % (self?.selectedPlayers.count ?? 0), completion: completion)
             }
         })
         animation.startAnimation(afterDelay: afterDuration)

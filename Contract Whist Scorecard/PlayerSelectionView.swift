@@ -267,19 +267,10 @@ class PlayerSelectionView: UIView, PlayerViewDelegate, UIGestureRecognizerDelega
             self.delegate?.resizeView?()
         }
     }
-    
+       
     // MARK: - Image download handlers =================================================== -
     
-    func setImageDownloadNotification() -> NSObjectProtocol? {
-        // Set a notification for images downloaded
-        let observer = NotificationCenter.default.addObserver(forName: .playerImageDownloaded, object: nil, queue: nil) {
-            (notification) in
-            self.updateImage(objectID: notification.userInfo?["playerObjectID"] as! NSManagedObjectID)
-        }
-        return observer
-    }
-    
-    func updateImage(objectID: NSManagedObjectID) {
+    public func updatePlayer(objectID: NSManagedObjectID) {
         // Find any cells containing an image which has just been downloaded asynchronously
         Utility.mainThread {
             if let availableIndex = self.playerList.firstIndex(where: {($0.objectID == objectID)}) {

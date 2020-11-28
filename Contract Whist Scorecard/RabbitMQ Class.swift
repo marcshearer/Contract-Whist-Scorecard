@@ -93,10 +93,8 @@ class RabbitMQService: NSObject, CommsServiceDelegate, CommsDataDelegate, CommsS
     
     internal func stopService() {
         self._connectionPlayerUUID = nil
-        if let observer = self.observer {
-            NotificationCenter.default.removeObserver(observer)
-            self.observer = nil
-        }
+        Notifications.removeObserver(self.observer)
+        self.observer = nil
     }
     
     public func disconnect(from commsPeer: CommsPeer? = nil, reason: String = "", reconnect: Bool) {
@@ -317,11 +315,11 @@ class RabbitMQServerService : RabbitMQService, CommsHostServiceDelegate, CommsCo
                                        withName: name,
                                        to: invite,
                                        inviteUUID: self.serverInviteUUID,
-                                       completion: { [unowned self ] (success,_,_) in
+                                       completion: { [weak self ] (success,_,_) in
                                                         if success {
-                                                            self.controllerStateChange(to: .invited)
+                                                            self?.controllerStateChange(to: .invited)
                                                         } else {
-                                                            self.controllerStateChange(to: .notStarted)
+                                                            self?.controllerStateChange(to: .notStarted)
                                                         }
                                                     })
            self.invitePlayerUUID = playerUUID
@@ -336,9 +334,9 @@ class RabbitMQServerService : RabbitMQService, CommsHostServiceDelegate, CommsCo
         if let from = self.invitePlayerUUID {
             // Invitation sent - cancel it
             self.invite = Invite()
-            self.invite.cancelInvitation(from: from, completion: { [unowned self] (_,_,_) in
-                self.debugMessage("Invitation cancelled")
-                self.stopServerEnd()
+            self.invite.cancelInvitation(from: from, completion: { [weak self] (_,_,_) in
+                self?.debugMessage("Invitation cancelled")
+                self?.stopServerEnd()
                 completion?()
             })
         } else {
@@ -624,12 +622,14 @@ class RabbitMQClientService : RabbitMQService, CommsClientServiceDelegate, Comms
     
     private func clientOnlineInviteNotification() -> NSObjectProtocol? {
         // Add new observer
-        let observer = NotificationCenter.default.addObserver(forName: .onlineInviteReceived, object: nil, queue: nil) {
+        let observer = Notifications.addObserver(forName: .onlineInviteReceived) { [weak self]
             (notification) in
             // Refresh online games - give iCloud a second to catch up!
-            Utility.executeAfter(delay: 2, completion: { [unowned self] in
-                self.debugMessage("Notification received")
-                self.checkOnlineInvites(playerUUID: self.invitePlayerUUID, matchDeviceName: self.matchDeviceName)
+            Utility.executeAfter(delay: 2, completion: {
+                self?.debugMessage("Notification received")
+                if let invitePlayerUUID = self?.invitePlayerUUID {
+                    self?.checkOnlineInvites(playerUUID: invitePlayerUUID, matchDeviceName: self?.matchDeviceName)
+                }
             })
         }
         return observer
@@ -638,7 +638,7 @@ class RabbitMQClientService : RabbitMQService, CommsClientServiceDelegate, Comms
     private func clientClearOnlineInviteNotifications(observer: NSObjectProtocol?) {
         if observer != nil {
             // Remove any previous notification handler
-            NotificationCenter.default.removeObserver(observer!)
+            Notifications.removeObserver(observer)
         }
     }
 }

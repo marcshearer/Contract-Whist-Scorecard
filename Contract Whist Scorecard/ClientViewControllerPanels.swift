@@ -13,10 +13,20 @@ struct PanelContainerItem {
     let container: Container
 }
 
+class ViewControllerStackElement {
+    let uniqueID: String
+    weak var viewController: ScorecardViewController!
+    
+    init(uniqueID: String, viewController: ScorecardViewController) {
+        self.uniqueID = uniqueID
+        self.viewController = viewController
+    }
+}
+
 protocol PanelContainer {
     
     var dismissSnapshotStack: [UIView] {get set}
-    var viewControllerStack: [(uniqueID: String, viewController: ScorecardViewController)] {get set}
+    var viewControllerStack: [ViewControllerStackElement] {get set}
     var containers: Bool {get}
     var detailDelegate: DetailDelegate? {get set}
     
@@ -257,6 +267,7 @@ extension ClientViewController : PanelContainer {
                 viewController.rootViewController = self.rootViewController
                 viewController.menuController = self.rootViewController.menuController
                 viewController.container = container
+                viewController.uniqueID = viewController.uniqueID ?? UUID().uuidString
                 if let view = viewController.view {
                     let containerView = self.view(container: container)
                     // Got a container - add view controller / view to container
@@ -269,7 +280,7 @@ extension ClientViewController : PanelContainer {
                     animateViews.append((view, container, view.frame))
                     if container == .main || container == .mainRight {
                         // Add to controller stack
-                        self.rootViewController?.viewControllerStack.append((viewController.uniqueID, viewController))
+                        self.rootViewController?.viewControllerStack.append(ViewControllerStackElement(uniqueID: viewController.uniqueID, viewController: viewController))
                     }
                 }
             }

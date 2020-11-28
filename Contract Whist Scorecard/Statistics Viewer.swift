@@ -135,7 +135,7 @@ class StatisticsViewer : NSObject, DataTableViewerDelegate {
     }
     
     internal func completion() {
-        NotificationCenter.default.removeObserver(observer!)
+        Notifications.removeObserver(self.observer)
         self.callerCompletion?()
     }
     
@@ -153,9 +153,9 @@ class StatisticsViewer : NSObject, DataTableViewerDelegate {
     
     func setImageDownloadNotification() -> NSObjectProtocol? {
         // Set a notification for images downloaded
-        let observer = NotificationCenter.default.addObserver(forName: .playerImageDownloaded, object: nil, queue: nil) {
-            (notification) in
-            self.updateImage(objectID: notification.userInfo?["playerObjectID"] as! NSManagedObjectID)
+        let observer = Notifications.addObserver(forName: .playerImageDownloaded) {
+            [weak self] (notification) in
+            self?.updateImage(objectID: notification.userInfo?["playerObjectID"] as! NSManagedObjectID)
         }
         return observer
     }

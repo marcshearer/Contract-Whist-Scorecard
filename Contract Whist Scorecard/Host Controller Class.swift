@@ -367,7 +367,7 @@ enum InviteStatus {
     private func newGame() {
         Scorecard.game.resetValues()
         Scorecard.game.datePlayed = Date()
-        Scorecard.game.gameUUID = self.gameUUID ?? UUID().uuidString
+        Scorecard.game.gameUUID = UUID().uuidString
         Scorecard.recovery.saveLocationAndDate()
         Scorecard.recovery.saveOverride()
     }

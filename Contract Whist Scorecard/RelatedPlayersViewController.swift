@@ -64,7 +64,7 @@ class RelatedPlayersViewController : ScorecardViewController, RelatedPlayersDele
         self.banner.set(
             title: "W H I S T",
             rightButtons:[
-                BannerButton(action: self.helpPressed, type: .help)])
+                BannerButton(action: {[weak self] in self?.helpPressed()}, type: .help)])
     }
     
     // MARK: - Default view colors ============================================================== -

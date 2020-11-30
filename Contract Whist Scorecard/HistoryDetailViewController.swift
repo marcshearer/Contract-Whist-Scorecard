@@ -185,8 +185,8 @@ class HistoryDetailViewController: ScorecardViewController, UITableViewDataSourc
         let shareImage = UIImage(systemName: "square.and.arrow.up", withConfiguration: UIImage.SymbolConfiguration(pointSize: Banner.defaultFont.fontDescriptor.pointSize, weight: .semibold))
         self.banner.set(
             rightButtons: [
-                BannerButton(action: self.helpPressed, type: .help),
-                BannerButton(image: shareImage, action: self.actionPressed, id: shareButton)])
+                BannerButton(action: {[weak self] in self?.helpPressed()}, type: .help),
+                BannerButton(image: shareImage, action: {[weak self] in self?.actionPressed()}, id: shareButton)])
     }
     
     func dropPin() {

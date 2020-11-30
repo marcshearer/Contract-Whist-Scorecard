@@ -28,7 +28,7 @@ class PlayersViewController: ScorecardViewController, PlayersViewDelegate, UICol
     
     private var playerDetailList: [PlayerDetail]!
     
-    internal var playerDetailView: PlayerDetailViewDelegate?
+    weak internal var playerDetailView: PlayerDetailViewDelegate?
     
     private var removing: Bool = false
     private var isEnabled: Bool = true

@@ -273,7 +273,8 @@ class PlayerSelectionView: UIView, PlayerViewDelegate, UIGestureRecognizerDelega
     public func updatePlayer(objectID: NSManagedObjectID) {
         // Find any cells containing an image which has just been downloaded asynchronously
         Utility.mainThread {
-            if let availableIndex = self.playerList.firstIndex(where: {($0.objectID == objectID)}) {
+            if let playerList = self.playerList,
+               let availableIndex = playerList.firstIndex(where: {($0.objectID == objectID)}) {
                 // Found it - reload the cell
                 self.collectionView.reloadItems(at: [IndexPath(row: availableIndex, section: 0)])
             }

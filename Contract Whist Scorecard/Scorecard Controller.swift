@@ -972,12 +972,12 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
                     viewController.bannerClass?.restored()
                 }
             }
-            if Utility.isDevelopment {
-                // Check that all view controllers have been deinited correctly
+            if Utility.isDevelopment && ScorecardUI.phoneSize() {
+                // Check that all view controllers have been deinited correctly - doesn't work on iPad
                 if let rootViewController = self.rootViewController {
                     Utility.executeAfter(delay: 0.1) {
                         if (rootViewController.viewControllerStack.isEmpty) {
-                            let active = ScorecardViewController.existingViewControllers.filter({$0.value != "Client"})
+                            let active = ScorecardViewController.existingViewControllers.filter({$0.value != "Client" || $0.value != "MenuPanel"})
                             if !active.isEmpty {
                                 Utility.debugMessage("ViewController", "The following are still active:\n \(active.map({$0.value}).toNaturalString())")
                                 rootViewController.alertSound(sound: .alarm)

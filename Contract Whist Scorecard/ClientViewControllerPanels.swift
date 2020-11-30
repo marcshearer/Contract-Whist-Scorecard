@@ -56,7 +56,7 @@ extension PanelContainer {
         presentInContainers(items, animation: animation, duration: nil, completion: completion)
     }
         
-    func invokeOption(_ option: MenuOption, completion: (()->())?) -> ScorecardViewController? {
+    @discardableResult func invokeOption(_ option: MenuOption, completion: (()->())?) -> ScorecardViewController? {
         invokeOption(option, animation: .none, completion: completion)
     }
 }
@@ -234,7 +234,7 @@ extension ClientViewController : PanelContainer {
         self.rightPanelCaptionLabel.textColor = Palette.banner.text
     }
         
-    public func invokeOption(_ option: MenuOption, animation: ViewAnimation, completion: (()->())?) -> ScorecardViewController? {
+    @discardableResult public func invokeOption(_ option: MenuOption, animation: ViewAnimation, completion: (()->())?) -> ScorecardViewController? {
         var viewController: ScorecardViewController?
         
         switch option {
@@ -274,7 +274,6 @@ extension ClientViewController : PanelContainer {
                     view.frame = containerView.superview!.convert(containerView.frame, to: rootView)
                     rootView.addSubview(view)
                     viewController.didMove(toParent: rootViewController)
-                    rootView.bringSubviewToFront(view)
                     
                     animateViews.append((view, container, view.frame))
                     if container == .main || container == .mainRight {

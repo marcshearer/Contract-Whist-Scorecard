@@ -332,14 +332,14 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
     @objc internal func saveGameLocationChanged(_ saveGameLocationSwitch: UISwitch) {
         if saveGameLocationSwitch.isOn {
             self.location.checkUseLocation(
-                refused: { (requested) in
+                refused: { [weak self] (requested) in
                     if !requested {
-                        self.alertMessage("You have previously refused permission for this app to use your location. To change this, please allow location access 'While Using the App' in the Whist section of the main Settings App")
+                        self?.alertMessage("You have previously refused permission for this app to use your location. To change this, please allow location access 'While Using the App' in the Whist section of the main Settings App")
                     }
-                    self.setSaveLocation(false)
+                    self?.setSaveLocation(false)
                 },
-                accepted: {
-                    self.setSaveLocation(true)
+                accepted: { [weak self] in
+                    self?.setSaveLocation(true)
                 },
                 request: true)
             
@@ -620,6 +620,7 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
 extension GetStartedViewController {
     
     internal func setupHelpView() {
+        weak var weakSelf = self
         
         self.helpView.reset()
                 
@@ -629,13 +630,13 @@ extension GetStartedViewController {
         
         self.helpView.add("The first player you create becomes the default player for this device and is displayed here. This will normally be the owner of the device.", views: [self.thisPlayerThumbnailView], border: 4)
         
-        self.helpView.add("You have chosen to change the default player for this device. Tap on a player to select them.", views: [self.playerSelectionView], condition: { self.selectingPlayer }, border: 4)
+        self.helpView.add("You have chosen to change the default player for this device. Tap on a player to select them.", views: [self.playerSelectionView], condition: { (weakSelf?.selectingPlayer ?? false) }, border: 4)
         
-        self.helpView.add("\(!self.selectingPlayer ? "When you have created 2 or more players you are able to change the default player. Tap the @*/Change@*/ button to change the default player for this device to another player." : "Tap the @*/Cancel@*/ button to keep the current default player.")", views: [self.thisPlayerChangeButton], radius: self.thisPlayerChangeButton.frame.height / 2)
+        self.helpView.add("\(!(weakSelf?.selectingPlayer ?? false) ? "When you have created 2 or more players you are able to change the default player. Tap the @*/Change@*/ button to change the default player for this device to another player." : "Tap the @*/Cancel@*/ button to keep the current default player.")", views: [self.thisPlayerChangeButton], radius: self.thisPlayerChangeButton.frame.height / 2)
         
-        self.helpView.add("To download players who have played before on another device enter one of their Unique Ids here.", views: [self.downloadIdentifierTextField], condition: { self.section == .downloadPlayers && !self.selectingPlayer })
+        self.helpView.add("To download players who have played before on another device enter one of their Unique Ids here.", views: [self.downloadIdentifierTextField], condition: { weakSelf?.section == .downloadPlayers && !(weakSelf?.selectingPlayer ?? false) })
         
-        self.helpView.add("Once you have entered a player's Unique Id tap the @*/Download Players from iCloud@*/ to choose the players to download.", views: [self.downloadButton], condition: { self.section == .downloadPlayers && !self.selectingPlayer })
+        self.helpView.add("Once you have entered a player's Unique Id tap the @*/Download Players from iCloud@*/ to choose the players to download.", views: [self.downloadButton], condition: { weakSelf?.section == .downloadPlayers && !(weakSelf?.selectingPlayer ?? false) })
         
         self.addOnlineGamesSwitchHelp(section: .downloadPlayers)
         
@@ -643,11 +644,11 @@ extension GetStartedViewController {
         
         self.addHomeButtonHelp(section: .downloadPlayers)
         
-        self.helpView.add("Tap the @*/Download Players@*/ button to download existing players from iCloud", views: [self.downloadPlayersTitleBar], condition: {self.section != .downloadPlayers && !self.selectingPlayer})
+        self.helpView.add("Tap the @*/Download Players@*/ button to download existing players from iCloud", views: [self.downloadPlayersTitleBar], condition: {weakSelf?.section != .downloadPlayers && !(weakSelf?.selectingPlayer ?? false)})
         
-        self.helpView.add("Tap the @*/Create New Player@*/ button to create a new player who has not already been created on another device.", views: [self.createPlayerTitleBar], condition: { self.section != .createPlayer && !self.selectingPlayer})
+        self.helpView.add("Tap the @*/Create New Player@*/ button to create a new player who has not already been created on another device.", views: [self.createPlayerTitleBar], condition: { weakSelf?.section != .createPlayer && !(weakSelf?.selectingPlayer ?? false)})
         
-        self.createPlayerView.addHelp(to: self.helpView, condition: { self.section == .createPlayer  && !self.selectingPlayer})
+        self.createPlayerView.addHelp(to: self.helpView, condition: { weakSelf?.section == .createPlayer  && !(weakSelf?.selectingPlayer ?? false)})
         
         self.addOnlineGamesSwitchHelp(section: .createPlayerSettings)
         
@@ -666,6 +667,7 @@ extension GetStartedViewController {
     }
     
     private func addOnlineGamesSwitchHelp(section: Section) {
+        weak var weakSelf = self
         var helpLabel: UILabel?
         var helpSwitch: UISwitch?
         
@@ -680,11 +682,12 @@ extension GetStartedViewController {
             }
         }
         
-        self.helpView.add("If you want to play Whist with players on other devices (as opposed to simply scoring a game played with cards) you need to enable online games.\n\nFor this to work the App needs to send notifications between the devices so you will be asked to confirm that you are happy with this if you switch this option on.", views: [helpLabel, helpSwitch], condition: { self.section == section && !self.selectingPlayer }, horizontalBorder: 8)
+        self.helpView.add("If you want to play Whist with players on other devices (as opposed to simply scoring a game played with cards) you need to enable online games.\n\nFor this to work the App needs to send notifications between the devices so you will be asked to confirm that you are happy with this if you switch this option on.", views: [helpLabel, helpSwitch], condition: { weakSelf?.section == section && !(weakSelf?.selectingPlayer ?? false) }, horizontalBorder: 8)
         
     }
     
     private func addSaveLocationHelp(section: Section) {
+        weak var weakSelf = self
         var helpLabel: UILabel?
         var helpSwitch: UISwitch?
         
@@ -699,11 +702,12 @@ extension GetStartedViewController {
             }
         }
         
-        self.helpView.add("It is great to save the location of each game you play so that you can look back and see all the amazing places you've played @*/Whist@*/.\n\nFor this to work the App needs access to your current location when the app is running and you will be asked to confirm that you are happy with this if you switch this option on.", views: [helpLabel, helpSwitch], condition: { self.section == section && !self.selectingPlayer }, horizontalBorder: 8)
+        self.helpView.add("It is great to save the location of each game you play so that you can look back and see all the amazing places you've played @*/Whist@*/.\n\nFor this to work the App needs access to your current location when the app is running and you will be asked to confirm that you are happy with this if you switch this option on.", views: [helpLabel, helpSwitch], condition: { weakSelf?.section == section && !(weakSelf?.selectingPlayer ?? false) }, horizontalBorder: 8)
         
     }
     
     private func addHomeButtonHelp(section: Section) {
+        weak var weakSelf = self
         var helpButton: UIButton?
         
         self.actionButton.forEach { (button) in
@@ -713,7 +717,7 @@ extension GetStartedViewController {
         }
         
         if let helpButton = helpButton {
-            self.helpView.add("Once you have created some players the @*/Home@*/ button will become enabled.\n\nTap it to start playing Whist.", views: [helpButton], condition: { self.section == section && !self.selectingPlayer }, radius: helpButton.frame.height / 2)
+            self.helpView.add("Once you have created some players the @*/Home@*/ button will become enabled.\n\nTap it to start playing Whist.", views: [helpButton], condition: { weakSelf?.section == section && !(weakSelf?.selectingPlayer ?? false) }, radius: helpButton.frame.height / 2)
         }
     }
     

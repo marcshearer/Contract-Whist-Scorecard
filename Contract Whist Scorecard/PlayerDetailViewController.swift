@@ -16,7 +16,7 @@ enum DetailMode {
     case none
 }
 
-protocol PlayerDetailViewDelegate {
+protocol PlayerDetailViewDelegate : class {
     func hide()
     func refresh(playerDetail: PlayerDetail, mode: DetailMode)
 }
@@ -749,9 +749,9 @@ class PlayerDetailViewController: ScorecardViewController, PlayerDetailViewDeleg
         } else {
             self.banner.set(title: playerDetail.name,
                 leftButtons:
-                    [BannerButton(image: UIImage(named: "back"), action: self.finishPressed, menuHide: true, menuText: self.returnTo, id: Banner.finishButton)],
+                    [BannerButton(image: UIImage(named: "back"), action: {[weak self] in self?.finishPressed()}, menuHide: true, menuText: self.returnTo, id: Banner.finishButton)],
                 rightButtons:
-                    [BannerButton(action: self.helpPressed, type: .help)])
+                    [BannerButton(action: {[weak self] in self?.helpPressed()}, type: .help)])
         }
     }
     
@@ -966,14 +966,15 @@ extension PlayerDetailViewController {
 extension PlayerDetailViewController {
     
     internal func setupHelpView() {
+        weak var weakSelf = self
         
         self.helpView.reset()
                 
-        self.helpView.add("This is the player's name on this device. \(self.mode == .display ? "" : "You can change the name for this player on your device\(self.mode == .amend ? " when in edit mode" : "").")", views: [self.tableView], section: self.nameSection, item: -1, itemTo: 0, horizontalBorder: 8)
+        self.helpView.add("This is the player's name on this device. \(weakSelf?.mode == .display ? "" : "You can change the name for this player on your device\(weakSelf?.mode == .amend ? " when in edit mode" : "").")", views: [self.tableView], section: self.nameSection, item: -1, itemTo: 0, horizontalBorder: 8)
         
-        self.helpView.add("This is the player's photo. \(self.mode == .display ? "" : self.playerDetail.thumbnail == nil ? "You can add a photo by tapping the camera button\(self.mode == .amend ? " when in edit mode" : "")." : "You can change or remove the photo by tapping it\(self.mode == .amend ? " when in edit mode" : "").")", views: [self.tableView], section: self.thumbnailSection, item: -1, itemTo: 0, horizontalBorder: 8)
+        self.helpView.add("This is the player's photo. \(weakSelf?.mode == .display ? "" : weakSelf?.playerDetail.thumbnail == nil ? "You can add a photo by tapping the camera button\(weakSelf?.mode == .amend ? " when in edit mode" : "")." : "You can change or remove the photo by tapping it\(weakSelf?.mode == .amend ? " when in edit mode" : "").")", views: [self.tableView], section: self.thumbnailSection, item: -1, itemTo: 0, horizontalBorder: 8)
         
-        self.helpView.add("\(self.mode != .amending ? "Tap the edit button to edit the name and/or photo. " : (self.changed ? "Tap the @*/Save@*/ button to save changes or the @*/Cancel@*/ button to cancel any changes." : "Tap the @*/Cancel@*/ button to leave edit mode."))", views: [self.tableView], condition: { self.mode != .display }, section: editSection, item: 0, horizontalBorder: 8)
+        self.helpView.add("\(weakSelf?.mode != .amending ? "Tap the edit button to edit the name and/or photo. " : ((weakSelf?.changed ?? true) ? "Tap the @*/Save@*/ button to save changes or the @*/Cancel@*/ button to cancel any changes." : "Tap the @*/Cancel@*/ button to leave edit mode."))", views: [self.tableView], condition: { weakSelf?.mode != .display }, section: editSection, item: 0, horizontalBorder: 8)
         
         self.helpView.add("This section shows the date when the player last played a game of Whist.", views: [self.tableView], section: self.lastPlayedSection, item: -1, itemTo: 999, horizontalBorder: 8)
 
@@ -981,7 +982,7 @@ extension PlayerDetailViewController {
 
         self.helpView.add("This section shows the players statistics including games played, percentage of games won //etc//.", views: [self.tableView], section: self.statsSection, item: -1, itemTo: 999, horizontalBorder: 8)
         
-        self.helpView.add("Tap the @*/Remove Player@*/ button to remove the player from this device. Note that if this player has been synced to the cloud they will still exist there and can be downloaded again in future.", views: [self.tableView], condition: { self.mode == .amend }, section: self.deleteSection, item: 0, horizontalBorder: 8)
+        self.helpView.add("Tap the @*/Remove Player@*/ button to remove the player from this device. Note that if this player has been synced to the cloud they will still exist there and can be downloaded again in future.", views: [self.tableView], condition: { weakSelf?.mode == .amend }, section: self.deleteSection, item: 0, horizontalBorder: 8)
 
         self.helpView.add("Tap the {} to close @*/Player Details@*/.", bannerId: Banner.finishButton)
     }

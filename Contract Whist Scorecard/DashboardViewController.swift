@@ -49,26 +49,28 @@ public enum Orientation: String, CaseIterable {
 }
 
 struct DashboardName {
-    let title: String
+    let title: String?
     let fileName: String
     let imageName: String?
     let helpId: AnyHashable?
-    let returnTo: String
+    let returnTo: String?
+    let highScoresDrill: Bool
     
-    init(title: String, returnTo: String? = nil, fileName: String, imageName: String? = nil, helpId: AnyHashable? = nil) {
+    init(title: String? = nil, returnTo: String? = nil, fileName: String, imageName: String? = nil, helpId: AnyHashable? = nil, highScoresDrill: Bool = false) {
         self.title = title
         self.fileName = fileName
         self.imageName = imageName
         self.helpId = helpId
         self.returnTo = returnTo ?? title
+        self.highScoresDrill = highScoresDrill
     }
 }
 
 class DashboardViewController: ScorecardViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, CustomCollectionViewLayoutDelegate, DashboardActionDelegate, BannerDelegate, MenuSwipeDelegate {
  
     struct DashboardViewInfo {
-        var title: String
-        var returnTo: String
+        var title: String?
+        var returnTo: String?
         var imageName: String?
         var nibNames: [Orientation:String]
         var views: [Orientation:DashboardView]
@@ -80,11 +82,16 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     }
     
     private var currentPage = -1
+    private var returnToPage: Int?
+    private var highScoresPage: Int?
     private var currentView: DashboardView?
     
     private var dashboardViewInfo: [Int:DashboardViewInfo] = [:]
     private var dashboardInfo: [DashboardName] = []
     private var currentOrientation: Orientation!
+
+    private var historyViewer: HistoryViewer!
+    private var statisticsViewer: StatisticsViewer!
     
     private var backImage: String!
     private var backText: String!
@@ -130,7 +137,12 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     
     @IBAction func swipeGestureRecognizer(_ recognizer: UISwipeGestureRecognizer) {
         if recognizer.state == .ended {
-            if self.menuController?.isVisible ?? false {
+            if let returnToPage = self.returnToPage {
+                if recognizer.direction == .down {
+                    self.changed(self.carouselCollectionView, itemAtCenter: returnToPage, forceScroll: true, animation: .uncoverToBottom)
+                    self.returnToPage = nil
+                }
+            } else if self.menuController?.isVisible ?? false {
                 self.menuController?.swipeGesture(direction: recognizer.direction)
             } else {
                 self.swipeGesture(direction: recognizer.direction)
@@ -140,19 +152,23 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     
     @discardableResult internal func swipeGesture(direction: UISwipeGestureRecognizer.Direction) -> Bool {
         var handled = false
-        switch direction {
-        case .left:
-            if self.currentPage < self.dashboardViewInfo.count - 1 {
-                self.changed(self.carouselCollectionView, itemAtCenter: self.currentPage + 1, forceScroll: true)
-                handled = true
-            }
-        case .right:
-            if self.currentPage > 0 {
-                self.changed(self.carouselCollectionView, itemAtCenter: self.currentPage - 1, forceScroll: true)
-                handled = true
-            }
-        default:
+        var nextPage: Int = -1
+        if direction != .left && direction != .right {
             self.finishPressed()
+            handled = true
+        } else {
+            switch direction {
+            case .left:
+                nextPage = self.currentPage + 1
+            case .right:
+                nextPage = self.currentPage - 1
+            default:
+                break
+            }
+            if nextPage >= 0 && nextPage < self.dashboardInfo.count && !self.dashboardInfo[nextPage].highScoresDrill {
+                self.changed(self.carouselCollectionView, itemAtCenter: nextPage, forceScroll: true)
+                handled = true
+            }
         }
         return handled
     }
@@ -214,7 +230,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
                 self.carouselCollectionView.layoutIfNeeded()
                 self.carouselCollectionView.contentOffset = CGPoint(x: self.carouselCollectionView.bounds.width / 4.0, y: 0.0)
                 let selectedPage = (self.firstTime ? Int(self.dashboardViewInfo.count / 2) : self.currentPage)
-                self.changed(self.carouselCollectionView, itemAtCenter: selectedPage, forceScroll: true, animated: false)
+                self.changed(self.carouselCollectionView, itemAtCenter: selectedPage, forceScroll: true, animation: .none)
                 self.carouselCollectionView.reloadData()
                 if self.rotated {
                     self.reloadData()
@@ -223,7 +239,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
             }
         } else {
             if self.firstTime || self.rotated {
-                self.changed(itemAtCenter: self.initialPage ?? 0, forceScroll: true, animated: false)
+                self.changed(itemAtCenter: self.initialPage ?? 0, forceScroll: true, animation: .none)
             }
         }
         self.firstTime = false
@@ -373,10 +389,10 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
         }
     }
         
-    internal func changed(_ collectionView: UICollectionView? = nil, itemAtCenter: Int, forceScroll: Bool, animated: Bool = true) {
+    internal func changed(_ collectionView: UICollectionView? = nil, itemAtCenter: Int, forceScroll: Bool, animation: ViewAnimation = .slideRight) {
         Utility.mainThread {
-            let currentPage = self.currentPage
-            let changed = currentPage != itemAtCenter
+            let lastPage = self.currentPage
+            let changed = lastPage != itemAtCenter
             if changed || forceScroll == true {
                 // Select cell
                 self.currentPage = itemAtCenter
@@ -391,20 +407,18 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
                 self.dashboardContainerView.addSubview(newView)
                 self.setupHelpView(view: newView)
                 let animation: ViewAnimation =
-                    (animated ?
-                        (self.showCarousel ? (currentPage < itemAtCenter ? .slideRight
+                    (animation != .slideRight ? animation :
+                        (self.showCarousel ? (lastPage < itemAtCenter ? .slideRight
                                                                          : .slideLeft)
-                                           : (currentPage < itemAtCenter ? .coverFromRight
-                                                                         : .uncoverToRight))
-                              : .none)
+                                           : (lastPage < itemAtCenter ? .coverFromRight
+                                                                         : .uncoverToRight)))
                 ViewAnimator.animate(rootView: self.dashboardContainerView, oldViews: oldViews,   newViews: [newView], animation: animation,
                     duration: (self.showCarousel ? 0.25 : 0.5), layout: false,
                     additionalAnimations: {
-                        self.menuController?.highlightSuboption(id: self.dashboardInfo[itemAtCenter].fileName)
                         if self.showCarousel {
                             // Unhighlight the cell leaving the center
-                            if let cell = self.carouselCollectionView.cellForItem(at: IndexPath(item: currentPage, section: 0)) as? DashboardCarouselCell {
-                                if currentPage != itemAtCenter {
+                            if let cell = self.carouselCollectionView.cellForItem(at: IndexPath(item: lastPage, section: 0)) as? DashboardCarouselCell {
+                                if lastPage != itemAtCenter {
                                     cell.containerView.backgroundColor = Palette.carouselUnselected.background
                                     cell.backgroundImageView.tintColor = Palette.carouselUnselected.faintText
                                     cell.titleLabel.textColor = Palette.carouselUnselected.text
@@ -413,11 +427,11 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
                             }
                             
                             if forceScroll {
-                                collectionView?.scrollToItem(at: IndexPath(item: itemAtCenter, section: 0), at: .centeredHorizontally, animated: animated)
+                                collectionView?.scrollToItem(at: IndexPath(item: itemAtCenter, section: 0), at: .centeredHorizontally, animated: animation != .none)
                             }
                             
                             // Highlight new cell at center
-                            if let cell = self.carouselCollectionView.cellForItem(at: IndexPath(item: currentPage, section: 0)) as? DashboardCarouselCell {
+                            if let cell = self.carouselCollectionView.cellForItem(at: IndexPath(item: lastPage, section: 0)) as? DashboardCarouselCell {
                                 cell.containerView.backgroundColor = Palette.carouselSelected.background
                                 cell.backgroundImageView.tintColor = Palette.carouselSelected.contrastText
                                 cell.titleLabel.textColor = Palette.carouselSelected.text
@@ -429,6 +443,10 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
                      completion: {
                         oldViews.first?.removeFromSuperview()
                         self.setupSubtitle()
+                        self.showMenuOptions(highScoreMode: self.currentPage == self.highScoresPage)
+                        if self.returnToPage == nil {
+                            self.menuController?.highlightSuboption(id: self.dashboardInfo[itemAtCenter].fileName)
+                        }
                      }
                 )
             }
@@ -502,10 +520,41 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     // MARK: - Dashboard Action Delegate =============================================================== -
     
     func action(view: DashboardDetailType, personal: Bool) {
-        // Should already have been actioned in the individual dashboard - this is just to let us
-        // refresh other views
-        
+        switch view {
+        case .history:
+            self.historyViewer = HistoryViewer(from: self, playerUUID: (personal ? Scorecard.activeSettings.thisPlayerUUID : nil)) {
+                self.historyViewer = nil
+            }
+        case .statistics:
+            self.statisticsViewer = StatisticsViewer(from: self) {
+                self.statisticsViewer = nil
+            }
+        case .highScores:
+            self.showHighScores()
+        }
         self.reloadData()
+    }
+    
+    // MARK: - Functions to present other views ========================================================== -
+    
+    private func showHighScores(allowSync: Bool = true) {
+        let title = self.dashboardInfo[self.currentPage].returnTo
+        
+        if let highScoresPage = self.highScoresPage {
+            self.returnToPage = self.currentPage
+            self.changed(self.carouselCollectionView, itemAtCenter: highScoresPage, forceScroll: true, animation: .coverFromBottom)
+        } else {
+            DashboardViewController.showHighScores(from: self, allowSync: allowSync, returnTo: title) {
+                self.reloadData()
+            }
+        }
+    }
+    
+    public static func showHighScores(from parentViewController: ScorecardViewController, allowSync: Bool = false, returnTo: String? = nil, completion: (()->())? = nil) {
+        DashboardViewController.show(from: parentViewController,
+                                     dashboardNames: [DashboardName(title: "High Scores",  fileName: "HighScoresDashboard", helpId: "highScores")], allowSync: allowSync, backImage: "back", backgroundColor: Palette.banner, container: parentViewController.container, menuFinishText: "Back to \(returnTo ?? "Results")", showCarousel: false) {
+            completion?()
+        }
     }
     
     // MARK: - Utility Routines ======================================================================== -
@@ -568,7 +617,12 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
         var nonBannerButtons: [BannerButton] = []
         if self.dashboardInfo.count > 1 {
             for (index, info) in self.dashboardInfo.enumerated() {
-                nonBannerButtons.append(BannerButton(action: { [weak self] in self?.changed(self?.carouselCollectionView, itemAtCenter: index, forceScroll: false)}, menuText: info.title, id: info.fileName))
+                if info.highScoresDrill {
+                    self.highScoresPage = index
+                }
+                nonBannerButtons.append(BannerButton(action: { [weak self] in self?.changed(self?.carouselCollectionView, itemAtCenter: (self?.returnToPage ?? index), forceScroll: false, animation: (self?.returnToPage != nil ? .uncoverToBottom : .coverFromRight))
+                    self?.returnToPage = nil
+                }, menuText: info.title, id: info.fileName))
             }
         }
         self.banner.set(
@@ -578,6 +632,24 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
                 BannerButton(title: title, image: image, width: width, action: { [weak self] in self?.syncPressed()}, type: type, menuHide: false, font: UIFont.systemFont(ofSize: 14), id: "sync")],
             nonBannerButtonsAfter: nonBannerButtons,
             backgroundColor: self.bannerColor, disableOptions: (leftButtons != nil))
+        self.showMenuOptions()
+    }
+    
+    private func showMenuOptions(highScoreMode: Bool = false) {
+        for info in self.dashboardInfo {
+            var menuText = info.title
+            var isHidden: Bool
+            if info.highScoresDrill {
+                if let returnToPage = self.returnToPage {
+                    menuText = "Return to \(self.dashboardInfo[returnToPage].returnTo ?? "Results")"
+                }
+                isHidden = !highScoreMode
+            } else {
+                menuText = info.title ?? "Results"
+                isHidden = highScoreMode
+            }
+            self.banner.setButton(info.fileName, menuText: menuText, isHidden: isHidden)
+        }
     }
 
     // MARK: - Functions to present other views ========================================================== -
@@ -591,11 +663,11 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     
     // MARK: - Function to present and dismiss this view ================================================= -
     
-    @discardableResult class public func show(from viewController: ScorecardViewController, title: String? = nil, dashboardNames: [DashboardName], allowSync: Bool = true, backImage: String = "home", backText: String? = nil, backgroundColor: PaletteColor = Palette.dark, container: Container? = .main, bottomInset: CGFloat? = nil, menuFinishText: String? = nil, showCarousel: Bool = true, initialPage: Int? = nil, completion: (()->())? = nil) -> ScorecardViewController {
+    @discardableResult class public func show(from viewController: ScorecardViewController, title: String? = nil, dashboardNames: [DashboardName], allowSync: Bool = true, backImage: String = "home", backText: String? = nil, backgroundColor: PaletteColor = Palette.dark, container: Container? = .main, animation: ViewAnimation? = nil, bottomInset: CGFloat? = nil, menuFinishText: String? = nil, showCarousel: Bool = true, initialPage: Int? = nil, completion: (()->())? = nil) -> ScorecardViewController {
         
         let dashboardViewController = DashboardViewController.create(title: title, dashboardNames: dashboardNames, allowSync: allowSync, backImage: backImage, backText: backText, backgroundColor: backgroundColor, bottomInset: bottomInset, menuFinishText: menuFinishText, showCarousel: showCarousel, initialPage: initialPage, completion: completion)
         
-        viewController.present(dashboardViewController, animated: true, container: container, completion: nil)
+        viewController.present(dashboardViewController, animated: true, container: container, animation: animation, completion: nil)
         
         return dashboardViewController
     }

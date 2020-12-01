@@ -278,9 +278,9 @@ class LaunchScreenView: UIView, SyncDelegate, ReconcileDelegate {
                 
                 self.syncGetVersion = false
                 
-                Utility.debugMessage("launch", "Version returned")
+                Utility.debugMessage("launch", "Version returned\(errors > 0 ? " with errors" : "")")
                 
-                if Scorecard.shared.playerList.count != 0 && !Scorecard.version.blockSync && Scorecard.reachability.isConnected {
+                if errors == 0 && Scorecard.shared.playerList.count != 0 && !Scorecard.version.blockSync && Scorecard.reachability.isConnected {
                     // Rebuild any players who have a sync in progress flag set
                     self.reconcilePlayers()
                 } else {

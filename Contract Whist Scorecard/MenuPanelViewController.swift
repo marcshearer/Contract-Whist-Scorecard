@@ -747,7 +747,8 @@ class MenuPanelViewController : ScorecardViewController, MenuController, UITable
             let viewController = DashboardViewController.create(
                 dashboardNames: [
                     DashboardName(title: "Personal", returnTo: "Personal", fileName: "PersonalDashboard", helpId: "ersonalResults"),
-                    DashboardName(title: "Everyone", returnTo: "Everyone", fileName: "EveryoneDashboard", helpId: "everyoneResults")],
+                    DashboardName(title: "Everyone", returnTo: "Everyone", fileName: "EveryoneDashboard", helpId: "everyoneResults"),
+                    DashboardName(title: "High Scores", fileName: "HighScoresDashboard", helpId: "highScores", highScoresDrill: true)],
                 showCarousel: false, initialPage: (animation.leftMovement ? 0 : 1),
                 completion: self.optionCompletion)
             self.presentInContainers([PanelContainerItem(viewController: viewController, container: .mainRight)], animation: animation, completion: completion)

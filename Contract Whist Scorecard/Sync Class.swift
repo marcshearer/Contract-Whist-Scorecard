@@ -402,6 +402,7 @@ class Sync {
                 Scorecard.version.latestVersion = "0.0"
                 Scorecard.version.latestBuild = 0
                 self.errors += 1
+                self.syncController()
                 return
             }
             Scorecard.version.latestVersion = version

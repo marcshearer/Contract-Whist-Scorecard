@@ -75,7 +75,6 @@ enum HighScoreType: Int {
 class DashboardView : UIView, DashboardActionDelegate {
     
     private var historyViewer: HistoryViewer!
-    private var statisticsViewer: StatisticsViewer!
     private var title: String?
     private var returnTo: String?
     private(set) var id: String!
@@ -112,28 +111,6 @@ class DashboardView : UIView, DashboardActionDelegate {
     // MARK: - Dashboard Action Delegate =============================================================== -
     
     func action(view: DashboardDetailType, personal: Bool) {
-        switch view {
-        case .history:
-            self.historyViewer = HistoryViewer(from: self.parentViewController!, playerUUID: (personal ? Scorecard.activeSettings.thisPlayerUUID : nil)) {
-                self.historyViewer = nil
-                self.delegate?.reloadData?()
-            }
-        case .statistics:
-            if false && personal {
-                if let playerMO = Scorecard.shared.findPlayerByPlayerUUID(Scorecard.activeSettings.thisPlayerUUID) {
-                    let playerDetail = PlayerDetail()
-                    playerDetail.fromManagedObject(playerMO: playerMO)
-                    PlayerDetailViewController.show(from: self.parentViewController!, playerDetail: playerDetail, mode: .display, sourceView: self.parentViewController!.view, returnTo: "Back to \(self.title!)")
-                }
-            } else {
-                self.statisticsViewer = StatisticsViewer(from: self.parentViewController!) {
-                    self.statisticsViewer = nil
-                    self.delegate?.reloadData?()
-                }
-            }
-        case .highScores:
-            self.showHighScores()
-        }
         delegate?.action(view: view, personal: personal)
     }
     
@@ -221,20 +198,5 @@ class DashboardView : UIView, DashboardActionDelegate {
             }
         }
         return result
-    }
-    
-    // MARK: - Functions to present other views ========================================================== -
-    
-    private func showHighScores(allowSync: Bool = true) {
-        DashboardView.showHighScores(from: self.parentViewController!, allowSync: allowSync, returnTo: self.returnTo) {
-            self.delegate?.reloadData?()
-        }
-    }
-    
-    public static func showHighScores(from parentViewController: ScorecardViewController, allowSync: Bool = false, returnTo: String? = nil, completion: (()->())? = nil) {
-        DashboardViewController.show(from: parentViewController,
-                                     dashboardNames: [DashboardName(title: "High Scores",  fileName: "HighScoresDashboard", helpId: "highScores")], allowSync: allowSync, backImage: "cross white", backgroundColor: Palette.banner, container: parentViewController.container, menuFinishText: "Back to \(returnTo ?? "Results")", showCarousel: false) {
-            completion?()
-        }
     }
 }

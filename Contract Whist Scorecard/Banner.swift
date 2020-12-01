@@ -26,7 +26,7 @@ public class BannerButton: NSObject {
     fileprivate let releaseAction: (()->())?
     fileprivate let type: BannerButtonType
     fileprivate let menuHide: Bool
-    fileprivate let menuText: String?
+    fileprivate var menuText: String?
     fileprivate let releaseMenuText: String?
     fileprivate var menuSpaceBefore: CGFloat = 0.0
     fileprivate var menuTextColor: UIColor?
@@ -281,7 +281,7 @@ class Banner : UIView {
         }
     }
     
-    public func setButton(_ id: AnyHashable = Banner.finishButton, title: String? = nil, attributedTitle: NSAttributedString? = nil,  titleColor: UIColor? = nil, image: UIImage? = nil, isHidden: Bool? = nil, isEnabled: Bool? = nil, disableOptions: Bool? = nil, width: CGFloat? = nil) {
+    public func setButton(_ id: AnyHashable = Banner.finishButton, title: String? = nil, attributedTitle: NSAttributedString? = nil, titleColor: UIColor? = nil, image: UIImage? = nil, menuText: String? = nil, isHidden: Bool? = nil, isEnabled: Bool? = nil, disableOptions: Bool? = nil, width: CGFloat? = nil) {
         var layoutSubviews = false
         var arrange = false
         
@@ -321,6 +321,9 @@ class Banner : UIView {
                 button.specificTextColor = specificTextColor
                 button.control?.setTitleColor(specificTextColor, for: .normal)
             }
+            if let menuText = menuText{
+                button.menuText = menuText
+            }
             if arrange {
                 self.arrange()
             } else if layoutSubviews {
@@ -329,7 +332,7 @@ class Banner : UIView {
                 self.layoutSubviews()
             }
         }
-        if let disableOptions = disableOptions   { self.disableOptions = disableOptions }
+        if let disableOptions = disableOptions { self.disableOptions = disableOptions }
         self.setupMenuEntries()
     }
     

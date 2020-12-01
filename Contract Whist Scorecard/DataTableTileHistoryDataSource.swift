@@ -15,8 +15,8 @@ class DataTableTileHistoryDataSource : DataTableTileViewDataSource {
     let availableFields: [DataTableField] = [
         DataTableField("        ",      "",          sequence: 1,   width: 7,   type: .string),
         DataTableField("        ",      "",          sequence: 6,   width: 2,   type: .string),
-        DataTableField("=shortDate",    "Date",      sequence: 2,   width: 50,  type: .date,    align: .left),
-        DataTableField("=player1",      "Winner",    sequence: 3,   width: 80,  type: .string,  pad: true),
+        DataTableField("=shortDate",    "Date",      sequence: 2,   width: 50,  type: .date,    align: .left, pad: true),
+        DataTableField("=player1",      "Winner",    sequence: 3,   width: 60,  type: .string,  pad: true),
         DataTableField("=score1",       "Score",     sequence: 4,   width: 50,  type: .int),
         DataTableField("=location",     "Location",  sequence: 5,   width: 60,  type: .string,  pad: true),
     ]

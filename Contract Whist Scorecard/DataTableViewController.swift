@@ -13,7 +13,7 @@ import CoreData
 
     func value(forKey: String) -> Any?
     
-    @objc optional func derivedField(field: String, record: DataTableViewerDataSource, sortValue: Bool) -> String
+    @objc optional func derivedField(field: String, record: DataTableViewerDataSource, sortValue: Bool, width: CGFloat) -> String
 
 }
 
@@ -768,7 +768,7 @@ class DataTableFormatter {
     public static func getValue(record: DataTableViewerDataSource, column: DataTableField, sortValue: Bool = false) -> String {
         let derived = (column.field.left(1) == "=")
         if derived {
-            return record.derivedField?(field: column.field.right(column.field.length - 1), record: record, sortValue: sortValue) ?? ""
+            return record.derivedField?(field: column.field.right(column.field.length - 1), record: record, sortValue: sortValue, width: column.adjustedWidth) ?? ""
         } else {
             if let object = record.value(forKey: column.field) {
                 switch column.type {

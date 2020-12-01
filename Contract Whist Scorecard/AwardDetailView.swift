@@ -107,7 +107,7 @@ class AwardDetailView: UIView {
         case .toBeAwarded:
             if let playerMO = Scorecard.shared.findPlayerByPlayerUUID(playerUUID),
                let value = awards.getAchievedValue(code: award.code, playerMO: playerMO) {
-                title += "\nAchieved so far: \(value)"
+                title += "\nCurrently: \(value)"
             }
             let levels = awards.toAchieve(playerUUID: playerUUID, code: award.code)
             if levels.count > 1 {

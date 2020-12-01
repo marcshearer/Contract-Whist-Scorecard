@@ -79,6 +79,7 @@ fileprivate struct AwardConfig {
     fileprivate let repeatable: Bool
     fileprivate let compare: Comparison?
     fileprivate let source: Source?
+    fileprivate let suppressAchivement: Bool
     fileprivate let key: String?
     fileprivate let custom: (([ParticipantMO])->Int)?
     fileprivate let winLose: WinLose
@@ -87,13 +88,14 @@ fileprivate struct AwardConfig {
     fileprivate let backgroundImageName: String?
     fileprivate let condition: (()->Bool)?
     
-    fileprivate init(code: String, name: String, shortName: String, title: String, description: String? = nil, awardLevels: [Int], repeatable: Bool = true, compare: Comparison? = nil, source: Source? = nil, key: String? = nil, custom: (([ParticipantMO])->Int)? = nil, winLose: WinLose = .any, imageName: String, backgroundColor: UIColor = Palette.darkHighlight.background, backgroundImageName: String? = nil, condition: (()->Bool)? = nil, overrides: [Int : AwardNameConfig]? = nil) {
+    fileprivate init(code: String, name: String, shortName: String, title: String, description: String? = nil, awardLevels: [Int], repeatable: Bool = true, compare: Comparison? = nil, source: Source? = nil, suppressAchievement: Bool = false, key: String? = nil, custom: (([ParticipantMO])->Int)? = nil, winLose: WinLose = .any, imageName: String, backgroundColor: UIColor = Palette.darkHighlight.background, backgroundImageName: String? = nil, condition: (()->Bool)? = nil, overrides: [Int : AwardNameConfig]? = nil) {
         self.code = code
         self.nameConfig = AwardNameConfig(name: name, shortName: shortName, title: title, description: description)
         self.awardLevels = awardLevels
         self.repeatable = repeatable
         self.compare = compare
         self.source = source
+        self.suppressAchivement = suppressAchievement
         self.key = key
         self.custom = custom
         self.winLose = winLose
@@ -408,7 +410,31 @@ public class Awards {
         
         return history
     }
-
+    
+    /// getAchievedValue - Used to find out the achievement so far - only for player-source awards not flagged to be suppressed
+    /// - Parameters:
+    ///   - code: code
+    ///   - playerMO: player managed object
+    /// - Returns: Number achieved
+    public func getAchievedValue(code: String, playerMO: PlayerMO) -> Int? {
+        var value: Int?
+        let config = self.config.first(where: {$0.code == code})!
+        if let source = config.source, let key = config.key {
+            switch source {
+            case .player:
+                if !config.suppressAchivement {
+                    value = playerMO.value(forKey: key) as? Int
+                }
+            case .awards:
+                let (achieved, _, _) = self.get(playerUUID: playerMO.playerUUID!)
+                value = achieved.count
+            default:
+                break
+            }
+        }
+        return value
+    }
+    
     private func getValue(config: AwardConfig, current: ParticipantMO, player: Player, history: [ParticipantMO], awarded: Int) -> Int? {
         var value: Int?
         
@@ -663,7 +689,7 @@ public class Awards {
                    imageName: "award game made %d"),
             AwardConfig(code: "winStreak", name: "Don't Stop Me Now", shortName: "Don't Stop Me", title: "I'm having such a good time.\nWin %d games in a row",
                    awardLevels: [3, 4, 5],
-                   compare: .greaterOrEqual, source: .player, key: "winStreak",
+                   compare: .greaterOrEqual, source: .player, suppressAchievement: true, key: "winStreak",
                    imageName: "award win streak %d"),
             AwardConfig(code: "weekGames", name: "Enthusiast", shortName: "Enthusiast", title: "Play %d games in a week",
                    awardLevels: [10, 15, 20],

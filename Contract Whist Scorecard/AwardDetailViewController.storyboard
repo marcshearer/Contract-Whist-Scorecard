@@ -27,11 +27,11 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wnV-SE-WTy" customClass="AwardDetailView" customModule="Whist" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="244" width="834" height="350"/>
+                                <rect key="frame" x="0.0" y="244" width="834" height="360"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <accessibility key="accessibilityConfiguration" identifier="awardDetailView"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="350" id="JsS-ys-nxX"/>
+                                    <constraint firstAttribute="height" constant="360" id="JsS-ys-nxX"/>
                                 </constraints>
                             </view>
                         </subviews>

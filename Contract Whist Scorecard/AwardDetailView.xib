@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -19,6 +19,7 @@
                 <outlet property="nameLabel" destination="eBV-lw-ecw" id="bhU-9y-zem"/>
                 <outlet property="otherLabel" destination="i3s-rW-ZLv" id="wuw-Lo-Wn1"/>
                 <outlet property="shadowView" destination="onT-bw-PDq" id="oGt-3l-ieV"/>
+                <outlet property="shadowViewHeightConstraint" destination="3zn-W0-2ya" id="StP-ie-jgx"/>
                 <outlet property="shadowViewWidthConstraint" destination="phi-Vc-BGX" id="QyA-WD-F9X"/>
                 <outlet property="titleLabel" destination="Lec-jZ-nt1" id="Srj-Ul-FYq"/>
                 <outletCollection property="labels" destination="eBV-lw-ecw" collectionClass="NSMutableArray" id="v7D-RQ-Rxa"/>
@@ -32,10 +33,10 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="onT-bw-PDq" userLabel="Shadow View">
-                    <rect key="frame" x="30" y="0.0" width="240" height="350"/>
+                    <rect key="frame" x="30" y="-5" width="240" height="360"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Wgy-fH-2XD" customClass="AwardView" customModule="Whist" customModuleProvider="target">
-                            <rect key="frame" x="32.5" y="40" width="175" height="175"/>
+                            <rect key="frame" x="30" y="40" width="180" height="180"/>
                             <color key="backgroundColor" name="Clear"/>
                             <accessibility key="accessibilityConfiguration" identifier="awardView"/>
                             <constraints>
@@ -43,7 +44,7 @@
                             </constraints>
                         </view>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="eBV-lw-ecw" userLabel="Name Label">
-                            <rect key="frame" x="40" y="231" width="160" height="31"/>
+                            <rect key="frame" x="40" y="236" width="160" height="31"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="31" id="KXE-tx-qEh"/>
                             </constraints>
@@ -52,7 +53,7 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="Lec-jZ-nt1" userLabel="Title Label">
-                            <rect key="frame" x="20" y="262" width="200" height="35"/>
+                            <rect key="frame" x="20" y="267" width="200" height="35"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="35" id="lIc-wv-BTc"/>
                             </constraints>
@@ -61,7 +62,7 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="i3s-rW-ZLv" userLabel="Other Label">
-                            <rect key="frame" x="30" y="334" width="180" height="0.0"/>
+                            <rect key="frame" x="30" y="344" width="180" height="0.0"/>
                             <fontDescription key="fontDescription" type="italicSystem" pointSize="14"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
@@ -75,14 +76,14 @@
                             <state key="normal" image="cross grey"/>
                         </button>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Y3o-sV-ZJG" userLabel="Count Badge Image">
-                            <rect key="frame" x="188" y="27.5" width="32" height="31"/>
+                            <rect key="frame" x="190.5" y="27.5" width="32" height="31"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="32" id="FvG-Ny-xxn"/>
                                 <constraint firstAttribute="width" secondItem="Y3o-sV-ZJG" secondAttribute="height" multiplier="26:25" id="gV5-K5-dbK"/>
                             </constraints>
                         </imageView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.20000000298023224" translatesAutoresizingMaskIntoConstraints="NO" id="hVe-Cf-m7K" userLabel="Count Badge">
-                            <rect key="frame" x="188" y="27.5" width="32" height="31"/>
+                            <rect key="frame" x="190.5" y="27.5" width="32" height="31"/>
                             <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
@@ -92,7 +93,7 @@
                     <accessibility key="accessibilityConfiguration" identifier="awardDetailViewShadowView"/>
                     <constraints>
                         <constraint firstItem="hVe-Cf-m7K" firstAttribute="bottom" secondItem="Y3o-sV-ZJG" secondAttribute="bottom" id="1zK-7P-MaT"/>
-                        <constraint firstAttribute="height" constant="350" id="3zn-W0-2ya"/>
+                        <constraint firstAttribute="height" constant="360" id="3zn-W0-2ya"/>
                         <constraint firstAttribute="trailing" secondItem="i3s-rW-ZLv" secondAttribute="trailing" constant="30" id="6BK-fL-YRe"/>
                         <constraint firstAttribute="trailing" secondItem="Lec-jZ-nt1" secondAttribute="trailing" constant="20" id="6kn-cu-spM"/>
                         <constraint firstItem="Wgy-fH-2XD" firstAttribute="centerX" secondItem="onT-bw-PDq" secondAttribute="centerX" id="8fH-9t-PlA"/>

@@ -26,7 +26,7 @@ class AwardDetailViewController: ScorecardViewController, AwardDetail, DetailDel
         super.viewDidLoad()
         self.view.backgroundColor = Palette.banner.background
         self.awardTitleLabel.textColor = Palette.banner.text
-        self.awardDetailView.set(backgroundColor: Palette.banner.background, textColor: Palette.banner.text, detailFont: UIFont.systemFont(ofSize: 17), shadow: false, dismiss: false, widthPercent: 100)
+        self.awardDetailView.set(backgroundColor: Palette.banner.background, textColor: Palette.banner.text, detailFont: UIFont.systemFont(ofSize: 17), shadow: false, dismiss: false, widthPercent: 100, heightPercent: 100)
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {

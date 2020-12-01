@@ -19,12 +19,14 @@ class AwardDetailView: UIView {
     private var tapGesture: UITapGestureRecognizer!
     private var shadow = true
     private var widthPercent: CGFloat = 80
+    private var heightPercent: CGFloat = 0
     private var dismiss = false
     
     @IBOutlet private weak var contentView: UIView!
     @IBOutlet private weak var exitButton: UIButton!
     @IBOutlet private weak var shadowView: UIView!
     @IBOutlet private weak var shadowViewWidthConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var shadowViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var nameLabel: UILabel!
     @IBOutlet private weak var awardView: AwardView!
     @IBOutlet private weak var titleLabel: UILabel!
@@ -58,6 +60,9 @@ class AwardDetailView: UIView {
         super.layoutSubviews()
         self.contentView.layoutIfNeeded()
         self.shadowViewWidthConstraint.constant = self.contentView.frame.width * (self.widthPercent / 100)
+        if self.heightPercent != 0 {
+            self.shadowViewHeightConstraint.constant = self.contentView.frame.height * (self.heightPercent / 100)
+        }
         self.shadowView.layoutIfNeeded()
         self.shadowView.roundCorners(cornerRadius: 16.0)
         if self.shadow {
@@ -65,9 +70,10 @@ class AwardDetailView: UIView {
         }
     }
     
-    public func set(backgroundColor: UIColor? = nil, textColor: UIColor? = nil, detailFont: UIFont? = nil, shadow: Bool = true, dismiss: Bool = true, widthPercent: CGFloat = 80) {
+    public func set(backgroundColor: UIColor? = nil, textColor: UIColor? = nil, detailFont: UIFont? = nil, shadow: Bool = true, dismiss: Bool = true, widthPercent: CGFloat = 80, heightPercent: CGFloat = 0) {
         self.dismiss = dismiss
         self.widthPercent = widthPercent
+        self.heightPercent = heightPercent
         self.exitButton.isHidden = !dismiss
         if let backgroundColor = backgroundColor {
             self.shadowView.backgroundColor = backgroundColor
@@ -88,8 +94,8 @@ class AwardDetailView: UIView {
     }
     
     public func set(awards: Awards, playerUUID: String, award: Award, mode: AwardDetailMode) {
+        var title = award.title
         self.nameLabel.text = award.name
-        self.titleLabel.text = award.title
         self.exitButton.isHidden = !dismiss
         let alpha: CGFloat = (mode == .toBeAwarded ? 0.3 : 1.0)
         self.awardView.set(award: award, alpha: alpha, showBadge: false)
@@ -99,6 +105,10 @@ class AwardDetailView: UIView {
         case .awarded:
             self.otherLabel.text = Utility.dateString(award.dateAwarded!, style: .full)
         case .toBeAwarded:
+            if let playerMO = Scorecard.shared.findPlayerByPlayerUUID(playerUUID),
+               let value = awards.getAchievedValue(code: award.code, playerMO: playerMO) {
+                title += "\nAchieved so far: \(value)"
+            }
             let levels = awards.toAchieve(playerUUID: playerUUID, code: award.code)
             if levels.count > 1 {
                 var text = "Award levels: \(levels.first!)"
@@ -106,8 +116,11 @@ class AwardDetailView: UIView {
                     text += ", \(levels[index])"
                 }
                 self.otherLabel.text = text
+            } else {
+                self.otherLabel.text = ""
             }
         }
+        self.titleLabel.text = title
         
         if award.count <= 1 {
             self.countBadgeLabel.isHidden = true
@@ -118,7 +131,7 @@ class AwardDetailView: UIView {
             self.countBadgeLabel.text = "\(award.count <= 9 ? "x" : "")\(award.count)"
             self.countBadgeLabel.textColor = Palette.banner.text
             self.countBadgeImageView.image = UIImage(named: "award")?.asTemplate
-            self.countBadgeImageView.tintColor = Palette.banner.background
+            self.countBadgeImageView.tintColor = Palette.bannerShadow.background
         }
         
         self.layoutSubviews()

@@ -977,7 +977,7 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
                 if let rootViewController = self.rootViewController {
                     Utility.executeAfter(delay: 0.1) {
                         if (rootViewController.viewControllerStack.isEmpty) {
-                            let active = ScorecardViewController.existingViewControllers.filter({$0.value != "Client" || $0.value != "MenuPanel"})
+                            let active = ScorecardViewController.existingViewControllers.filter({$0.value != "Client" && $0.value != "MenuPanel"})
                             if !active.isEmpty {
                                 Utility.debugMessage("ViewController", "The following are still active:\n \(active.map({$0.value}).toNaturalString())")
                                 rootViewController.alertSound(sound: .alarm)

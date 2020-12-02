@@ -461,11 +461,7 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
         var highScoresViewController: ScorecardViewController?
         
         if let parentViewController = self.fromViewController() {
-            highScoresViewController = DashboardViewController.show(
-                from: parentViewController, title: "High Scores",
-                dashboardNames: [DashboardName(title: "High Scores",  fileName: "HighScoresDashboard", helpId: "highScores")],
-                allowSync: false, backImage: "cross white", backgroundColor: Palette.banner,
-                container: .mainRight,  menuFinishText: "Return to Game Summary")
+            highScoresViewController = DashboardViewController.showHighScores(from: parentViewController, allowSync: false, returnTo: "Return to Game Summary")
         }
         return highScoresViewController
     }

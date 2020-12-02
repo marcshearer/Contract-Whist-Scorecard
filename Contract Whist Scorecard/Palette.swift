@@ -38,7 +38,6 @@ class Palette {
     @BackgroundColor(.instruction) static var instruction
     @BackgroundColor(.madeContract) static var madeContract
     @BackgroundColor(.roomInterior) static var roomInterior
-    @BackgroundColor(.sectionHeading) static var sectionHeading
     @BackgroundColor(.tableTop) static var tableTop
     @BackgroundColor(.tableTopShadow) static var tableTopShadow
     @BackgroundColor(.total) static var total
@@ -136,27 +135,6 @@ class Palette {
         }
         
         return matches
-    }
-    
-    class func sectionHeadingStyle(_ cell: UITableViewCell) {
-        cell.backgroundColor = Palette.sectionHeading.background
-        cell.textLabel?.textColor = Palette.sectionHeading.text
-    }
-    
-    class func sectionHeadingStyle(_ label: UILabel, setFont: Bool = true) {
-        label.backgroundColor = Palette.sectionHeading.background
-        label.textColor = Palette.sectionHeading.text
-        if setFont {
-            label.font = UIFont.systemFont(ofSize: 17.0, weight: .thin)
-        }
-    }
-    
-    class func sectionHeadingStyle(_ cell: UICollectionViewCell) {
-        cell.backgroundColor = Palette.sectionHeading.background
-    }
-    
-    class func sectionHeadingStyle(view: UIView) {
-        view.backgroundColor = Palette.sectionHeading.background
     }
     
     class func highlightStyle(_ label: UILabel, setFont: Bool = true) {

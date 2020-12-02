@@ -92,7 +92,7 @@ class HistoryDetailViewController: ScorecardViewController, UITableViewDataSourc
             dropPin()
         }
         if self.gameDetail.gameMO.excludeStats {
-            Palette.sectionHeadingStyle(view: self.excludeStatsView)
+            Palette.bannerStyle(view: self.excludeStatsView)
         } else {
             self.excludeStatsHeightConstraint.constant = 0
         }
@@ -126,11 +126,11 @@ class HistoryDetailViewController: ScorecardViewController, UITableViewDataSourc
         switch indexPath.row {
         case 0:
             // Header
-            Palette.sectionHeadingStyle(cell)
-            Palette.sectionHeadingStyle(cell.name)
-            Palette.sectionHeadingStyle(cell.totalScore)
-            Palette.sectionHeadingStyle(cell.handsMade)
-            Palette.sectionHeadingStyle(cell.otherValue)
+            Palette.bannerStyle(cell)
+            Palette.bannerStyle(cell.name)
+            Palette.bannerStyle(cell.totalScore)
+            Palette.bannerStyle(cell.handsMade)
+            Palette.bannerStyle(cell.otherValue)
             
             cell.name.text = "Player"
             cell.totalScore.text = "Score"

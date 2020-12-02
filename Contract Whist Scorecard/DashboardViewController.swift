@@ -213,8 +213,8 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
         self.view.setNeedsLayout()
     }
     
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         self.getOrientation()
         if self.rotated {
             self.hideOrientationViews(not: self.currentOrientation)
@@ -242,16 +242,13 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
                 self.changed(itemAtCenter: self.initialPage ?? 0, forceScroll: true, animation: .none)
             }
         }
-        self.firstTime = false
-        self.rotated = false
-    }
-
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
         
         // Configure bottom
         let bottomSafeArea = self.view.safeAreaInsets.bottom
         self.dashboardContainerBottomConstraint.constant = self.bottomInset ?? (bottomSafeArea == 0 ? 16 : bottomSafeArea)
+        
+        self.firstTime = false
+        self.rotated = false
     }
 
     override func animationDidFinish() {
@@ -390,66 +387,64 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     }
         
     internal func changed(_ collectionView: UICollectionView? = nil, itemAtCenter: Int, forceScroll: Bool, animation: ViewAnimation = .slideRight) {
-        Utility.mainThread {
-            let lastPage = self.currentPage
-            let changed = lastPage != itemAtCenter
-            if changed || forceScroll == true {
-                // Select cell
-                self.currentPage = itemAtCenter
-                var oldViews: [DashboardView] = []
-                if changed && self.currentView != nil {
-                    self.willDisappear(for: self.currentView!)
-                    oldViews = [self.currentView!]
-                }
-                let newView = self.getView(page: itemAtCenter)
-                self.currentView = newView
-                newView.backgroundColor = self.backgroundColor.background
-                self.dashboardContainerView.addSubview(newView)
-                self.setupHelpView(view: newView)
-                let animation: ViewAnimation =
-                    (animation != .slideRight ? animation :
-                        (self.showCarousel ? (lastPage < itemAtCenter ? .slideRight
-                                                                         : .slideLeft)
-                                           : (lastPage < itemAtCenter ? .coverFromRight
-                                                                         : .uncoverToRight)))
-                ViewAnimator.animate(rootView: self.dashboardContainerView, oldViews: oldViews,   newViews: [newView], animation: animation,
-                    duration: (self.showCarousel ? 0.25 : 0.5), layout: false,
-                    additionalAnimations: {
-                        if self.showCarousel {
-                            // Unhighlight the cell leaving the center
-                            if let cell = self.carouselCollectionView.cellForItem(at: IndexPath(item: lastPage, section: 0)) as? DashboardCarouselCell {
-                                if lastPage != itemAtCenter {
-                                    cell.containerView.backgroundColor = Palette.carouselUnselected.background
-                                    cell.backgroundImageView.tintColor = Palette.carouselUnselected.faintText
-                                    cell.titleLabel.textColor = Palette.carouselUnselected.text
-                                    cell.titleLabel.alpha = 0.0
-                                }
-                            }
-                            
-                            if forceScroll {
-                                collectionView?.scrollToItem(at: IndexPath(item: itemAtCenter, section: 0), at: .centeredHorizontally, animated: animation != .none)
-                            }
-                            
-                            // Highlight new cell at center
-                            if let cell = self.carouselCollectionView.cellForItem(at: IndexPath(item: lastPage, section: 0)) as? DashboardCarouselCell {
-                                cell.containerView.backgroundColor = Palette.carouselSelected.background
-                                cell.backgroundImageView.tintColor = Palette.carouselSelected.contrastText
-                                cell.titleLabel.textColor = Palette.carouselSelected.text
-                                cell.titleLabel.alpha = 1.0
-                            }
-                            self.scrollCollectionView.reloadData()
-                        }
-                     },
-                     completion: {
-                        oldViews.first?.removeFromSuperview()
-                        self.setupSubtitle()
-                        self.showMenuOptions(highScoreMode: self.currentPage == self.highScoresPage)
-                        if self.returnToPage == nil {
-                            self.menuController?.highlightSuboption(id: self.dashboardInfo[itemAtCenter].fileName)
-                        }
-                     }
-                )
+        let lastPage = self.currentPage
+        let changed = lastPage != itemAtCenter
+        if changed || forceScroll == true {
+            // Select cell
+            self.currentPage = itemAtCenter
+            var oldViews: [DashboardView] = []
+            if changed && self.currentView != nil {
+                self.willDisappear(for: self.currentView!)
+                oldViews = [self.currentView!]
             }
+            let newView = self.getView(page: itemAtCenter)
+            self.currentView = newView
+            newView.backgroundColor = self.backgroundColor.background
+            self.dashboardContainerView.addSubview(newView)
+            self.setupHelpView(view: newView)
+            let animation: ViewAnimation =
+                (animation != .slideRight ? animation :
+                    (self.showCarousel ? (lastPage < itemAtCenter ? .slideRight
+                                            : .slideLeft)
+                        : (lastPage < itemAtCenter ? .coverFromRight
+                            : .uncoverToRight)))
+            ViewAnimator.animate(rootView: self.dashboardContainerView, oldViews: oldViews,   newViews: [newView], animation: animation,
+                 duration: (self.showCarousel ? 0.25 : 0.5), layout: false,
+                 additionalAnimations: {
+                    if self.showCarousel {
+                        // Unhighlight the cell leaving the center
+                        if let cell = self.carouselCollectionView.cellForItem(at: IndexPath(item: lastPage, section: 0)) as? DashboardCarouselCell {
+                            if lastPage != itemAtCenter {
+                                cell.containerView.backgroundColor = Palette.carouselUnselected.background
+                                cell.backgroundImageView.tintColor = Palette.carouselUnselected.faintText
+                                cell.titleLabel.textColor = Palette.carouselUnselected.text
+                                cell.titleLabel.alpha = 0.0
+                            }
+                        }
+                        
+                        if forceScroll {
+                            collectionView?.scrollToItem(at: IndexPath(item: itemAtCenter, section: 0), at: .centeredHorizontally, animated: animation != .none)
+                        }
+                        
+                        // Highlight new cell at center
+                        if let cell = self.carouselCollectionView.cellForItem(at: IndexPath(item: lastPage, section: 0)) as? DashboardCarouselCell {
+                            cell.containerView.backgroundColor = Palette.carouselSelected.background
+                            cell.backgroundImageView.tintColor = Palette.carouselSelected.contrastText
+                            cell.titleLabel.textColor = Palette.carouselSelected.text
+                            cell.titleLabel.alpha = 1.0
+                        }
+                        self.scrollCollectionView.reloadData()
+                    }
+                 },
+                 completion: {
+                    oldViews.first?.removeFromSuperview()
+                    self.setupSubtitle()
+                    self.showMenuOptions(highScoreMode: self.currentPage == self.highScoresPage)
+                    if self.returnToPage == nil {
+                        self.menuController?.highlightSuboption(id: self.dashboardInfo[itemAtCenter].fileName)
+                    }
+                 }
+            )
         }
     }
 
@@ -537,7 +532,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     
     // MARK: - Functions to present other views ========================================================== -
     
-    private func showHighScores(allowSync: Bool = true) {
+    private func showHighScores(allowSync: Bool = false) {
         let title = self.dashboardInfo[self.currentPage].returnTo
         
         if let highScoresPage = self.highScoresPage {
@@ -550,9 +545,9 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
         }
     }
     
-    public static func showHighScores(from parentViewController: ScorecardViewController, allowSync: Bool = false, returnTo: String? = nil, completion: (()->())? = nil) {
-        DashboardViewController.show(from: parentViewController,
-                                     dashboardNames: [DashboardName(title: "High Scores",  fileName: "HighScoresDashboard", helpId: "highScores")], allowSync: allowSync, backImage: "back", backgroundColor: Palette.banner, container: parentViewController.container, menuFinishText: "Back to \(returnTo ?? "Results")", showCarousel: false) {
+    @discardableResult public static func showHighScores(from parentViewController: ScorecardViewController, allowSync: Bool = false, returnTo: String? = nil, completion: (()->())? = nil) -> DashboardViewController{
+        return DashboardViewController.show(from: parentViewController,
+                                     dashboardNames: [DashboardName(title: "High Scores",  fileName: "HighScoresDashboard", helpId: "highScores")], allowSync: allowSync, backImage: "back", backgroundColor: Palette.banner, container: parentViewController.container, menuFinishText:returnTo ?? "Results") {
             completion?()
         }
     }
@@ -636,6 +631,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     }
     
     private func showMenuOptions(highScoreMode: Bool = false) {
+        if menuController?.isVisible ?? false {
         for info in self.dashboardInfo {
             var menuText = info.title
             var isHidden: Bool
@@ -650,6 +646,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
             }
             self.banner.setButton(info.fileName, menuText: menuText, isHidden: isHidden)
         }
+        }
     }
 
     // MARK: - Functions to present other views ========================================================== -
@@ -663,7 +660,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     
     // MARK: - Function to present and dismiss this view ================================================= -
     
-    @discardableResult class public func show(from viewController: ScorecardViewController, title: String? = nil, dashboardNames: [DashboardName], allowSync: Bool = true, backImage: String = "home", backText: String? = nil, backgroundColor: PaletteColor = Palette.dark, container: Container? = .main, animation: ViewAnimation? = nil, bottomInset: CGFloat? = nil, menuFinishText: String? = nil, showCarousel: Bool = true, initialPage: Int? = nil, completion: (()->())? = nil) -> ScorecardViewController {
+    @discardableResult class public func show(from viewController: ScorecardViewController, title: String? = nil, dashboardNames: [DashboardName], allowSync: Bool = true, backImage: String = "home", backText: String? = nil, backgroundColor: PaletteColor = Palette.dark, container: Container? = .main, animation: ViewAnimation? = nil, bottomInset: CGFloat? = nil, menuFinishText: String? = nil, showCarousel: Bool = false, initialPage: Int? = nil, completion: (()->())? = nil) -> DashboardViewController {
         
         let dashboardViewController = DashboardViewController.create(title: title, dashboardNames: dashboardNames, allowSync: allowSync, backImage: backImage, backText: backText, backgroundColor: backgroundColor, bottomInset: bottomInset, menuFinishText: menuFinishText, showCarousel: showCarousel, initialPage: initialPage, completion: completion)
         
@@ -708,7 +705,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
 extension DashboardViewController {
     
     private func defaultViewColors() {
-        self.bannerColor = (self.container == .mainRight ? Palette.banner : self.defaultBannerColor)
+        self.bannerColor = (self.container == .mainRight || self.container == .main ? Palette.banner : self.defaultBannerColor)
         self.view.backgroundColor = self.backgroundColor.background
         self.bannerContinuation.backgroundColor = self.bannerColor.background
     }

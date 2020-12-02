@@ -372,10 +372,10 @@ extension DataTableViewController: UICollectionViewDelegate, UICollectionViewDat
             cell.tag = indexPath.row
             cell.layoutIfNeeded()
 
-            Palette.sectionHeadingStyle(cell.textLabel)
-            cell.topSpacingView.backgroundColor = Palette.sectionHeading.background
+            Palette.bannerStyle(cell.textLabel)
+            cell.topSpacingView.backgroundColor = Palette.banner.background
             cell.topSpacingHeightConstraint.constant = self.delegate?.headerTopSpacingHeight ?? 0.0
-            cell.headerUpArrowView.backgroundColor = Palette.sectionHeading.background
+            cell.headerUpArrowView.backgroundColor = Palette.banner.background
             cell.textLabel.text = column.title
             cell.textLabel.textAlignment = .center
             
@@ -604,7 +604,7 @@ class DataTableCell: UITableViewCell {
     public func setupArrows() {
         self.resetArrows()
         self.headerUpArrowShape = self.centralArrow(container: self.headerUpArrowView, up: true, color: Palette.normal.background)
-        self.headerDownArrowShape = self.centralArrow(container: self.headerDownArrowView, up: false, color: Palette.sectionHeading.background)
+        self.headerDownArrowShape = self.centralArrow(container: self.headerDownArrowView, up: false, color: Palette.banner.background)
     }
     
     private func centralArrow(container: UIView, up: Bool, color: UIColor) -> UIView {

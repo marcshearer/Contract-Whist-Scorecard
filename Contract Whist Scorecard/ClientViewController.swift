@@ -455,7 +455,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
                 DashboardName(title: "Awards",  fileName: "AwardsDashboard",  imageName: "award", helpId: "awards"),
                 DashboardName(title: "Personal", fileName: "PersonalDashboard", imageName: "personal", helpId: "personalResults"),
                 DashboardName(title: "Everyone", fileName: "EveryoneDashboard", imageName: "everyone", helpId: "everyoneResults")],
-             container: .mainRight) {
+             container: .mainRight, showCarousel: true) {
             
             // Reallocate container sizes in case screen grew during dashboard
             self.allocateContainerSizes()

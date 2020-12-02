@@ -177,6 +177,7 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
             self.bottomArea.layoutIfNeeded()
             self.setupSize()
             self.winnerCollectionView.reloadData()
+            self.otherCollectionView.reloadData()
             self.awardsCollectionView.reloadData()
         }
         firstTime = false

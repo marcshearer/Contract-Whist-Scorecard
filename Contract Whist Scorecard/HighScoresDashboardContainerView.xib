@@ -19,7 +19,7 @@
             <rect key="frame" x="0.0" y="0.0" width="414" height="700"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rDT-oS-tCg" userLabel="Total Scores Tile" customClass="DataTableTileView" customModule="Whist" customModuleProvider="target">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rDT-oS-tCg" userLabel="Total Scores Tile (Twos)" customClass="DataTableTileView" customModule="Whist" customModuleProvider="target">
                     <rect key="frame" x="16" y="8" width="224.5" height="197"/>
                     <color key="backgroundColor" name="Clear"/>
                     <userDefinedRuntimeAttributes>
@@ -41,10 +41,40 @@
                         </userDefinedRuntimeAttribute>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="showTypeButton" value="NO"/>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="detailDrill" value="YES"/>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="hideNoTwos" value="YES"/>
                     </userDefinedRuntimeAttributes>
                     <connections>
                         <outlet property="dashboardDelegate" destination="-1" id="F0Y-gp-BHe"/>
                         <outlet property="parentDashboardView" destination="-1" id="rAz-xR-LhT"/>
+                    </connections>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="64B-rq-1Jt" userLabel="Total Scores Tile (No Twos)" customClass="DataTableTileView" customModule="Whist" customModuleProvider="target">
+                    <rect key="frame" x="16" y="8" width="224.5" height="400"/>
+                    <color key="backgroundColor" name="Clear"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="detail">
+                            <integer key="value" value="3"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="personal" value="NO"/>
+                        <userDefinedRuntimeAttribute type="string" keyPath="title" value="Highest Scores"/>
+                        <userDefinedRuntimeAttribute type="number" keyPath="highScore">
+                            <integer key="value" value="1"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="headings" value="NO"/>
+                        <userDefinedRuntimeAttribute type="number" keyPath="maxRows">
+                            <integer key="value" value="6"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="separator" value="NO"/>
+                        <userDefinedRuntimeAttribute type="number" keyPath="fontSize">
+                            <real key="value" value="19"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="showTypeButton" value="NO"/>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="detailDrill" value="YES"/>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="hideTwos" value="YES"/>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <outlet property="dashboardDelegate" destination="-1" id="vBT-mx-OgO"/>
+                        <outlet property="parentDashboardView" destination="-1" id="U7a-Di-I0H"/>
                     </connections>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NHt-cp-ido" userLabel="Twos Made Tile" customClass="DataTableTileView" customModule="Whist" customModuleProvider="target">
@@ -69,6 +99,7 @@
                         </userDefinedRuntimeAttribute>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="separator" value="NO"/>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="detailDrill" value="YES"/>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="hideNoTwos" value="YES"/>
                     </userDefinedRuntimeAttributes>
                     <connections>
                         <outlet property="dashboardDelegate" destination="-1" id="jdw-D4-0Eb"/>
@@ -139,6 +170,7 @@
             <constraints>
                 <constraint firstItem="jqS-Vg-wOa" firstAttribute="height" secondItem="iN0-l3-epB" secondAttribute="height" multiplier="0.4" constant="-12" id="3IH-S7-N1u"/>
                 <constraint firstItem="NHt-cp-ido" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="16" id="3J1-Sh-itw"/>
+                <constraint firstItem="64B-rq-1Jt" firstAttribute="top" secondItem="rDT-oS-tCg" secondAttribute="top" id="7hN-dv-7Wh"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="jqS-Vg-wOa" secondAttribute="trailing" constant="16" id="CQP-gU-u8z"/>
                 <constraint firstItem="jqS-Vg-wOa" firstAttribute="top" secondItem="NHt-cp-ido" secondAttribute="bottom" constant="16" id="L67-vf-YId"/>
                 <constraint firstItem="rDT-oS-tCg" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" multiplier="0.6" constant="-24" id="O6J-Sb-zly"/>
@@ -151,7 +183,10 @@
                 <constraint firstItem="jqS-Vg-wOa" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="16" id="kFP-Pl-uEc"/>
                 <constraint firstItem="jqS-Vg-wOa" firstAttribute="top" secondItem="kVP-Fk-6a5" secondAttribute="bottom" constant="16" id="lpj-Km-X0y"/>
                 <constraint firstItem="rDT-oS-tCg" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="8" id="mI9-dd-mvr"/>
+                <constraint firstItem="64B-rq-1Jt" firstAttribute="leading" secondItem="rDT-oS-tCg" secondAttribute="leading" id="oMw-PJ-WlL"/>
                 <constraint firstItem="NHt-cp-ido" firstAttribute="width" secondItem="rDT-oS-tCg" secondAttribute="width" id="onL-9B-2Oh"/>
+                <constraint firstItem="64B-rq-1Jt" firstAttribute="trailing" secondItem="rDT-oS-tCg" secondAttribute="trailing" id="rxh-fw-KKg"/>
+                <constraint firstItem="64B-rq-1Jt" firstAttribute="bottom" secondItem="NHt-cp-ido" secondAttribute="bottom" id="uDB-T3-K6I"/>
                 <constraint firstItem="NHt-cp-ido" firstAttribute="top" secondItem="rDT-oS-tCg" secondAttribute="bottom" constant="16" id="vYI-9m-2F5"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

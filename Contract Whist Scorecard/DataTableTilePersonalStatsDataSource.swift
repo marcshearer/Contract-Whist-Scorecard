@@ -23,10 +23,15 @@ class DataTableTilePersonalStatsDataSource : DataTableTileViewDataSource {
         var result: [DataTableViewerDataSource] = []
         
         if let playerMO = Scorecard.shared.findPlayerByPlayerUUID(Scorecard.settings.thisPlayerUUID) {
+            if !Scorecard.settings.bonus2 {
+                result.append(DataTablePersonalStats(name: "Played", value: "\(playerMO.gamesPlayed)"))
+            }
             result.append(DataTablePersonalStats(name: "Games won", value: "\(Utility.roundPercent(playerMO.gamesWon,playerMO.gamesPlayed)) %"))
             result.append(DataTablePersonalStats(name: "Av. score", value: "\(Utility.roundQuotient(playerMO.totalScore, playerMO.gamesPlayed))"))
             result.append(DataTablePersonalStats(name: "Bids made", value: "\(Utility.roundPercent(playerMO.handsMade, playerMO.handsPlayed)) %"))
-            result.append(DataTablePersonalStats(name: "Twos made", value: "\(Utility.roundPercent(playerMO.twosMade, playerMO.handsPlayed)) %"))
+            if Scorecard.settings.bonus2 {
+                result.append(DataTablePersonalStats(name: "Twos made", value: "\(Utility.roundPercent(playerMO.twosMade, playerMO.handsPlayed)) %"))
+            }
         }
         
         return result

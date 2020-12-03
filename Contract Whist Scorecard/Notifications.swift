@@ -234,19 +234,16 @@ class Notifications {
     public class func addObserver(forName name: NSNotification.Name,
                                        using block: @escaping (Notification) -> Void) -> NSObjectProtocol? {
         let observer = NotificationCenter.default.addObserver(forName: name, object: nil, queue: nil, using: block)
-        Utility.debugMessage("Notifications", "Add \(name) \(observer.description)")
         return observer
     }
     
     public class func removeObserver(_ observer: NSObjectProtocol?) {
         if let observer = observer {
-            Utility.debugMessage("Notifications", "Remove \(observer.description)")
             NotificationCenter.default.removeObserver(observer)
         }
     }
     
     public class func post(name: NSNotification.Name, object: Any? = nil, userInfo: [AnyHashable:Any]? = nil) {
-        Utility.debugMessage("Notifications", "Post to \(name)")
         NotificationCenter.default.post(name: name, object: object, userInfo: userInfo)
     }
 }

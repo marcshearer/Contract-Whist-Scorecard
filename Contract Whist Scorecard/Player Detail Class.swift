@@ -335,8 +335,8 @@ import CoreData
         }
         return result
     }
-    
-    internal func derivedField(field: String, record: DataTableViewerDataSource, sortValue: Bool) -> String {
+
+    internal func derivedField(field: String, record: DataTableViewerDataSource, sortValue: Bool, width: CGFloat) -> String {
         var numericResult: Double?
         var result: String
         let format = (ScorecardUI.landscapePhone() ? "%.1f" : "%.0f")

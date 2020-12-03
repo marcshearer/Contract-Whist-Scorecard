@@ -48,6 +48,13 @@ fileprivate enum AwardNameItem {
     case description
 }
 
+fileprivate enum AwardScaleFactor {
+    case rounds
+    case score
+    case maxCards
+    case none
+}
+
 fileprivate struct AwardNameConfig {
     private let name: String?
     private let shortName: String?
@@ -83,15 +90,14 @@ fileprivate struct AwardConfig {
     fileprivate let key: String?
     fileprivate let custom: (([ParticipantMO])->Int)?
     fileprivate let winLose: WinLose
-    fileprivate let imageName: String
+    fileprivate let imageNames: [String]
     fileprivate let backgroundColor: UIColor
     fileprivate let backgroundImageName: String?
     fileprivate let condition: (()->Bool)?
     
-    fileprivate init(code: String, name: String, shortName: String, title: String, description: String? = nil, awardLevels: [Int], repeatable: Bool = true, compare: Comparison? = nil, source: Source? = nil, suppressAchievement: Bool = false, key: String? = nil, custom: (([ParticipantMO])->Int)? = nil, winLose: WinLose = .any, imageName: String, backgroundColor: UIColor = Palette.darkHighlight.background, backgroundImageName: String? = nil, condition: (()->Bool)? = nil, overrides: [Int : AwardNameConfig]? = nil) {
+    fileprivate init(code: String, name: String, shortName: String, title: String, description: String? = nil, awardLevels: [Int], repeatable: Bool = true, compare: Comparison? = nil, source: Source? = nil, suppressAchievement: Bool = false, key: String? = nil, custom: (([ParticipantMO])->Int)? = nil, winLose: WinLose = .any, imageName: String, backgroundColor: UIColor = Palette.darkHighlight.background, backgroundImageName: String? = nil, condition: (()->Bool)? = nil, overrides: [Int : AwardNameConfig]? = nil, scaleFactor: AwardScaleFactor = .none, rounding: Int = 1) {
         self.code = code
         self.nameConfig = AwardNameConfig(name: name, shortName: shortName, title: title, description: description)
-        self.awardLevels = awardLevels
         self.repeatable = repeatable
         self.compare = compare
         self.source = source
@@ -99,11 +105,47 @@ fileprivate struct AwardConfig {
         self.key = key
         self.custom = custom
         self.winLose = winLose
-        self.imageName = imageName
         self.backgroundColor = backgroundColor
         self.backgroundImageName = backgroundImageName
         self.condition = condition
         self.levelNameConfig = overrides ?? [:]
+
+        // Now scale award levels and setup image names (based on unscaled levels)
+        var scaledAwardLevels: [Int] = []
+        var imageNames: [String] = []
+        var factor: CGFloat = 1.0
+        let rounds = CGFloat(Game.rounds(cards: Scorecard.activeSettings.cards, bounce: Scorecard.activeSettings.bounceNumberCards))
+        let compareRounds = CGFloat(Game.rounds(cards: [13, 1], bounce: false))
+        let cards = CGFloat(Game.rounds(cards: Scorecard.activeSettings.cards, bounce: Scorecard.activeSettings.bounceNumberCards))
+        let compareCards = CGFloat(Game.rounds(cards: [13, 1], bounce: false))
+        switch scaleFactor {
+        case .rounds:
+            factor = rounds / compareRounds
+        case .score:
+            let score: CGFloat = ((rounds * 6.667) + (cards * 0.333))
+            let compareScore: CGFloat = ((compareRounds * 6.667) + (compareCards * 0.333))
+            factor = score / compareScore
+        case .maxCards:
+            factor = CGFloat(Scorecard.activeSettings.cards.max()!) / 13.0
+        default:
+            break
+        }
+        for level in awardLevels {
+            var level = level
+            let imageName = imageName.replacingOccurrences(of: "%d", with: "\(level)")
+            if factor != 1.0 {
+                let scaled = CGFloat(level) * factor
+                level = Int((scaled / CGFloat(rounding)).rounded() * CGFloat(rounding))
+            }
+            if level == 0 || scaledAwardLevels.last == level {
+                continue
+            }
+            scaledAwardLevels.append(level)
+            imageNames.append(imageName)
+        }
+        self.awardLevels = scaledAwardLevels
+        self.imageNames = imageNames
+
     }
     
     private func value(for item: AwardNameItem, level: Int? = nil) -> String {
@@ -135,7 +177,11 @@ fileprivate struct AwardConfig {
     }
     
     fileprivate func imageName(level: Int) -> String {
-        return self.substitute(self.imageName, level)
+        if let index = self.awardLevels.firstIndex(where: {$0 == level}) {
+            return self.imageNames[index]
+        } else {
+            return ""
+        }
     }
 
     private func substitute(_ stringValue: String, _ level: Int) -> String {
@@ -652,9 +698,11 @@ public class Awards {
         let sequence = Scorecard.activeSettings.trumpSequence
         if let ntIndex = sequence.firstIndex(where: {$0 == "NT"}) {
             if ntIndex == 4 {
-                if cards[0] <= 9 && cards[1] >= 9 && (cards[0] == 5) {
+                if cards[0] == 5 && cards[1] >= 9  {
+                    // Starting at 5 and increasing
                     result = true
-                } else if cards[0] >= 9 && cards[1] <= 9 && (cards[0] == 13) {
+                } else if cards[0] == 13 && cards[1] <= 9 {
+                    // Starting at 13 and decreasing
                     result = true
                 }
             }
@@ -686,7 +734,8 @@ public class Awards {
             AwardConfig(code: "madeGame", name: "Contract Killer", shortName: "Contract Killer", title: "Make %d contracts in one game",
                    awardLevels: [11, 12, 13],
                    compare: .greaterOrEqual, source: .current, key: "handsMade",
-                   imageName: "award game made %d"),
+                   imageName: "award game made %d",
+                   scaleFactor: .rounds),
             AwardConfig(code: "winStreak", name: "Don't Stop Me Now", shortName: "Don't Stop Me", title: "I'm having such a good time.\nWin %d games in a row",
                    awardLevels: [3, 4, 5],
                    compare: .greaterOrEqual, source: .player, suppressAchievement: true, key: "winStreak",
@@ -710,7 +759,8 @@ public class Awards {
             AwardConfig(code: "totalScore", name: "Flying High", shortName: "Flying High", title: "Score higher than %d in a game",
                    awardLevels: [130, 140, 150],
                    compare: .greaterOrEqual, source: .current, key: "totalScore",
-                   imageName: "award total score %d"),
+                   imageName: "award total score %d",
+                   scaleFactor: .score, rounding: 10),
             AwardConfig(code: "allNoTrumps", name: "Clean Sweep", shortName: "Clean Sweep", title: "Win all nine tricks in the 9 NT hand",
                    awardLevels: [9],
                    compare: .equal, source: .round(.specific(5)), key: "made",
@@ -719,7 +769,8 @@ public class Awards {
             AwardConfig(code: "maxTricks", name: "Abracadabra", shortName: "Abracadabra", title: "Win %d or more tricks in a hand",
                    awardLevels: [10],
                    compare: .greaterOrEqual, source: .round(.maximum), key: "made",
-                   imageName: "award max tricks %d"),
+                   imageName: "award max tricks %d",
+                   scaleFactor: .maxCards, rounding: 1),
             AwardConfig(code: "twoLastRound", name: "Lucky Duck", shortName: "Lucky Duck", title: "Win with a 2 in last round",
                    awardLevels: [1],
                    compare: .greaterOrEqual, source: .round(.last), key: "twos",
@@ -728,19 +779,23 @@ public class Awards {
             AwardConfig(code: "winBehind", name: "Comeback King", shortName: "Comeback King", title: "Win the game after being %d points behind",
                    awardLevels: [30],
                    compare: .greaterOrEqual, custom: maxBehind, winLose: .win,
-                   imageName: "award win behind %d"),
+                   imageName: "award win behind %d",
+                   scaleFactor: .score, rounding: 10),
             AwardConfig(code: "loseAhead", name: "Crimble Crumble", shortName: "Crumble", title: "Hard luck bambino! Lose the game after being %d points ahead",
                    awardLevels: [30],
                    compare: .greaterOrEqual, custom: maxAhead, winLose: .lose,
-                   imageName: "award lose ahead %d"),
+                   imageName: "award lose ahead %d",
+                   scaleFactor: .score, rounding: 10),
             AwardConfig(code: "highLoss", name: "Hard Cheese", shortName: "Hard Cheese", title: "Better luck next time. Score more than %d points but still lose the game",
                    awardLevels: [130],
                    compare: .greaterOrEqual, source: .current, key: "totalScore", winLose: .lose,
-                   imageName: "award high loss %d"),
+                   imageName: "award high loss %d",
+                   scaleFactor: .score, rounding: 10),
             AwardConfig(code: "lowWin", name: "Down To The Wire", shortName: "To The Wire", title: "Win the game while scoring %d points or less",
                    awardLevels: [100, 90, 80],
                    compare: .lessOrEqual, source: .current, key: "totalScore", winLose: .win,
-                   imageName: "award low win %d"),
+                   imageName: "award low win %d",
+                   scaleFactor: .score, rounding: 10),
             AwardConfig(code: "aboveAverage", name: "Little Miss Consistent", shortName: "Miss Consistent", title: "Score above your average for %d games in a row",
                    awardLevels: [5, 10],
                    compare: .equal, custom: aboveAverage,
@@ -754,17 +809,24 @@ public class Awards {
                    awardLevels: [3, 4, 5],
                    compare: .greaterOrEqual, source: .current, key: "twosMade",
                    imageName: "award game twos %d",
-                   condition: { Scorecard.activeSettings.bonus2 }),
+                   condition: { Scorecard.activeSettings.bonus2 },
+                   scaleFactor: .rounds, rounding: 1),
             AwardConfig(code: "twosHand", name: "It Takes Two To Tango", shortName: "Two to Tango", title: "Make %d twos in one hand",
                    awardLevels: [2, 3],
                    compare: .greaterOrEqual, source: .round(.maximum), key: "twos",
                    imageName: "award hand twos %d",
-                   condition: { Scorecard.activeSettings.bonus2 }),
+                   condition: { Scorecard.activeSettings.bonus2 && Scorecard.activeSettings.cards.max()! >= 3}),
             AwardConfig(code: "awards", name: "VIP", shortName: "VIP", title: "This award is for being awarded %d awards",
                    awardLevels: [25, 50], repeatable: false,
                    compare: .greaterOrEqual, source: .awards, key: "",
                    imageName: "awards %d"),
         ]
+        // Remove any with a condition that isn't satisfied
+        for (index, element) in config.enumerated().reversed() {
+            if !(element.condition?() ?? true) {
+                self.config.remove(at: index)
+            }
+        }
     }
 }
 

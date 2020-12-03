@@ -36,6 +36,8 @@ class DashboardTileView: UIView, DashboardTileDelegate {
         }
     }
     @IBInspectable internal var personal: Bool = true
+    @IBInspectable internal var hideTwos: Bool = false
+    @IBInspectable internal var hideNoTwos: Bool = false
     
     @IBOutlet internal weak var dashboardDelegate: DashboardActionDelegate?
     @IBOutlet internal weak var parentDashboardView: DashboardView?

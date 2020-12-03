@@ -10,17 +10,26 @@ import CoreGraphics
 
 class DataTableTileStatsDataSource : DataTableTileViewDataSource {
 
-    let availableFields: [DataTableField] = [
-        DataTableField("",             "",                 sequence: 1,     width: 7,     type: .string),
-        DataTableField("",             "",                 sequence: 9,     width: 7,     type: .string),
-        DataTableField("name",         "",                 sequence: 2,     width: 140,    type: .string,    align: .left,   pad: true),
-        DataTableField("=gamesWon%",   "Games Won",        sequence: 5,     width: 60.0,  type: .double),
-        DataTableField("=averageScore","Av. Score",        sequence: 6,     width: 60.0,  type: .double),
-        DataTableField("=handsMade%",  "Hands Made",       sequence: 7,     width: 60.0,  type: .double),
-        DataTableField("=twosMade%",   "Twos Made",        sequence: 8,     width: 60.0,  type: .double),
-        DataTableField("gamesPlayed",  "Games Played",     sequence: 3,     width: 60.0,  type: .int),
-        DataTableField("gamesWon",     "Games Won",        sequence: 4,     width: 60.0,  type: .int)
-    ]
+    var availableFields: [DataTableField]
+        
+    init() {
+        
+        self.availableFields = [
+                DataTableField("",             "",                 sequence: 1,     width: 7,     type: .string),
+                DataTableField("",             "",                 sequence: 9,     width: 7,     type: .string),
+                DataTableField("name",         "",                 sequence: 2,     width: 140,    type: .string,    align: .left,   pad: true),
+                DataTableField("=gamesWon%",   "Games Won",        sequence: 5,     width: 60.0,  type: .double),
+                DataTableField("=averageScore","Av. Score",        sequence: 6,     width: 60.0,  type: .double),
+                DataTableField("=handsMade%",  "Hands Made",       sequence: 7,     width: 60.0,  type: .double)]
+        if Scorecard.settings.bonus2 {
+            self.availableFields.append(
+                DataTableField("=twosMade%",   "Twos Made",        sequence: 8,     width: 60.0,  type: .double))
+        }
+        self.availableFields.append(contentsOf: [
+                DataTableField("gamesPlayed",  "Games Played",     sequence: 3,     width: 60.0,  type: .int),
+                DataTableField("gamesWon",     "Games Won",        sequence: 4,     width: 60.0,  type: .int)]
+        )
+    }
     
     let minColumns = 4
     

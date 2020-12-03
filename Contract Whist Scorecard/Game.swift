@@ -102,14 +102,7 @@ class Game {
     */
     public var rounds: Int {
         get {
-            let cards = self.settings.cards
-            let bounce = self.settings.bounceNumberCards
-            let range = abs(cards[0] - cards[1]) + 1
-            if bounce {
-                return (2 * range) - 1
-            } else {
-                return range
-            }
+            return Game.rounds(cards: self.settings.cards, bounce: self.settings.bounceNumberCards)
         }
     }
     
@@ -729,5 +722,35 @@ class Game {
             result = false
         }
         return result
+    }
+    
+    // Static game information methods
+    
+    /// Number of rounds for given settings
+    /// - Parameter settings: settings to use
+    /// - Returns: number of rounds
+    public static func rounds(cards: [Int], bounce: Bool) -> Int {
+        let range = abs(cards[0] - cards[1]) + 1
+        if bounce {
+            return (2 * range) - 1
+        } else {
+            return range
+        }
+    }
+    
+    /// Total number of cards for given settings
+    /// - Parameter settings: settings to use
+    /// - Returns: total number of cards
+    public static func totalCards(cards: [Int], bounce: Bool) -> Int {
+        let cardMin = cards.min()!
+        let cardMax = cards.max()!
+        var totalCards = 0
+        for count in cardMin...cardMax {
+            totalCards += count
+        }
+        if bounce {
+            totalCards = (totalCards * 2) - cards[1]
+        }
+        return totalCards
     }
 }

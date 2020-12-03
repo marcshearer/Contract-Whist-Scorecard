@@ -574,8 +574,6 @@ public class HistoryGame: NSObject, DataTableViewerDataSource {
             result = Utility.dateString(historyGame.datePlayed, style: .short, doesRelativeDateFormatting: true)
             if (width < 70 && Date.startOfDay(from: historyGame.datePlayed) != Date.startOfDay()) || result.contains("/") {
                 result = Utility.dateString(historyGame.datePlayed, format: "dd MMM", localized: false)
-            } else if result == "Yesterday" {
-                result = "Yesterday"
             }
         
         case "player1", "player2", "player3", "player4":

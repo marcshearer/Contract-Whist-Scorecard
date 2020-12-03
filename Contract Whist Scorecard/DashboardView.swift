@@ -106,6 +106,19 @@ class DashboardView : UIView, DashboardActionDelegate {
         self.addSubview(contentView)
         contentView.frame = self.bounds
         contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        
+        // Show / hide dependent on settings
+        for view in contentView.subviews {
+            if let view = view as? DashboardTileView {
+                view.isHidden = false
+                if view.hideTwos && Scorecard.settings.bonus2 {
+                    view.isHidden = true
+                }
+                if view.hideNoTwos && !Scorecard.settings.bonus2 {
+                    view.isHidden = true
+                }
+            }
+        }
     }
     
     // MARK: - Dashboard Action Delegate =============================================================== -

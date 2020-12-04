@@ -23,10 +23,11 @@ enum ViewAnimation {
     case uncoverToTop
     case uncoverToBottom
     case none
+    case replace // Should be replaced with other animation by application
     
     func offset(by size: CGSize = CGSize(width: 1.0,height: 1.0), multiplier: CGFloat = 1.0) -> CGPoint {
         switch self {
-        case .fade, .none:
+        case .fade, .none, .replace:
             return .zero
         case .slideRight, .coverFromRight, .uncoverToLeft:
             return CGPoint(x: size.width * multiplier, y: 0)

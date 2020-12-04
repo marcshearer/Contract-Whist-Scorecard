@@ -386,7 +386,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
         }
     }
         
-    internal func changed(_ collectionView: UICollectionView? = nil, itemAtCenter: Int, forceScroll: Bool, animation: ViewAnimation = .slideRight) {
+    internal func changed(_ collectionView: UICollectionView? = nil, itemAtCenter: Int, forceScroll: Bool, animation: ViewAnimation = .replace) {
         let lastPage = self.currentPage
         let changed = lastPage != itemAtCenter
         if changed || forceScroll == true {
@@ -403,11 +403,11 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
             self.dashboardContainerView.addSubview(newView)
             self.setupHelpView(view: newView)
             let animation: ViewAnimation =
-                (animation != .slideRight ? animation :
+                (animation != .replace ? animation :
                     (self.showCarousel ? (lastPage < itemAtCenter ? .slideRight
-                                            : .slideLeft)
-                        : (lastPage < itemAtCenter ? .coverFromRight
-                            : .uncoverToRight)))
+                                                                  : .slideLeft)
+                                       : (lastPage < itemAtCenter ? .coverFromRight
+                                                                  : .uncoverToRight)))
             ViewAnimator.animate(rootView: self.dashboardContainerView, oldViews: oldViews,   newViews: [newView], animation: animation,
                  duration: (self.showCarousel ? 0.25 : 0.5), layout: false,
                  additionalAnimations: {

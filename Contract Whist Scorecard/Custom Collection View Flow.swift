@@ -16,7 +16,7 @@ protocol CustomCollectionViewLayoutDelegate : class {
 extension CustomCollectionViewLayoutDelegate {
     
     func changed(_ collectionView: UICollectionView?, itemAtCenter: Int, forceScroll: Bool) {
-        changed(collectionView, itemAtCenter: itemAtCenter, forceScroll: forceScroll, animation: .coverFromRight)
+        changed(collectionView, itemAtCenter: itemAtCenter, forceScroll: forceScroll, animation: .replace)
     }
 }
 

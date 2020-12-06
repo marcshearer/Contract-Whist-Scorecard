@@ -308,7 +308,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
                     }
 
                     // Can now consider ourselves connected
-                    self.controllerStateChange(to: .connected)
+                    self.controllerStateChange(to: .connected, peer: peer)
                     
                     if let _ = data?["playHand"] as? [String:Any?]? {
                         stopProcessing =  self.processQueue(descriptor: "playHand", data: nil, peer: peer) || stopProcessing
@@ -881,7 +881,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
         Utility.mainThread { [weak self] in
             if Scorecard.shared.onlineEnabled && (self?.controllerState == .notConnected || self?.controllerState == .reconnecting) {
                 if let thisPlayer = self?.thisPlayer {
-                    self?.onlineClientService?.checkOnlineInvites(playerUUID: thisPlayer)
+                    self?.onlineClientService?.checkOnlineInvites(playerUUID: thisPlayer, checkExpiry: self?.matchProximity == nil, matchDeviceName: self?.matchDeviceName)
                 }
             }
         }
@@ -933,7 +933,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
         }
     }
     
-    private func controllerStateChange(to state: ClientAppState, startTimers: Bool = true) {
+    private func controllerStateChange(to state: ClientAppState, peer: CommsPeer? = nil, startTimers: Bool = true) {
         if state != self.controllerState {
             Utility.debugMessage("controller \(self.uuid)", "Controller state changing to \(state)")
 
@@ -953,6 +953,14 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
                 }
             } else {
                 self.stopConnectingTimer()
+            }
+            
+            if state == .connected {
+                if let peer = peer {
+                    self.matchDeviceName = peer.deviceName
+                    self.matchProximity = peer.proximity
+                    self.matchGameUUID = Scorecard.game.gameUUID
+                }
             }
             
             self.delegate?.stateChange(to: state)

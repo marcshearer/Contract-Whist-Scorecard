@@ -577,7 +577,7 @@ class RabbitMQClientService : RabbitMQService, CommsClientServiceDelegate, Comms
                                             rabbitMQPeer.attach(queue)
                                         }
                                         peerFound = true
-                                    } else if rabbitMQPeer.state == .notConnected {
+                                    } else if rabbitMQPeer.state == .notConnected || rabbitMQPeer.state == .recovering {
                                         peerFound = true
                                     }
                                 } else {

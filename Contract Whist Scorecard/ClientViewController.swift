@@ -813,7 +813,9 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
                 switch state {
                 case .notConnected:
                     if let reason = reason {
-                        self.whisper.show(reason, from: self.view, hideAfter: 3)
+                        if reason != "" {
+                            self.whisper.show(reason, from: self.view, hideAfter: 3)
+                        }
                     }
                     if oldState != .notConnected {
                         serviceText = "\(name) has disconnected"
@@ -1095,21 +1097,26 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         
         if self.recoveryMode && Scorecard.recovery.onlineMode != nil {
             // Recovering - use same player
-            self.thisPlayer = Scorecard.recovery.connectionPlayerUUID
-
-            self.thisPlayerName = Scorecard.shared.findPlayerByPlayerUUID(self.thisPlayer)?.name
-            self.matchDeviceName = Scorecard.recovery.connectionRemoteDeviceName
-            self.matchProximity = Scorecard.recovery.onlineProximity
-            self.matchGameUUID = Scorecard.recovery.gameUUID
-            if self.recoveryMode && Scorecard.recovery.onlineMode == .invite {
-                if self.thisPlayer == nil {
-                    self.alertMessage("Error recovering game", okHandler: {
-                        self.cancelRecovery()
-                        self.restart()
-                    })
-                    return
+            if let playerUUID = Scorecard.recovery.connectionPlayerUUID {
+                self.thisPlayer = playerUUID
+                self.thisPlayerName = Scorecard.shared.findPlayerByPlayerUUID(self.thisPlayer)?.name
+                self.matchDeviceName = Scorecard.recovery.connectionRemoteDeviceName
+                self.matchProximity = Scorecard.recovery.onlineProximity
+                self.matchGameUUID = Scorecard.recovery.gameUUID
+                if self.recoveryMode && Scorecard.recovery.onlineMode == .invite {
+                    if self.thisPlayer == nil {
+                        self.alertMessage("Error recovering game", okHandler: {
+                            self.cancelRecovery()
+                            self.restart()
+                        })
+                        return
+                    }
                 }
+            } else {
+                // Shouldn't happen but might
+                self.cancelRecovery()
             }
+
         }
         if !self.recoveryMode || Scorecard.recovery.onlineType == .client {
             if self.thisPlayer == nil || self.matchDeviceName == nil {

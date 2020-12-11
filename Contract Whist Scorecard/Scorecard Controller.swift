@@ -116,11 +116,12 @@ public struct ScorecardAppQueue {
     var peer: CommsPeer?
 }
 
-class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate {
+class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate, CustomStringConvertible {
 
     internal weak var activeViewController: ScorecardViewController?
     internal weak var parentViewController: ScorecardViewController!
     internal var _controllerType: ControllerType
+    internal var description: String { "App controller: \(self._controllerType)" }
     private static var references: [ControllerType:Int] = [:]
     private static var totalReferences = 0
     internal var activeView: ScorecardView = .none
@@ -227,7 +228,7 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
                     self.activeViewController = nil
                     Scorecard.shared.viewPresenting = .processing
                     
-                    if nextView == .exit && self.gameDetailPanelViewController != nil {
+                    if (nextView == .exit || nextView == .none) && self.gameDetailPanelViewController != nil {
                         // Remove game detail as exiting
                         self.gameDetailPanelViewController.dismiss(animated: animated) {
                             self.gameDetailPanelViewController = nil
@@ -621,6 +622,7 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
     
     typealias RootViewController = ScorecardViewController & PanelContainer
     
+    override internal var description: String { "View controller: \(self.className)" }
     fileprivate var dismissView = ScorecardView.none
     internal weak var controllerDelegate: ScorecardAppControllerDelegate?
     internal weak var appController: ScorecardAppController?

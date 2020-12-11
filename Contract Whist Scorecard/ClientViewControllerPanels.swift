@@ -314,7 +314,10 @@ extension ClientViewController : PanelContainer {
                         // Add constraints
                         let containerView = self.view(container: viewElement.container)
                         viewElement.view.translatesAutoresizingMaskIntoConstraints = false
-                        Constraint.anchor(view: rootView, control: containerView, to: viewElement.view)
+                        // Check that view is still around
+                        if viewElement.view.superview == rootView {
+                            Constraint.anchor(view: rootView, control: containerView, to: viewElement.view)
+                        }
                     }
                     self.presentInContainersCompletion(items: items, completion: completion)
                 }

@@ -4,13 +4,13 @@
 // The ASL v2.0:
 //
 // ---------------------------------------------------------------------------
-// Copyright 2016 Pivotal Software, Inc.
+// Copyright 2017-2020 VMware, Inc. or its affiliates.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//    http://www.apache.org/licenses/LICENSE-2.0
+//    https://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -51,12 +51,7 @@
 
 #import "RMQSuspendResumeDispatcher.h"
 #import "RMQErrors.h"
-
-typedef NS_ENUM(NSUInteger, DispatcherState) {
-    DispatcherStateOpen = 1,
-    DispatcherStateClosedByClient,
-    DispatcherStateClosedByServer,
-};
+#import "RMQDispatcher.h"
 
 @interface RMQSuspendResumeDispatcher ()
 @property (nonatomic, readwrite) id<RMQChannel> channel;
@@ -119,14 +114,14 @@ typedef NS_ENUM(NSUInteger, DispatcherState) {
 
 - (void)sendSyncMethod:(id<RMQMethod>)method
      completionHandler:(void (^)(RMQFrameset *frameset))completionHandler {
+
     [self.commandQueue enqueue:^{
         [self processOutgoing:method executeOrErr:^{
-            if ([self isClose:method]) {
-                [self processClientClose];
+            if ([self isChannelClose:method]) {
+                [self processUserInitiatedChannelClose];
             }
 
-            RMQFrameset *outgoingFrameset = [[RMQFrameset alloc] initWithChannelNumber:self.channelNumber
-                                                                                method:method];
+            RMQFrameset *outgoingFrameset = [[RMQFrameset alloc] initWithChannelNumber:self.channelNumber method:method];
             [self.commandQueue suspend];
             [self.sender sendFrameset:outgoingFrameset];
         }];
@@ -134,22 +129,27 @@ typedef NS_ENUM(NSUInteger, DispatcherState) {
 
     [self.commandQueue enqueue:^{
         RMQFramesetValidationResult *result = [self.validator expect:method.syncResponse];
-        if (self.channelIsOpen && result.error) {
+        if (self.isOpen && result.error) {
             [self.delegate channel:self.channel error:result.error];
-        } else if (self.channelIsOpen) {
+        } else if (self.isOpen || [self isChannelClose:method]) {
+            // execute completion handlers when open
+            // but special case user-initiated channel.close methods
             completionHandler(result.frameset);
         }
     }];
 }
 
 - (void)sendSyncMethod:(id<RMQMethod>)method {
-    [self sendSyncMethod:method
-       completionHandler:^(RMQFrameset *frameset) {}];
+    [self sendSyncMethod:method completionHandler:^(RMQFrameset *frameset) {}];
 }
 
 - (void)sendSyncMethodBlocking:(id<RMQMethod>)method {
     [self.commandQueue blockingEnqueue:^{
         [self processOutgoing:method executeOrErr:^{
+            if ([self isChannelClose:method]) {
+                [self processUserInitiatedChannelClose];
+            }
+
             RMQFrameset *frameset = [[RMQFrameset alloc] initWithChannelNumber:self.channelNumber method:method];
             [self.commandQueue suspend];
             [self.sender sendFrameset:frameset];
@@ -158,7 +158,8 @@ typedef NS_ENUM(NSUInteger, DispatcherState) {
 
     [self.commandQueue blockingEnqueue:^{
         RMQFramesetValidationResult *result = [self.validator expect:method.syncResponse];
-        if (self.channelIsOpen && result.error) {
+
+        if (self.isOpen && result.error) {
             [self.delegate channel:self.channel error:result.error];
         }
     }];
@@ -192,10 +193,22 @@ typedef NS_ENUM(NSUInteger, DispatcherState) {
     }];
 }
 
+- (BOOL)isOpen {
+    return self.state == DispatcherStateOpen;
+}
+
+- (BOOL) wasClosedByServer {
+    return self.state == DispatcherStateClosedByServer;
+}
+
+- (BOOL) wasClosedExplicitly {
+    return self.state == DispatcherStateClosedByClient;
+}
+
 - (void)handleFrameset:(RMQFrameset *)frameset {
-    if (!self.channelAlreadyClosedByServer && [self isClose:frameset.method]) {
-        [self processServerClose:(RMQChannelClose *)frameset.method];
-    } else if (self.channelIsOpen) {
+    if (!self.wasClosedByServer && [self isChannelClose:frameset.method]) {
+        [self processServerSentChannelClose:(RMQChannelClose *)frameset.method];
+    } else if (self.isOpen) {
         [self.validator fulfill:frameset];
     }
     if (!self.disabled) {
@@ -206,19 +219,19 @@ typedef NS_ENUM(NSUInteger, DispatcherState) {
 # pragma mark - Private
 
 - (void)processOutgoing:(id<RMQMethod>)method
-           executeOrErr:(void (^)())operation {
-    if (self.channelIsOpen) {
+           executeOrErr:(void (^)(void))operation {
+    if (self.isOpen) {
         operation();
-    } else if (![self isClose:method]) {
+    } else if (![self isChannelClose:method]) {
         [self sendChannelClosedError];
     }
 }
 
-- (void)processClientClose {
+- (void)processUserInitiatedChannelClose {
     self.state = DispatcherStateClosedByClient;
 }
 
-- (void)processServerClose:(RMQChannelClose *)close {
+- (void)processServerSentChannelClose:(RMQChannelClose *)close {
     self.state = DispatcherStateClosedByServer;
     NSError *error = [NSError errorWithDomain:RMQErrorDomain
                                          code:close.replyCode.integerValue
@@ -235,15 +248,7 @@ typedef NS_ENUM(NSUInteger, DispatcherState) {
     [self.delegate channel:self.channel error:error];
 }
 
-- (BOOL)channelIsOpen {
-    return self.state == DispatcherStateOpen;
-}
-
-- (BOOL)channelAlreadyClosedByServer {
-    return self.state == DispatcherStateClosedByServer;
-}
-
-- (BOOL)isClose:(id<RMQMethod>)method {
+- (BOOL)isChannelClose:(id<RMQMethod>)method {
     return [method isKindOfClass:[RMQChannelClose class]];
 }
 

@@ -4,13 +4,13 @@
 // The ASL v2.0:
 //
 // ---------------------------------------------------------------------------
-// Copyright 2016 Pivotal Software, Inc.
+// Copyright 2017-2020 VMware, Inc. or its affiliates.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//    http://www.apache.org/licenses/LICENSE-2.0
+//    https://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -63,12 +63,14 @@
 #import "RMQTLSOptions.h"
 #import "RMQStarter.h"
 
-extern NSInteger const RMQChannelLimit;
-
-/// @brief Public API: Interface to an AMQ connection. See the see the <a href="http://www.amqp.org/">spec</a> for details.
+/// @brief Public API: Interface to an AMQP 0-9-1 connection. See the <a href="https://www.rabbitmq.com/specification.html">spec</a> for details.
 @interface RMQConnection : NSObject<RMQFrameHandler, RMQSender, RMQStarter, RMQTransportDelegate>
 
 @property (nonnull, copy, nonatomic, readonly) NSString *vhost;
+@property (nonnull, copy, nonatomic, readwrite) RMQTable *serverProperties;
+
+/// @brief Returns a GCD dispatch queue used for newly created connections by default.
++(nonnull dispatch_queue_t) defaultDispatchQueue;
 
 /// @brief Designated initializer: do not use.
 - (nonnull instancetype)initWithTransport:(nonnull id<RMQTransport>)transport
@@ -81,12 +83,15 @@ extern NSInteger const RMQChannelLimit;
                             waiterFactory:(nonnull id<RMQWaiterFactory>)waiterFactory
                           heartbeatSender:(nonnull id<RMQHeartbeatSender>)heartbeatSender;
 
-/// @brief Connection tuning, customisable TLS, all recovery options.
+/// @brief Connection tuning, customisable config, all recovery options.
 - (nonnull instancetype)initWithUri:(nonnull NSString *)uri
-                         tlsOptions:(nonnull RMQTLSOptions *)tlsOptions
+         userProvidedConnectionName:(nonnull NSString *)connectionName
                          channelMax:(nonnull NSNumber *)channelMax
                            frameMax:(nonnull NSNumber *)frameMax
                           heartbeat:(nonnull NSNumber *)heartbeat
+                     connectTimeout:(nonnull NSNumber*)connectTimeout
+                        readTimeout:(nonnull NSNumber*)readTimeout
+                       writeTimeout:(nonnull NSNumber*)writeTimeout
                         syncTimeout:(nonnull NSNumber *)syncTimeout
                            delegate:(nullable id<RMQConnectionDelegate>)delegate
                       delegateQueue:(nonnull dispatch_queue_t)delegateQueue
@@ -94,10 +99,64 @@ extern NSInteger const RMQChannelLimit;
                    recoveryAttempts:(nonnull NSNumber *)recoveryAttempts
          recoverFromConnectionClose:(BOOL)shouldRecoverFromConnectionClose;
 
+/// @brief Connection tuning, customisable TLS, key recovery options.
+- (nonnull instancetype)initWithUri:(nonnull NSString *)uri
+                         tlsOptions:(nonnull RMQTLSOptions *)tlsOptions
+                           delegate:(nullable id<RMQConnectionDelegate>)delegate
+                       recoverAfter:(nonnull NSNumber *)recoveryInterval
+                   recoveryAttempts:(nonnull NSNumber *)recoveryAttempts
+         recoverFromConnectionClose:(BOOL)shouldRecoverFromConnectionClose;
+
+/// @brief Connection tuning, customisable TLS and connection name, key recovery options.
+- (nonnull instancetype)initWithUri:(nonnull NSString *)uri
+                         tlsOptions:(nonnull RMQTLSOptions *)tlsOptions
+         userProvidedConnectionName:(nullable NSString *)connectionName
+                           delegate:(nullable id<RMQConnectionDelegate>)delegate
+                       recoverAfter:(nonnull NSNumber *)recoveryInterval
+                   recoveryAttempts:(nonnull NSNumber *)recoveryAttempts
+         recoverFromConnectionClose:(BOOL)shouldRecoverFromConnectionClose;
+
+/// @brief Connection tuning, customisable TLS, all recovery options.
+- (nonnull instancetype)initWithUri:(nonnull NSString *)uri
+         userProvidedConnectionName:(nullable NSString *)connectionName
+                           delegate:(nullable id<RMQConnectionDelegate>)delegate
+                       recoverAfter:(nonnull NSNumber *)recoveryInterval
+                   recoveryAttempts:(nonnull NSNumber *)recoveryAttempts
+         recoverFromConnectionClose:(BOOL)shouldRecoverFromConnectionClose;
+
+/// @brief Connection URI, custom name and delegate..
+- (nonnull instancetype)initWithUri:(nonnull NSString *)uri
+         userProvidedConnectionName:(nonnull NSString *)connectionName
+                           delegate:(nullable id<RMQConnectionDelegate>)delegate;
+
+/// @brief Connection URI, custom name, delegate object and delegate GCD queue.
+- (nonnull instancetype)initWithUri:(nonnull NSString *)uri
+         userProvidedConnectionName:(nonnull NSString *)connectionName
+                           delegate:(nullable id<RMQConnectionDelegate>)delegate
+                      delegateQueue:(nonnull dispatch_queue_t)delegateQueue;
+
+/// @brief TLS, connection configuration and delegate.
+- (nonnull instancetype)initWithUri:(nonnull NSString *)uri
+                         tlsOptions:(nonnull RMQTLSOptions *)tlsOptions
+         userProvidedConnectionName:(nonnull NSString *)connectionName
+                           delegate:(nullable id<RMQConnectionDelegate>)delegate;
+
+/// @brief Allows setting of timeouts
+- (nonnull instancetype)initWithUri:(nonnull NSString *)uri
+                     connectTimeout:(nonnull NSNumber*)connectTimeout
+                        readTimeout:(nonnull NSNumber*)readTimeout
+                       writeTimeout:(nonnull NSNumber*)writeTimeout
+                           delegate:(nullable id<RMQConnectionDelegate>)delegate;
+
 /// @brief Allows setting of recovery interval
 - (nonnull instancetype)initWithUri:(nonnull NSString *)uri
                            delegate:(nullable id<RMQConnectionDelegate>)delegate
                        recoverAfter:(nonnull NSNumber *)recoveryInterval;
+
+/// @brief Allows setting of GCD queue
+- (nonnull instancetype)initWithUri:(nonnull NSString *)uri
+                           delegate:(nullable id<RMQConnectionDelegate>)delegate
+                       delegateQueue:(nonnull dispatch_queue_t)delegateQueue;
 
 /// @brief Connection tuning options with customisable TLS
 - (nonnull instancetype)initWithUri:(nonnull NSString *)uri
@@ -105,6 +164,9 @@ extern NSInteger const RMQChannelLimit;
                          channelMax:(nonnull NSNumber *)channelMax
                            frameMax:(nonnull NSNumber *)frameMax
                           heartbeat:(nonnull NSNumber *)heartbeat
+                     connectTimeout:(nonnull NSNumber*)connectTimeout
+                        readTimeout:(nonnull NSNumber*)readTimeout
+                       writeTimeout:(nonnull NSNumber*)writeTimeout
                         syncTimeout:(nonnull NSNumber *)syncTimeout
                            delegate:(nullable id<RMQConnectionDelegate>)delegate
                       delegateQueue:(nonnull dispatch_queue_t)delegateQueue;
@@ -114,6 +176,9 @@ extern NSInteger const RMQChannelLimit;
                          channelMax:(nonnull NSNumber *)channelMax
                            frameMax:(nonnull NSNumber *)frameMax
                           heartbeat:(nonnull NSNumber *)heartbeat
+                     connectTimeout:(nonnull NSNumber*)connectTimeout
+                        readTimeout:(nonnull NSNumber*)readTimeout
+                       writeTimeout:(nonnull NSNumber*)writeTimeout
                         syncTimeout:(nonnull NSNumber *)syncTimeout
                            delegate:(nullable id<RMQConnectionDelegate>)delegate
                       delegateQueue:(nonnull dispatch_queue_t)delegateQueue;
@@ -162,10 +227,22 @@ extern NSInteger const RMQChannelLimit;
 /// @brief Assumes amqp://guest:guest@localhost URI.
 - (nonnull instancetype)initWithDelegate:(nullable id<RMQConnectionDelegate>)delegate;
 
-/// @brief Close the AMQP connection with a handshake.
+/// @brief Returns the transport used by this connection, if any
+-(nonnull id<RMQTransport>)transport;
+
+/// @brief Returns true if the connection has successfully completed protocol handshake
+- (BOOL)hasCompletedHandshake;
+
+/// @brief Returns true if the connection is currently open
+- (BOOL)isOpen;
+
+/// @brief Returns true if the connection is currently closed
+- (BOOL)isClosed;
+
+/// @brief Close the connection.
 - (void)close;
 
-/// @brief Close the AMQP connection with a handshake, blocking the calling thread until done.
+/// @brief Close the connection, blocking the calling thread until done.
 - (void)blockingClose;
 
 /*!

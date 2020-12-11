@@ -4,13 +4,13 @@
 // The ASL v2.0:
 //
 // ---------------------------------------------------------------------------
-// Copyright 2016 Pivotal Software, Inc.
+// Copyright 2017-2020 VMware, Inc. or its affiliates.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//    http://www.apache.org/licenses/LICENSE-2.0
+//    https://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -56,7 +56,7 @@
  * @brief  Connect and handshake with the remote AMQP server, calling completionHandler when done.
            This is usually unnecessary because future operations are queued.
  */
-- (void)start:(void (^)())completionHandler;
+- (void)start:(void (^)(void))completionHandler;
 /// @brief Connect and handshake with the remote AMQP server.
 - (void)start;
 @end

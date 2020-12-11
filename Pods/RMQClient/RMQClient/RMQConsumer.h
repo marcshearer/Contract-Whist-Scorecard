@@ -4,13 +4,13 @@
 // The ASL v2.0:
 //
 // ---------------------------------------------------------------------------
-// Copyright 2016 Pivotal Software, Inc.
+// Copyright 2017-2020 VMware, Inc. or its affiliates.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//    http://www.apache.org/licenses/LICENSE-2.0
+//    https://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -60,10 +60,19 @@
 @property (nonatomic, readonly) NSString *queueName;
 @property (nonatomic, readonly) RMQBasicConsumeOptions options;
 @property (nonatomic, readonly) NSString *tag;
+@property (nonatomic, readonly) RMQTable *arguments;
 
 - (instancetype)initWithChannel:(id<RMQChannel>)channel
                       queueName:(NSString *)queueName
                         options:(RMQBasicConsumeOptions)options;
+- (instancetype)initWithChannel:(id<RMQChannel>)channel
+                      queueName:(NSString *)queueName
+                        options:(RMQBasicConsumeOptions)options
+                      arguments:(RMQTable *)arguments;
+
+- (BOOL)usesManualAckMode;
+- (BOOL)usesAutomaticAckMode;
+- (BOOL)isExclusive;
 - (void)onDelivery:(RMQConsumerDeliveryHandler)handler;
 - (void)onCancellation:(RMQConsumerCancellationHandler)handler;
 - (void)consume:(RMQMessage *)message;

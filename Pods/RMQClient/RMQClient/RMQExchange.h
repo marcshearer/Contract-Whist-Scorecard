@@ -4,13 +4,13 @@
 // The ASL v2.0:
 //
 // ---------------------------------------------------------------------------
-// Copyright 2016 Pivotal Software, Inc.
+// Copyright 2017-2020 VMware, Inc. or its affiliates.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//    http://www.apache.org/licenses/LICENSE-2.0
+//    https://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -61,24 +61,26 @@
  */
 @interface RMQExchange : NSObject
 
-@property (nonatomic, readonly) NSString *name;
-@property (nonatomic, readonly) NSString *type;
+@property (nonnull, nonatomic, readonly) NSString *name;
+@property (nonnull, nonatomic, readonly) NSString *type;
 @property (nonatomic, readonly) RMQExchangeDeclareOptions options;
 
 /// @brief Internal constructor used by RMQChannel exchange creation methods (direct, fanout, topic, headers)
-- (instancetype)initWithName:(NSString *)name
-                        type:(NSString *)type
-                     options:(RMQExchangeDeclareOptions)options
-                     channel:(id<RMQChannel>)channel;
+- (instancetype _Nonnull )initWithName:(nonnull NSString *)name
+                                  type:(nonnull NSString *)type
+                               options:(RMQExchangeDeclareOptions)options
+                               channel:(nonnull id<RMQChannel>)channel;
 
 /// @brief Bind this exchange to another exchange
-- (void)bind:(RMQExchange *)source routingKey:(NSString *)routingKey;
+- (nonnull instancetype)bind:(nonnull RMQExchange *)source
+                  routingKey:(NSString *_Nullable)routingKey;
 /// @brief Bind this exchange to another exchange
-- (void)bind:(RMQExchange *)source;
+- (nonnull instancetype)bind:(nonnull RMQExchange *)source;
 /// @brief Unbind this exchange from another exchange
-- (void)unbind:(RMQExchange *)source routingKey:(NSString *)routingKey;
+- (nonnull instancetype)unbind:(nonnull RMQExchange *)source
+                    routingKey:(NSString *_Nullable)routingKey;
 /// @brief Unbind this exchange from another exchange
-- (void)unbind:(RMQExchange *)source;
+- (nonnull instancetype)unbind:(nonnull RMQExchange *)source;
 /// @brief Delete the exchange
 - (void)delete:(RMQExchangeDeleteOptions)options;
 /// @brief Delete the exchange with no options
@@ -87,39 +89,39 @@
  * @brief  Publish a message to this exchange
  * @return Sequence number corresponding to the numbers passed to RMQChannel#afterConfirmed
  */
-- (NSNumber *)publish:(NSData *)body
-           routingKey:(NSString *)routingKey
-           properties:(NSArray <RMQValue<RMQBasicValue> *> *)properties
-              options:(RMQBasicPublishOptions)options;
+- (nonnull NSNumber *)publish:(nonnull NSData *)body
+                   routingKey:(nonnull NSString *)routingKey
+                   properties:(NSArray <RMQValue<RMQBasicValue> *> *_Nonnull)properties
+                      options:(RMQBasicPublishOptions)options;
 /*!
  * @brief  Publish a message to this exchange
  *         Convenience method for setting persistent property and no other properties.
  * @return Sequence number corresponding to the numbers passed to RMQChannel#afterConfirmed
  */
-- (NSNumber *)publish:(NSData *)body
-           routingKey:(NSString *)key
-           persistent:(BOOL)isPersistent
-              options:(RMQBasicPublishOptions)options;
+- (nonnull NSNumber *)publish:(nonnull NSData *)body
+                   routingKey:(nonnull NSString *)key
+                   persistent:(BOOL)isPersistent
+                      options:(RMQBasicPublishOptions)options;
 /*!
  * @brief  Publish a message to this exchange
  *         Convenience method for setting persistent property and no other properties or options.
  * @return Sequence number corresponding to the numbers passed to RMQChannel#afterConfirmed
  */
-- (NSNumber *)publish:(NSData *)body
-           routingKey:(NSString *)key
-           persistent:(BOOL)isPersistent;
+- (nonnull NSNumber *)publish:(nonnull NSData *)body
+                   routingKey:(nonnull NSString *)key
+                   persistent:(BOOL)isPersistent;
 /*!
  * @brief  Publish a message to this exchange
  *         Convenience method for publishing without persistence or any other properties / options.
  * @return Sequence number corresponding to the numbers passed to RMQChannel#afterConfirmed
  */
-- (NSNumber *)publish:(NSData *)body
-           routingKey:(NSString *)key;
+- (nonnull NSNumber *)publish:(nonnull NSData *)body
+                   routingKey:(nonnull NSString *)key;
 /*!
  * @brief  Publish a message to this exchange
  *         Convenience method for publishing without properties, options or routing key.
  * @return Sequence number corresponding to the numbers passed to RMQChannel#afterConfirmed
  */
-- (NSNumber *)publish:(NSData *)body;
+- (nonnull NSNumber *)publish:(nonnull NSData *)body;
 
 @end

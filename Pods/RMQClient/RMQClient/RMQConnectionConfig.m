@@ -4,13 +4,13 @@
 // The ASL v2.0:
 //
 // ---------------------------------------------------------------------------
-// Copyright 2016 Pivotal Software, Inc.
+// Copyright 2017-2020 VMware, Inc. or its affiliates.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//    http://www.apache.org/licenses/LICENSE-2.0
+//    https://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -49,7 +49,15 @@
 // under either the MPL or the ASL License.
 // ---------------------------------------------------------------------------
 
+#import "RMQFrame.h"
 #import "RMQConnectionConfig.h"
+
+/**
+ * @brief Default channel max value. One channel per connection
+ *        is reserved for protocol negotiation, error reporting
+ *        and so on.
+ */
+NSInteger const RMQChannelMaxDefault = 127;
 
 @interface RMQConnectionConfig ()
 @property (nonnull, nonatomic, readwrite) NSNumber *channelMax;
@@ -58,6 +66,7 @@
 @property (nonnull, nonatomic, readwrite) NSString *vhost;
 @property (nonnull, nonatomic, readwrite) RMQCredentials *credentials;
 @property (nonnull, nonatomic, readwrite) NSString *authMechanism;
+@property (nonatomic, readwrite) NSString *userProvidedConnectionName;
 @property (nonnull, nonatomic, readwrite) id<RMQConnectionRecovery> recovery;
 @end
 
@@ -80,5 +89,57 @@
         self.recovery = recovery;
     }
     return self;
+}
+
+- (instancetype)initWithCredentials:(RMQCredentials *)credentials
+                          heartbeat:(NSNumber *)heartbeat
+                              vhost:(nonnull NSString *)vhost
+                      authMechanism:(nonnull NSString *)authMechanism
+                           recovery:(nonnull id<RMQConnectionRecovery>)recovery {
+    return [self initWithCredentials:credentials
+                          channelMax:[NSNumber numberWithInteger:RMQChannelMaxDefault]
+                            frameMax:[NSNumber numberWithInteger:RMQFrameMax]
+                           heartbeat:heartbeat
+                               vhost:vhost
+                       authMechanism:authMechanism
+                            recovery:recovery];
+}
+
+- (instancetype)initWithCredentials:(RMQCredentials *)credentials
+                         channelMax:(NSNumber *)channelMax
+                           frameMax:(NSNumber *)frameMax
+                          heartbeat:(NSNumber *)heartbeat
+                              vhost:(nonnull NSString *)vhost
+                      authMechanism:(nonnull NSString *)authMechanism
+         userProvidedConnectionName:(nonnull NSString *)userProvidedConnectionName
+                           recovery:(nonnull id<RMQConnectionRecovery>)recovery {
+    self = [super init];
+    if (self) {
+        self.credentials = credentials;
+        self.channelMax = channelMax;
+        self.frameMax = frameMax;
+        self.heartbeat = heartbeat;
+        self.vhost = vhost;
+        self.authMechanism = authMechanism;
+        self.userProvidedConnectionName = userProvidedConnectionName;
+        self.recovery = recovery;
+    }
+    return self;
+}
+
+- (instancetype)initWithCredentials:(RMQCredentials *)credentials
+                          heartbeat:(NSNumber *)heartbeat
+                              vhost:(nonnull NSString *)vhost
+                      authMechanism:(nonnull NSString *)authMechanism
+         userProvidedConnectionName:(nonnull NSString *)userProvidedConnectionName
+                           recovery:(nonnull id<RMQConnectionRecovery>)recovery {
+    return [self initWithCredentials:credentials
+                          channelMax:[NSNumber numberWithInteger:RMQChannelMaxDefault]
+                            frameMax:[NSNumber numberWithInteger:RMQFrameMax]
+                           heartbeat:heartbeat
+                               vhost:vhost
+                       authMechanism:authMechanism
+          userProvidedConnectionName:userProvidedConnectionName
+                            recovery:recovery];
 }
 @end

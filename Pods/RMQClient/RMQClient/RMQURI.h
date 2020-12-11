@@ -4,13 +4,13 @@
 // The ASL v2.0:
 //
 // ---------------------------------------------------------------------------
-// Copyright 2016 Pivotal Software, Inc.
+// Copyright 2017-2020 VMware, Inc. or its affiliates.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//    http://www.apache.org/licenses/LICENSE-2.0
+//    https://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -53,6 +53,14 @@
 
 @interface RMQURI : NSObject
 @property (nonatomic,nonnull,readonly) NSString *host;
+/*! @brief Virtual host to connect to, extracted from the path component.
+ *  @discussion Slashes in URI path must be percent-encoded as "%2F" or "%2f".
+ *
+ *              The default virtual is assumed to be a single slash ("/").
+ *              It will be used in cases where the path
+ *              component is blank or only consists of a URI component separator (a slash),
+ *              for example, "amqp://hostname:5672" and "amqp://hostname:5672/".
+ */
 @property (nonatomic,nonnull,readonly) NSString *vhost;
 @property (nonatomic,nonnull,readonly) NSNumber *portNumber;
 @property (nonatomic,nonnull,readonly) NSString *username;

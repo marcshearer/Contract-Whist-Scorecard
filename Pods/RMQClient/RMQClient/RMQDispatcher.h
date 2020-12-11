@@ -4,13 +4,13 @@
 // The ASL v2.0:
 //
 // ---------------------------------------------------------------------------
-// Copyright 2016 Pivotal Software, Inc.
+// Copyright 2017-2020 VMware, Inc. or its affiliates.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//    http://www.apache.org/licenses/LICENSE-2.0
+//    https://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -53,6 +53,12 @@
 #import "RMQConnectionDelegate.h"
 #import "RMQFrameset.h"
 
+typedef NS_ENUM(NSUInteger, DispatcherState) {
+    DispatcherStateOpen = 1,
+    DispatcherStateClosedByClient,
+    DispatcherStateClosedByServer,
+};
+
 @protocol RMQDispatcher <NSObject, RMQFrameHandler>
 
 - (void)blockingWaitOn:(Class)method;
@@ -74,5 +80,9 @@
 - (void)enqueue:(RMQOperation)operation;
 - (void)disable;
 - (void)enable;
+
+- (BOOL)isOpen;
+- (BOOL)wasClosedByServer;
+- (BOOL)wasClosedExplicitly;
 
 @end

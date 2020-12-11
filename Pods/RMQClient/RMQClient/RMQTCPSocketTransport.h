@@ -4,13 +4,13 @@
 // The ASL v2.0:
 //
 // ---------------------------------------------------------------------------
-// Copyright 2016 Pivotal Software, Inc.
+// Copyright 2017-2020 VMware, Inc. or its affiliates.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//    http://www.apache.org/licenses/LICENSE-2.0
+//    https://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -52,17 +52,34 @@
 #import <Foundation/Foundation.h>
 #import "RMQTransport.h"
 #import "RMQTLSOptions.h"
-@import CocoaAsyncSocket;
+#import <CocoaAsyncSocket/GCDAsyncSocket.h>
 
 @interface RMQTCPSocketTransport : NSObject<RMQTransport,GCDAsyncSocketDelegate>
 
 - (nonnull instancetype)initWithHost:(nonnull NSString *)host
                                 port:(nonnull NSNumber *)port
                           tlsOptions:(nonnull RMQTLSOptions *)tlsOptions
-                     callbackStorage:(nonnull id)callbacks;
+                     callbackStorage:(nonnull id)callbacks
+                  socketConfigurator:(void (^_Nullable)(GCDAsyncSocket * _Nonnull socket))socketConfigurator
+                      connectTimeout:(nonnull NSNumber *)connectTimeout
+                         readTimeout:(nonnull NSNumber *)readTimeout
+                        writeTimeout:(nonnull NSNumber *)writeTimeout;
 
+/// @brief Most common connection options plus a socket configurator.
 - (nonnull instancetype)initWithHost:(nonnull NSString *)host
                                 port:(nonnull NSNumber *)port
-                          tlsOptions:(nonnull RMQTLSOptions *)tlsOptions;
+                          tlsOptions:(nonnull RMQTLSOptions *)tlsOptions
+                  socketConfigurator:(void (^_Nullable)(GCDAsyncSocket * _Nonnull socket))socketConfigurator
+                      connectTimeout:(nonnull NSNumber *)connectTimeout
+                         readTimeout:(nonnull NSNumber *)readTimeout
+                        writeTimeout:(nonnull NSNumber *)writeTimeout;
+
+/// @brief Most common connection options plus all timeouts.
+- (nonnull instancetype)initWithHost:(nonnull NSString *)host
+                                port:(nonnull NSNumber *)port
+                          tlsOptions:(nonnull RMQTLSOptions *)tlsOptions
+                      connectTimeout:(nonnull NSNumber *)connectTimeout
+                         readTimeout:(nonnull NSNumber *)readTimeout
+                        writeTimeout:(nonnull NSNumber *)writeTimeout;
 
 @end

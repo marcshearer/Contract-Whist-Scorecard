@@ -706,7 +706,7 @@ public class RabbitMQQueue: NSObject, RMQConnectionDelegate {
         }
         self.queue?.unbind(self.exchange)
         self.connection?.close()
-        self.queue?.subscribe(nil)
+        // self.queue?.subscribe(nil) - not supported in 0.11
         self.queue = nil
         self.exchange = nil
         self.channel = nil

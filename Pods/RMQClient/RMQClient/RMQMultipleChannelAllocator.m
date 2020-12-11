@@ -4,13 +4,13 @@
 // The ASL v2.0:
 //
 // ---------------------------------------------------------------------------
-// Copyright 2016 Pivotal Software, Inc.
+// Copyright 2017-2020 VMware, Inc. or its affiliates.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//    http://www.apache.org/licenses/LICENSE-2.0
+//    https://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -62,6 +62,7 @@
 
 @interface RMQMultipleChannelAllocator ()
 @property (atomic, readwrite) UInt16 channelNumber;
+@property (atomic, readwrite) UInt16 maxCapacity;
 @property (nonatomic, readwrite) NSMutableDictionary *channels;
 @property (nonatomic, readwrite) NSNumber *syncTimeout;
 @property (nonatomic, readwrite) RMQProcessInfoNameGenerator *nameGenerator;
@@ -71,10 +72,12 @@
 @implementation RMQMultipleChannelAllocator
 @synthesize sender;
 
-- (instancetype)initWithChannelSyncTimeout:(NSNumber *)syncTimeout {
+- (instancetype)initWithMaxCapacity:(UInt16)limit
+                 channelSyncTimeout:(NSNumber *)syncTimeout {
     self = [super init];
     if (self) {
         self.channels = [NSMutableDictionary new];
+        self.maxCapacity = limit;
         self.channelNumber = 0;
         self.sender = nil;
         self.syncTimeout = syncTimeout;
@@ -141,7 +144,7 @@
 }
 
 - (id<RMQChannel>)previouslyReleasedChannel {
-    for (UInt16 i = 1; i < RMQChannelLimit; i++) {
+    for (UInt16 i = 1; i < self.maxCapacity; i++) {
         if (!self.channels[@(i)]) {
             return [self allocatedChannel:i];
         }
@@ -174,11 +177,11 @@
 }
 
 - (BOOL)atCapacity {
-    return self.channels.count == RMQChannelLimit;
+    return self.channels.count == self.maxCapacity;
 }
 
 - (BOOL)atMaxIndex {
-    return self.channelNumber == RMQChannelLimit;
+    return self.channelNumber == self.maxCapacity;
 }
 
 - (RMQGCDSerialQueue *)serialQueue:(UInt16)channelNumber

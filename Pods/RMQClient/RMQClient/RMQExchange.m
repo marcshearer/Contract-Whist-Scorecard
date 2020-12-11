@@ -4,13 +4,13 @@
 // The ASL v2.0:
 //
 // ---------------------------------------------------------------------------
-// Copyright 2016 Pivotal Software, Inc.
+// Copyright 2017-2020 VMware, Inc. or its affiliates.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//    http://www.apache.org/licenses/LICENSE-2.0
+//    https://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -76,26 +76,30 @@
     return self;
 }
 
-- (void)bind:(RMQExchange *)source
-  routingKey:(NSString *)routingKey {
+- (nonnull instancetype)bind:(RMQExchange *)source
+                  routingKey:(NSString *)routingKey {
     [self.channel exchangeBind:source.name
                    destination:self.name
                     routingKey:routingKey];
+    return self;
 }
 
-- (void)bind:(RMQExchange *)source {
+- (nonnull instancetype)bind:(RMQExchange *)source {
     [self bind:source routingKey:@""];
+    return self;
 }
 
-- (void)unbind:(RMQExchange *)source
-    routingKey:(NSString *)routingKey {
+- (nonnull instancetype)unbind:(RMQExchange *)source
+                    routingKey:(NSString *)routingKey {
     [self.channel exchangeUnbind:source.name
                      destination:self.name
                       routingKey:routingKey];
+    return self;
 }
 
-- (void)unbind:(RMQExchange *)source {
+- (nonnull instancetype)unbind:(RMQExchange *)source {
     [self unbind:source routingKey:@""];
+    return self;
 }
 
 - (void)delete:(RMQExchangeDeleteOptions)options {

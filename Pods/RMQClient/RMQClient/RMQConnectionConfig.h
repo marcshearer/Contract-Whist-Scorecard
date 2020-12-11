@@ -4,13 +4,13 @@
 // The ASL v2.0:
 //
 // ---------------------------------------------------------------------------
-// Copyright 2016 Pivotal Software, Inc.
+// Copyright 2017-2020 VMware, Inc. or its affiliates.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//    http://www.apache.org/licenses/LICENSE-2.0
+//    https://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -52,6 +52,8 @@
 #import <Foundation/Foundation.h>
 #import "RMQConnectionRecovery.h"
 
+extern NSInteger const RMQChannelMaxDefault;
+
 @class RMQCredentials;
 
 @interface RMQConnectionConfig : NSObject
@@ -61,12 +63,36 @@
 @property (nonnull, nonatomic, readonly) NSString *vhost;
 @property (nonnull, nonatomic, readonly) RMQCredentials *credentials;
 @property (nonnull, nonatomic, readonly) NSString *authMechanism;
+@property (nullable, nonatomic, readonly) NSString *userProvidedConnectionName;
 @property (nonnull, nonatomic, readonly) id<RMQConnectionRecovery> recovery;
+
 - (nonnull instancetype)initWithCredentials:(nonnull RMQCredentials *)credentials
                                  channelMax:(nonnull NSNumber *)channelMax
                                    frameMax:(nonnull NSNumber *)frameMax
                                   heartbeat:(nonnull NSNumber *)heartbeat
                                       vhost:(nonnull NSString *)vhost
                               authMechanism:(nonnull NSString *)authMechanism
+                                   recovery:(nonnull id<RMQConnectionRecovery>)recovery;
+
+- (nonnull instancetype)initWithCredentials:(nonnull RMQCredentials *)credentials
+                                  heartbeat:(nonnull NSNumber *)heartbeat
+                                      vhost:(nonnull NSString *)vhost
+                              authMechanism:(nonnull NSString *)authMechanism
+                                   recovery:(nonnull id<RMQConnectionRecovery>)recovery;
+
+- (nonnull instancetype)initWithCredentials:(nonnull RMQCredentials *)credentials
+                                 channelMax:(nonnull NSNumber *)channelMax
+                                   frameMax:(nonnull NSNumber *)frameMax
+                                  heartbeat:(nonnull NSNumber *)heartbeat
+                                      vhost:(nonnull NSString *)vhost
+                              authMechanism:(nonnull NSString *)authMechanism
+                 userProvidedConnectionName:(nonnull NSString *)userProvidedConnectionName
+                                   recovery:(nonnull id<RMQConnectionRecovery>)recovery;
+
+- (nonnull instancetype)initWithCredentials:(nonnull RMQCredentials *)credentials
+                                  heartbeat:(nonnull NSNumber *)heartbeat
+                                      vhost:(nonnull NSString *)vhost
+                              authMechanism:(nonnull NSString *)authMechanism
+                 userProvidedConnectionName:(nonnull NSString *)userProvidedConnectionName
                                    recovery:(nonnull id<RMQConnectionRecovery>)recovery;
 @end

@@ -121,8 +121,8 @@ fileprivate struct HelpViewActiveElement: Comparable {
 
 class HelpView : UIView, UIGestureRecognizerDelegate {
     
-    private weak var speechBubble: SpeechBubbleView!
-    private weak var focus: FocusView!
+    private var speechBubble: SpeechBubbleView!
+    private var focus: FocusView!
     private var nextButton: ShadowButton!
     private var finishButton: ShadowButton!
     private var finishTitle = "Exit"

@@ -4,11 +4,15 @@ List of current versions
 New version merged to master 25/11/2020 11:00 GMT
 Version 7.0 release branch created
 Version 7.0 test (/development) branch created
-ARC problems feature branch created
+Feature branches are used for development
+    These are then merged to master
+    Master is merged to the test branch to check all OK
+    Master is merged to the release branch which is used to send system to TestFlight
+    Any major changes should create new test & release branches leaving 7.0 secure
 
 List of outstanding things to do
 
-// Tasks for upgrade
+// Tasks carried out during upgrade
 Update production schema
 Create version record manually
 Restore backup

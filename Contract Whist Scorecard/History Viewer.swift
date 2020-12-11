@@ -105,7 +105,7 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
             self.customView = self.dataTableViewController.customHeaderView
             self.customHeightConstraint = self.dataTableViewController.customHeaderViewHeightConstraint
             self.customView.layoutIfNeeded()
-            self.filterStateChange()
+            self.filterStateChange(animated: false)
         }
         completion()
     }
@@ -292,7 +292,7 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
         self.filterStateChange()
     }
     
-    private func filterStateChange() {
+    private func filterStateChange(animated: Bool = true) {
         var viewHeight = self.customHeightConstraint.constant
         var instructionHeight = self.filterInstructionHeightConstraint?.constant ?? 0.0
         let small = ScorecardUI.smallPhoneSize()
@@ -351,7 +351,7 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
         
         if self.customHeightConstraint.constant != viewHeight ||
             self.filterInstructionHeightConstraint.constant != instructionHeight {
-            Utility.animate(duration: viewHeight == 0.0 ? 0.3 : 0.5) {
+            Utility.animate(if: animated, duration: viewHeight == 0.0 ? 0.3 : 0.5) {
                 self.customHeightConstraint.constant = viewHeight
                 self.filterInstructionHeightConstraint.constant = instructionHeight
             }

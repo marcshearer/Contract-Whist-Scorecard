@@ -94,7 +94,7 @@
 	<true/>
 	<key>NSBonjourServices</key>
 	<array>
-		<string>_whdev_udp</string>
+		<string>_whdev._udp</string>
 		<string>_whdev._tcp</string>
 		<string>_whist._tcp</string>
 		<string>_whist._udp</string>

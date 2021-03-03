@@ -104,7 +104,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>You need to grant the app access to the camera so that it can include images of players</string>
 	<key>NSLocalNetworkUsageDescription</key>
-	<string>You need to grant the app access to communicate with nearby devices</string>
+	<string>You need to grant the app access to local networks to enable playing games with nearby devices</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>You need to grant the app access to your current location to let it calculate and save the location of each game</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>

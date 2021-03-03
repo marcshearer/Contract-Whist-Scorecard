@@ -8,7 +8,6 @@
 
 // Does all core data handling
 
-import UIKit
 import CoreData
  
 public enum SortDirection {
@@ -143,7 +142,7 @@ class CoreData {
         return result
     }
     
-    class func delete<MO: NSManagedObject>(record: MO, specialContext: NSManagedObjectContext! = nil) {
+    class func delete<MO: NSManagedObject>(record: MO) {
         if let context = CoreData.context {
             context.delete(record)
         }

@@ -177,9 +177,12 @@ class HighScoreTileView: DashboardTileView, UITableViewDataSource, UITableViewDe
         let name = row.name
         var title = ""
         
+        cell.valueImageViewDial?.clear()
+        
         switch row.type {
         case .totalScore:
             title = "High Score"
+            cell.valueImageView.image = nil
             cell.valueImageView.image = UIImage(named: "rosette")?.asTemplate
             cell.valueImageView.tintColor = Palette.highScores
             cell.valueLabel.text = "\(score)"
@@ -188,8 +191,10 @@ class HighScoreTileView: DashboardTileView, UITableViewDataSource, UITableViewDe
         case .handsMade, .twosMade:
             title = (row.type == .handsMade ? "Bids Made" : "Twos Made")
             cell.valueLabel.text = "\(score)"
+            cell.valueImageView.image = nil
             let dial = Dial(view: cell.valueImageView)
             dial.draw(dialColor: Palette.highScores.withAlphaComponent(0.5), valueColor: Palette.highScores, radius: imageHeight * 0.5, fraction: CGFloat(score) / CGFloat(Scorecard.game.rounds))
+            cell.valueImageViewDial = dial
             cell.valueLabel.font = UIFont.systemFont(ofSize: max(6, imageHeight / 3))
     
         case .winStreak:
@@ -397,6 +402,8 @@ class HighScoreTileTableViewCell: UITableViewCell {
     @IBOutlet fileprivate weak var captionBelowLabel: UILabel!
     @IBOutlet fileprivate weak var captionBelowLabelHeightConstraint: NSLayoutConstraint!
     
+    fileprivate var valueImageViewDial: Dial!
+    
     func setCollectionViewDataSourceDelegate
          <D: UICollectionViewDataSource & UICollectionViewDelegate>
         (_ dataSourceDelegate: D, nib: UINib, forRow row: Int) {
@@ -418,6 +425,15 @@ class Dial {
     
     init(view: UIView) {
         self.view = view
+    }
+    
+    public func clear() {
+        self.view.layer.sublayers?.forEach {
+            if let layer = $0 as? CAShapeLayer {
+                layer.removeFromSuperlayer()
+            }
+        }
+        self.view.layoutIfNeeded()
     }
     
     public func draw(dialColor: UIColor, valueColor: UIColor, radius: CGFloat, fraction: CGFloat) {

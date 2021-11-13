@@ -1,5 +1,5 @@
 //
-//  Palette.swift.background
+//  Palette
 //  Contract Whist Scorecard
 //
 //  Created by Marc Shearer on 04/07/2019.

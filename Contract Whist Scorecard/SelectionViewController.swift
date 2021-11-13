@@ -898,7 +898,7 @@ extension SelectionViewController {
 
         self.helpView.add("This screen allows you to select players \(weakSelf?.gameMode == .scoring ? "for your game" : "to invite to your online game").\n\nTap (or drag) players in the list \(ScorecardUI.portraitPhone() ? "on the bottom" : "at the right") of the screen to add them to the game.\n\nTap (or drag) players in the room to remove them.\n\nTap on the " + plusButton + " to add a new player to your device")
         
-        self.helpView.add("The @*/Room@*/ contains the players who you select to take part in the game.\(weakSelf?.gameMode == .scoring ? "" : " Your own player always appears at the bottom of the room.") Tap on a player to remove them from the room.", views: [self.selectedPlayersView], radius: 44)
+        self.helpView.add("The @*/Room@*/ contains the players who you select to take part in the game.\(weakSelf?.gameMode == .scoring ? "" : " Your own player always appears at the bottom of the room.") Tap on a player to remove them from the room. You can drag players to change their position in the room.", views: [self.selectedPlayersView], radius: 44)
         
         self.helpView.add("You can use the " + plusButton + " to add a new player to the device (and hence to the available players).", views: [self.unselectedCollectionView], item: 0)
 

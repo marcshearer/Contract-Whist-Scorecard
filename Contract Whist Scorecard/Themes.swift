@@ -29,7 +29,7 @@ enum ThemeName: String, CaseIterable {
     case standard = "Default"
     case alternate = "Alternate"
     case red = "Red"
-    case blue = "Blue"
+    case yellow = "Yellow"
     case green = "Green"
     
     public var description: String {
@@ -40,8 +40,8 @@ enum ThemeName: String, CaseIterable {
             return "Alternate"
         case .red:
             return "Red"
-        case .blue:
-            return "Blue"
+        case .yellow:
+            return "Yellow"
         case .green:
             return "Green"
         }
@@ -472,6 +472,7 @@ class Themes {
             background: [
                 .gameBanner                  : ThemeColor(#colorLiteral(red: 0.4549019608, green: 0.5764705882, blue: 0.5921568627, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1),  .midBackground)   ,
                 .emphasis                    : ThemeColor(#colorLiteral(red: 0.4549019608, green: 0.5764705882, blue: 0.5921568627, alpha: 1), nil, .midBackground)   ,
+                .alwaysTheme                 : ThemeColor(#colorLiteral(red: 0.4549019608, green: 0.5764705882, blue: 0.5921568627, alpha: 1), nil, .midBackground)   ,
                 .banner                      : ThemeColor(#colorLiteral(red: 0.4549019608, green: 0.5764705882, blue: 0.5921568627, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1),  .midBackground)   ,
                 .bannerShadow                : ThemeColor(#colorLiteral(red: 0.4078431373, green: 0.5176470588, blue: 0.5294117647, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1),  .midBackground)   ,//3
                 .gameBannerShadow            : ThemeColor(#colorLiteral(red: 0.4078431373, green: 0.5176470588, blue: 0.5294117647, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1),  .midBackground)   ,//3
@@ -501,7 +502,7 @@ class Themes {
                 .midGameBackground           : ThemeTextColor(normal: #colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1), contrast: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), strong: #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1), theme: #colorLiteral(red: 0.1176470588, green: 0.3607843137, blue: 0.4352941176, alpha: 1)) ,
                 .darkBackground              : ThemeTextColor(normal: #colorLiteral(red: 0.9411764706, green: 0.9411764706, blue: 0.9411764706, alpha: 1), contrast: #colorLiteral(red: 0.337254902, green: 0.4509803922, blue: 0.4549019608, alpha: 1), strong: #colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1), theme: #colorLiteral(red: 0.6699781418, green: 0.2215877175, blue: 0.2024611831, alpha: 1)) ]
         ),
-        .blue: ThemeConfig(
+        .yellow: ThemeConfig(
             icon: "AppIcon-Yellow",
             background: [
                 .background                  : ThemeColor(#colorLiteral(red: 0.9724639058, green: 0.9726034999, blue: 0.9724336267, alpha: 1), nil, .lightBackground) ,
@@ -517,7 +518,7 @@ class Themes {
                 .darkHighlight               : ThemeColor(#colorLiteral(red: 0.4783872962, green: 0.4784596562, blue: 0.4783713818, alpha: 1), nil, .darkBackground)  ,
                 .disabled                    : ThemeColor(#colorLiteral(red: 0.8509055972, green: 0.851028502, blue: 0.8508786559, alpha: 1), nil, .lightBackground) ,
                 .emphasis                    : ThemeColor(#colorLiteral(red: 0.8961163759, green: 0.7460593581, blue: 0.3743121624, alpha: 1), nil, .midBackground)   ,
-                .error                       : ThemeColor(#colorLiteral(red: 0.9166395068, green: 0.1978720129, blue: 0.137429297, alpha: 1), nil, .midBackground)   ,
+                .alwaysTheme                 : ThemeColor(#colorLiteral(red: 0.8961163759, green: 0.7460593581, blue: 0.3743121624, alpha: 1), nil, .midBackground)   ,
                 .gameBanner                  : ThemeColor(#colorLiteral(red: 0.9281279445, green: 0.4577305913, blue: 0.4537009001, alpha: 1), nil, .midBackground)   ,
                 .gameBannerShadow            : ThemeColor(#colorLiteral(red: 0.968627451, green: 0.4980392157, blue: 0.4941176471, alpha: 1), nil, .midBackground)   ,
                 .gameSegmentedControls       : ThemeColor(#colorLiteral(red: 0.9281279445, green: 0.4577305913, blue: 0.4537009001, alpha: 1), nil, .midBackground)   ,
@@ -550,6 +551,7 @@ class Themes {
             icon: "AppIcon-Green",
             background:  [
                 .emphasis                    : ThemeColor(#colorLiteral(red: 0.3921568627, green: 0.6509803922, blue: 0.6431372549, alpha: 1), nil, .midBackground) ,
+                .alwaysTheme                 : ThemeColor(#colorLiteral(red: 0.3921568627, green: 0.6509803922, blue: 0.6431372549, alpha: 1), nil, .midBackground) ,
                 .banner                      : ThemeColor(#colorLiteral(red: 0.3921568627, green: 0.6509803922, blue: 0.6431372549, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1),  .midBackground) ,
                 .gameBannerShadow            : ThemeColor(#colorLiteral(red: 0.431372549, green: 0.6901960784, blue: 0.6823529412, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1),  .midBackground) ,
                 .gameBanner                  : ThemeColor(#colorLiteral(red: 0.3921568627, green: 0.6509803922, blue: 0.6431372549, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1),  .midBackground) ],

@@ -86,7 +86,7 @@ public class HexagonView: UIView {
             self.separatorView = UIView(frame: CGRect(x: 0.0, y: bannerHeightUnits * scale, width: width, height: 2.0 * scale))
             self.separatorView.backgroundColor = strokeColor
             self.addSubview(self.separatorView)
-            Constraint.anchor(view: self, control: self.separatorView, attributes: .left, .right)
+            Constraint.anchor(view: self, control: self.separatorView, attributes: .leading, .trailing)
             Constraint.anchor(view: self, control: self.separatorView, to: self.bannerColorView, toAttribute: .bottom, attributes: .top)
             Constraint.setHeight(control: self.separatorView, height: 2.0 * scale)
         }

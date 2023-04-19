@@ -39,6 +39,7 @@ Get rid of warnings in console
 Jumps to scorepad coming from hand for the second time. Probably due to the resizing problem (where we now do nothing till width is right in viewDidLayoutSubviews) - Made this not reuse scorepad to solve
     but could cause memory problems
 Avoid repeated failure in recovery - save counter and after 3 failed recoveries give override
+Avoid HandViewController having cells defined in storyboard for each suit (to avoid unfortunate reuse on phones). Better to make this cell a xib file
 
 Jack
 ----

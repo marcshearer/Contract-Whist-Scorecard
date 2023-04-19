@@ -103,7 +103,7 @@ class Settings : Equatable {
         case "rawColorTheme":
             self.rawColorTheme = value as! String
         case "rawAppearance":
-            self.rawAppearance = value as! Int
+            self.rawAppearance = (value as? Int) ?? ThemeAppearance.device.rawValue
         case "thisPlayerUUID":
             self.thisPlayerUUID = value as! String
         case "termsDate":
@@ -126,7 +126,7 @@ class Settings : Equatable {
             if self.confettiWin {
                 self.confettiWinSettingState = .available
             } else {
-                self.rawConfettiWinSettingState = value as! Int
+                self.rawConfettiWinSettingState = (value as? Int) ?? SettingState.notAvailable.rawValue
             }
         case "colorTheme", "appearance":
             // Old values no longer used
@@ -361,10 +361,10 @@ class Settings : Equatable {
         } else if let _ = value as? [NSNumber] {
             type = "[Int]"
         } else {
-            if let _ = value as? Bool {
-                type = "Bool"
-            } else if let _ = value as? Int {
+            if let _ = value as? Int {
                 type = "Int"
+            } else if let _ = value as? Bool {
+                type = "Bool"
             } else if let _ = value as? Date {
                 type = "Date"
             } else if value == nil {

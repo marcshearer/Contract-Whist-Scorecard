@@ -303,6 +303,10 @@ public enum SuitEnum : Int {
     case diamond = 2
     case heart = 3
     case spade = 4
+    
+    var string: String {
+        "\(self)".capitalized
+    }
 }
     
 public class Suit : Hashable {

@@ -165,12 +165,6 @@
 		B291D18825702860006A5E31 /* Weak Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = B291D18725702860006A5E31 /* Weak Dictionary.swift */; };
 		B298496924E6DF4400FADC06 /* LaunchScreenView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B298496824E6DF4400FADC06 /* LaunchScreenView.xib */; };
 		B29AD706224F88060087160B /* Whisper Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29AD705224F88060087160B /* Whisper Class.swift */; };
-		B29D675F253B1B99000CE151 /* appicon green@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = B29D6759253B1B98000CE151 /* appicon green@3x.png */; };
-		B29D6760253B1B99000CE151 /* appicon green@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B29D675A253B1B98000CE151 /* appicon green@2x.png */; };
-		B29D6761253B1B99000CE151 /* appicon red@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B29D675B253B1B98000CE151 /* appicon red@2x.png */; };
-		B29D6762253B1B99000CE151 /* appicon red@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = B29D675C253B1B98000CE151 /* appicon red@3x.png */; };
-		B29D6763253B1B99000CE151 /* appicon yellow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B29D675D253B1B99000CE151 /* appicon yellow@2x.png */; };
-		B29D6764253B1B99000CE151 /* appicon yellow@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = B29D675E253B1B99000CE151 /* appicon yellow@3x.png */; };
 		B29FFF31223BA302002C01FE /* Banners.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29FFF30223BA302002C01FE /* Banners.swift */; };
 		B2A3D9A1248E2804008556B8 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2A3D9A0248E2804008556B8 /* Location.swift */; };
 		B2A44F222500DB970071F899 /* AwardDetailViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B2A44F212500DB970071F899 /* AwardDetailViewController.storyboard */; };
@@ -214,6 +208,12 @@
 		B2CAAEEB256A6BC900B35F6F /* GameDetailCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2CAAEEA256A6BC900B35F6F /* GameDetailCell.xib */; };
 		B2CAAEF1256A6D0E00B35F6F /* GameDetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2CAAEF0256A6D0E00B35F6F /* GameDetailCell.swift */; };
 		B2CAAEFF256A743D00B35F6F /* ClientViewControllerLastGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2CAAEFE256A743D00B35F6F /* ClientViewControllerLastGame.swift */; };
+		B2CAE11227622E8800C5822E /* appicon green@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B2CAE10C27622E8800C5822E /* appicon green@2x.png */; };
+		B2CAE11327622E8800C5822E /* appicon green@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = B2CAE10D27622E8800C5822E /* appicon green@3x.png */; };
+		B2CAE11427622E8800C5822E /* appicon yellow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B2CAE10E27622E8800C5822E /* appicon yellow@2x.png */; };
+		B2CAE11527622E8800C5822E /* appicon red@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = B2CAE10F27622E8800C5822E /* appicon red@3x.png */; };
+		B2CAE11627622E8800C5822E /* appicon red@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B2CAE11027622E8800C5822E /* appicon red@2x.png */; };
+		B2CAE11727622E8800C5822E /* appicon yellow@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = B2CAE11127622E8800C5822E /* appicon yellow@3x.png */; };
 		B2CB5C5224669CDA009B44C5 /* Client Controller Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2CB5C5124669CDA009B44C5 /* Client Controller Class.swift */; };
 		B2CBB81724A9D71400B336CB /* CreatePlayerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2CBB81624A9D71400B336CB /* CreatePlayerView.xib */; };
 		B2CBB81924A9D81500B336CB /* CreatePlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2CBB81824A9D81500B336CB /* CreatePlayerView.swift */; };
@@ -477,12 +477,6 @@
 		B291D18725702860006A5E31 /* Weak Dictionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Weak Dictionary.swift"; sourceTree = "<group>"; };
 		B298496824E6DF4400FADC06 /* LaunchScreenView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LaunchScreenView.xib; sourceTree = "<group>"; };
 		B29AD705224F88060087160B /* Whisper Class.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Whisper Class.swift"; sourceTree = "<group>"; };
-		B29D6759253B1B98000CE151 /* appicon green@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "appicon green@3x.png"; path = "../../Images/Media.xcassets/Appicon Green.imageset/appicon green@3x.png"; sourceTree = "<group>"; };
-		B29D675A253B1B98000CE151 /* appicon green@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "appicon green@2x.png"; path = "../../Images/Media.xcassets/Appicon Green.imageset/appicon green@2x.png"; sourceTree = "<group>"; };
-		B29D675B253B1B98000CE151 /* appicon red@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "appicon red@2x.png"; path = "../../Images/Media.xcassets/Appicon Red.imageset/appicon red@2x.png"; sourceTree = "<group>"; };
-		B29D675C253B1B98000CE151 /* appicon red@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "appicon red@3x.png"; path = "../../Images/Media.xcassets/Appicon Red.imageset/appicon red@3x.png"; sourceTree = "<group>"; };
-		B29D675D253B1B99000CE151 /* appicon yellow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "appicon yellow@2x.png"; path = "../../Images/Media.xcassets/Appicon Yellow.imageset/appicon yellow@2x.png"; sourceTree = "<group>"; };
-		B29D675E253B1B99000CE151 /* appicon yellow@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "appicon yellow@3x.png"; path = "../../Images/Media.xcassets/Appicon Yellow.imageset/appicon yellow@3x.png"; sourceTree = "<group>"; };
 		B29FFF30223BA302002C01FE /* Banners.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Banners.swift; sourceTree = "<group>"; };
 		B2A3D9A0248E2804008556B8 /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 		B2A44F212500DB970071F899 /* AwardDetailViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = AwardDetailViewController.storyboard; sourceTree = "<group>"; };
@@ -524,6 +518,12 @@
 		B2CAAEEA256A6BC900B35F6F /* GameDetailCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GameDetailCell.xib; sourceTree = "<group>"; };
 		B2CAAEF0256A6D0E00B35F6F /* GameDetailCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameDetailCell.swift; sourceTree = "<group>"; };
 		B2CAAEFE256A743D00B35F6F /* ClientViewControllerLastGame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientViewControllerLastGame.swift; sourceTree = "<group>"; };
+		B2CAE10C27622E8800C5822E /* appicon green@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "appicon green@2x.png"; sourceTree = "<group>"; };
+		B2CAE10D27622E8800C5822E /* appicon green@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "appicon green@3x.png"; sourceTree = "<group>"; };
+		B2CAE10E27622E8800C5822E /* appicon yellow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "appicon yellow@2x.png"; sourceTree = "<group>"; };
+		B2CAE10F27622E8800C5822E /* appicon red@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "appicon red@3x.png"; sourceTree = "<group>"; };
+		B2CAE11027622E8800C5822E /* appicon red@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "appicon red@2x.png"; sourceTree = "<group>"; };
+		B2CAE11127622E8800C5822E /* appicon yellow@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "appicon yellow@3x.png"; sourceTree = "<group>"; };
 		B2CB5C5124669CDA009B44C5 /* Client Controller Class.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Client Controller Class.swift"; sourceTree = "<group>"; };
 		B2CBB81624A9D71400B336CB /* CreatePlayerView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CreatePlayerView.xib; sourceTree = "<group>"; };
 		B2CBB81824A9D81500B336CB /* CreatePlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePlayerView.swift; sourceTree = "<group>"; };
@@ -1385,19 +1385,6 @@
 			name = "Award View";
 			sourceTree = "<group>";
 		};
-		B29D6758253B1B35000CE151 /* App Icons */ = {
-			isa = PBXGroup;
-			children = (
-				B29D675A253B1B98000CE151 /* appicon green@2x.png */,
-				B29D6759253B1B98000CE151 /* appicon green@3x.png */,
-				B29D675B253B1B98000CE151 /* appicon red@2x.png */,
-				B29D675C253B1B98000CE151 /* appicon red@3x.png */,
-				B29D675D253B1B99000CE151 /* appicon yellow@2x.png */,
-				B29D675E253B1B99000CE151 /* appicon yellow@3x.png */,
-			);
-			name = "App Icons";
-			sourceTree = "<group>";
-		};
 		B2A44F202500DB750071F899 /* Award Detail */ = {
 			isa = PBXGroup;
 			children = (
@@ -1481,6 +1468,19 @@
 				B2BE8691234C6C1600766CF2 /* PlayerSelectionView.swift */,
 			);
 			name = "Player Selection";
+			sourceTree = "<group>";
+		};
+		B2CAE10B27622E8800C5822E /* App Icons */ = {
+			isa = PBXGroup;
+			children = (
+				B2CAE10C27622E8800C5822E /* appicon green@2x.png */,
+				B2CAE10D27622E8800C5822E /* appicon green@3x.png */,
+				B2CAE10E27622E8800C5822E /* appicon yellow@2x.png */,
+				B2CAE10F27622E8800C5822E /* appicon red@3x.png */,
+				B2CAE11027622E8800C5822E /* appicon red@2x.png */,
+				B2CAE11127622E8800C5822E /* appicon yellow@3x.png */,
+			);
+			path = "App Icons";
 			sourceTree = "<group>";
 		};
 		B2CBB81524A9D70000B336CB /* Create Player */ = {
@@ -1624,7 +1624,7 @@
 				CC4CC1071DEADC32007FB24F /* Info.plist */,
 				B2B1802621196166008D3BAA /* Contract_Whist_Scorecard.xcdatamodeld */,
 				B20DA04F1E1FEC5F0040221D /* Contract Whist Scorecard.entitlements */,
-				B29D6758253B1B35000CE151 /* App Icons */,
+				B2CAE10B27622E8800C5822E /* App Icons */,
 			);
 			name = "Standard Components";
 			sourceTree = "<group>";
@@ -1845,10 +1845,12 @@
 				B20B1262245EFC2B001DD632 /* Contract Whist Comms Protocols.docx in Resources */,
 				B243386022E57BBC002EBD40 /* ImageButton.xib in Resources */,
 				B2AC65312573990C00371F1E /* TestViewController.storyboard in Resources */,
-				B29D6763253B1B99000CE151 /* appicon yellow@2x.png in Resources */,
 				B22789451FB8951A009BABCA /* GraphViewController.storyboard in Resources */,
+				B2CAE11327622E8800C5822E /* appicon green@3x.png in Resources */,
 				B24ABA3824B040D600E3F130 /* DataTableTileContentCollectionViewCell.xib in Resources */,
 				B228E3C224A10F36006D91CE /* EveryoneDashboardPortraitView.xib in Resources */,
+				B2CAE11527622E8800C5822E /* appicon red@3x.png in Resources */,
+				B2CAE11727622E8800C5822E /* appicon yellow@3x.png in Resources */,
 				B203ECCB24F8EBE6001E2CED /* Banner.xib in Resources */,
 				B2594E862251FEB2004398FB /* MyDevices.sh in Resources */,
 				B23D46F62514AACF0018E954 /* NextHandViewController.storyboard in Resources */,
@@ -1859,8 +1861,6 @@
 				B2A9096324A1BBDB00B35B69 /* DataTableTileView.xib in Resources */,
 				B2E37D0724E7DFC60074C8F3 /* LaunchScreen.storyboard in Resources */,
 				B22789021FB83AA7009BABCA /* SelectionViewController.storyboard in Resources */,
-				B29D675F253B1B99000CE151 /* appicon green@3x.png in Resources */,
-				B29D6762253B1B99000CE151 /* appicon red@3x.png in Resources */,
 				B260AAD1251E34AA00CD1EB3 /* LeaderboardView.xib in Resources */,
 				B22789331FB88FA5009BABCA /* DataTableViewController.storyboard in Resources */,
 				B216268E251B892200BDEE70 /* EveryoneDashboardContainerView.xib in Resources */,
@@ -1882,7 +1882,6 @@
 				B221EED5210B0DFE00F7FBA0 /* HandViewController.storyboard in Resources */,
 				B20CF54824A7D74500F27A9C /* EveryoneDashboardLandscapeView.xib in Resources */,
 				B227892A1FB885AC009BABCA /* ConfirmCountViewController.storyboard in Resources */,
-				B29D6761253B1B99000CE151 /* appicon red@2x.png in Resources */,
 				B28DDAA424A3274E0029FE36 /* HighScoreTileCollectionViewCell.xib in Resources */,
 				B24C5A4824C1F0650069759A /* AwardGridCollectionCell.xib in Resources */,
 				B2361A3722D5B965007D88BB /* ConfirmPlayedViewController.storyboard in Resources */,
@@ -1894,11 +1893,12 @@
 				B25FC7CB22D0733C00D2E651 /* ReviewViewController.storyboard in Resources */,
 				B25FC7CA22D0733C00D2E651 /* OverrideViewController.storyboard in Resources */,
 				B2E065C924AB03090055C376 /* RelatedPlayersView.xib in Resources */,
+				B2CAE11627622E8800C5822E /* appicon red@2x.png in Resources */,
 				B227891E1FB84F66009BABCA /* LocationViewController.storyboard in Resources */,
 				B2B2CE7324A733C00081CBFD /* PlayersViewController.storyboard in Resources */,
 				B23970DB24AF77DE00E3C2A9 /* HighScoresDashboardLandscapeView.xib in Resources */,
-				B29D6760253B1B99000CE151 /* appicon green@2x.png in Resources */,
 				B247A72B248359F500591BBA /* TitleBar.xib in Resources */,
+				B2CAE11227622E8800C5822E /* appicon green@2x.png in Resources */,
 				B243385922E0A6C3002EBD40 /* SelectedPlayersView.xib in Resources */,
 				B22789001FB83AA7009BABCA /* GetStartedViewController.storyboard in Resources */,
 				B2CAAEEB256A6BC900B35F6F /* GameDetailCell.xib in Resources */,
@@ -1906,10 +1906,10 @@
 				B24C5A5124C3165E0069759A /* AwardsTileView.xib in Resources */,
 				B227893F1FB893C9009BABCA /* SettingsViewController.storyboard in Resources */,
 				B248F2F8249F54EA000275DD /* DashboardViewController.storyboard in Resources */,
-				B29D6764253B1B99000CE151 /* appicon yellow@3x.png in Resources */,
 				B22789421FB894AE009BABCA /* PlayerDetailViewController.storyboard in Resources */,
 				B28DDA9E24A325500029FE36 /* HighScoreTileView.xib in Resources */,
 				B283A1B024AF438D0065994B /* BubbleView.xib in Resources */,
+				B2CAE11427622E8800C5822E /* appicon yellow@2x.png in Resources */,
 				B235D790251096BF002F5BB6 /* DealViewCell.xib in Resources */,
 				B298496924E6DF4400FADC06 /* LaunchScreenView.xib in Resources */,
 				B20CF54424A7BD3B00F27A9C /* PersonalDashboardLandscapeView.xib in Resources */,
@@ -2365,7 +2365,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 35;
+				CURRENT_PROJECT_VERSION = 45;
 				DEVELOPMENT_TEAM = 3T7CT2S464;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				IBSC_MODULE = Contract_Whist_Watch_Extension;
@@ -2391,7 +2391,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 35;
+				CURRENT_PROJECT_VERSION = 45;
 				DEVELOPMENT_TEAM = 3T7CT2S464;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				IBSC_MODULE = Contract_Whist_Watch_Extension;
@@ -2416,7 +2416,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 35;
+				CURRENT_PROJECT_VERSION = 45;
 				DEVELOPMENT_TEAM = 3T7CT2S464;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_WARN_PEDANTIC = NO;
@@ -2442,7 +2442,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 35;
+				CURRENT_PROJECT_VERSION = 45;
 				DEVELOPMENT_TEAM = 3T7CT2S464;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_WARN_PEDANTIC = NO;
@@ -2622,7 +2622,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Contract Whist Scorecard/Contract Whist Scorecard.entitlements";
-				CURRENT_PROJECT_VERSION = 35;
+				CURRENT_PROJECT_VERSION = 45;
 				DEVELOPMENT_TEAM = 3T7CT2S464;
 				GCC_WARN_PEDANTIC = NO;
 				INFOPLIST_FILE = "Contract Whist Scorecard/Info.plist";
@@ -2643,7 +2643,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Contract Whist Scorecard/Contract Whist Scorecard.entitlements";
-				CURRENT_PROJECT_VERSION = 35;
+				CURRENT_PROJECT_VERSION = 45;
 				DEVELOPMENT_TEAM = 3T7CT2S464;
 				GCC_WARN_PEDANTIC = NO;
 				INFOPLIST_FILE = "Contract Whist Scorecard/Info.plist";

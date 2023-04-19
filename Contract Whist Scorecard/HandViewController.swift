@@ -275,8 +275,8 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
         var cell: SuitTableCell
         
         // Suits
-        
-        cell = tableView.dequeueReusableCell(withIdentifier: "Suit Table Cell", for: indexPath) as! SuitTableCell
+
+        cell = tableView.dequeueReusableCell(withIdentifier: "\(SuitEnum(rawValue: (4 - indexPath.row))!.string) Table Cell", for: indexPath) as! SuitTableCell
 
         cell.setCollectionViewDataSourceDelegate(self, forRow: indexPath.row)
         self.suitEnable(suitCollectionView: cell.cardCollection, enable: suitEnabled[indexPath.row], suitNumber: indexPath.row + 1)

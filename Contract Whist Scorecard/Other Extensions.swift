@@ -57,6 +57,34 @@ extension UIView {
             return CGRect()
         }
     }
+    
+    func addSubview(_ parent: UIView, constant: CGFloat = 0, anchored attributes: ConstraintAnchor...) {
+        self.addSubview(parent)
+        Constraint.anchor(view: self, control: parent, constant: constant, attributes: attributes)
+    }
+    
+    func addSubview(_ parent: UIView, constant: CGFloat = 0, anchored attributes: [ConstraintAnchor]?) {
+        self.addSubview(parent)
+        if let attributes = attributes {
+            Constraint.anchor(view: self, control: parent, constant: constant, attributes: attributes)
+        }
+    }
+    
+    func addSubview(_ parent: UIView, leading: CGFloat? = nil, trailing: CGFloat? = nil, top: CGFloat? = nil, bottom: CGFloat? = nil) {
+        self.addSubview(parent)
+        if let leading = leading {
+            Constraint.anchor(view: self, control: parent, constant: leading, attributes: .leading)
+        }
+        if let trailing = trailing {
+            Constraint.anchor(view: self, control: parent, constant: trailing, attributes: .trailing)
+        }
+        if let top = top {
+            Constraint.anchor(view: self, control: parent, constant: top, attributes: .top)
+        }
+        if let bottom = bottom {
+            Constraint.anchor(view: self, control: parent, constant: bottom, attributes: .bottom)
+        }
+    }
 }
 
 extension CGPoint {

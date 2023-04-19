@@ -17,7 +17,7 @@ import CoreData
 
 }
 
-@objc internal protocol DataTableViewerDelegate : class {
+@objc internal protocol DataTableViewerDelegate : AnyObject {
     
     var availableFields: [DataTableField] { get }
     @objc optional var allowSync: Bool { get }

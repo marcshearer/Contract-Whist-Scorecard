@@ -127,7 +127,7 @@ class Scorecard {
      */
     public static var activeSettings: Settings {
         get {
-            return Scorecard.game?.settings ?? Scorecard.settings.copy()
+            return ((Scorecard.game?.inProgress ?? false) ? Scorecard.game?.settings : nil) ?? Scorecard.settings.copy()
         }
     }
         

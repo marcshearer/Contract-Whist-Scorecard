@@ -27,6 +27,9 @@ Changes since last version
 Bugs fix now
 ------------
 
+iPad shows last game rather than current game summary when Viewing scores
+My phone won't load game
+
 Short-term
 ----------
 Add tests for temporary settings

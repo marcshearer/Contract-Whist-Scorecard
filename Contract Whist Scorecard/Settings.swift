@@ -75,35 +75,57 @@ class Settings : Equatable {
     public func setValue(_ value: Any?, forKey label: String) {
         switch label {
         case "bonus2":
-            self.bonus2 = value as! Bool
+            if value is Bool {
+                self.bonus2 = value as! Bool
+            }
         case "cards":
             self.cards = value as! [Int]
         case "bounceNumberCards":
-            self.bounceNumberCards = value as! Bool
+            if value is Bool {
+                self.bounceNumberCards = value as! Bool
+            }
         case "trumpSequence":
             self.trumpSequence = value as! [String]
         case "syncEnabled":
-            self.syncEnabled = value as! Bool
+            if value is Bool {
+                self.syncEnabled = value as! Bool
+            }
         case "saveHistory":
-            self.saveHistory = value as! Bool
+            if value is Bool {
+                self.saveHistory = value as! Bool
+            }
         case "saveLocation":
-            self.saveLocation = value as! Bool
+            if value is Bool {
+                self.saveLocation = value as! Bool
+            }
         case "receiveNotifications":
-            self.receiveNotifications = value as! Bool
+            if value is Bool {
+                self.receiveNotifications = value as! Bool
+            }
         case "alertVibrate":
-            self.alertVibrate = value as! Bool
+            if value is Bool {
+                self.alertVibrate = value as! Bool
+            }
         case "allowBroadcast":
-            self.allowBroadcast = value as! Bool
+            if value is Bool {
+                self.allowBroadcast = value as! Bool
+            }
         case "faceTimeAddress":
-            self.faceTimeAddress = value as! String
+            if value is Bool {
+                self.faceTimeAddress = value as! String
+            }
         case "onlineGamesEnabled":
-            self.onlineGamesEnabled = value as! Bool
+            if value is Bool {
+                self.onlineGamesEnabled = (value as? Bool) == true
+            }
         case "prefersStatusBarHidden":
-            self.prefersStatusBarHidden = value as! Bool
+            if value is Bool {
+                self.prefersStatusBarHidden = value as! Bool
+            }
         case "rawColorTheme":
             self.rawColorTheme = value as! String
         case "rawAppearance":
-            self.rawAppearance = (value as? Int) ?? ThemeAppearance.device.rawValue
+            self.rawAppearance = value as! Int
         case "thisPlayerUUID":
             self.thisPlayerUUID = value as! String
         case "termsDate":
@@ -113,9 +135,13 @@ class Settings : Equatable {
         case "termsUser":
             self.termsUser = value as! String
         case "saveStats":
-            self.saveStats = value as! Bool
+            if value is Bool {
+                self.saveStats = value as! Bool
+            }
         case "confettiWin":
-            self.confettiWin = value as! Bool
+            if value is Bool {
+                self.confettiWin = value as! Bool
+            }
         case "rawOnlineGamesEnabledSettingState":
             if self.onlineGamesEnabled {
                 self.onlineGamesEnabledSettingState = .available
@@ -408,7 +434,7 @@ class Settings : Equatable {
                     let values: [Int] = value.split(at: ";").map({Int($0) ?? 0})
                     downloaded.setValue(values, forKey: label)
                 case "Bool":
-                    downloaded.setValue((Int(value) ?? 0 == 0 ? false : true), forKey: label)
+                    downloaded.setValue((Bool(value) ?? false), forKey: label)
                 case "Int":
                     downloaded.setValue(Int(value) ?? 0, forKey: label)
                 case "Date":

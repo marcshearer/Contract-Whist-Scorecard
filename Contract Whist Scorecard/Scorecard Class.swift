@@ -464,7 +464,7 @@ class Scorecard {
     
     public static var deviceName: String {
         get {
-            let result = UIDevice.current.name
+            let result = "\(Scorecard.nameFromPlayerUUID(Scorecard.onlinePlayerUUID() ?? "") ?? "Unknown") \(UIDevice.current.identifierForVendor!)"
             return result
         }
     }

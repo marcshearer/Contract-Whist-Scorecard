@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -44,7 +44,7 @@
 		B2144C5124653BF900CF56B7 /* Game Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2144C5024653BF900CF56B7 /* Game Location.swift */; };
 		B214FB8C1FCADC7B00F4F39B /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B214FB8A1FCADC7B00F4F39B /* Interface.storyboard */; };
 		B214FB8E1FCADC7B00F4F39B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B214FB8D1FCADC7B00F4F39B /* Assets.xcassets */; };
-		B214FB951FCADC7B00F4F39B /* Contract Whist Watch Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = B214FB941FCADC7B00F4F39B /* Contract Whist Watch Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		B214FB951FCADC7B00F4F39B /* Contract Whist Watch Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = B214FB941FCADC7B00F4F39B /* Contract Whist Watch Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		B214FB9C1FCADC7B00F4F39B /* ExtensionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B214FB9B1FCADC7B00F4F39B /* ExtensionDelegate.swift */; };
 		B214FBA01FCADC7B00F4F39B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B214FB9F1FCADC7B00F4F39B /* Assets.xcassets */; };
 		B214FBA51FCADC7B00F4F39B /* Contract Whist Watch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = B214FB881FCADC7B00F4F39B /* Contract Whist Watch.app */; };
@@ -289,15 +289,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		B214FBAB1FCADC7B00F4F39B /* Embed App Extensions */ = {
+		B214FBAB1FCADC7B00F4F39B /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				B214FB951FCADC7B00F4F39B /* Contract Whist Watch Extension.appex in Embed App Extensions */,
+				B214FB951FCADC7B00F4F39B /* Contract Whist Watch Extension.appex in Embed Foundation Extensions */,
 			);
-			name = "Embed App Extensions";
+			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		B214FBAD1FCADC7B00F4F39B /* Embed Watch Content */ = {
@@ -1659,7 +1659,7 @@
 			buildConfigurationList = B214FBAC1FCADC7B00F4F39B /* Build configuration list for PBXNativeTarget "Contract Whist Watch" */;
 			buildPhases = (
 				B214FB861FCADC7B00F4F39B /* Resources */,
-				B214FBAB1FCADC7B00F4F39B /* Embed App Extensions */,
+				B214FBAB1FCADC7B00F4F39B /* Embed Foundation Extensions */,
 				167549912A38177EA3E71960 /* Frameworks */,
 			);
 			buildRules = (
@@ -1735,8 +1735,9 @@
 		CC4CC0ED1DEADC32007FB24F /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 0910;
-				LastUpgradeCheck = 1200;
+				LastUpgradeCheck = 1430;
 				ORGANIZATIONNAME = "Marc Shearer";
 				TargetAttributes = {
 					B214FB871FCADC7B00F4F39B = {
@@ -1973,6 +1974,7 @@
 		};
 		B2BD3EAF224D09C600697656 /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -2365,7 +2367,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 45;
+				CURRENT_PROJECT_VERSION = 50;
 				DEVELOPMENT_TEAM = 3T7CT2S464;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				IBSC_MODULE = Contract_Whist_Watch_Extension;
@@ -2391,7 +2393,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 45;
+				CURRENT_PROJECT_VERSION = 50;
 				DEVELOPMENT_TEAM = 3T7CT2S464;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				IBSC_MODULE = Contract_Whist_Watch_Extension;
@@ -2416,12 +2418,16 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 45;
+				CURRENT_PROJECT_VERSION = 50;
 				DEVELOPMENT_TEAM = 3T7CT2S464;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_WARN_PEDANTIC = NO;
 				INFOPLIST_FILE = "Contract Whist Watch Extension/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
 				MARKETING_VERSION = 7.0;
 				PRODUCT_BUNDLE_IDENTIFIER = MarcShearer.Whist.watchkitapp.watchkitextension;
 				PRODUCT_NAME = "${TARGET_NAME}";
@@ -2442,12 +2448,16 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 45;
+				CURRENT_PROJECT_VERSION = 50;
 				DEVELOPMENT_TEAM = 3T7CT2S464;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_WARN_PEDANTIC = NO;
 				INFOPLIST_FILE = "Contract Whist Watch Extension/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
 				MARKETING_VERSION = 7.0;
 				PRODUCT_BUNDLE_IDENTIFIER = MarcShearer.Whist.watchkitapp.watchkitextension;
 				PRODUCT_NAME = "${TARGET_NAME}";
@@ -2471,7 +2481,11 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = "Contract Whist Scorecard UI Tests/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "MarcShearer.Whist.Contract-Whist-Scorecard-UI-Tests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -2492,7 +2506,11 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = "Contract Whist Scorecard UI Tests/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "MarcShearer.Whist.Contract-Whist-Scorecard-UI-Tests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -2611,7 +2629,8 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				"SWIFT_ACTIVE_COMPILATION_CONDITIONS[arch=*]" = ContractWhist;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -2622,12 +2641,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Contract Whist Scorecard/Contract Whist Scorecard.entitlements";
-				CURRENT_PROJECT_VERSION = 45;
+				CURRENT_PROJECT_VERSION = 50;
 				DEVELOPMENT_TEAM = 3T7CT2S464;
 				GCC_WARN_PEDANTIC = NO;
 				INFOPLIST_FILE = "Contract Whist Scorecard/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				MARKETING_VERSION = 7.0;
 				PRODUCT_BUNDLE_IDENTIFIER = MarcShearer.Whist;
 				PRODUCT_NAME = Whist;
@@ -2643,12 +2665,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Contract Whist Scorecard/Contract Whist Scorecard.entitlements";
-				CURRENT_PROJECT_VERSION = 45;
+				CURRENT_PROJECT_VERSION = 50;
 				DEVELOPMENT_TEAM = 3T7CT2S464;
 				GCC_WARN_PEDANTIC = NO;
 				INFOPLIST_FILE = "Contract Whist Scorecard/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				MARKETING_VERSION = 7.0;
 				PRODUCT_BUNDLE_IDENTIFIER = MarcShearer.Whist;
 				PRODUCT_NAME = Whist;

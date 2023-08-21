@@ -21,7 +21,7 @@ import CloudKit
     case complete = 5
 }
 
-@objc protocol SyncDelegate: class {
+@objc protocol SyncDelegate: AnyObject {
     
     // A method to manage a message from the sync controller
     @objc optional func syncMessage(_ message: String)

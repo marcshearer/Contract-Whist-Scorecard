@@ -28,7 +28,6 @@ Bugs fix now
 ------------
 
 iPad shows last game rather than current game summary when Viewing scores
-My phone won't load game
 Dealer halo not appearing any more
 Should reject same player connecting to game twice
 

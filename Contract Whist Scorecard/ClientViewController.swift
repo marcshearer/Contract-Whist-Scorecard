@@ -918,6 +918,9 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         Utility.mainThread {
             self.displayingPeer = itemAtCenter
             collectionView?.reloadData()
+            if collectionView == self.peerCollectionView {
+                self.peerScrollCollectionView?.reloadData()
+            }
         }
     }
 
@@ -1251,6 +1254,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
                 if self.availablePeers.count > 1 {
                     // Add to collection view
                     self.peerCollectionView.insertItems(at: [IndexPath(item: item, section: 0)])
+                    self.peerScrollCollectionView.insertItems(at: [IndexPath(item: item, section: 0)])
                     if item != self.displayingPeer {
                         self.peerCollectionView.reloadItems(at: [IndexPath(item: self.displayingPeer, section: 0)])
                     }
@@ -1276,9 +1280,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
                     } else {
                         // Remove from collection view
                         self.peerCollectionView.deleteItems(at: [IndexPath(row: item, section: 0)])
-                        if item != self.displayingPeer {
-                            self.peerCollectionView.reloadItems(at: [IndexPath(item: self.displayingPeer, section: 0)])
-                        }
+                        self.peerCollectionView.reloadItems(at: [IndexPath(item: self.displayingPeer, section: 0)])
                         self.peerScrollCollectionView.deleteItems(at: [IndexPath(row: item, section: 0)])
                     }
                     self.updateMenuNotifications()

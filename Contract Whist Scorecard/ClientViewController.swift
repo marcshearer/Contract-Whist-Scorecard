@@ -1162,7 +1162,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     
     internal func appStateChange(to newState: ClientAppState) {
         if newState != self.appState {
-            Utility.debugMessage("client", "Application state \(newState)")
+            Utility.debugMessage("Client", "Application state \(newState)")
 
             self.appState = newState
             self.checkPlayingGame()

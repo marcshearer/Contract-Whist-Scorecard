@@ -153,6 +153,14 @@ class RabbitMQService: NSObject, CommsServiceDelegate, CommsDataDelegate, CommsS
         fatalError("Should be overridden")
     }
     
+    internal func suspend(reason: String? = nil) {
+        // Not implemented
+    }
+    
+    internal func resume(reason: String? = nil) {
+        // Not implemented
+    }
+    
     internal func connectionInfo(message: String) {
         var message = message + "\n\nPeers"
         self.forEachPeer { (rabbitMQPeer) in

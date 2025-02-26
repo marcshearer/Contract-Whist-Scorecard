@@ -67,7 +67,7 @@ class MultipeerService: NSObject, CommsServiceDelegate, MCSessionDelegate {
         self.myPeerID = MCPeerID(displayName: deviceName)
         // Create my peer ID to be consistent over time - apparently helps stability!
         var archivedPeerID = UserDefaults.standard.data(forKey: "MCPeerID")
-        if archivedPeerID == nil {
+        if true || archivedPeerID == nil {
             self.myPeerID = MCPeerID(displayName: Scorecard.deviceName)
             do {
                 archivedPeerID = try NSKeyedArchiver.archivedData(withRootObject: myPeerID, requiringSecureCoding: false)
@@ -183,6 +183,14 @@ class MultipeerService: NSObject, CommsServiceDelegate, MCSessionDelegate {
     internal func reset(reason: String? = nil) {
         // Over-ridden in client and server
     }
+    
+    internal func suspend(reason: String? = nil) {
+        // Over-ridden in client and server
+    }
+    
+    internal func resume(reason: String? = nil) {
+        // Over-ridden in client and server
+    }
 
     internal func connectionInfo(message: String) {
         var message = message + "\n\nPeers"
@@ -284,7 +292,7 @@ class MultipeerService: NSObject, CommsServiceDelegate, MCSessionDelegate {
                                 }
                                 self.endSessions(matchDeviceName: deviceName)
                                 broadcastPeer.state = .notConnected
-                                if reason != "Reset" {
+                                if reason != "Reset" && reason.left(7) != "Suspend" {
                                     broadcastPeer.reconnect = false
                                 }
                                 if self.stateDelegate != nil {
@@ -427,6 +435,20 @@ class MultipeerServerService : MultipeerService, CommsHostServiceDelegate, MCNea
         }
     }
     
+    override internal func suspend(reason: String? = nil) {
+        // Just disconnect and wait - will reconnect when resume
+        self.debugMessage("Suspending")
+        self.disconnect(reason: "Suspended: \(reason ?? "Unknown reason")", reconnect: true)
+        self.server.advertiser.stopAdvertisingPeer()
+    }
+    
+    override internal func resume(reason: String? = nil) {
+        // Resuming after supspension
+        self.debugMessage("Resuming")
+        Utility.executeAfter(delay: 1.0) {
+            self.server.advertiser.startAdvertisingPeer()
+        }
+    }
     
     // MARK: - Comms Handler State handler =================================================================== -
 
@@ -619,8 +641,23 @@ class MultipeerClientService : MultipeerService, CommsClientServiceDelegate, MCN
     internal override func reset(reason: String? = nil) {
         // Disconnect and then start looking for peers again - should reconnect automatically when find peer
         self.debugMessage("Restart nearby peer browsing")
+        self.disconnect(reason: "Reset", reconnect: false)
         self.endSessions()
         self.stopBrowsingForPeers()
+        self.startBrowsingForPeers()
+    }
+    
+    internal override func suspend(reason: String? = nil) {
+        // Disconnect and wait to reconnect in resume
+        self.debugMessage("Suspend nearby peer browsing")
+        self.disconnect(reason: "Reset", reconnect: false)
+        self.endSessions()
+        self.stopBrowsingForPeers()
+    }
+    
+    internal override func resume(reason: String? = nil) {
+        // Resume connecction
+        self.debugMessage("Resume nearby peer browsing")
         self.startBrowsingForPeers()
     }
     
@@ -653,34 +690,38 @@ class MultipeerClientService : MultipeerService, CommsClientServiceDelegate, MCN
                 // End any pre-existing sessions
                 self.endSessions(matchDeviceName: deviceName)
                 
-                let gameUUID = info?["gameUUID"]
-                let invite = info?["invite"]?.components(separatedBy: ";")
-                let purpose = CommsPurpose(rawValue: info?["purpose"] ?? "") ?? CommsPurpose.playing
-                if invite == nil || invite!.isEmpty || invite?.first(where: {$0 == self.connectionPlayerUUID}) != nil {
-                    if self.matchGameUUID == nil || self.matchGameUUID! == gameUUID {
-                        var broadcastPeer = self.broadcastPeerList[deviceName]
-                        if broadcastPeer == nil {
-                            broadcastPeer = BroadcastPeer(parent: self, mcPeer: peerID, deviceName: deviceName, purpose: purpose)
-                            self.broadcastPeerList[deviceName] = broadcastPeer
-                        } else {
-                            broadcastPeer?.mcPeer = peerID
-                        }
-                        broadcastPeer?.playerName = info?["playerName"]
-                        broadcastPeer?.playerUUID = info?["playerUUID"]
-                        broadcastPeer?.purpose = purpose
-                        
-                        // Notify delegate
-                        self.browserDelegate?.peerFound(peer: broadcastPeer!.commsPeer)
-                        
-                        if broadcastPeer!.reconnect {
-                            // Auto-reconnect set - try to connect
-                            if !self.connect(to: broadcastPeer!.commsPeer, playerUUID: self.connectionPlayerUUID, playerName: self.connectionName, reconnect: true) {
-                                // Not good - shouldn't happen - try stopping browsing and restarting - will retry when find peer again
-                                self.debugMessage("Shouldn't happen - connect failed")
-                                self.stopBrowsingForPeers()
-                                self.startBrowsingForPeers()
-                                broadcastPeer!.state = .reconnecting
-                                self.stateDelegate?.stateChange(for: broadcastPeer!.commsPeer)
+                let playerUUID = info?["playerUUID"]
+                if playerUUID != Scorecard.activeSettings.thisPlayerUUID {
+                    // Don't show connections to this player
+                    let gameUUID = info?["gameUUID"]
+                    let invite = info?["invite"]?.components(separatedBy: ";")
+                    let purpose = CommsPurpose(rawValue: info?["purpose"] ?? "") ?? CommsPurpose.playing
+                    if invite == nil || invite!.isEmpty || invite?.first(where: {$0 == self.connectionPlayerUUID}) != nil {
+                        if self.matchGameUUID == nil || self.matchGameUUID! == gameUUID {
+                            var broadcastPeer = self.broadcastPeerList[deviceName]
+                            if broadcastPeer == nil {
+                                broadcastPeer = BroadcastPeer(parent: self, mcPeer: peerID, deviceName: deviceName, purpose: purpose)
+                                self.broadcastPeerList[deviceName] = broadcastPeer
+                            } else {
+                                broadcastPeer?.mcPeer = peerID
+                            }
+                            broadcastPeer?.playerName = info?["playerName"]
+                            broadcastPeer?.playerUUID = playerUUID
+                            broadcastPeer?.purpose = purpose
+                            
+                                // Notify delegate
+                            self.browserDelegate?.peerFound(peer: broadcastPeer!.commsPeer)
+                            
+                            if broadcastPeer!.reconnect {
+                                    // Auto-reconnect set - try to connect
+                                if !self.connect(to: broadcastPeer!.commsPeer, playerUUID: self.connectionPlayerUUID, playerName: self.connectionName, reconnect: true) {
+                                        // Not good - shouldn't happen - try stopping browsing and restarting - will retry when find peer again
+                                    self.debugMessage("Shouldn't happen - connect failed")
+                                    self.stopBrowsingForPeers()
+                                    self.startBrowsingForPeers()
+                                    broadcastPeer!.state = .reconnecting
+                                    self.stateDelegate?.stateChange(for: broadcastPeer!.commsPeer)
+                                }
                             }
                         }
                     }

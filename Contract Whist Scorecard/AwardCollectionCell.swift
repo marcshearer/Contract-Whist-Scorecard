@@ -56,7 +56,7 @@ class AwardCollectionCell: UICollectionViewCell {
     }
 }
 
-protocol AwardCollectionDelegate : class {
+protocol AwardCollectionDelegate : AnyObject {
     
     func changeMode(to mode: AwardCellMode, section: Int)
 }

@@ -461,7 +461,7 @@ enum InviteStatus {
         } else {
             // Should already be in list
             let playerIndex = self.playerIndexFor(playerUUID: peer.playerUUID)
-            if playerIndex != nil && self.playerData[playerIndex!].peer != nil && self.playerData[playerIndex!].peer.deviceName != peer.deviceName && self.playerData[playerIndex!].peer.state != .notConnected {
+            if playerIndex != nil && self.playerData[playerIndex!].peer != nil && self.playerData[playerIndex!].peer.deviceName != peer.deviceName {
                     // Duplicate - add it temporarily - to disconnect in state change
                     addPlayer(name: name, playerUUID: peer.playerUUID!, playerMO: playerMO, peer: peer, inviteStatus: InviteStatus.none, disconnectReason: "\(name ?? "This player") has already joined from another device")
             } else {
@@ -496,6 +496,12 @@ enum InviteStatus {
     private func addPlayer(name: String, playerUUID: String, playerMO: PlayerMO?, peer: CommsPeer?, inviteStatus: InviteStatus! = nil, disconnectReason: String? = nil, refreshPlayers: Bool = true, host: Bool = false, robot: Bool = false) {
         var disconnectReason = disconnectReason
         
+        // Check not already there
+        var playerDataItem: PlayerData?
+        if let peer = peer {
+            playerDataItem = self.playerDataFor(peer: peer, matchPlayer: false)
+        }
+        
         if disconnectReason == nil {
             if gameInProgress {
                 let foundPlayer = Scorecard.game.player(playerUUID:playerUUID)
@@ -503,27 +509,21 @@ enum InviteStatus {
                     // Player not in game trying to connect while game in progress - refuse
                     disconnectReason = "A game is already in progress - only existing players can rejoin this game"
                 }
-            } else if playerData.count >= Scorecard.shared.maxPlayers {
-                // Already got a full game
+            } else if playerData.count >= Scorecard.shared.maxPlayers && playerDataItem == nil {
+                // Already got a full game not including this device
                 disconnectReason = "The maximum number of players has already joined this game"
             }
         }
         
-        // Check not already there
-        var playerData: PlayerData?
-        if let peer = peer {
-            playerData = self.playerDataFor(peer: peer)
-        } else {
-            playerData = self.playerDataFor(playerUUID: playerUUID)
-        }
-        if let playerData = playerData {
+        if let playerDataItem = playerDataItem {
             // Update it
-            playerData.name = name
-            playerData.playerMO = playerMO
-            playerData.peer = peer
-            playerData.inviteStatus = inviteStatus
-            playerData.disconnectReason = disconnectReason
-            playerData.host = host
+            playerDataItem.name = name
+            playerDataItem.playerUUID = playerUUID
+            playerDataItem.playerMO = playerMO
+            playerDataItem.peer = peer
+            playerDataItem.inviteStatus = inviteStatus
+            playerDataItem.disconnectReason = disconnectReason
+            playerDataItem.host = host
         } else {
             // Add to list
             self.unique += 1
@@ -532,8 +532,8 @@ enum InviteStatus {
                 playerMO = self.createLocalPlayer(name: name, playerUUID: playerUUID, peer: peer)
             }
             self.playerData.insert(PlayerData(name: name, playerUUID: playerUUID, playerMO: playerMO, peer: peer, unique: self.unique, disconnectReason: disconnectReason, inviteStatus: inviteStatus, host: host, robot: robot), at: self.visiblePlayers)
-            self.refreshPlayers()
         }
+        self.refreshPlayers()
     }
     
     // MARK: - State Delegate handlers ===================================================================== -
@@ -971,20 +971,19 @@ enum InviteStatus {
         return self.playerData.first(where: {$0.playerUUID == playerUUID})
     }
 
-    private func playerDataFor(peer: CommsPeer, excludeHost: Bool = true) -> PlayerData? {
+    private func playerDataFor(peer: CommsPeer, excludeHost: Bool = true, matchPlayer: Bool = true) -> PlayerData? {
         return self.playerData.first(where: { (!excludeHost || !$0.host) &&
                                                 $0.peer?.deviceName == peer.deviceName &&
-                                                $0.playerUUID == peer.playerUUID})
+                                                (!matchPlayer || $0.playerUUID == peer.playerUUID)})
     }
     
     private func playerIndexFor(playerUUID: String?) -> Int? {
          return self.playerData.firstIndex(where: {$0.playerUUID == playerUUID})
     }
 
-    private func playerIndexFor(peer: CommsPeer, excludeHost: Bool = true) -> Int? {
+     private func playerIndexFor(peer: CommsPeer, excludeHost: Bool = true, matchPlayer: Bool = true) -> Int? {
         return self.playerData.firstIndex(where: { (!excludeHost || !$0.host) &&
-                                                    $0.peer?.deviceName == peer.deviceName &&
-                                                    $0.playerUUID == peer.playerUUID})
+            $0.peer?.deviceName == peer.deviceName && (!matchPlayer || $0.playerUUID == peer.playerUUID)})
     }
     
     private func setConnectionMode(_ connectionMode: ConnectionMode, completion: (()->())? = nil) {

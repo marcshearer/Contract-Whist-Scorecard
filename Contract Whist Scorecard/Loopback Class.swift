@@ -78,6 +78,14 @@ class LoopbackService: NSObject, CommsServiceDelegate, CommsHostServiceDelegate,
         // Not implemented
     }
 
+    func suspend(reason: String?) {
+        // Not implemented
+    }
+
+    func resume(reason: String?) {
+        // Not implemented
+    }
+
     public func connect(to commsPeer: CommsPeer, playerUUID: String?, playerName: String?, context: [String : String]? = nil, reconnect: Bool) -> Bool {
         if let loopbackDelegates = LoopbackService.peerList[commsPeer.deviceName] {
             

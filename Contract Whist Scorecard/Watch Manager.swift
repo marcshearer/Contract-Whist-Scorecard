@@ -69,14 +69,14 @@ class WatchManager: NSObject, WCSessionDelegate {
     }
     
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
-        Utility.debugMessage("session","Session activation did complete")
+        Utility.debugMessage("Watch","Session activation did complete")
     }
     
     public func sessionDidBecomeInactive(_ session: WCSession) {
-        Utility.debugMessage("session","Session did become inactive")
+        Utility.debugMessage("Watch","Session did become inactive")
     }
     
     public func sessionDidDeactivate(_ session: WCSession) {
-        Utility.debugMessage("session","Session did deactivate")
+        Utility.debugMessage("Watch","Session did deactivate")
     }
 }

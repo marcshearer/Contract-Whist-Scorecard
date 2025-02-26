@@ -85,7 +85,7 @@ public class CommsPeer {
 
 // Applications must/should implement the following protocols to receive updates from the communications layer
 
-public protocol CommsBrowserDelegate : class {
+public protocol CommsBrowserDelegate : AnyObject {
     
     // Must be implemented by clients to allow them to initiate connections
     
@@ -104,7 +104,7 @@ extension CommsBrowserDelegate {
     }
 }
 
-public protocol CommsStateDelegate : class {
+public protocol CommsStateDelegate : AnyObject {
     
     // Must be implemented by clients & servers to allow them to react to changes in the state of a connection
     
@@ -120,7 +120,7 @@ extension CommsStateDelegate {
     
 }
 
-public protocol CommsDataDelegate : class {
+public protocol CommsDataDelegate : AnyObject {
     
     // Should be implemented by clients and servers to allow them to receive data on a connection (unless they only send data)
     
@@ -128,7 +128,7 @@ public protocol CommsDataDelegate : class {
     
 }
 
-public protocol CommsBroadcastDelegate : class {
+public protocol CommsBroadcastDelegate : AnyObject {
     
     // Should be implemented by clients and server to receive broadcasts on a service running in queue mode
     
@@ -137,7 +137,7 @@ public protocol CommsBroadcastDelegate : class {
 }
 
 
-public protocol CommsConnectionDelegate : class {
+public protocol CommsConnectionDelegate : AnyObject {
     
     // Must be implemented by servers to allow them to receive connection requests from clients
     
@@ -154,7 +154,7 @@ extension CommsConnectionDelegate {
     }
 }
 
-public protocol CommsServiceStateDelegate : class {
+public protocol CommsServiceStateDelegate : AnyObject {
     
     // Can be implemented by controllers to allow them to detect a change in the state of the service
     
@@ -166,7 +166,7 @@ public protocol CommsServiceStateDelegate : class {
 
 // These protocols must be implemented by communication handlers to allow the abstraction layer to communicate with them
 
-public protocol CommsServiceDelegate : class {
+public protocol CommsServiceDelegate : AnyObject {
     
     // This is an abstract class protocol and classes which implement it should never be instantiated
     // Instead either a client or server extension class should be instantiated
@@ -188,6 +188,10 @@ public protocol CommsServiceDelegate : class {
     func disconnect(from commsPeer: CommsPeer?, reason: String, reconnect: Bool)
     
     func reset(reason: String?)
+    
+    func suspend(reason: String?)
+    
+    func resume(reason: String?)
 
     func connectionInfo(message: String)
     
@@ -218,6 +222,14 @@ extension CommsServiceDelegate {
     
     func reset() {
         reset(reason: nil)
+    }
+    
+    func suspend() {
+        suspend(reason: nil)
+    }
+    
+    func resume() {
+        resume(reason: nil)
     }
     
     func debugMessage(_ message: String) {

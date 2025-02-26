@@ -1028,7 +1028,7 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
         let fullName = NSStringFromClass(self.classForCoder)
         var tail = fullName.split(at: ".").last!
         if let viewControllerPos = tail.position("viewController", caseless: true) {
-            tail = tail.left(viewControllerPos)
+            tail = "\(tail.left(viewControllerPos))View"
         }
         return tail
     }

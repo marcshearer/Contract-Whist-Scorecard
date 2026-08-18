@@ -342,6 +342,8 @@ extension CommsClientServiceDelegate {
 
 public class CommsHandler {
     
+    static let useMCNearby = false
+    
     public static func client(proximity: CommsConnectionProximity,
                               mode: CommsConnectionMode,
                               serviceID: String?,
@@ -349,10 +351,14 @@ public class CommsHandler {
         
         if proximity == .nearby && mode == .broadcast {
             // Nearby broadcast = Multi-peer connectivity
-            return MultipeerClientService(mode: mode, serviceID: serviceID, deviceName: deviceName)
+            if useMCNearby || serviceID == MultipeerLoggerConfig.logService {
+                return MultipeerClientService(mode: mode, serviceID: serviceID, deviceName: deviceName)
+            } else {
+                return NetworkFrameworkClientService(mode: mode, serviceID: serviceID, deviceName: deviceName)
+            }
         } else if proximity == .online && (mode == .invite || mode == .queue) {
             // Online invite or online queue = RabbitMQ connectivity
-            return RabbitMQClientService(mode: mode, serviceID: serviceID, deviceName: deviceName)
+            return nil // RabbitMQClientService(mode: mode, serviceID: serviceID, deviceName: deviceName)
         } else {
             return nil
         }
@@ -366,7 +372,11 @@ public class CommsHandler {
         
         if proximity == .nearby && mode == .broadcast {
             // Nearby broadcast = Multi-peer connectivity
-            return MultipeerServerService(mode: mode, serviceID: serviceID, deviceName: deviceName, purpose: purpose)
+            if useMCNearby || serviceID == MultipeerLoggerConfig.logService {
+                return MultipeerServerService(mode: mode, serviceID: serviceID, deviceName: deviceName, purpose: purpose)
+            } else {
+                return NetworkFrameworkServerService(mode: mode, serviceID: serviceID, deviceName: deviceName, purpose: purpose)
+            }
         } else if proximity == .online && (mode == .invite || mode == .queue) {
             // Online invite or online queue = RabbitMQ connectivity
             return RabbitMQServerService(mode: mode, serviceID: serviceID, deviceName: deviceName, purpose: purpose)

@@ -178,6 +178,7 @@
 		B2A9096924A1C3A000B35B69 /* DataTableTileCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2A9096824A1C3A000B35B69 /* DataTableTileCollectionViewCell.xib */; };
 		B2AC652B257398FB00371F1E /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2AC652A257398FB00371F1E /* TestViewController.swift */; };
 		B2AC65312573990C00371F1E /* TestViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B2AC65302573990C00371F1E /* TestViewController.storyboard */; };
+		B2ACBD7030249E05002BB6EC /* Network Framework Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2ACBD6F30249DEF002BB6EC /* Network Framework Class.swift */; };
 		B2B180122110128C008D3BAA /* (null) in Sources */ = {isa = PBXBuildFile; };
 		B2B180142114AD92008D3BAA /* (null) in Sources */ = {isa = PBXBuildFile; };
 		B2B1801D21195FB0008D3BAA /* Robot Bidding.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B1801C21195FB0008D3BAA /* Robot Bidding.swift */; };
@@ -491,6 +492,7 @@
 		B2A9096824A1C3A000B35B69 /* DataTableTileCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DataTableTileCollectionViewCell.xib; sourceTree = "<group>"; };
 		B2AC652A257398FB00371F1E /* TestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
 		B2AC65302573990C00371F1E /* TestViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = TestViewController.storyboard; sourceTree = "<group>"; };
+		B2ACBD6F30249DEF002BB6EC /* Network Framework Class.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Network Framework Class.swift"; sourceTree = "<group>"; };
 		B2B1801C21195FB0008D3BAA /* Robot Bidding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Robot Bidding.swift"; sourceTree = "<group>"; };
 		B2B1801E21195FBC008D3BAA /* Robot Player Class.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Robot Player Class.swift"; sourceTree = "<group>"; };
 		B2B1802021195FFA008D3BAA /* Contract Whist Scorecard.pages */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Contract Whist Scorecard.pages"; sourceTree = "<group>"; };
@@ -1335,6 +1337,7 @@
 				B2F7281A1F6D74F9006F0941 /* Invite.swift */,
 				B2767C1D2110061B0029155E /* Loopback Class.swift */,
 				B2C051031EDF194C009DE37F /* Multipeer Class.swift */,
+				B2ACBD6F30249DEF002BB6EC /* Network Framework Class.swift */,
 				B2D8104D225AF7A7005A86A5 /* Multipeer logger.swift */,
 				B2F7281C1F7199AE006F0941 /* RabbitMQ Class.swift */,
 				B235D2BD1F82288A0019384B /* Notification Simulator.swift */,
@@ -2036,6 +2039,7 @@
 				B23D46FC2514AB130018E954 /* NextHandViewController.swift in Sources */,
 				B2144C5124653BF900CF56B7 /* Game Location.swift in Sources */,
 				B202551F22B13A560074310A /* Constraint.swift in Sources */,
+				B2ACBD7030249E05002BB6EC /* Network Framework Class.swift in Sources */,
 				B2C5840E2567BFD6009E0478 /* Custom View Animations.swift in Sources */,
 				B2B755051E58A2D900B1313B /* HistoryDetailViewController.swift in Sources */,
 				B221EED7210B0E2D00F7FBA0 /* HandViewController.swift in Sources */,

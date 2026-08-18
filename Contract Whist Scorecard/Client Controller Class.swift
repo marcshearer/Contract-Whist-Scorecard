@@ -589,7 +589,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
         }
     }
     
-    private func connect(peer: CommsPeer, faceTimeAddress: String?) -> Bool {
+    private func connect(peer: CommsPeer, faceTimeAddress: String?, noSync: Bool = false) -> Bool {
         var playerName: String!
         var context: [String : String]? = [:]
         
@@ -620,7 +620,9 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
         }
         
         // Do a background sync
-        Scorecard.shared.syncBeforeGame()
+        if !noSync {
+            Scorecard.shared.syncBeforeGame()
+        }
         
         return success
     }
@@ -762,7 +764,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
                     // Reconnect unless calling code has not asked us not to
                     
                     // Assume that FaceTime connection had already been sent
-                    _ = self.connect(peer: peer, faceTimeAddress: nil)
+                    _ = self.connect(peer: peer, faceTimeAddress: nil, noSync: true)
                     self.reflectState(peer: peer)
                 }
             }

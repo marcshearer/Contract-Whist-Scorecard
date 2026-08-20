@@ -102,16 +102,16 @@ class MultipeerService: NSObject, CommsServiceDelegate, MCSessionDelegate {
         // End all connections - or possibly just for one remote device if specified
         for (deviceName, session) in self.sessionList {
             if matchDeviceName == nil || matchDeviceName == deviceName {
-                self.sessionList.removeValue(forKey: deviceName)
-                endSession(session: session)
+                endSession(session: session, deviceName: deviceName)
             }
         }
     }
     
-    internal func endSession(session: MCSession) {
+    internal func endSession(session: MCSession, deviceName: String) {
         self.debugMessage("End Session")
         session.disconnect()
         session.delegate = nil
+        self.sessionList.removeValue(forKey: deviceName)
     }
     
     internal func disconnect(from commsPeer: CommsPeer? = nil, reason: String = "", reconnect: Bool) {

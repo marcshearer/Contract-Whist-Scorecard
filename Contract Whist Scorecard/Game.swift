@@ -328,7 +328,7 @@ class Game {
                 self.gameMO.localDateCreated = Date()
                 self.gameMO.gameUUID = self.gameUUID
                 self.gameMO.datePlayed = self.datePlayed
-                self.gameMO.deviceUUID = UIDevice.current.identifierForVendor?.uuidString
+                self.gameMO.deviceUUID = Scorecard.deviceName
                 self.gameMO.deviceName = Scorecard.deviceName
                 if !self.settings.saveLocation || !self.location.locationSet {
                     self.gameMO.latitude = 0

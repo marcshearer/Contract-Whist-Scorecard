@@ -95,7 +95,7 @@ class Utility {
     public static var isSimulator: Bool {
         get {
             if _isSimulator == nil {
-                #if arch(i386) || arch(x86_64)
+                #if targetEnvironment(simulator)
                     _isSimulator = true
                 #else
                     _isSimulator = false

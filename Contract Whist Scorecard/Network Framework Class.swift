@@ -91,9 +91,7 @@ class NetworkFrameworkService: NSObject, CommsServiceDelegate {
         tcpOptions.keepaliveInterval = 2
         tcpOptions.keepaliveCount = 3
         let parameters = NWParameters(tls: nil, tcp: tcpOptions)
-#if !targetEnvironment(simulator)
         parameters.includePeerToPeer = true
-#endif
         return parameters
     }
 
@@ -137,21 +135,23 @@ class NetworkFrameworkService: NSObject, CommsServiceDelegate {
         // End all connections - or possibly just for one remote device if specified
         for (deviceName, connection) in self.connectionList {
             if matchDeviceName == nil || matchDeviceName == deviceName {
-                self.connectionList.removeValue(forKey: deviceName)
-                closeConnection(connection: connection)
+                closeConnection(connection: connection, deviceName: deviceName)
             }
         }
     }
     
-    internal func closeConnection(connection: NWConnection) {
-        self.debugMessage("End Session")
-        connection.stateUpdateHandler = nil
+    internal func closeConnection(connection: NWConnection, deviceName: String? = nil) {
+        self.debugMessage("End Connection")
         connection.cancel()
+        connection.stateUpdateHandler = nil
+        if let deviceName = deviceName {
+            self.connectionList.removeValue(forKey: deviceName)
+        }
     }
     
     internal func disconnect(from commsPeer: CommsPeer? = nil, reason: String = "", reconnect: Bool) {
         self.debugMessage("Disconnect - reconnect: \(reconnect)")
-
+        
         self.send("disconnect", ["reason" : reason], to: commsPeer)
         
         for (deviceName, _) in self.connectionList {
@@ -179,12 +179,12 @@ class NetworkFrameworkService: NSObject, CommsServiceDelegate {
         }
         self.debugMessage("Sending \(descriptor)\(content) to \(commsPeer == nil ? "all" : commsPeer!.playerName!)", device: toDeviceName)
             
-        for (deviceName, session) in self.connectionList {
+        for (deviceName, connection) in self.connectionList {
             
             if toDeviceName == nil || deviceName == toDeviceName {
                 if let broadcastPeer = broadcastPeerList[deviceName] {
                     if matchPlayerUUID == nil || (broadcastPeer.playerUUID != nil && broadcastPeer.playerUUID! == matchPlayerUUID) {
-                        session.send(content: encode(descriptor: descriptor, dictionary: dictionary), completion: .contentProcessed({ error in
+                        connection.send(content: encode(descriptor: descriptor, dictionary: dictionary), completion: .contentProcessed({ error in
                             // TODO: Maybe I should disconnect and reconnect on errors?
                             if let error = error {
                                 self.debugMessage("Send error: \(error)")
@@ -216,7 +216,7 @@ class NetworkFrameworkService: NSObject, CommsServiceDelegate {
             message = message + "\nDevice: \(deviceName), Player: \(peer.playerName!), \(peer.state.rawValue)\n"
         }
         
-        message = message + "\nSessions"
+        message = message + "\nConnections"
         for (deviceName, _) in self.connectionList {
             message = message + "\nDevice: \(deviceName)\n"
         }
@@ -248,7 +248,7 @@ class NetworkFrameworkService: NSObject, CommsServiceDelegate {
         // Overridden by client
     }
 
-    // MARK: - Session delegate handlers ========================================================== -
+    // MARK: - Connection handlers ========================================================== -
     
     internal func listen(connection: NWConnection, peerID: NFPeerID) {
         connection.stateUpdateHandler = { [self] state in
@@ -273,7 +273,7 @@ class NetworkFrameworkService: NSObject, CommsServiceDelegate {
     
     internal func connectionState(connection: NWConnection, peerID: NFPeerID, didChangeTo nwState: NWConnection.State) {
         let state = commsConnectionState(nwState)
-        debugMessage("Session change state to \((state == .notConnected ? "Not connected" : (state == .connected ? "Connected" : "Connecting"))) (\(nwState)", peerID: peerID)
+        debugMessage("Connection change state to \((state == .notConnected ? "Not connected" : (state == .connected ? "Connected" : "Connecting"))) (\(nwState)", peerID: peerID)
         
         let deviceName = peerID.displayName
         if let broadcastPeer = broadcastPeerList[deviceName] {
@@ -303,10 +303,10 @@ class NetworkFrameworkService: NSObject, CommsServiceDelegate {
         }
         
         if state == .notConnected {
-            // Clear session
+            // Clear connection
             connectionList.removeValue(forKey: deviceName)
         } else {
-            // Save session
+            // Save connection
             connectionList[deviceName] = connection
         }
     }
@@ -336,8 +336,9 @@ class NetworkFrameworkService: NSObject, CommsServiceDelegate {
                             if self.stateDelegate != nil {
                                 self.stateDelegate?.stateChange(for: broadcastPeer.commsPeer, reason: reason)
                             }
-                            // Need to restart browsing for peers
-                            self.startBrowsingForPeers()
+                            if reason == "Reset" {
+                                self.reset()
+                            }
                         } else if values is NSNull {
                             self.dataDelegate?.didReceiveData(descriptor: descriptor, data: nil, from: broadcastPeer.commsPeer)
                         } else {
@@ -470,6 +471,7 @@ class NetworkFrameworkServerService : NetworkFrameworkService, CommsHostServiceD
             
             self.server.advertiser.newConnectionHandler = advertiserDidReceiveInvitation
             self.server.advertiser.stateUpdateHandler = { [self] state in
+                // TODO: Do something sensible
                 switch state {
                     case .ready:
                     self.debugMessage(("Device network stack is open. Scanning..."), peerID: myPeerID)
@@ -500,7 +502,7 @@ class NetworkFrameworkServerService : NetworkFrameworkService, CommsHostServiceD
         Utility.executeAfter(delay: 0.2) {
             // Slight pause to let disconnects get through
             
-            // End sessions
+            // End connections
             self.closeConnections()
             
             // Stop service
@@ -591,7 +593,7 @@ class NetworkFrameworkServerService : NetworkFrameworkService, CommsHostServiceD
         
         self.debugMessage("Invitation from \(playerName ?? "unknown") (\(peerID.displayName)) @\(timestamp ?? "??")", peerID: peerID)
         
-        // End any pre-existing sessions since should only have 1 connection at a time
+        // End any pre-existing connections since should only have 1 connection at a time
         self.closeConnections(matchDeviceName: deviceName)
         
         // Create / replace peer data
@@ -617,6 +619,24 @@ class NetworkFrameworkServerService : NetworkFrameworkService, CommsHostServiceD
 
 // NetworkFramework Client Service Class ========================================================================= -
 
+class NetworkFrameworkClientServiceFactory {
+    private static var existingClients: [NetworkFrameworkClientService] = []
+    
+    public static func create(mode: CommsConnectionMode, serviceID: String, deviceName: String) -> NetworkFrameworkClientService {
+        var result: NetworkFrameworkClientService
+        if let existing = existingClients.first(where: {$0.connectionMode == mode && $0.serviceID == serviceID && $0.myPeerID == NFPeerID(displayName: deviceName)}) {
+            Utility.debugMessage("networkFramework", "Re-using Client for (\(mode) \(serviceID)) \(deviceName)")
+            result = existing
+        } else {
+            result = NetworkFrameworkClientService(mode: mode, serviceID: serviceID, deviceName: deviceName)
+            Utility.debugMessage("networkFramework", "Creating new Client for (\(mode) \(serviceID)) \(deviceName)")
+            existingClients.append(result)
+        }
+        return result
+    }
+    
+}
+
 class NetworkFrameworkClientService : NetworkFrameworkService, CommsClientServiceDelegate {
     
     private struct ClientConnection {
@@ -628,7 +648,8 @@ class NetworkFrameworkClientService : NetworkFrameworkService, CommsClientServic
     private var matchGameUUID: String?
     private var invite: Invite!
     private var onlineInviteObserver: NSObjectProtocol?
-    private var endpointList: [NFPeerID : NWEndpoint] = [:]
+    private var dormant = false
+    private var storedChanges: Set<NWBrowser.Result.Change> = []
     
     // Delegates
     public weak var browserDelegate: CommsBrowserDelegate!
@@ -640,21 +661,31 @@ class NetworkFrameworkClientService : NetworkFrameworkService, CommsClientServic
     // Comms Handler Client Service handlers ========================================================================= -
     
     internal func start(playerUUID: String!, name: String!, recoveryMode: Bool, matchDeviceName: String!, matchGameUUID: String!) {
-        if self.connectionMode != .queue {
-            // Don't log start for other since it might be (probably is) the logger starting! While this works on simulator it crashes devices
-            self.debugMessage("Start Client (\(self.connectionMode) \(self.serviceType))")
-        }
+        var new: Bool = false
         
-        if self.connectionMode != .broadcast {
-            fatalError("start(playerUUID: is only valid for broadcast mode in Multi-peer Connectivity")
+        if client == nil {
+            // New client rather than re-using existing
+            new = true
+            if self.connectionMode != .queue {
+                // Don't log start for other since it might be (probably is) the logger starting! While this works on simulator it crashes devices
+                self.debugMessage("Start Client (\(self.connectionMode) \(self.serviceType))")
+            }
+            
+            if self.connectionMode != .broadcast {
+                fatalError("start(playerUUID: is only valid for broadcast mode in Multi-peer Connectivity")
+            }
+            
+            super.startService(playerUUID: playerUUID, name: name, recoveryMode: recoveryMode)
         }
-        
-        super.startService(playerUUID: playerUUID, name: name, recoveryMode: recoveryMode)
         
         self.matchDeviceName = matchDeviceName
         self.matchGameUUID = matchGameUUID
         
-        self.startBrowsingForPeers()
+        if new {
+            self.startBrowsingForPeers()
+        } else {
+            resumeBrowsing()
+        }
     }
     
     internal func start(queue: String, filterPlayerUUID: String!) {
@@ -662,23 +693,48 @@ class NetworkFrameworkClientService : NetworkFrameworkService, CommsClientServic
     }
     
     internal func stop() {
-        if super.started {
-            self.debugMessage("Stop Client \(self.connectionMode)")
-        }
-        
-        super.stopService()
         
         self.closeConnections()
         self.endConnections()
+        self.suspendBrowsing()
         
-        self.broadcastPeerList = [:]
-        self.endpointList = [:]
-        if self.client != nil {
-            if self.client.browser != nil {
-                self.stopBrowsingForPeers()
-                self.client?.browser = nil
+        if false {
+            // No longer stopping - to allow reuse
+            
+            self.broadcastPeerList = [:]
+            if self.client != nil {
+                if self.client.browser != nil {
+                    self.stopBrowsingForPeers()
+                    self.client?.browser = nil
+                }
+                self.client  = nil
             }
-            self.client  = nil
+            
+            if super.started {
+                self.debugMessage("Stop Client \(self.connectionMode)")
+            }
+            
+            super.stopService()
+        }
+    }
+    
+    private func suspendBrowsing() {
+        self.dormant = true
+        self.broadcastPeerList.forEach { $0.value.dormant = true }
+    }
+    
+    private func resumeBrowsing() {
+        // Replay any stored browser changes and become non-dormant
+        Utility.executeAfter(delay: 2) { [self] in
+            dormant = false
+            if !storedChanges.isEmpty {
+                browserPeersChanged(results: [], changes: storedChanges)
+                storedChanges.removeAll()
+            }
+            // Wake up any peers which are still dormant
+            broadcastPeerList.filter{$0.value.dormant}.forEach { (_, broadcastPeer) in
+                self.browserPeerChanged(change: .added, broadcastPeer: broadcastPeer)
+            }
         }
     }
     
@@ -689,7 +745,7 @@ class NetworkFrameworkClientService : NetworkFrameworkService, CommsClientServic
     /// - additional context
     
     internal func connect(to commsPeer: CommsPeer, playerUUID: String?, playerName: String?, context: [String : String]?, reconnect: Bool = true) -> Bool{
-        if let broadcastPeer = self.broadcastPeerList[commsPeer.deviceName], let endpoint = endpointList[broadcastPeer.nfPeer] {
+        if let broadcastPeer = self.broadcastPeerList[commsPeer.deviceName] {
             self.debugMessage("Connect to ", peerID: broadcastPeer.nfPeer)
             
             // Stop browsing for other peers
@@ -701,14 +757,15 @@ class NetworkFrameworkClientService : NetworkFrameworkService, CommsClientServic
             self.stateDelegate?.stateChange(for: broadcastPeer.commsPeer)
             
             // Start connection
-            let connection = NWConnection(to: endpoint, using: tcpParameters)
-            self.debugMessage("Connection - peer \(broadcastPeer.nfPeer)")
+            let connection = NWConnection(to: broadcastPeer.endpoint!, using: tcpParameters)
+            self.debugMessage("Connection - peer", peerID: broadcastPeer.nfPeer)
             self._connectionRemoteDeviceName = broadcastPeer.deviceName
             self._connectionRemotePlayerUUID = broadcastPeer.playerUUID
             
             connection.stateUpdateHandler = { [self] state in
                 if state == .ready {
                     self.debugMessage("Connection ready - sending connection metadata")
+                    connectionState(connection: connection, peerID: broadcastPeer.nfPeer, didChangeTo: .ready)
                     sendConnectionData(connection: connection, broadcastPeer: broadcastPeer, playerUUID: playerUUID, playerName: playerName)
                     listen(connection: connection, peerID: broadcastPeer.nfPeer)
                     broadcastPeer.state = .connected
@@ -742,20 +799,27 @@ class NetworkFrameworkClientService : NetworkFrameworkService, CommsClientServic
     
     internal override func reset(reason: String? = nil) {
         // Disconnect and then start looking for peers again - should reconnect automatically when find peer
-        self.debugMessage("Restart nearby peer browsing")
+        self.debugMessage("Reset connections")
         self.disconnect(reason: "Reset", reconnect: false)
         self.closeConnections()
+        self.suspendBrowsing()
+        Utility.executeAfter(delay: 2) {
+            self.resumeBrowsing()
+        }
     }
     
     internal override func suspend(reason: String? = nil) {
         // Disconnect and wait to reconnect in resume
         self.debugMessage("Suspend nearby peer browsing")
         self.disconnect(reason: "Reset", reconnect: false)
+        self.closeConnections()
+        self.suspendBrowsing()
     }
     
     internal override func resume(reason: String? = nil) {
         // Resume connecction
         self.debugMessage("Resume nearby peer browsing (no action)")
+        self.resumeBrowsing()
     }
     
     override internal func startBrowsingForPeers() {
@@ -764,6 +828,7 @@ class NetworkFrameworkClientService : NetworkFrameworkService, CommsClientServic
         browser.browseResultsChangedHandler = browserPeersChanged
         self.client = ClientConnection(browser: browser)
         self.client.browser.stateUpdateHandler = { [self] state in
+            // TODO: Do something sensible
             switch state {
                 case .ready:
                 self.debugMessage(("Device network stack is ready. Scanning..."), peerID: myPeerID)
@@ -779,8 +844,6 @@ class NetworkFrameworkClientService : NetworkFrameworkService, CommsClientServic
     }
     
     override internal func stopBrowsingForPeers() {
-        self.client?.browser.cancel()
-        self.client?.browser.browseResultsChangedHandler = nil
     }
     
     func checkOnlineInvites(playerUUID: String, checkExpiry: Bool = true, matchDeviceName: String? = nil) {
@@ -795,108 +858,150 @@ class NetworkFrameworkClientService : NetworkFrameworkService, CommsClientServic
     }
     
     internal func browserPeersChanged(results: Set<NWBrowser.Result>, changes: Set< NWBrowser.Result.Change>) {
-        var peerID: NFPeerID?
-        var playerUUID: String?
-        var gameUUID: String?
-        var invite: [String]?
-        var purpose: CommsPurpose?
-        var playerName: String?
-        
         Utility.mainThread { [self] in
-            for change in changes {
-                switch change {
-                case .added(let result):
-                    if case let .service(name, _, _, _) = result.endpoint {
-                        if name != serviceName {
-                            // Only consider services we're interested in
-                            continue
-                        }
+            if dormant {
+                storedChanges.formUnion(changes)
+            } else {
+                for change in changes {
+                    if let broadcastPeer = broadcastPeer(fromChange: change) {
+                        browserPeerChanged(change: PeerChange(from: change), broadcastPeer: broadcastPeer)
                     }
-                    let metadata = result.metadata
-                    if case let .bonjour(info) = metadata {
-                        if let displayName = info["displayName"], let id = info["id"] {
-                            peerID = NFPeerID(displayName: displayName, id: UUID(uuidString: id))
-                        }
-                        playerUUID = info["playerUUID"]
-                        gameUUID = info["gameUUID"]
-                        invite = info["invite"]?.components(separatedBy: ";")
-                        purpose = CommsPurpose(rawValue: info["purpose"] ?? "") ?? CommsPurpose.playing
-                        playerName = info["playerName"]
-                    } else {
-                        
-                    }
-                    if peerID == nil {
-                        continue
-                    }
-                    let deviceName = peerID!.displayName
-                    if deviceName != self.myPeerID.displayName {
-                        
-                        self.debugMessage("Found peer \(peerID!.displayName)", peerID: peerID!)
-                        
-                        // End any pre-existing sessions
-                        self.closeConnections(matchDeviceName: deviceName)
-                        
-                        if playerUUID != Scorecard.activeSettings.thisPlayerUUID {
-                            // Don't show connections to this player
-                            if invite == nil || invite!.isEmpty || invite?.first(where: {$0 == self.connectionPlayerUUID}) != nil {
-                                if self.matchGameUUID == nil || self.matchGameUUID! == gameUUID {
-                                    var broadcastPeer = self.broadcastPeerList[deviceName]
-                                    if broadcastPeer == nil {
-                                        broadcastPeer = NetworkBroadcastPeer(parent: self, nfPeer: peerID!, deviceName: deviceName, purpose: purpose!)
-                                        self.broadcastPeerList[deviceName] = broadcastPeer
-                                    } else {
-                                        broadcastPeer?.nfPeer = peerID!
-                                    }
-                                    endpointList[peerID!] = result.endpoint
-                                    broadcastPeer?.playerName = playerName
-                                    broadcastPeer?.playerUUID = playerUUID
-                                    broadcastPeer?.purpose = purpose!
-                                    
-                                    // Notify delegate
-                                    self.browserDelegate?.peerFound(peer: broadcastPeer!.commsPeer)
-                                    
-                                    if broadcastPeer!.reconnect {
-                                        // Auto-reconnect set - try to connect
-                                        if !self.connect(to: broadcastPeer!.commsPeer, playerUUID: self.connectionPlayerUUID, playerName: self.connectionName, reconnect: true) {
-                                            // Not good - shouldn't happen - try stopping browsing and restarting - will retry when find peer again
-                                            self.debugMessage("Shouldn't happen - connect failed")
-                                            self.stopBrowsingForPeers()
-                                            self.startBrowsingForPeers()
-                                            broadcastPeer!.state = .reconnecting
-                                            self.stateDelegate?.stateChange(for: broadcastPeer!.commsPeer)
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                case .removed(let result):
-                    let endpoint = result.endpoint
-                    if let peerID = endpointList.first(where: { $0.value == endpoint })?.key {
-                        if let broadcastPeer = self.broadcastPeerList[peerID.displayName] {
-                            /* TODO: Remove
-                            if broadcastPeer.reconnect {
-                                if broadcastPeer.state != .reconnecting {
-                                    // Notify delegate since not already aware we are trying to reconnect
-                                    broadcastPeer.state = .reconnecting
-                                    self.stateDelegate?.stateChange(for: broadcastPeer.commsPeer)
-                                }
-                            } else { */
-                            // Notify delegate peer lost
-                            broadcastPeer.state = .notConnected
-                            self.stateDelegate?.stateChange(for: broadcastPeer.commsPeer)
-                            self.browserDelegate?.peerLost(peer: broadcastPeer.commsPeer)
-                            /*} TODO: Remove */
-                        }
-                    }
-                default:
-                    break
                 }
             }
         }
     }
     
-    // MARK: - Session delegate handlers ========================================================== -
+    enum PeerChange {
+        case added
+        case removed
+        case other
+        
+        init(from nwChange: NWBrowser.Result.Change) {
+            switch nwChange {
+            case .added:
+                self = .added
+            case .removed:
+                self = .removed
+            default:
+                self = .other
+            }
+        }
+    }
+    
+    internal func browserPeerChanged(change: PeerChange, broadcastPeer: NetworkBroadcastPeer) {
+        switch change {
+        case .added:
+            // End any pre-existing connections
+            var broadcastPeer = broadcastPeer
+            self.closeConnections(matchDeviceName: broadcastPeer.deviceName)
+            if let existing = broadcastPeerList[broadcastPeer.deviceName] {
+                existing.nfPeer = broadcastPeer.nfPeer
+                existing.playerName = broadcastPeer.playerName
+                existing.playerUUID = broadcastPeer.playerUUID
+                existing.purpose = broadcastPeer.purpose
+                existing.dormant = false
+                broadcastPeer = existing
+            } else {
+                broadcastPeerList[broadcastPeer.deviceName] = broadcastPeer
+            }
+            
+            // Notify delegate
+            self.browserDelegate.peerFound(peer: broadcastPeer.commsPeer)
+            
+            if broadcastPeer.reconnect {
+                // Auto-reconnect set - try to connect
+                if !self.connect(to: broadcastPeer.commsPeer, playerUUID: self.connectionPlayerUUID, playerName: self.connectionName, reconnect: true) {
+                    // Not good - shouldn't happen
+                    self.debugMessage("Shouldn't happen - connect failed")
+                    broadcastPeer.state = .reconnecting
+                    self.stateDelegate?.stateChange(for: broadcastPeer.commsPeer)
+                }
+            }
+        case .removed:
+            if broadcastPeer.reconnect {
+                if broadcastPeer.state != .reconnecting {
+                    // Notify delegate since not already aware we are trying to reconnect
+                    broadcastPeer.state = .reconnecting
+                    self.stateDelegate?.stateChange(for: broadcastPeer.commsPeer)
+                }
+                self.debugMessage("Peer lost - reconnecting")
+            } else {
+                // Notify delegate peer lost
+                broadcastPeer.state = .notConnected
+                self.stateDelegate?.stateChange(for: broadcastPeer.commsPeer)
+                self.browserDelegate?.peerLost(peer: broadcastPeer.commsPeer)
+                self.debugMessage("Peer lost")
+            }
+        default:
+            break
+        }
+    }
+    
+    internal func broadcastPeer(fromChange change: NWBrowser.Result.Change) -> NetworkBroadcastPeer? {
+        var broadcastPeer: NetworkBroadcastPeer? = nil
+        
+        switch change {
+        case .added(let result):
+            var peerID: NFPeerID?
+            var playerUUID: String?
+            var gameUUID: String?
+            var invite: [String]?
+            var purpose: CommsPurpose?
+            var playerName: String?
+            
+            if case let .service(name, _, _, _) = result.endpoint, name == serviceName {
+                // Only consider services we're interested in
+                let metadata = result.metadata
+                if case let .bonjour(info) = metadata {
+                    if let displayName = info["displayName"], let id = info["id"] {
+                        peerID = NFPeerID(displayName: displayName, id: UUID(uuidString: id))
+                    }
+                    playerUUID = info["playerUUID"]
+                    gameUUID = info["gameUUID"]
+                    invite = info["invite"]?.components(separatedBy: ";")
+                    purpose = CommsPurpose(rawValue: info["purpose"] ?? "") ?? CommsPurpose.playing
+                    playerName = info["playerName"]
+                }
+                if peerID != nil {
+                    let deviceName = peerID!.displayName
+                    if deviceName != self.myPeerID.displayName {
+                        // Don't show any advertisers from this device
+                        if playerUUID != Scorecard.activeSettings.thisPlayerUUID {
+                            // Don't show connections to this player
+                            if invite == nil || invite!.isEmpty || invite?.first(where: {$0 == self.connectionPlayerUUID}) != nil {
+                                // Ignore if inviting specific players that don't include this player
+                                if self.matchGameUUID == nil || self.matchGameUUID! == gameUUID {
+                                    // Ignore if inviting to a particular match which isn't this match
+                                    broadcastPeer = NetworkBroadcastPeer(parent: self, nfPeer: peerID!, deviceName: deviceName, playerUUID: playerUUID, playerName: playerName, purpose: purpose!, endpoint: result.endpoint)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        case .removed(let result):
+            let endpoint = result.endpoint
+            if let broadcastPeer = broadcastPeerList.first(where: {$1.endpoint == endpoint})?.value {
+                if broadcastPeer.reconnect {
+                    if broadcastPeer.state != .reconnecting {
+                        // Notify delegate since not already aware we are trying to reconnect
+                        broadcastPeer.state = .reconnecting
+                        self.stateDelegate?.stateChange(for: broadcastPeer.commsPeer)
+                    }
+                } else {
+                    // Notify delegate peer lost
+                    broadcastPeer.state = .notConnected
+                    self.stateDelegate?.stateChange(for: broadcastPeer.commsPeer)
+                    self.browserDelegate?.peerLost(peer: broadcastPeer.commsPeer)
+                }
+            }
+        default:
+            break
+        }
+        return broadcastPeer
+    }
+    
+    // MARK: - Connection handlers ========================================================== -
 
     override internal func connectionState(connection: NWConnection, peerID: NFPeerID, didChangeTo nwState: NWConnection.State) {
         let state = commsConnectionState(nwState)
@@ -961,22 +1066,26 @@ public class NetworkBroadcastPeer {
     public var state: CommsConnectionState
     public var purpose: CommsPurpose
     public var reason: String?
-    public var reconnect: Bool = false
-    public var shouldReconnect: Bool = false
+    // TODO: Remove didSet
+    public var reconnect: Bool = false { didSet { Utility.debugMessage("networkFramework", "reconnect changed from \(oldValue) to \(reconnect) on \(deviceName)") }}
+    public var shouldReconnect: Bool = false { didSet { Utility.debugMessage("networkFramework", "shouldReconnect changed from \(oldValue) to \(shouldReconnect) on \(deviceName)") }}
     private var parent: NetworkFrameworkService
+    public var endpoint: NWEndpoint?
+    public var dormant: Bool = false
     public var deviceName: String {
         get {
             return nfPeer.displayName
         }
     }
     
-    init(parent: NetworkFrameworkService, nfPeer: NFPeerID, deviceName: String, playerUUID: String? = "", playerName: String? = "", purpose: CommsPurpose) {
+    init(parent: NetworkFrameworkService, nfPeer: NFPeerID, deviceName: String, playerUUID: String? = "", playerName: String? = "", purpose: CommsPurpose, endpoint: NWEndpoint? = nil) {
         self.parent = parent
         self.nfPeer = nfPeer
         self.playerUUID = playerUUID
         self.playerName = playerName
         self.state = .notConnected
         self.purpose = purpose
+        self.endpoint = endpoint
     }
     
     public var commsPeer: CommsPeer {

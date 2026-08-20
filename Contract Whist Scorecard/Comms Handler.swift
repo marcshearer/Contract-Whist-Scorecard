@@ -354,7 +354,7 @@ public class CommsHandler {
             if useMCNearby || serviceID == MultipeerLoggerConfig.logService {
                 return MultipeerClientService(mode: mode, serviceID: serviceID, deviceName: deviceName)
             } else {
-                return NetworkFrameworkClientService(mode: mode, serviceID: serviceID, deviceName: deviceName)
+                return NetworkFrameworkClientServiceFactory.create(mode: mode, serviceID: serviceID!, deviceName: deviceName)
             }
         } else if proximity == .online && (mode == .invite || mode == .queue) {
             // Online invite or online queue = RabbitMQ connectivity

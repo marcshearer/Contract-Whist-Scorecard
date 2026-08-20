@@ -464,7 +464,12 @@ class Scorecard {
     
     public static var deviceName: String {
         get {
-            let result = UIDevice.current.identifierForVendor?.uuidString ?? "Unknown"
+            var result: String
+            if Utility.isDevelopment {
+                result = UIDevice.current.name
+            } else {
+                result = UIDevice.current.identifierForVendor?.uuidString ?? "Unknown"
+            }
             return result
         }
     }

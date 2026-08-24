@@ -29,10 +29,10 @@ class LoopbackService: NSObject, CommsServiceDelegate, CommsHostServiceDelegate,
     
     // Delegates
     public weak var browserDelegate: CommsBrowserDelegate!
-    public weak var stateDelegate: CommsStateDelegate!
-    public weak var dataDelegate: CommsDataDelegate!
+    public weak var stateDelegate: CommsStateDelegate?
+    public weak var dataDelegate: CommsDataDelegate?
     public weak var connectionDelegate: CommsConnectionDelegate!
-    public weak var broadcastDelegate: CommsBroadcastDelegate!
+    public weak var broadcastDelegate: CommsBroadcastDelegate?
     public weak var handlerStateDelegate: CommsServiceStateDelegate!
     public weak var loopbackServiceDelegate: LoopbackServiceDelegate!
     
@@ -84,6 +84,9 @@ class LoopbackService: NSObject, CommsServiceDelegate, CommsHostServiceDelegate,
 
     func resume(reason: String?) {
         // Not implemented
+    }
+    
+    internal func clearReconnect(commsPeer: CommsPeer) {
     }
 
     public func connect(to commsPeer: CommsPeer, playerUUID: String?, playerName: String?, context: [String : String]? = nil, reconnect: Bool) -> Bool {

@@ -179,9 +179,9 @@ public protocol CommsServiceDelegate : AnyObject {
     var connectionPlayerUUID: String? { get }
     var connectionRemoteDeviceName: String? { get }
     var connectionRemotePlayerUUID: String? { get }
-    var stateDelegate: CommsStateDelegate! { get set }
-    var dataDelegate: CommsDataDelegate! { get set }
-    var broadcastDelegate: CommsBroadcastDelegate! { get set}
+    var stateDelegate: CommsStateDelegate? { get set }
+    var dataDelegate: CommsDataDelegate? { get set }
+    var broadcastDelegate: CommsBroadcastDelegate? { get set}
 
     func send(_ descriptor: String, _ dictionary: Dictionary<String, Any?>!, to commsPeer: CommsPeer?, matchPlayerUUID: String?)
 
@@ -230,6 +230,9 @@ extension CommsServiceDelegate {
     
     func resume() {
         resume(reason: nil)
+    }
+    
+    internal func clearReconnect(commsPeer: CommsPeer) {
     }
     
     func debugMessage(_ message: String) {
@@ -288,7 +291,7 @@ extension CommsHostServiceDelegate {
 
 public protocol CommsClientServiceDelegate : CommsServiceDelegate {
     
-    var browserDelegate: CommsBrowserDelegate! { get set }
+    var browserDelegate: CommsBrowserDelegate? { get set }
     
     init(mode: CommsConnectionMode, serviceID: String?, deviceName: String)
     
@@ -296,7 +299,7 @@ public protocol CommsClientServiceDelegate : CommsServiceDelegate {
     
     func start(queue: String, filterPlayerUUID: String!)
     
-    func stop()
+    func stop(suspendOnly: Bool)
     
     func connect(to commsPeer: CommsPeer, playerUUID: String?, playerName: String?, context: [String : String]?, reconnect: Bool) -> Bool
     
@@ -327,6 +330,10 @@ extension CommsClientServiceDelegate {
     
     func start(playerUUID: String!, recoveryMode: Bool, matchDeviceName: String!) {
         start(playerUUID: playerUUID, name: nil, recoveryMode: recoveryMode, matchDeviceName: matchDeviceName, matchGameUUID: nil)
+    }
+    
+    func stop() {
+        stop(suspendOnly: false) // Note if change this to true need to check that connection closed down when terminate from host
     }
     
     func connect(to commsPeer: CommsPeer, playerUUID: String?, playerName: String?, reconnect: Bool) -> Bool {

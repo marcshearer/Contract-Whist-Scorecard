@@ -54,9 +54,9 @@ class RabbitMQService: NSObject, CommsServiceDelegate, CommsDataDelegate, CommsS
     }
 
     // Delegates
-    public weak var stateDelegate: CommsStateDelegate!
-    public weak var dataDelegate: CommsDataDelegate!
-    public weak var broadcastDelegate: CommsBroadcastDelegate! {
+    public weak var stateDelegate: CommsStateDelegate?
+    public weak var dataDelegate: CommsDataDelegate?
+    public weak var broadcastDelegate: CommsBroadcastDelegate? {
         didSet {
             self.queue?.messageDelegate = broadcastDelegate
         }
@@ -430,7 +430,7 @@ class RabbitMQClientService : RabbitMQService, CommsClientServiceDelegate, Comms
     private var onlineInviteObserver: NSObjectProtocol?
     
     // Delegates
-    public weak var browserDelegate: CommsBrowserDelegate!
+    public weak var browserDelegate: CommsBrowserDelegate?
 
     required init(mode: CommsConnectionMode, serviceID: String?, deviceName: String) {
         super.init(mode: mode, type: .client, serviceID: serviceID, deviceName: deviceName)
@@ -462,7 +462,9 @@ class RabbitMQClientService : RabbitMQService, CommsClientServiceDelegate, Comms
     }
 
     
-    internal func stop() {
+    internal func stop(suspendOnly: Bool) {
+        // suspendOnly not supported in RabbitMQ
+        
         // Disconnecting queues will disconnect all peers
         self.debugMessage("Stop Client \(self.connectionMode)")
         

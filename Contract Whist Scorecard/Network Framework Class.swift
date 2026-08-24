@@ -96,9 +96,9 @@ class NetworkFrameworkService: NSObject, CommsServiceDelegate {
     }
 
     // Delegates
-    public weak var stateDelegate: CommsStateDelegate!
-    public weak var dataDelegate: CommsDataDelegate!
-    public weak var broadcastDelegate: CommsBroadcastDelegate!
+    public weak var stateDelegate: CommsStateDelegate?
+    public weak var dataDelegate: CommsDataDelegate?
+    public weak var broadcastDelegate: CommsBroadcastDelegate?
 
     // Other state variables
     internal var serviceID: String
@@ -331,7 +331,8 @@ class NetworkFrameworkService: NSObject, CommsServiceDelegate {
                             self.closeConnections(matchDeviceName: deviceName)
                             broadcastPeer.state = .notConnected
                             if reason != "Reset" && reason.left(7) != "Suspend" {
-                                broadcastPeer.reconnect = false
+                                // Intentional disconnect
+                                self.clearReconnect(commsPeer: broadcastPeer.commsPeer)
                             }
                             if self.stateDelegate != nil {
                                 self.stateDelegate?.stateChange(for: broadcastPeer.commsPeer, reason: reason)
@@ -350,6 +351,10 @@ class NetworkFrameworkService: NSObject, CommsServiceDelegate {
                 Utility.debugMessage("networkFramework", "Ignoring message for \(deviceName)")
             }
         }
+    }
+    
+    internal func clearReconnect(commsPeer: CommsPeer) {
+        // Overridden in client
     }
     
     // MARK: - Utility Methods ========================================================================= -
@@ -506,7 +511,7 @@ class NetworkFrameworkServerService : NetworkFrameworkService, CommsHostServiceD
             self.closeConnections()
             
             // Stop service
-            super.stopService()
+            self.stopService()
             
             self.broadcastPeerList = [:]
             if self.server != nil {
@@ -635,6 +640,9 @@ class NetworkFrameworkClientServiceFactory {
         return result
     }
     
+    public static func remove(client: NetworkFrameworkClientService) {
+        existingClients.removeAll(where: {$0 === client})
+    }
 }
 
 class NetworkFrameworkClientService : NetworkFrameworkService, CommsClientServiceDelegate {
@@ -652,7 +660,7 @@ class NetworkFrameworkClientService : NetworkFrameworkService, CommsClientServic
     private var storedChanges: Set<NWBrowser.Result.Change> = []
     
     // Delegates
-    public weak var browserDelegate: CommsBrowserDelegate!
+    public weak var browserDelegate: CommsBrowserDelegate?
     
     required init(mode: CommsConnectionMode, serviceID: String?, deviceName: String) {
         super.init(mode: mode, type: .client, serviceID: serviceID, deviceName: deviceName)
@@ -672,7 +680,7 @@ class NetworkFrameworkClientService : NetworkFrameworkService, CommsClientServic
             }
             
             if self.connectionMode != .broadcast {
-                fatalError("start(playerUUID: is only valid for broadcast mode in Multi-peer Connectivity")
+                fatalError("start(playerUUID: is only valid for broadcast mode in Nearby Connectivity")
             }
             
             super.startService(playerUUID: playerUUID, name: name, recoveryMode: recoveryMode)
@@ -692,15 +700,16 @@ class NetworkFrameworkClientService : NetworkFrameworkService, CommsClientServic
         fatalError("start(queue: is not valid in Multi-peer Connectivity")
     }
     
-    internal func stop() {
+    internal func stop(suspendOnly: Bool) {
         
         self.closeConnections()
         self.endConnections()
-        self.suspendBrowsing()
         
-        if false {
-            // No longer stopping - to allow reuse
+        if suspendOnly {
+            self.suspendBrowsing()
             
+        } else {
+            self.debugMessage("Stop Client (\(self.connectionMode) \(self.serviceType))")
             self.broadcastPeerList = [:]
             if self.client != nil {
                 if self.client.browser != nil {
@@ -714,11 +723,13 @@ class NetworkFrameworkClientService : NetworkFrameworkService, CommsClientServic
                 self.debugMessage("Stop Client \(self.connectionMode)")
             }
             
+            NetworkFrameworkClientServiceFactory.remove(client: self)
             super.stopService()
         }
     }
     
     private func suspendBrowsing() {
+        self.debugMessage("Suspend Client \(self.connectionMode)")
         self.dormant = true
         self.broadcastPeerList.forEach { $0.value.dormant = true }
     }
@@ -726,6 +737,7 @@ class NetworkFrameworkClientService : NetworkFrameworkService, CommsClientServic
     private func resumeBrowsing() {
         // Replay any stored browser changes and become non-dormant
         Utility.executeAfter(delay: 2) { [self] in
+            self.debugMessage("Resume Client \(self.connectionMode)")
             dormant = false
             if !storedChanges.isEmpty {
                 browserPeersChanged(results: [], changes: storedChanges)
@@ -735,6 +747,16 @@ class NetworkFrameworkClientService : NetworkFrameworkService, CommsClientServic
             broadcastPeerList.filter{$0.value.dormant}.forEach { (_, broadcastPeer) in
                 self.browserPeerChanged(change: .added, broadcastPeer: broadcastPeer)
             }
+        }
+    }
+    
+    override internal func clearReconnect(commsPeer: CommsPeer) {
+        matchDeviceName = nil
+        matchGameUUID = nil
+        invite = nil
+        if let broadcastPeer = self.broadcastPeerList[commsPeer.deviceName] {
+            broadcastPeer.shouldReconnect = false
+            broadcastPeer.reconnect = false
         }
     }
     
@@ -889,6 +911,7 @@ class NetworkFrameworkClientService : NetworkFrameworkService, CommsClientServic
     }
     
     internal func browserPeerChanged(change: PeerChange, broadcastPeer: NetworkBroadcastPeer) {
+        self.debugMessage("Browser peer changed: \(change)")
         switch change {
         case .added:
             // End any pre-existing connections
@@ -906,7 +929,7 @@ class NetworkFrameworkClientService : NetworkFrameworkService, CommsClientServic
             }
             
             // Notify delegate
-            self.browserDelegate.peerFound(peer: broadcastPeer.commsPeer)
+            self.browserDelegate?.peerFound(peer: broadcastPeer.commsPeer, reconnect: broadcastPeer.reconnect)
             
             if broadcastPeer.reconnect {
                 // Auto-reconnect set - try to connect

@@ -543,6 +543,9 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
                         if !Scorecard.game.gameComplete() {
                             // Don't exit if just finished a game
                             self.present(nextView: .exit, willDismiss: true)
+                        } else {
+                            // Added for network framework - might cause problems with others (esp RabbitMQ)
+                            self.clientService?.clearReconnect(commsPeer: peer)
                         }
                     }
                     

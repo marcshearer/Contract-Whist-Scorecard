@@ -50,9 +50,9 @@ class MultipeerService: NSObject, CommsServiceDelegate, MCSessionDelegate {
     }
 
     // Delegates
-    public weak var stateDelegate: CommsStateDelegate!
-    public weak var dataDelegate: CommsDataDelegate!
-    public weak var broadcastDelegate: CommsBroadcastDelegate!
+    public weak var stateDelegate: CommsStateDelegate?
+    public weak var dataDelegate: CommsDataDelegate?
+    public weak var broadcastDelegate: CommsBroadcastDelegate?
 
     // Other state variables
     internal var serviceID: String
@@ -450,6 +450,9 @@ class MultipeerServerService : MultipeerService, CommsHostServiceDelegate, MCNea
         }
     }
     
+    internal func clearReconnect(commsPeer: CommsPeer) {
+    }
+    
     // MARK: - Comms Handler State handler =================================================================== -
 
     internal func changeState(to state: CommsServiceState) {
@@ -527,7 +530,7 @@ class MultipeerClientService : MultipeerService, CommsClientServiceDelegate, MCN
     private var onlineInviteObserver: NSObjectProtocol?
     
     // Delegates
-    public weak var browserDelegate: CommsBrowserDelegate!
+    public weak var browserDelegate: CommsBrowserDelegate?
     
     required init(mode: CommsConnectionMode, serviceID: String?, deviceName: String) {
         super.init(mode: mode, type: .client, serviceID: serviceID, deviceName: deviceName)
@@ -560,7 +563,9 @@ class MultipeerClientService : MultipeerService, CommsClientServiceDelegate, MCN
         fatalError("start(queue: is not valid in Multi-peer Connectivity")
     }
     
-    internal func stop() {
+    internal func stop(suspendOnly: Bool) {
+        // suspendOnly not supported in Multipeer
+        
         if super.started {
             self.debugMessage("Stop Client \(self.connectionMode)")
         }

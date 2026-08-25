@@ -10,6 +10,8 @@ Feature branches are used for development
     Master is merged to the release branch which is used to send system to TestFlight
     Any major changes should create new test & release branches leaving 7.0 secure
 
+New version 7.1 created from feature/network-framework branch 25/08/2026
+
 List of outstanding things to do
 
 // Tasks carried out during upgrade

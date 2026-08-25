@@ -497,8 +497,8 @@ class NetworkFrameworkServerService : NetworkFrameworkService, CommsHostServiceD
                     self.debugMessage(("Device network stack is open. Scanning..."), peerID: myPeerID)
                 case .waiting(let error):
                     self.debugMessage(("Blocked or waiting on permission payload: \(error)"), peerID: myPeerID)
-                case .failed:
-                    connectionError()
+                case .failed(let error):
+                    self.debugMessage(("Unable to connect: \(error)"), peerID: myPeerID)
                 default:
                     break
                 }
@@ -895,8 +895,8 @@ class NetworkFrameworkClientService : NetworkFrameworkService, CommsClientServic
                 self.debugMessage(("Device network stack is ready. Scanning..."), peerID: myPeerID)
             case .waiting(let error):
                 self.debugMessage(("Blocked or waiting on permission payload: \(error)"), peerID: myPeerID)
-            case .failed:
-                connectionError()
+            case .failed(let error):
+                self.debugMessage(("Failed to connect: \(error)"), peerID: myPeerID)
             default:
                 break
             }

@@ -29,11 +29,15 @@ class Recovery {
     
     init(load: Bool = true) {
         if load {
-            self.recoveryAvailable = UserDefaults.standard.bool(forKey: "recoveryGameInProgress")
-            if self.recoveryAvailable {
-                self.gameUUID = UserDefaults.standard.string(forKey: "recoveryGameUUID") ?? ""
-                self.loadOnlineRecovery()
-            }
+            self.load()
+        }
+    }
+    
+    func load() {
+        self.recoveryAvailable = UserDefaults.standard.bool(forKey: "recoveryGameInProgress")
+        if self.recoveryAvailable {
+            self.gameUUID = UserDefaults.standard.string(forKey: "recoveryGameUUID") ?? ""
+            self.loadOnlineRecovery()
         }
     }
     
@@ -60,9 +64,17 @@ class Recovery {
                     UserDefaults.standard.set(delegate.connectionRemotePlayerUUID, forKey: "recoveryConnectionRemotePlayerUUID")
                 }
             }
+        } else {
+            UserDefaults.standard.set("", forKey: "recoveryGameUUID")
+            UserDefaults.standard.set(nil, forKey: "recoveryConnectionUUID")
+            UserDefaults.standard.set("", forKey: "recoveryConnectionRemoteDevice")
+            UserDefaults.standard.set("", forKey: "recoveryConnectionPlayerUUID")
+            UserDefaults.standard.set("", forKey: "recoveryConnectionRemotePlayerUUID")
         }
         UserDefaults.standard.set(online, forKey: "recoveryOnline")
         UserDefaults.standard.synchronize()
+        // Get in-memor in line with user defaults
+        self.load()
     }
     
     func saveFaceTimeAddress() {

@@ -185,7 +185,7 @@ class NetworkFrameworkService: NSObject, CommsServiceDelegate {
                 if let broadcastPeer = broadcastPeerList[deviceName] {
                     if matchPlayerUUID == nil || (broadcastPeer.playerUUID != nil && broadcastPeer.playerUUID! == matchPlayerUUID) {
                         connection.send(content: encode(descriptor: descriptor, dictionary: dictionary), completion: .contentProcessed({ error in
-                            // TODO: Maybe I should disconnect and reconnect on errors?
+                            // Maybe I should disconnect and reconnect on errors?
                             if let error = error {
                                 self.debugMessage("Send error: \(error)")
                             } else {
@@ -337,7 +337,7 @@ class NetworkFrameworkService: NSObject, CommsServiceDelegate {
                             if self.stateDelegate != nil {
                                 self.stateDelegate?.stateChange(for: broadcastPeer.commsPeer, reason: reason)
                             }
-                            if reason == "Reset" {
+                            if reason == "Reset" || reason.left(7) == "Suspend" {
                                 self.reset()
                             }
                         } else if values is NSNull {
@@ -452,12 +452,28 @@ class NetworkFrameworkServerService : NetworkFrameworkService, CommsHostServiceD
         super.init(mode: mode, type: .server, serviceID: serviceID, deviceName: deviceName)
     }
     
+    // Other variables
+    private var playerUUID: String?
+    private var name: String?
+    private var invite: [String]?
+    private var matchGameUUID: String?
+    
     // MARK: - Comms Handler Server handlers ========================================================================= -
     
     internal func start(playerUUID: String!, queueUUID: String!, name: String!, invite: [String]!, recoveryMode: Bool, matchGameUUID: String!) {
         self.debugMessage("Start Server (\(self.connectionMode) \(self.serviceType))")
         
+        self.playerUUID = playerUUID
+        self.name = name
+        self.invite = invite
+        self.matchGameUUID = matchGameUUID
+        
         super.startService(playerUUID: playerUUID, name: name, recoveryMode: recoveryMode)
+        self.startAdvertising()
+        
+    }
+    
+    internal func startAdvertising() {
         
         var discoveryInfo = NWTXTRecord()
         discoveryInfo["displayName"] = myPeerID.displayName
@@ -476,14 +492,13 @@ class NetworkFrameworkServerService : NetworkFrameworkService, CommsHostServiceD
             
             self.server.advertiser.newConnectionHandler = advertiserDidReceiveInvitation
             self.server.advertiser.stateUpdateHandler = { [self] state in
-                // TODO: Do something sensible
                 switch state {
                     case .ready:
                     self.debugMessage(("Device network stack is open. Scanning..."), peerID: myPeerID)
                 case .waiting(let error):
                     self.debugMessage(("Blocked or waiting on permission payload: \(error)"), peerID: myPeerID)
-                case .failed(let error):
-                    self.debugMessage(("Fatal hardware constraint block: \(error)"), peerID: myPeerID)
+                case .failed:
+                    connectionError()
                 default:
                     break
                 }
@@ -501,28 +516,31 @@ class NetworkFrameworkServerService : NetworkFrameworkService, CommsHostServiceD
             self.debugMessage("Stop Server \(self.connectionMode)")
         }
         
-        // Send disconnects
-        self.disconnect(reason: "Host has stopped", reconnect: false)
+        self.stopAdvertising(reason: "Host has stopped")
         
-        Utility.executeAfter(delay: 0.2) {
-            // Slight pause to let disconnects get through
+        // Stop service
+        self.stopService()
+        
+        self.changeState(to: .notStarted)
+        completion?()
+    }
+    
+    func stopAdvertising(reason: String? = nil) {
+        if self.server != nil {
+            // Send disconnects
+            self.disconnect(reason: reason ?? "Reset", reconnect: false)
             
-            // End connections
-            self.closeConnections()
-            
-            // Stop service
-            self.stopService()
-            
-            self.broadcastPeerList = [:]
-            if self.server != nil {
+            Utility.executeAfter(delay: 0.2) {
+                // Slight pause to let disconnects get through
+                
                 if self.server.advertiser != nil {
+                    self.closeConnections()
                     self.server.advertiser.cancel()
                     self.server.advertiser = nil
+                    self.broadcastPeerList = [:]
                 }
                 self.server = nil
             }
-            self.changeState(to: .notStarted)
-            completion?()
         }
     }
     
@@ -530,19 +548,24 @@ class NetworkFrameworkServerService : NetworkFrameworkService, CommsHostServiceD
         // Just disconnect and wait for client to reconnect
         self.debugMessage("Resetting")
         self.disconnect(reason: reason ?? "Reset", reconnect: true)
+        self.suspend(reason: "Reset")
+        Utility.executeAfter(delay: 2.0) {
+            self.resume(reason: "Reset")
+        }
     }
     
     override internal func suspend(reason: String? = nil) {
         // Just disconnect and wait - will reconnect when resume
         self.debugMessage("Suspending")
         self.disconnect(reason: "Suspended: \(reason ?? "Unknown reason")", reconnect: true)
+        self.stopAdvertising()
     }
     
     override internal func resume(reason: String? = nil) {
         // Resuming after supspension
         self.debugMessage("Resuming")
         Utility.executeAfter(delay: 1.0) {
-            self.server.advertiser.start(queue: .main)
+            self.startAdvertising()
         }
     }
     
@@ -728,24 +751,41 @@ class NetworkFrameworkClientService : NetworkFrameworkService, CommsClientServic
         }
     }
     
+    enum SuspendBrowsingMode {
+        case becomeDormant
+        case stopBrowsing
+    }
+    
+    var suspendBrowsingMode = SuspendBrowsingMode.stopBrowsing
+    
     private func suspendBrowsing() {
-        self.debugMessage("Suspend Client \(self.connectionMode)")
-        self.dormant = true
-        self.broadcastPeerList.forEach { $0.value.dormant = true }
+        switch suspendBrowsingMode {
+        case .becomeDormant:
+            self.debugMessage("Suspend Client \(self.connectionMode)")
+            self.dormant = true
+            self.broadcastPeerList.forEach { $0.value.dormant = true }
+        case .stopBrowsing:
+            self.stopBrowsingForPeers()
+        }
     }
     
     private func resumeBrowsing() {
-        // Replay any stored browser changes and become non-dormant
         Utility.executeAfter(delay: 2) { [self] in
-            self.debugMessage("Resume Client \(self.connectionMode)")
-            dormant = false
-            if !storedChanges.isEmpty {
-                browserPeersChanged(results: [], changes: storedChanges)
-                storedChanges.removeAll()
-            }
-            // Wake up any peers which are still dormant
-            broadcastPeerList.filter{$0.value.dormant}.forEach { (_, broadcastPeer) in
-                self.browserPeerChanged(change: .added, broadcastPeer: broadcastPeer)
+            switch suspendBrowsingMode {
+            case .becomeDormant:
+                // Replay any stored browser changes and become non-dormant
+                self.debugMessage("Resume Client \(self.connectionMode)")
+                dormant = false
+                if !storedChanges.isEmpty {
+                    browserPeersChanged(results: [], changes: storedChanges)
+                    storedChanges.removeAll()
+                }
+                // Wake up any peers which are still dormant
+                broadcastPeerList.filter{$0.value.dormant}.forEach { (_, broadcastPeer) in
+                    self.browserPeerChanged(change: .added, broadcastPeer: broadcastPeer)
+                }
+            case .stopBrowsing:
+                self.startBrowsingForPeers()
             }
         }
     }
@@ -850,14 +890,13 @@ class NetworkFrameworkClientService : NetworkFrameworkService, CommsClientServic
         browser.browseResultsChangedHandler = browserPeersChanged
         self.client = ClientConnection(browser: browser)
         self.client.browser.stateUpdateHandler = { [self] state in
-            // TODO: Do something sensible
             switch state {
                 case .ready:
                 self.debugMessage(("Device network stack is ready. Scanning..."), peerID: myPeerID)
             case .waiting(let error):
                 self.debugMessage(("Blocked or waiting on permission payload: \(error)"), peerID: myPeerID)
-            case .failed(let error):
-                self.debugMessage(("Fatal hardware constraint block: \(error)"), peerID: myPeerID)
+            case .failed:
+                connectionError()
             default:
                 break
             }
@@ -866,6 +905,8 @@ class NetworkFrameworkClientService : NetworkFrameworkService, CommsClientServic
     }
     
     override internal func stopBrowsingForPeers() {
+        self.client?.browser?.cancel()
+        self.client = nil
     }
     
     func checkOnlineInvites(playerUUID: String, checkExpiry: Bool = true, matchDeviceName: String? = nil) {
@@ -930,6 +971,12 @@ class NetworkFrameworkClientService : NetworkFrameworkService, CommsClientServic
             
             // Notify delegate
             self.browserDelegate?.peerFound(peer: broadcastPeer.commsPeer, reconnect: broadcastPeer.reconnect)
+            
+            if Scorecard.recovery.recoveryAvailable && Scorecard.recovery.connectionRemoteDeviceName == broadcastPeer.deviceName {
+                // If this is a peer we think we are connected to in recovery - reconnect
+                broadcastPeer.reconnect = true
+                broadcastPeer.shouldReconnect = true
+            }
             
             if broadcastPeer.reconnect {
                 // Auto-reconnect set - try to connect
@@ -1089,9 +1136,8 @@ public class NetworkBroadcastPeer {
     public var state: CommsConnectionState
     public var purpose: CommsPurpose
     public var reason: String?
-    // TODO: Remove didSet
-    public var reconnect: Bool = false { didSet { Utility.debugMessage("networkFramework", "reconnect changed from \(oldValue) to \(reconnect) on \(deviceName)") }}
-    public var shouldReconnect: Bool = false { didSet { Utility.debugMessage("networkFramework", "shouldReconnect changed from \(oldValue) to \(shouldReconnect) on \(deviceName)") }}
+    public var reconnect: Bool = false // { didSet { Utility.debugMessage("networkFramework", "reconnect changed from \(oldValue) to \(reconnect) on \(deviceName)") }}
+    public var shouldReconnect: Bool = false // { didSet { Utility.debugMessage("networkFramework", "shouldReconnect changed from \(oldValue) to \(shouldReconnect) on \(deviceName)") }}
     private var parent: NetworkFrameworkService
     public var endpoint: NWEndpoint?
     public var dormant: Bool = false

@@ -116,7 +116,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
         Utility.debugMessage("appDelegate", "didbecomeActive")
-        Scorecard.shared.commsDelegate?.resume(reason: "willResignActive")
+        Scorecard.shared.commsDelegate?.resume(reason: "didBecomeActive")
     }
 
     func applicationWillTerminate(_ application: UIApplication) {

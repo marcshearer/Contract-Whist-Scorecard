@@ -665,11 +665,13 @@ class Game {
     */
     public func setGameInProgress(_ gameInProgress: Bool, suppressWatch: Bool = false, save: Bool = true) {
         Scorecard.game?.inProgress = gameInProgress
-        if save && (!Scorecard.recovery.recoveryAvailable || gameInProgress == true) {
+        if save && (!Scorecard.recovery.recoveryAvailable || gameInProgress) {
             Scorecard.recovery.saveGameInProgress()
             if !suppressWatch || gameInProgress {
                 Scorecard.shared.watchManager.updateScores()
             }
+        } else if (save && !gameInProgress) {
+            Scorecard.recovery.saveGameInProgress()
         }
     }
     

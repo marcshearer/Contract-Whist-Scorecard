@@ -25,9 +25,11 @@ public class ThumbnailView: UIView {
     @IBOutlet private var imageConstraintsArray: [NSLayoutConstraint]!
     @IBOutlet private var initialsConstraintsArray: [NSLayoutConstraint]!
     
-    private var haloConstraints = WeakArray<NSLayoutConstraint>()
-    private var imageConstraints = WeakArray<NSLayoutConstraint>()
-    private var initialsConstraints = WeakArray<NSLayoutConstraint>()
+    // Stopped using these as halos didn't work any more
+    // Might result in some views not being released
+    // private var haloConstraints = WeakArray<NSLayoutConstraint>()
+    // private var imageConstraints = WeakArray<NSLayoutConstraint>()
+    // private var initialsConstraints = WeakArray<NSLayoutConstraint>()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -47,9 +49,9 @@ public class ThumbnailView: UIView {
     
     public override func awakeFromNib() {
         super.awakeFromNib()
-        haloConstraints.replace(&haloConstraintsArray)
-        imageConstraints.replace(&imageConstraintsArray)
-        initialsConstraints.replace(&initialsConstraintsArray)
+        //haloConstraints.replace(&haloConstraintsArray)
+        //imageConstraints.replace(&imageConstraintsArray)
+        //initialsConstraints.replace(&initialsConstraintsArray)
     }
     
     public override func layoutSubviews() {
@@ -187,9 +189,10 @@ public class ThumbnailView: UIView {
     public func set(haloWidth: CGFloat, allowHaloWidth: CGFloat = 0.0) {
         self.haloWidth = haloWidth
         self.allowHaloWidth = allowHaloWidth
-        self.haloConstraints.forEach{(constraint) in constraint.constant = max(0,allowHaloWidth - haloWidth)}
-        self.imageConstraints.forEach{(constraint) in constraint.constant = haloWidth}
-        self.initialsConstraints.forEach{(constraint) in constraint.constant = haloWidth}
+        // Below were ...Constraints... rather than ...ConstraintsArray... before (see declarations)
+        self.haloConstraintsArray.forEach{(constraint) in constraint.constant = max(0,allowHaloWidth - haloWidth)}
+        self.imageConstraintsArray.forEach{(constraint) in constraint.constant = haloWidth}
+        self.initialsConstraintsArray.forEach{(constraint) in constraint.constant = haloWidth}
     }
     
     public func set(haloColor: UIColor) {

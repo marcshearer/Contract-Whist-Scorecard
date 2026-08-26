@@ -49,7 +49,7 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
     private let labelHeight: CGFloat = 30.0
     private var cutCardWidth: CGFloat!
     private var cutCardHeight: CGFloat!
-    private var haloWidth: CGFloat = 3.0
+    private var haloWidth: CGFloat = 5.0
     private var dealerHaloWidth: CGFloat = 5.0
     private weak var observer: NSObjectProtocol?
     private var initialising = true
@@ -521,7 +521,7 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
         
         if self.selectedPlayersView != nil {
             if forceHide {
-                self.selectedPlayersView.setHaloColor(slot: playerNumber - 1, color: Palette.halo.background)
+                self.selectedPlayersView.setHaloColor(slot: playerNumber - 1, color: .clear) // Palette.halo.background)
                 self.selectedPlayersView.setHaloWidth(slot: playerNumber - 1, haloWidth: haloWidth, allowHaloWidth: dealerHaloWidth)
             } else {
                 self.selectedPlayersView.setHaloColor(slot: playerNumber - 1, color: Palette.haloDealer.background)

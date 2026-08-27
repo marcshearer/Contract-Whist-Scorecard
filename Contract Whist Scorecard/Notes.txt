@@ -30,7 +30,6 @@ Bugs fix now
 ------------
 
 iPad shows last game rather than current game summary when Viewing scores
-Should reject same player connecting to game twice
 
 Short-term
 ----------
@@ -40,13 +39,11 @@ Auto-sync when download players in Get Started?
 
 TODO
 ----
-Need to get a halo around the dealer in game preview. Otherwise next dealer is useless
 Get rid of warnings in console
 Jumps to scorepad coming from hand for the second time. Probably due to the resizing problem (where we now do nothing till width is right in viewDidLayoutSubviews) - Made this not reuse scorepad to solve
     but could cause memory problems
 Avoid repeated failure in recovery - save counter and after 3 failed recoveries give override
 Avoid HandViewController having cells defined in storyboard for each suit (to avoid unfortunate reuse on phones). Better to make this cell a xib file
-When close (Network Framework) services intentionally, clear recovery information?
 Tidy up score mode with a device monitoring the score - E.g. when score closes, onlookers don't
 
 Jack

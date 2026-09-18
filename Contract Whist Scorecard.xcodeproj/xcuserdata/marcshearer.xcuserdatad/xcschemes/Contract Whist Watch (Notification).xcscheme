@@ -70,7 +70,6 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B214FB871FCADC7B00F4F39B"
             BuildableName = "Contract Whist Watch.app"
-            BlueprintName = "Contract Whist Watch"
             ReferencedContainer = "container:Contract Whist Scorecard.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -88,7 +87,6 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B214FB871FCADC7B00F4F39B"
             BuildableName = "Contract Whist Watch.app"
-            BlueprintName = "Contract Whist Watch"
             ReferencedContainer = "container:Contract Whist Scorecard.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

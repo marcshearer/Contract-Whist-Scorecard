@@ -17,10 +17,6 @@
 		B2021D80247FFE2000A82EBB /* Themes.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2021D7F247FFE2000A82EBB /* Themes.swift */; };
 		B202551F22B13A560074310A /* Constraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = B202551E22B13A560074310A /* Constraint.swift */; };
 		B202552122BCCE220074310A /* ScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B202552022BCCE220074310A /* ScrollView.swift */; };
-		B202A0061FCC7F8F0070D5DC /* WatchRoundInterfaceController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B202A0051FCC7F8F0070D5DC /* WatchRoundInterfaceController.storyboard */; };
-		B202A0081FCC814B0070D5DC /* WatchGameInterfaceController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B202A0071FCC814B0070D5DC /* WatchGameInterfaceController.storyboard */; };
-		B202A00A1FCC87540070D5DC /* WatchGameInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B202A0091FCC87540070D5DC /* WatchGameInterfaceController.swift */; };
-		B202A00D1FCC90E40070D5DC /* Watch State Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B202A00C1FCC90E40070D5DC /* Watch State Class.swift */; };
 		B202A06B1FD122F30070D5DC /* OverrideViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B202A0671FD118940070D5DC /* OverrideViewController.swift */; };
 		B203ECCB24F8EBE6001E2CED /* Banner.xib in Resources */ = {isa = PBXBuildFile; fileRef = B203ECCA24F8EBE6001E2CED /* Banner.xib */; };
 		B203ECCE24F8EC8B001E2CED /* Banner.swift in Sources */ = {isa = PBXBuildFile; fileRef = B203ECCD24F8EC8B001E2CED /* Banner.swift */; };
@@ -42,13 +38,6 @@
 		B211E137224164FB00B48D64 /* SelectPlayersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211E136224164FB00B48D64 /* SelectPlayersViewController.swift */; };
 		B2144C4F2465334200CF56B7 /* Version.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2144C4E2465334200CF56B7 /* Version.swift */; };
 		B2144C5124653BF900CF56B7 /* Game Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2144C5024653BF900CF56B7 /* Game Location.swift */; };
-		B214FB8C1FCADC7B00F4F39B /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B214FB8A1FCADC7B00F4F39B /* Interface.storyboard */; };
-		B214FB8E1FCADC7B00F4F39B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B214FB8D1FCADC7B00F4F39B /* Assets.xcassets */; };
-		B214FB951FCADC7B00F4F39B /* Contract Whist Watch Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = B214FB941FCADC7B00F4F39B /* Contract Whist Watch Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		B214FB9C1FCADC7B00F4F39B /* ExtensionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B214FB9B1FCADC7B00F4F39B /* ExtensionDelegate.swift */; };
-		B214FBA01FCADC7B00F4F39B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B214FB9F1FCADC7B00F4F39B /* Assets.xcassets */; };
-		B214FBA51FCADC7B00F4F39B /* Contract Whist Watch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = B214FB881FCADC7B00F4F39B /* Contract Whist Watch.app */; };
-		B214FBAF1FCB711B00F4F39B /* WatchRoundInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B214FBAE1FCB711B00F4F39B /* WatchRoundInterfaceController.swift */; };
 		B214FBB11FCB71EB00F4F39B /* Watch Manager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B214FBB01FCB71EB00F4F39B /* Watch Manager.swift */; };
 		B216268C251B892200BDEE70 /* AwardsDashboardContainerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2162689251B892200BDEE70 /* AwardsDashboardContainerView.xib */; };
 		B216268D251B892200BDEE70 /* PersonalDashboardContainerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B216268A251B892200BDEE70 /* PersonalDashboardContainerView.xib */; };
@@ -204,6 +193,8 @@
 		B2C051041EDF194C009DE37F /* Multipeer Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C051031EDF194C009DE37F /* Multipeer Class.swift */; };
 		B2C054781FB8B55700846F6E /* ConfirmCountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C054771FB8B55700846F6E /* ConfirmCountViewController.swift */; };
 		B2C0966B24616E4900C19447 /* Player Managed Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C0966A24616E4900C19447 /* Player Managed Object.swift */; };
+		B2C16BD03063C86500F640E8 /* BunnySwift Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C16BCF3063C85A00F640E8 /* BunnySwift Class.swift */; };
+		B2C16BD23063C91400F640E8 /* BunnySwift in Frameworks */ = {isa = PBXBuildFile; productRef = B2C16BD13063C91400F640E8 /* BunnySwift */; };
 		B2C19E932370541E009485E0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B2C19E922370541E009485E0 /* Assets.xcassets */; };
 		B2C5840E2567BFD6009E0478 /* Custom View Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C5840D2567BFD5009E0478 /* Custom View Animations.swift */; };
 		B2CAAEEB256A6BC900B35F6F /* GameDetailCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2CAAEEA256A6BC900B35F6F /* GameDetailCell.xib */; };
@@ -266,20 +257,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		B214FB961FCADC7B00F4F39B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CC4CC0ED1DEADC32007FB24F /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = B214FB931FCADC7B00F4F39B;
-			remoteInfo = "Contract Whist Watch Extension";
-		};
-		B214FBA31FCADC7B00F4F39B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CC4CC0ED1DEADC32007FB24F /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = B214FB871FCADC7B00F4F39B;
-			remoteInfo = "Contract Whist Watch";
-		};
 		B27B1FEC1F9B55ED00ED6FFF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = CC4CC0ED1DEADC32007FB24F /* Project object */;
@@ -290,24 +267,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		B214FBAB1FCADC7B00F4F39B /* Embed Foundation Extensions */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 13;
-			files = (
-				B214FB951FCADC7B00F4F39B /* Contract Whist Watch Extension.appex in Embed Foundation Extensions */,
-			);
-			name = "Embed Foundation Extensions";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		B214FBAD1FCADC7B00F4F39B /* Embed Watch Content */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
 			dstSubfolderSpec = 16;
 			files = (
-				B214FBA51FCADC7B00F4F39B /* Contract Whist Watch.app in Embed Watch Content */,
 			);
 			name = "Embed Watch Content";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -352,11 +317,9 @@
 		B211E136224164FB00B48D64 /* SelectPlayersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPlayersViewController.swift; sourceTree = "<group>"; };
 		B2144C4E2465334200CF56B7 /* Version.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Version.swift; sourceTree = "<group>"; };
 		B2144C5024653BF900CF56B7 /* Game Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Game Location.swift"; sourceTree = "<group>"; };
-		B214FB881FCADC7B00F4F39B /* Contract Whist Watch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Contract Whist Watch.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B214FB8B1FCADC7B00F4F39B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
 		B214FB8D1FCADC7B00F4F39B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B214FB8F1FCADC7B00F4F39B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		B214FB941FCADC7B00F4F39B /* Contract Whist Watch Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Contract Whist Watch Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B214FB9B1FCADC7B00F4F39B /* ExtensionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionDelegate.swift; sourceTree = "<group>"; };
 		B214FB9F1FCADC7B00F4F39B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B214FBA11FCADC7B00F4F39B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -516,6 +479,7 @@
 		B2C051031EDF194C009DE37F /* Multipeer Class.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Multipeer Class.swift"; sourceTree = "<group>"; };
 		B2C054771FB8B55700846F6E /* ConfirmCountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmCountViewController.swift; sourceTree = "<group>"; };
 		B2C0966A24616E4900C19447 /* Player Managed Object.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Player Managed Object.swift"; sourceTree = "<group>"; };
+		B2C16BCF3063C85A00F640E8 /* BunnySwift Class.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BunnySwift Class.swift"; sourceTree = "<group>"; };
 		B2C19E922370541E009485E0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B2C5840D2567BFD5009E0478 /* Custom View Animations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Custom View Animations.swift"; sourceTree = "<group>"; };
 		B2CAAEEA256A6BC900B35F6F /* GameDetailCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GameDetailCell.xib; sourceTree = "<group>"; };
@@ -582,20 +546,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		167549912A38177EA3E71960 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		B214FB911FCADC7B00F4F39B /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		B27B1FE41F9B55ED00ED6FFF /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -610,6 +560,7 @@
 				B206A1361E50522B00E26E96 /* MapKit.framework in Frameworks */,
 				B20DA0521E1FED040040221D /* CloudKit.framework in Frameworks */,
 				1FF83AD567C0F221FB2F142C /* Pods_Contract_Whist_Scorecard.framework in Frameworks */,
+				B2C16BD23063C91400F640E8 /* BunnySwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1340,6 +1291,7 @@
 				B2ACBD6F30249DEF002BB6EC /* Network Framework Class.swift */,
 				B2D8104D225AF7A7005A86A5 /* Multipeer logger.swift */,
 				B2F7281C1F7199AE006F0941 /* RabbitMQ Class.swift */,
+				B2C16BCF3063C85A00F640E8 /* BunnySwift Class.swift */,
 				B235D2BD1F82288A0019384B /* Notification Simulator.swift */,
 			);
 			name = "Comms Classes";
@@ -1587,8 +1539,6 @@
 			children = (
 				CC4CC0F51DEADC32007FB24F /* Whist.app */,
 				B27B1FE71F9B55ED00ED6FFF /* Contract Whist Scorecard UI Tests.xctest */,
-				B214FB881FCADC7B00F4F39B /* Contract Whist Watch.app */,
-				B214FB941FCADC7B00F4F39B /* Contract Whist Watch Extension.appex */,
 			);
 			name = Products;
 			path = ..;
@@ -1667,41 +1617,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		B214FB871FCADC7B00F4F39B /* Contract Whist Watch */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = B214FBAC1FCADC7B00F4F39B /* Build configuration list for PBXNativeTarget "Contract Whist Watch" */;
-			buildPhases = (
-				B214FB861FCADC7B00F4F39B /* Resources */,
-				B214FBAB1FCADC7B00F4F39B /* Embed Foundation Extensions */,
-				167549912A38177EA3E71960 /* Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				B214FB971FCADC7B00F4F39B /* PBXTargetDependency */,
-			);
-			name = "Contract Whist Watch";
-			productName = "Contract Whist Watch";
-			productReference = B214FB881FCADC7B00F4F39B /* Contract Whist Watch.app */;
-			productType = "com.apple.product-type.application.watchapp2";
-		};
-		B214FB931FCADC7B00F4F39B /* Contract Whist Watch Extension */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = B214FBAA1FCADC7B00F4F39B /* Build configuration list for PBXNativeTarget "Contract Whist Watch Extension" */;
-			buildPhases = (
-				B214FB901FCADC7B00F4F39B /* Sources */,
-				B214FB911FCADC7B00F4F39B /* Frameworks */,
-				B214FB921FCADC7B00F4F39B /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "Contract Whist Watch Extension";
-			productName = "Contract Whist Watch Extension";
-			productReference = B214FB941FCADC7B00F4F39B /* Contract Whist Watch Extension.appex */;
-			productType = "com.apple.product-type.watchkit2-extension";
-		};
 		B27B1FE61F9B55ED00ED6FFF /* Contract Whist Scorecard UI Tests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = B27B1FF01F9B55ED00ED6FFF /* Build configuration list for PBXNativeTarget "Contract Whist Scorecard UI Tests" */;
@@ -1735,9 +1650,11 @@
 			buildRules = (
 			);
 			dependencies = (
-				B214FBA41FCADC7B00F4F39B /* PBXTargetDependency */,
 			);
 			name = "Contract Whist Scorecard";
+			packageProductDependencies = (
+				B2C16BD13063C91400F640E8 /* BunnySwift */,
+			);
 			productName = "Contract Whist Scorecard";
 			productReference = CC4CC0F51DEADC32007FB24F /* Whist.app */;
 			productType = "com.apple.product-type.application";
@@ -1753,17 +1670,6 @@
 				LastUpgradeCheck = 1430;
 				ORGANIZATIONNAME = "Marc Shearer";
 				TargetAttributes = {
-					B214FB871FCADC7B00F4F39B = {
-						CreatedOnToolsVersion = 9.1;
-						DevelopmentTeam = 3T7CT2S464;
-						ProvisioningStyle = Automatic;
-					};
-					B214FB931FCADC7B00F4F39B = {
-						CreatedOnToolsVersion = 9.1;
-						DevelopmentTeam = 3T7CT2S464;
-						LastSwiftMigration = 1020;
-						ProvisioningStyle = Automatic;
-					};
 					B27B1FE61F9B55ED00ED6FFF = {
 						CreatedOnToolsVersion = 9.0.1;
 						LastSwiftMigration = 1020;
@@ -1801,38 +1707,20 @@
 				Base,
 			);
 			mainGroup = CC4CC0EC1DEADC32007FB24F;
+			packageReferences = (
+				B2C16BCE3063C6F800F640E8 /* XCRemoteSwiftPackageReference "bunny-swift" */,
+			);
 			productRefGroup = CC4CC0F61DEADC32007FB24F /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				CC4CC0F41DEADC32007FB24F /* Contract Whist Scorecard */,
 				B27B1FE61F9B55ED00ED6FFF /* Contract Whist Scorecard UI Tests */,
-				B214FB871FCADC7B00F4F39B /* Contract Whist Watch */,
-				B214FB931FCADC7B00F4F39B /* Contract Whist Watch Extension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		B214FB861FCADC7B00F4F39B /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				B202A0081FCC814B0070D5DC /* WatchGameInterfaceController.storyboard in Resources */,
-				B214FB8E1FCADC7B00F4F39B /* Assets.xcassets in Resources */,
-				B202A0061FCC7F8F0070D5DC /* WatchRoundInterfaceController.storyboard in Resources */,
-				B214FB8C1FCADC7B00F4F39B /* Interface.storyboard in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		B214FB921FCADC7B00F4F39B /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				B214FBA01FCADC7B00F4F39B /* Assets.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		B27B1FE51F9B55ED00ED6FFF /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2007,17 +1895,6 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		B214FB901FCADC7B00F4F39B /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				B202A00A1FCC87540070D5DC /* WatchGameInterfaceController.swift in Sources */,
-				B214FB9C1FCADC7B00F4F39B /* ExtensionDelegate.swift in Sources */,
-				B202A00D1FCC90E40070D5DC /* Watch State Class.swift in Sources */,
-				B214FBAF1FCB711B00F4F39B /* WatchRoundInterfaceController.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		B27B1FE31F9B55ED00ED6FFF /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2053,6 +1930,7 @@
 				B2E894D42369EF2E0011AD3D /* ConfettiView.swift in Sources */,
 				B203ECCE24F8EC8B001E2CED /* Banner.swift in Sources */,
 				B247A72F2483657600591BBA /* Shadow View.swift in Sources */,
+				B2C16BD03063C86500F640E8 /* BunnySwift Class.swift in Sources */,
 				B2AC652B257398FB00371F1E /* TestViewController.swift in Sources */,
 				B2A44F2B2506889A0071F899 /* AlertViewController.swift in Sources */,
 				B24ABA3D24B31BB900E3F130 /* BannerLogoView.swift in Sources */,
@@ -2182,16 +2060,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		B214FB971FCADC7B00F4F39B /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = B214FB931FCADC7B00F4F39B /* Contract Whist Watch Extension */;
-			targetProxy = B214FB961FCADC7B00F4F39B /* PBXContainerItemProxy */;
-		};
-		B214FBA41FCADC7B00F4F39B /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = B214FB871FCADC7B00F4F39B /* Contract Whist Watch */;
-			targetProxy = B214FBA31FCADC7B00F4F39B /* PBXContainerItemProxy */;
-		};
 		B27B1FED1F9B55ED00ED6FFF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = CC4CC0F41DEADC32007FB24F /* Contract Whist Scorecard */;
@@ -2371,118 +2239,6 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		B214FBA61FCADC7B00F4F39B /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 65;
-				DEVELOPMENT_TEAM = 3T7CT2S464;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				IBSC_MODULE = Contract_Whist_Watch_Extension;
-				INFOPLIST_FILE = "Contract Whist Watch/Info.plist";
-				MARKETING_VERSION = 7.1;
-				PRODUCT_BUNDLE_IDENTIFIER = MarcShearer.Whist.watchkitapp;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 4.1;
-			};
-			name = Debug;
-		};
-		B214FBA71FCADC7B00F4F39B /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 65;
-				DEVELOPMENT_TEAM = 3T7CT2S464;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				IBSC_MODULE = Contract_Whist_Watch_Extension;
-				INFOPLIST_FILE = "Contract Whist Watch/Info.plist";
-				MARKETING_VERSION = 7.1;
-				PRODUCT_BUNDLE_IDENTIFIER = MarcShearer.Whist.watchkitapp;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 4.1;
-			};
-			name = Release;
-		};
-		B214FBA81FCADC7B00F4F39B /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 65;
-				DEVELOPMENT_TEAM = 3T7CT2S464;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GCC_WARN_PEDANTIC = NO;
-				INFOPLIST_FILE = "Contract Whist Watch Extension/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 7.1;
-				PRODUCT_BUNDLE_IDENTIFIER = MarcShearer.Whist.watchkitapp.watchkitextension;
-				PRODUCT_NAME = "${TARGET_NAME}";
-				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 4.1;
-			};
-			name = Debug;
-		};
-		B214FBA91FCADC7B00F4F39B /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 65;
-				DEVELOPMENT_TEAM = 3T7CT2S464;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GCC_WARN_PEDANTIC = NO;
-				INFOPLIST_FILE = "Contract Whist Watch Extension/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 7.1;
-				PRODUCT_BUNDLE_IDENTIFIER = MarcShearer.Whist.watchkitapp.watchkitextension;
-				PRODUCT_NAME = "${TARGET_NAME}";
-				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 4.1;
-			};
-			name = Release;
-		};
 		B27B1FEE1F9B55ED00ED6FFF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2494,7 +2250,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = "Contract Whist Scorecard UI Tests/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2519,7 +2275,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = "Contract Whist Scorecard UI Tests/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2659,7 +2415,7 @@
 				DEVELOPMENT_TEAM = 3T7CT2S464;
 				GCC_WARN_PEDANTIC = NO;
 				INFOPLIST_FILE = "Contract Whist Scorecard/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2683,7 +2439,7 @@
 				DEVELOPMENT_TEAM = 3T7CT2S464;
 				GCC_WARN_PEDANTIC = NO;
 				INFOPLIST_FILE = "Contract Whist Scorecard/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2700,24 +2456,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		B214FBAA1FCADC7B00F4F39B /* Build configuration list for PBXNativeTarget "Contract Whist Watch Extension" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				B214FBA81FCADC7B00F4F39B /* Debug */,
-				B214FBA91FCADC7B00F4F39B /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		B214FBAC1FCADC7B00F4F39B /* Build configuration list for PBXNativeTarget "Contract Whist Watch" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				B214FBA61FCADC7B00F4F39B /* Debug */,
-				B214FBA71FCADC7B00F4F39B /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		B27B1FF01F9B55ED00ED6FFF /* Build configuration list for PBXNativeTarget "Contract Whist Scorecard UI Tests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -2746,6 +2484,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		B2C16BCE3063C6F800F640E8 /* XCRemoteSwiftPackageReference "bunny-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/michaelklishin/bunny-swift.git";
+			requirement = {
+				kind = upToNextMinorVersion;
+				minimumVersion = 0.13.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		B2C16BD13063C91400F640E8 /* BunnySwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B2C16BCE3063C6F800F640E8 /* XCRemoteSwiftPackageReference "bunny-swift" */;
+			productName = BunnySwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		B2B1802621196166008D3BAA /* Contract_Whist_Scorecard.xcdatamodeld */ = {

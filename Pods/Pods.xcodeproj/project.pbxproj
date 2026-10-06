@@ -220,12 +220,12 @@
 		1E7FACB78E629B5807F4CC44C2919991 /* RMQHeartbeatSender.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RMQHeartbeatSender.h; path = RMQClient/RMQHeartbeatSender.h; sourceTree = "<group>"; };
 		217E113DCCCBE3DA7843F684AFAFF60C /* RMQURI.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RMQURI.h; path = RMQClient/RMQURI.h; sourceTree = "<group>"; };
 		22456D5C9EE34F25CAF242864BF631DD /* GCDAsyncSocket.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = GCDAsyncSocket.m; path = Source/GCD/GCDAsyncSocket.m; sourceTree = "<group>"; };
-		2319F14FAA0573F951D9976032AB010C /* RMQClient */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = RMQClient; path = RMQClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2319F14FAA0573F951D9976032AB010C /* RMQClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RMQClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		23E9DFC2B73BA93F631AE8133AB5F4B5 /* RMQProtocolHeader.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RMQProtocolHeader.m; path = RMQClient/RMQProtocolHeader.m; sourceTree = "<group>"; };
 		2449F20775A9557E66D46C34BADCD809 /* RMQConnectionRecover.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RMQConnectionRecover.h; path = RMQClient/RMQConnectionRecover.h; sourceTree = "<group>"; };
 		256C9F831B320A3146105DDA17D24C8B /* RMQConnectionConfig.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RMQConnectionConfig.m; path = RMQClient/RMQConnectionConfig.m; sourceTree = "<group>"; };
 		256D2AA40DEDC77DF0120E1E902B59AD /* RMQFramesetValidator.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RMQFramesetValidator.m; path = RMQClient/RMQFramesetValidator.m; sourceTree = "<group>"; };
-		25F1977F45DC843AE917FD9B78F1E948 /* Pods-Contract Whist Scorecard */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = "Pods-Contract Whist Scorecard"; path = Pods_Contract_Whist_Scorecard.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		25F1977F45DC843AE917FD9B78F1E948 /* Pods_Contract_Whist_Scorecard.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Contract_Whist_Scorecard.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		266E6B844F84384CBA919834D0605609 /* JKVMutableValue.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JKVMutableValue.m; path = JKVValue/Public/JKVMutableValue.m; sourceTree = "<group>"; };
 		26F73B3CE47C343278ABD336591009D0 /* JKVProperty.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JKVProperty.h; path = JKVValue/Private/JKVProperty.h; sourceTree = "<group>"; };
 		277AD1C060ADD3743E098871893BD27F /* RMQTable.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RMQTable.h; path = RMQClient/RMQTable.h; sourceTree = "<group>"; };
@@ -253,7 +253,7 @@
 		42B1266C2922F1DE1EE56D451405C586 /* RMQLocalSerialQueue.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RMQLocalSerialQueue.h; path = RMQClient/RMQLocalSerialQueue.h; sourceTree = "<group>"; };
 		42CDC1CE0D6EA70F853219804A3CD6B6 /* CocoaAsyncSocket-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "CocoaAsyncSocket-umbrella.h"; sourceTree = "<group>"; };
 		42E3780A2529085100461EC26456BFAB /* RMQTransport.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RMQTransport.h; path = RMQClient/RMQTransport.h; sourceTree = "<group>"; };
-		43A3711116412E5894202170319A8099 /* JKVValue */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = JKVValue; path = JKVValue.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		43A3711116412E5894202170319A8099 /* JKVValue.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = JKVValue.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		44363FE97EE92DD8D7F9182FBA22A9CD /* RMQTransactionalConfirmations.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RMQTransactionalConfirmations.m; path = RMQClient/RMQTransactionalConfirmations.m; sourceTree = "<group>"; };
 		456A9AC2D68123A63869C6A849CB8C63 /* RMQMethodMap.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RMQMethodMap.h; path = RMQClient/RMQMethodMap.h; sourceTree = "<group>"; };
 		492A61254F2BC5B36A910D526CAA1880 /* Pods-Contract Whist Scorecard-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-Contract Whist Scorecard-dummy.m"; sourceTree = "<group>"; };
@@ -279,7 +279,7 @@
 		6899BB281C0D690D9D35E01AA00E6BF4 /* RMQConnectionDelegateLogger.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RMQConnectionDelegateLogger.h; path = RMQClient/RMQConnectionDelegateLogger.h; sourceTree = "<group>"; };
 		69684C3095A92C51A722CC9AE0261958 /* JKVValueImpl.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JKVValueImpl.m; path = JKVValue/Public/JKVValueImpl.m; sourceTree = "<group>"; };
 		6AF20EAF98DF53D5F1206A0D021E44E3 /* JKVValue-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "JKVValue-prefix.pch"; sourceTree = "<group>"; };
-		6CBEFE4F9E22AFDC6347A739BB35FF8C /* CocoaAsyncSocket */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = CocoaAsyncSocket; path = CocoaAsyncSocket.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6CBEFE4F9E22AFDC6347A739BB35FF8C /* CocoaAsyncSocket.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CocoaAsyncSocket.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6E4A8ACA3867EF5B2A3A4291730C3A2E /* CocoaAsyncSocket.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = CocoaAsyncSocket.debug.xcconfig; sourceTree = "<group>"; };
 		6F7C902953C3EB1309BD17A09DC23B6A /* RMQChannel.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RMQChannel.h; path = RMQClient/RMQChannel.h; sourceTree = "<group>"; };
 		71185982C0A14AF5E23EBF6BAE856E0D /* AsyncUdpSocket.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = AsyncUdpSocket.m; path = Source/RunLoop/AsyncUdpSocket.m; sourceTree = "<group>"; };
@@ -310,7 +310,7 @@
 		984814A2456B7157034719F2162DF1EB /* RMQQueuingConnectionDelegateProxy.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RMQQueuingConnectionDelegateProxy.h; path = RMQClient/RMQQueuingConnectionDelegateProxy.h; sourceTree = "<group>"; };
 		99619EDC215A3CD953A522F082DA3F63 /* RMQUnallocatedChannel.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RMQUnallocatedChannel.m; path = RMQClient/RMQUnallocatedChannel.m; sourceTree = "<group>"; };
 		9B8692A2EED5640E9F0B287EAD81985F /* RMQErrors.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RMQErrors.h; path = RMQClient/RMQErrors.h; sourceTree = "<group>"; };
-		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		9DE9F62E94D1FAFBA527A12F5E511445 /* JKVObjectPrinter-Protected.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "JKVObjectPrinter-Protected.h"; path = "JKVValue/Private/JKVObjectPrinter-Protected.h"; sourceTree = "<group>"; };
 		9E2E637C8E970C34EB1EB23C6A03A12E /* JKVMutableValue.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JKVMutableValue.h; path = JKVValue/Public/JKVMutableValue.h; sourceTree = "<group>"; };
 		A1D12E602EEDAAE413A6390FDFFFF531 /* RMQMultipleChannelAllocator.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RMQMultipleChannelAllocator.h; path = RMQClient/RMQMultipleChannelAllocator.h; sourceTree = "<group>"; };
@@ -421,10 +421,10 @@
 		489EA3224C4475CCFF39B52862BCFF59 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				6CBEFE4F9E22AFDC6347A739BB35FF8C /* CocoaAsyncSocket */,
-				43A3711116412E5894202170319A8099 /* JKVValue */,
-				25F1977F45DC843AE917FD9B78F1E948 /* Pods-Contract Whist Scorecard */,
-				2319F14FAA0573F951D9976032AB010C /* RMQClient */,
+				6CBEFE4F9E22AFDC6347A739BB35FF8C /* CocoaAsyncSocket.framework */,
+				43A3711116412E5894202170319A8099 /* JKVValue.framework */,
+				25F1977F45DC843AE917FD9B78F1E948 /* Pods_Contract_Whist_Scorecard.framework */,
+				2319F14FAA0573F951D9976032AB010C /* RMQClient.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -575,7 +575,6 @@
 				8B46A72A5E76D1232D2BBA786654D243 /* RMQWaiterFactory.h */,
 				67EAA6D2D2456D6120174D956BA65B42 /* Support Files */,
 			);
-			name = RMQClient;
 			path = RMQClient;
 			sourceTree = "<group>";
 		};
@@ -604,7 +603,6 @@
 				69684C3095A92C51A722CC9AE0261958 /* JKVValueImpl.m */,
 				A45C7B4A6B4740C138F880248B9AA8A8 /* Support Files */,
 			);
-			name = JKVValue;
 			path = JKVValue;
 			sourceTree = "<group>";
 		};
@@ -658,7 +656,6 @@
 				60F6707D18A4F4CC383BBF2082337E5F /* RunLoop */,
 				F08CAB0F21D6695DC20DB00A33F6726E /* Support Files */,
 			);
-			name = CocoaAsyncSocket;
 			path = CocoaAsyncSocket;
 			sourceTree = "<group>";
 		};
@@ -839,7 +836,7 @@
 			);
 			name = CocoaAsyncSocket;
 			productName = CocoaAsyncSocket;
-			productReference = 6CBEFE4F9E22AFDC6347A739BB35FF8C /* CocoaAsyncSocket */;
+			productReference = 6CBEFE4F9E22AFDC6347A739BB35FF8C /* CocoaAsyncSocket.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		693F68B0ECDCFF738C4CC7B5E5243743 /* JKVValue */ = {
@@ -857,7 +854,7 @@
 			);
 			name = JKVValue;
 			productName = JKVValue;
-			productReference = 43A3711116412E5894202170319A8099 /* JKVValue */;
+			productReference = 43A3711116412E5894202170319A8099 /* JKVValue.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		BD4E2DA88C3695B9BD5DD5A9DFF33355 /* Pods-Contract Whist Scorecard */ = {
@@ -878,7 +875,7 @@
 			);
 			name = "Pods-Contract Whist Scorecard";
 			productName = Pods_Contract_Whist_Scorecard;
-			productReference = 25F1977F45DC843AE917FD9B78F1E948 /* Pods-Contract Whist Scorecard */;
+			productReference = 25F1977F45DC843AE917FD9B78F1E948 /* Pods_Contract_Whist_Scorecard.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		D015D7C0C1EE9DDC863F493A9551FFE3 /* RMQClient */ = {
@@ -898,7 +895,7 @@
 			);
 			name = RMQClient;
 			productName = RMQClient;
-			productReference = 2319F14FAA0573F951D9976032AB010C /* RMQClient */;
+			productReference = 2319F14FAA0573F951D9976032AB010C /* RMQClient.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
@@ -1104,7 +1101,7 @@
 				GCC_PREFIX_HEADER = "Target Support Files/CocoaAsyncSocket/CocoaAsyncSocket-prefix.pch";
 				INFOPLIST_FILE = "Target Support Files/CocoaAsyncSocket/CocoaAsyncSocket-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MODULEMAP_FILE = "Target Support Files/CocoaAsyncSocket/CocoaAsyncSocket.modulemap";
 				PRODUCT_MODULE_NAME = CocoaAsyncSocket;
@@ -1202,7 +1199,7 @@
 				GCC_PREFIX_HEADER = "Target Support Files/RMQClient/RMQClient-prefix.pch";
 				INFOPLIST_FILE = "Target Support Files/RMQClient/RMQClient-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MODULEMAP_FILE = "Target Support Files/RMQClient/RMQClient.modulemap";
 				PRODUCT_MODULE_NAME = RMQClient;
@@ -1234,7 +1231,7 @@
 				GCC_PREFIX_HEADER = "Target Support Files/JKVValue/JKVValue-prefix.pch";
 				INFOPLIST_FILE = "Target Support Files/JKVValue/JKVValue-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MODULEMAP_FILE = "Target Support Files/JKVValue/JKVValue.modulemap";
 				PRODUCT_MODULE_NAME = JKVValue;
@@ -1267,7 +1264,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = "Target Support Files/Pods-Contract Whist Scorecard/Pods-Contract Whist Scorecard-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MACH_O_TYPE = staticlib;
 				MODULEMAP_FILE = "Target Support Files/Pods-Contract Whist Scorecard/Pods-Contract Whist Scorecard.modulemap";
@@ -1301,7 +1298,7 @@
 				GCC_PREFIX_HEADER = "Target Support Files/JKVValue/JKVValue-prefix.pch";
 				INFOPLIST_FILE = "Target Support Files/JKVValue/JKVValue-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MODULEMAP_FILE = "Target Support Files/JKVValue/JKVValue.modulemap";
 				PRODUCT_MODULE_NAME = JKVValue;
@@ -1332,7 +1329,7 @@
 				GCC_PREFIX_HEADER = "Target Support Files/CocoaAsyncSocket/CocoaAsyncSocket-prefix.pch";
 				INFOPLIST_FILE = "Target Support Files/CocoaAsyncSocket/CocoaAsyncSocket-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MODULEMAP_FILE = "Target Support Files/CocoaAsyncSocket/CocoaAsyncSocket.modulemap";
 				PRODUCT_MODULE_NAME = CocoaAsyncSocket;
@@ -1402,8 +1399,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRIP_INSTALLED_PRODUCT = NO;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 5.0;
 				SYMROOT = "${SRCROOT}/../build";
 			};
@@ -1426,7 +1422,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = "Target Support Files/Pods-Contract Whist Scorecard/Pods-Contract Whist Scorecard-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MACH_O_TYPE = staticlib;
 				MODULEMAP_FILE = "Target Support Files/Pods-Contract Whist Scorecard/Pods-Contract Whist Scorecard.modulemap";
@@ -1459,7 +1455,7 @@
 				GCC_PREFIX_HEADER = "Target Support Files/RMQClient/RMQClient-prefix.pch";
 				INFOPLIST_FILE = "Target Support Files/RMQClient/RMQClient-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MODULEMAP_FILE = "Target Support Files/RMQClient/RMQClient.modulemap";
 				PRODUCT_MODULE_NAME = RMQClient;

@@ -473,8 +473,10 @@ enum InviteStatus {
                         // Not found - shouldn't happen - add it temporarily - to disconnect in state change
                         addPlayer(name: name, playerUUID: peer.playerUUID!, playerMO: playerMO, peer: peer, inviteStatus: InviteStatus.none, disconnectReason: "\(name ?? "This player") has not been invited to a game on this device")
                     }
+                } else if let name = peer.playerName, let uuid = peer.playerUUID {
+                    addPlayer(name: name, playerUUID: uuid, playerMO: playerMO, peer: peer, robot: self.connectionMode == .loopback)
                 } else {
-                    addPlayer(name: peer.playerName!, playerUUID: peer.playerUUID!, playerMO: playerMO, peer: peer, robot: self.connectionMode == .loopback)
+                    // shouldn't happen - just ignore if it does
                 }
             }
         }
